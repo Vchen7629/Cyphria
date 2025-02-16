@@ -35,5 +35,5 @@ jobs:
                 context: ./frontend
                 file: ./frontend/Dockerfile
                 push: true
-                tags: ghcr.io/vchen7629/atlaxiom-frontend:prod
-                cache-from: type=registry,ref=ghcr.io/vchen7629/frontend-npm-cache:latest
+                tags: ghcr.io/vchen7629/cyphria-frontend:prod
+                cache-from: type=registry,ref=ghcr.io/vchen7629/cyphria-frontend-npm-cache:latest

@@ -36,4 +36,4 @@ jobs:
           target: cache
           push: true
           tags: ghcr.io/vchen7629/frontend-npm-cache:latest
-          cache-to: type=registry,ref=ghcr.io/vchen7629/frontend-npm-cache:latest,mode=max
+          cache-to: type=registry,ref=ghcr.io/vchen7629/cyphria-frontend-npm-cache:latest,mode=max

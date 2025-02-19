@@ -1,10 +1,10 @@
-import { ChartButton } from "../../navigation/sidebarbuttons.tsx/chartbutton";
-import { LogoutButton } from "../../navigation/sidebarbuttons.tsx/logoutbutton";
-import { UserButton } from "../../navigation/sidebarbuttons.tsx/profilebutton";
-import { SearchButton } from "../../navigation/sidebarbuttons.tsx/searchbutton";
-import { TemporalAnalysisButton } from "../../navigation/sidebarbuttons.tsx/temporalanalysis";
-import { BookmarkButton } from "../../navigation/sidebarbuttons.tsx/bookmarkbutton";
-import { LogoButton } from "../../navigation/sidebarbuttons.tsx/logobutton";
+import { ChartButton } from "../navigation/sidebarbuttons.tsx/chartbutton";
+import { LogoutButton } from "../navigation/sidebarbuttons.tsx/logoutbutton";
+import { UserButton } from "../navigation/sidebarbuttons.tsx/profilebutton";
+import { SearchButton } from "../navigation/sidebarbuttons.tsx/searchbutton";
+import { TemporalAnalysisButton } from "../navigation/sidebarbuttons.tsx/temporalanalysis";
+import { BookmarkButton } from "../navigation/sidebarbuttons.tsx/bookmarkbutton";
+import { LogoButton } from "../navigation/sidebarbuttons.tsx/logobutton";
 
 export function SidebarComponent() {
 

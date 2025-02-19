@@ -16,8 +16,9 @@ export default {
   			]
   		},
   		backgroundImage: {
-  			background: 'linear-gradient(180deg, #0a0a0a 0%, rgba(0, 0, 1, .13) 8%, rgb(3, 4, 10) 40%, rgb(5, 6, 16) 100%);'
-  		},
+  			background: 'linear-gradient(180deg, #0a0a0a 0%, rgba(0, 0, 1, .13) 8%, rgb(3, 4, 10) 40%, rgb(5, 6, 16) 100%);',
+			logo: 'linear-gradient(90deg, #00E5FF, #BF40BF);'
+		},
   		backgroundSize: {
   			'homepage-radial-gold': '100px 150px'
   		},
@@ -34,8 +35,9 @@ export default {
   			'background': '#131314',
 			'bordercolor': '#333333',
 			'interactive': '#005F7F',
-			'test1': '#0a0f23',
-			'test2': '#060a16',
+			'card': '#1b1a1a',
+			'test1': '#00E5FF',
+			'test2': '#BF40BF',
   		},
   		boxShadow: {
   			custom: 'inset 2px 2px 4px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02);',

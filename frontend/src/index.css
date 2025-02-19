@@ -18,5 +18,5 @@
 }
 
 .background {
-  background: linear-gradient(135deg, #005F7F, #5F205F);
+  background:radial-gradient(circle at center,#ff7e5f 0%, #feb47b 50%,#fff 100%);
 }

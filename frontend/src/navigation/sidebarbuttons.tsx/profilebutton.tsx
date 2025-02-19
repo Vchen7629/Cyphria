@@ -1,16 +1,16 @@
-import { TextSearch } from 'lucide-react';
+import { User } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
-export function SearchButton() {
+export function UserButton() {
     const navigate = useNavigate()
 
     function handleNavigate() {
-        navigate("/search")
+        navigate("/profile")
     }
-
+    
     return (
         <button onClick={handleNavigate}>
-            <TextSearch className='text-white  w-[25px] h-[25px]' strokeWidth={2.5}/>
+            <User className='text-interactive w-[30px] h-[30px]' strokeWidth={2.5}/>
         </button>
     )
 }

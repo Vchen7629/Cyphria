@@ -35,5 +35,5 @@ jobs:
                 context: ./frontend
                 file: ./frontend/Dockerfile
                 push: true
-                tags: ghcr.io/vchen7629/cyphria-frontend:prod
+                tags: ghcr.io/vchen7629/cyphria-frontend:latest
                 cache-from: type=registry,ref=ghcr.io/vchen7629/cyphria-frontend-npm-cache:latest

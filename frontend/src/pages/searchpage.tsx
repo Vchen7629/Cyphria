@@ -1,11 +1,17 @@
-import { SidebarComponent } from "../components/sidebar/sidebar";
+import { HeaderComponent } from "../components/header";
+import { SidebarComponent } from "../components/sidebar";
 
 export default function SearchPage() {
 
     return (
         <main className="flex  w-[100vw] h-[100vh] bg-background">
             <SidebarComponent/>
-            <p className="flex w-full justify-center items-center text-5xl font-bold">Search Page Under Construction</p>
+            <div className="flex flex-col w-full items-center font-bold">
+                <HeaderComponent/>
+                <span className="text-5xl">
+                SearchPage Under Construction
+                </span>
+            </div>
         </main>
     )
 }

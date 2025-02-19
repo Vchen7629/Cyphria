@@ -1,11 +1,15 @@
-import { SidebarComponent } from "../components/sidebar/sidebar";
+import { HeaderComponent } from "../components/header";
+import { SidebarComponent } from "../components/sidebar";
 
 export default function TemporalAnalysisPage() {
 
     return (
         <main className="flex  w-[100vw] h-[100vh] bg-background">
             <SidebarComponent/>
-            <p className="flex w-full justify-center items-center text-5xl font-bold">Temporal Analysis Page Under Construction</p>
+            <section className="flex flex-col w-full items-center font-bold">
+                <HeaderComponent/>
+                <span className="text-5xl">Temporal Analysis Page Under Construction</span>
+            </section>
         </main>
     )
 }

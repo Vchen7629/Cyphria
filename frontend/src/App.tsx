@@ -1,5 +1,5 @@
-import { lazy } from "react"
-import { Routes, Route } from "react-router"
+import { lazy, useEffect } from "react"
+import { Routes, Route, useLocation } from "react-router"
 
 const Homepage = lazy(() => (import("./pages/homepage.tsx")))
 const Searchpage = lazy(() => (import("./pages/searchpage.tsx")))
@@ -8,6 +8,12 @@ const Bookmarkpage = lazy(() => (import("./pages/bookmarkpage.tsx")))
 const Profilepage = lazy(() => (import("./pages/profilepage.tsx")))
 
 function App() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const subpage = location.pathname === '/' ? 'Home' : location.pathname.replace('/', '');
+    document.title = `Cyphria - ${subpage.charAt(0).toUpperCase() + subpage.slice(1)}`;
+  }, [location]);
 
   return (
     <Routes>

@@ -11,6 +11,17 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
+.main {
+  background: linear-gradient(
+      180deg,       /* direction: top to bottom */
+      #0a0f23 0%,   /* deep blue-black at the top */
+      #060a16 100%  /* darker shade at the bottom */
+    );
+  min-height: 100vh; /* for demonstration */
+  margin: 0;
+  width: 100vw;
+}
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }

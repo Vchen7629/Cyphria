@@ -20,3 +20,9 @@
 .background {
   background:radial-gradient(circle at center,#ff7e5f 0%, #feb47b 50%,#fff 100%);
 }
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}

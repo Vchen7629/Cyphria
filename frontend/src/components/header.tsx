@@ -1,6 +1,5 @@
-import { Bookmark, ChartNoAxesCombined, TextSearch, User } from "lucide-react";
+import { Bookmark, ChartNoAxesCombined, Home, TextSearch, User } from "lucide-react";
 import { useLocation } from "react-router";
-import Logo from "../assets/logo.svg"
 
 export function HeaderComponent() {
     const location = useLocation();
@@ -28,7 +27,9 @@ export function HeaderComponent() {
                         <User />
                     </div>
                 ) : (
-                    <img src={Logo} alt="Logo" className="w-12 h-12" />
+                    <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">
+                        <Home/>
+                    </div>
                 )}
                 <span className="text-xl font-bold">{PageName || "Home"}</span>
             </div>

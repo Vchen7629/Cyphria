@@ -5,6 +5,7 @@ const Homepage = lazy(() => (import("./pages/homepage.tsx")))
 const Searchpage = lazy(() => (import("./pages/searchpage.tsx")))
 const Trendingtopicspage = lazy(() => (import("./pages/topicttrendspage.tsx")))
 const Subredditstatisticspage = lazy(() => (import("./pages/subreddittrendspage.tsx")))
+const UserStatisticsPage = lazy(() => (import("./pages/userstatisticspage.tsx")))
 const Bookmarkpage = lazy(() => (import("./pages/bookmarkpage.tsx")))
 const Profilepage = lazy(() => (import("./pages/profilepage.tsx")))
 const LoginPage = lazy(() => (import("./pages/loginpage.tsx")))
@@ -23,6 +24,7 @@ function App() {
       <Route path="/search" element={<Searchpage/>}/>
       <Route path="/subredditstatistics" element={<Subredditstatisticspage />}/>
       <Route path="/trendingtopics" element={<Trendingtopicspage/>}/>
+      <Route path="/userstatistics" element={<UserStatisticsPage/>}/>
       <Route path="/bookmarks" element={<Bookmarkpage/>}/>
       <Route path="/profile" element={<Profilepage/>}/>
       <Route path="/login" element={<LoginPage/>} />

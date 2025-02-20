@@ -1,10 +1,10 @@
 import { TrendsButton } from "../navigation/sidebarbuttons.tsx/trendingtopicsbutton";
 import { LogoutButton } from "../navigation/sidebarbuttons.tsx/logoutbutton";
-import { UserButton } from "../navigation/sidebarbuttons.tsx/profilebutton";
 import { SearchButton } from "../navigation/sidebarbuttons.tsx/searchbutton";
 import { SubredditStatisticsButton } from "../navigation/sidebarbuttons.tsx/subredditstatsbutton";
 import { BookmarkButton } from "../navigation/sidebarbuttons.tsx/bookmarkbutton";
 import { LogoButton } from "../navigation/sidebarbuttons.tsx/logobutton";
+import { UserStatisticsButton } from "../navigation/sidebarbuttons.tsx/userstatisticsbutton";
 
 export function SidebarComponent() {
 
@@ -15,10 +15,10 @@ export function SidebarComponent() {
                 <SearchButton />
                 <TrendsButton/>
                 <SubredditStatisticsButton/>
+                <UserStatisticsButton/>
                 <BookmarkButton />
             </div>
             <div className="fixed flex flex-col bottom-[5vh] space-y-[3vh] items-center">
-                <UserButton />
                 <LogoutButton/>
             </div>
         </main>

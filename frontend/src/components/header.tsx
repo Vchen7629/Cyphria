@@ -22,11 +22,11 @@ export function HeaderComponent() {
                     <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">
                         <Bookmark />
                     </div>
-                ) : PageName === "profile" ? (
+                ) : PageName === "userstatistics" ? (
                     <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">
                         <User />
                     </div>
-                ): PageName === "trendingtopics" ? (
+                ) : PageName === "trendingtopics" ? (
                     <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">
                         <TrendingUp />
                     </div>
@@ -41,6 +41,8 @@ export function HeaderComponent() {
                 ) : PageName === "subredditstatistics" ? (
                     <span className="text-xl font-bold">{"Subreddit Statistics"}</span>
 
+                ) : PageName === "userstatistics" ? (
+                    <span className="text-xl font-bold">{"Your Statistics"}</span>
                 ) : (
                     <span className="text-xl font-bold">{PageName || "Home"}</span>
                 )}

@@ -6,6 +6,7 @@ const Searchpage = lazy(() => (import("./pages/searchpage.tsx")))
 const TemporalAnalysisPage = lazy(() => (import("./pages/temporalanalysispage.tsx")))
 const Bookmarkpage = lazy(() => (import("./pages/bookmarkpage.tsx")))
 const Profilepage = lazy(() => (import("./pages/profilepage.tsx")))
+const LoginPage = lazy(() => (import("./pages/loginpage.tsx")))
 
 function App() {
   const location = useLocation();
@@ -22,6 +23,7 @@ function App() {
       <Route path="/temporal" element={<TemporalAnalysisPage/>}/>
       <Route path="/bookmarks" element={<Bookmarkpage/>}/>
       <Route path="/profile" element={<Profilepage/>}/>
+      <Route path="/login" element={<LoginPage/>} />
     </Routes>
   )
 }

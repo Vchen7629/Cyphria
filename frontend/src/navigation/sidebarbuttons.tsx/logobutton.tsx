@@ -10,7 +10,7 @@ export function LogoButton() {
 
     return (
         <button onClick={handleNavigate}>
-            <img src={Logo} alt="Logo" className="w-12 h-12 mb-[5vh]" />
+            <img src={Logo} alt="Logo" className="w-12 h-12" />
         </button>
     )
 }

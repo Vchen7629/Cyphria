@@ -3,7 +3,8 @@ import { Routes, Route, useLocation } from "react-router"
 
 const Homepage = lazy(() => (import("./pages/homepage.tsx")))
 const Searchpage = lazy(() => (import("./pages/searchpage.tsx")))
-const TemporalAnalysisPage = lazy(() => (import("./pages/temporalanalysispage.tsx")))
+const Trendingtopicspage = lazy(() => (import("./pages/topicttrendspage.tsx")))
+const Subredditstatisticspage = lazy(() => (import("./pages/subreddittrendspage.tsx")))
 const Bookmarkpage = lazy(() => (import("./pages/bookmarkpage.tsx")))
 const Profilepage = lazy(() => (import("./pages/profilepage.tsx")))
 const LoginPage = lazy(() => (import("./pages/loginpage.tsx")))
@@ -20,7 +21,8 @@ function App() {
     <Routes>
       <Route path="" element={<Homepage/>}/>
       <Route path="/search" element={<Searchpage/>}/>
-      <Route path="/temporal" element={<TemporalAnalysisPage/>}/>
+      <Route path="/subredditstatistics" element={<Subredditstatisticspage />}/>
+      <Route path="/trendingtopics" element={<Trendingtopicspage/>}/>
       <Route path="/bookmarks" element={<Bookmarkpage/>}/>
       <Route path="/profile" element={<Profilepage/>}/>
       <Route path="/login" element={<LoginPage/>} />

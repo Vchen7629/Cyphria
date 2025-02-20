@@ -42,8 +42,10 @@ export default {
   		boxShadow: {
   			custom: 'inset 2px 2px 4px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02);',
   			mycards: '0px 0px 15px rgb(19, 18, 18)',
-  			dropdow: '0 0px 4px 0px hsl(var(--shadow-color))',
-  			'inner-border': 'inset 0 0 0 4px rgba(55, 65, 81, 1)'
+  			dropdown: '0 0px 4px 0px hsl(var(--shadow-color))',
+  			'inner-border': 'inset 0 0 0 4px rgba(55, 65, 81, 1)',
+			boxshadow: "0px 4px 12px rgba(255, 255, 255, 0.1)"
+			
   		},
   		keyframes: {
   			pulse: {

@@ -2,4 +2,4 @@
 Reddit Sentiment and Trend Analysis Platform
 
 <h2>Architecture</h2>
-![My Drawing](architecture.svg)
+<img src="architecture.svg" alt="Architecture image" />

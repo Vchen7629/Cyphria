@@ -1,0 +1,6 @@
+services:
+  postgres-sql:
+    image: postgres
+    restart: always
+    volumes:
+      -

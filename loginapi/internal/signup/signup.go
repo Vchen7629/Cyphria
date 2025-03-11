@@ -6,17 +6,28 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	dbconn "github.com/vchen7629/cyphria/login-api/internal/db_connection"
+	"golang.org/x/crypto/bcrypt"
 )
 
-type SignUpUserInfo struct {
+type SignUpUserRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-func CreateNewUser(username string, password string) (bool, error) {
+func HashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 11);
+	if err != nil {
+		return "", err
+	}
+
+	return string(hashedPassword), nil
+}
+
+func CreateNewUser(username, password string) (bool, error) {
 	var inserted bool
 	err := dbconn.DBConn.QueryRow(context.Background(), `
 		INSERT INTO useraccount (uuid, username, password, creation)
@@ -42,7 +53,7 @@ func CreateNewUser(username string, password string) (bool, error) {
 }
 
 func HttpHandler(w http.ResponseWriter, r *http.Request) {
-	var payload SignUpUserInfo
+	var payload SignUpUserRequest
 	bodyerr := json.NewDecoder(r.Body).Decode(&payload)
 	if bodyerr != nil {
 		http.Error(w, "Error parsing json", http.StatusBadRequest)
@@ -50,7 +61,13 @@ func HttpHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	created, err := CreateNewUser(payload.Username, payload.Password)
+	hashed, hasherror := HashPassword(payload.Password)
+	if hasherror != nil {
+		http.Error(w, fmt.Sprintf("Error hashing password: %v", hasherror), http.StatusInternalServerError)
+		return
+	}
+
+	created, err := CreateNewUser(payload.Username, hashed)
 
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error creating user: %v", err), http.StatusInternalServerError)

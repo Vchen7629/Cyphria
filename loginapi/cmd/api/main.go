@@ -27,7 +27,7 @@ func main(){
 	config.PoolConfig()
 	dbconn.Main()
 	r.HandleFunc("/", helloWorld)
-	//r.HandleFunc("/login", login.Login)
+	//r.HandleFunc("/login", login.LoginHandler)
 	r.HandleFunc("/logout", logout.Logout)
 	r.HandleFunc("/signup",  signup.HttpHandler)
 	http.Handle("/", r)

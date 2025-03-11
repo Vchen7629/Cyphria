@@ -2,6 +2,9 @@ services:
   testing-postgres-db:
     image: postgres
     restart: always
+    environment:
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "account"
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     ports:

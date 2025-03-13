@@ -1,5 +1,5 @@
 import { Layers2 } from "lucide-react";
-import { HeaderComponent } from "../components/header";
+import { HeaderComponent } from "../components/header/header";
 import { SidebarComponent } from "../components/sidebar";
 import { DatePickerWithRange } from "../components/TopicTrendsPageComponents/datefilter";
 import { TrendsTimeChart } from "../components/TopicTrendsPageComponents/timeserieschart";

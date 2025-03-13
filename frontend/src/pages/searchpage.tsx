@@ -1,4 +1,4 @@
-import { HeaderComponent } from "../components/header";
+import { HeaderComponent } from "../components/header/header";
 import { SearchBar } from "../components/searchbar";
 import { SidebarComponent } from "../components/sidebar";
 

@@ -8,7 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/vchen7629/cyphria/login-api/config/poolconfig"
 	"github.com/vchen7629/cyphria/login-api/internal/db_connection"
-	//"github.com/vchen7629/cyphria/login-api/internal/login"
+	"github.com/vchen7629/cyphria/login-api/internal/login"
 	"github.com/vchen7629/cyphria/login-api/internal/logout"
 	"github.com/vchen7629/cyphria/login-api/internal/signup"
 )
@@ -27,7 +27,8 @@ func main(){
 	config.PoolConfig()
 	dbconn.Main()
 	r.HandleFunc("/", helloWorld)
-	//r.HandleFunc("/login", login.LoginHandler)
+	r.HandleFunc("/login", login.LoginHandler).
+		Methods("POST")
 	r.HandleFunc("/logout", logout.Logout)
 	r.HandleFunc("/signup",  signup.HttpHandler)
 	http.Handle("/", r)

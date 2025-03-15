@@ -3,11 +3,13 @@ import { cn } from "../lib/utils";
 import { LoginLogo } from "../components/LoginPageComponents/loginLogo";
 import { LoginForm } from "../components/LoginPageComponents/LoginForm";
 import { Home } from "lucide-react";
+import { Toaster } from "sonner";
 
 export default function LoginPage() {
     
     return (
         <main className="flex justify-center items-center h-[100vh] w-[100vw] bg-background">
+            <Toaster />
             <DotPattern
                 className={cn(
                 "[mask-image:radial-gradient(1300px_circle_at_center,white,transparent)]",

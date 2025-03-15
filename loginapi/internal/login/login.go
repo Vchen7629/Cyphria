@@ -75,7 +75,7 @@ func GenerateJwtToken(w http.ResponseWriter, username string, uuid string)  {
     }
 
 	cookie := http.Cookie{
-		Name: "Cookie",
+		Name: "accessToken",
 		Value: tokenString,
 		Expires: time.Now().Add(24 * time.Hour),
 	}
@@ -115,17 +115,17 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Print(uuid)
 	jwtStart := time.Now()
-	//GenerateJwtToken(w, payload.Username, uuid)
+	GenerateJwtToken(w, payload.Username, uuid)
 	jwtSince := time.Since(jwtStart)
 	w.Header().Set("Content-Type", "application/json")
 
 	respStart := time.Now()
-	response := map[string]string{
+	response := map[string]interface{}{
 		"message": "Login Successful!",
-		/*"user": map[string]string{
+		"user": map[string]string{
             "username": payload.Username,
             "uuid": uuid,
-        },*/
+        },
 	}
 	respTime := time.Since(respStart)
 

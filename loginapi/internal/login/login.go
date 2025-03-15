@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/golang-jwt/jwt"
 	dbconn "github.com/vchen7629/cyphria/login-api/internal/db_connection"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -21,29 +23,65 @@ type LoginResponse struct {
 	Message string `json:"message"`
 }
 
-type Claims struct {
-
+type UserInfo struct {
+	UserId string
+	Username string
 }
 
-func AuthenticateUser(username, password string) (bool, error) {
+type Claims struct {
+	*jwt.StandardClaims
+	TokenType string
+	UserInfo
+}
+
+func AuthenticateUser(username, password string) (bool, string, error) {
 	var storedpasswordhash string;
+	var storeduuid string;
 
 	err := dbconn.DBConn.QueryRow(context.Background(), 
-		"SELECT password FROM useraccount WHERE username = $1",
-	username).Scan(&storedpasswordhash)
+		"SELECT password, uuid FROM useraccount WHERE username = $1",
+	username).Scan(&storedpasswordhash, &storeduuid)
 
 	if err != nil {
-		return false, fmt.Errorf("error querying database: %w", err)
+		return false, "", fmt.Errorf("error querying database: %w", err)
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(storedpasswordhash), []byte(password))
 	if err != nil {
-		return false, nil
+		return false, "", nil
 	}
 
-	return true, nil
+	return true, storeduuid, nil
 }
 
+func GenerateJwtToken(w http.ResponseWriter, username string, uuid string)  {
+	claims := &Claims{
+		UserInfo: UserInfo{
+			Username: 	username,
+			UserId: 	uuid,
+		},
+		StandardClaims: &jwt.StandardClaims{
+			ExpiresAt: 	time.Now().Add(24 * time.Hour).Unix(),
+			Issuer: 	"Cyphria",
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := token.SignedString([]byte("AllYourBase"))
+    if err != nil {
+        http.Error(w, "Failed to generate token", http.StatusInternalServerError)
+        return
+    }
+
+	cookie := http.Cookie{
+		Name: "Cookie",
+		Value: tokenString,
+		Expires: time.Now().Add(24 * time.Hour),
+	}
+
+	http.SetCookie(w, &cookie)
+}
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var payload LoginCredentials
@@ -55,7 +93,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	login, err := AuthenticateUser(payload.Username, payload.Password)
+	login, uuid, err := AuthenticateUser(payload.Username, payload.Password)
 	if err != nil {
 		log.Printf("Authentication error: %v", err)
 		http.Error(w, "Something went wrong", http.StatusInternalServerError)
@@ -70,11 +108,17 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	response := map[string]string{
+	fmt.Print(uuid)
+	GenerateJwtToken(w, payload.Username, uuid)
+	w.Header().Set("Content-Type", "application/json")
+
+	response := map[string]interface{}{
 		"message": "Login Successful!",
+		"user": map[string]string{
+            "username": payload.Username,
+            "uuid": uuid,
+        },
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusAccepted)
 	json.NewEncoder(w).Encode(response)
 }

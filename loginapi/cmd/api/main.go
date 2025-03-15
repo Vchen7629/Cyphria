@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/vchen7629/cyphria/login-api/config/middleware"
 	"github.com/vchen7629/cyphria/login-api/config/poolconfig"
 	"github.com/vchen7629/cyphria/login-api/internal/db_connection"
 	"github.com/vchen7629/cyphria/login-api/internal/login"
@@ -27,13 +29,13 @@ func main(){
 	config.PoolConfig()
 	dbconn.Main()
 	r.HandleFunc("/", helloWorld)
-	r.HandleFunc("/login", login.LoginHandler).
-		Methods("POST")
-	r.HandleFunc("/logout", logout.Logout)
-	r.HandleFunc("/signup",  signup.HttpHandler)
+	r.HandleFunc("/login", login.LoginHandler).Methods(http.MethodPost, http.MethodOptions)
+	r.HandleFunc("/logout", logout.Logout).Methods(http.MethodPost, http.MethodOptions)
+	r.HandleFunc("/signup",  signup.HttpHandler).Methods(http.MethodPost, http.MethodOptions)
 	http.Handle("/", r)
+	corsRouter := middleware.CorsMiddleware(r)
 	srv := &http.Server {
-		Handler: r,
+		Handler: corsRouter,
 		Addr: "127.0.0.1:3000",
 	}
 	log.Fatal(srv.ListenAndServe())

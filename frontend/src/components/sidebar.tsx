@@ -5,6 +5,7 @@ import { SubredditStatisticsButton } from "../navigation/sidebarbuttons.tsx/subr
 import { BookmarkButton } from "../navigation/sidebarbuttons.tsx/bookmarkbutton";
 import { LogoButton } from "../navigation/sidebarbuttons.tsx/logobutton";
 import { UserStatisticsButton } from "../navigation/sidebarbuttons.tsx/userstatisticsbutton";
+import { LoginButton } from "../navigation/sidebarbuttons.tsx/loginbutton";
 
 export function SidebarComponent() {
 
@@ -19,6 +20,7 @@ export function SidebarComponent() {
                 <BookmarkButton />
             </div>
             <div className="fixed flex flex-col bottom-[5vh] space-y-[3vh] items-center">
+                <LoginButton/>
                 <LogoutButton/>
             </div>
         </main>

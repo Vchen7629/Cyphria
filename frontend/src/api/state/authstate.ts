@@ -1,23 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { email, userId, username } from "./types.ts";
+import { userId, username } from "./types.ts";
+import { getUserDataFromToken } from "../../utils/tokenUtils.ts";
 
+
+const tokenData = getUserDataFromToken()
 
 const authSlice = createSlice({
     name: "auth",
-    initialState: { userId: null, email: null, username: null, loggingOut: false }, 
+    initialState: { 
+        userId: tokenData?.userId || null, 
+        username: tokenData?.username || null, 
+        loggingOut: false 
+    }, 
     reducers: {
         setCredentials: (state, action) => {
-            const { userId, email, username } = action.payload
+            const { userId, username } = action.payload
             state.userId = userId
             state.username = username
-            state.email = email
             state.loggingOut = false;
         },
 
         logOut: (state) => {
             state.userId = null
             state.username = null
-            state.email = null
             state.loggingOut = true;
         },
 
@@ -32,7 +37,6 @@ export const { setCredentials, logOut, resetLoggingOutState } = authSlice.action
 export default authSlice.reducer
 
 export const selectCurrentuserId = (state: userId) => state.auth.userId
-export const selectCurrentEmail = (state: email) => state.auth.email;
 export const selectCurrentUsername = (state: username) => state.auth.username;
 export const selectLoggingOut = (state: { auth: { loggingOut: boolean }}) => state.auth.loggingOut;
 

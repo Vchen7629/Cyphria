@@ -7,8 +7,8 @@ export const authApiSlice = baseSlice.injectEndpoints({
             query: credentials => ({
                 url: "/login",
                 method: "POST",
-                body: { ...credentials},    
-                credentials: 'include',
+                body: { ...credentials},   
+                credentials: 'include', 
             }),
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {

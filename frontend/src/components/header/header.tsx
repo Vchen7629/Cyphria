@@ -1,10 +1,11 @@
 import { Bookmark, ChartSpline, Home, TextSearch, TrendingUp, User } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
+import { selectCurrentUsername } from "../../api/state/authstate";
 
 export function HeaderComponent() {
     const location = useLocation();
-    const username = useSelector((state: { auth: { username: string }}) => state.auth.username)
+    const username = useSelector(selectCurrentUsername)
     
     const PageName = location.pathname.slice(1, 30)
     console.log(location.pathname)

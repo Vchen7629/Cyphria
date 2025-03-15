@@ -75,7 +75,7 @@ func GenerateJwtToken(w http.ResponseWriter, username string, uuid string)  {
     }
 
 	cookie := http.Cookie{
-		Name: "Cookie",
+		Name: "accessToken",
 		Value: tokenString,
 		Expires: time.Now().Add(24 * time.Hour),
 	}
@@ -84,16 +84,21 @@ func GenerateJwtToken(w http.ResponseWriter, username string, uuid string)  {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
 	var payload LoginCredentials
 
 	requestbodyerr := json.NewDecoder(r.Body).Decode(&payload)
+	parsetime := time.Since(start)
 	if requestbodyerr != nil {
 		http.Error(w, "error parsing json body", http.StatusBadRequest)
 		return
 	}
 	defer r.Body.Close()
 
+	authStart := time.Now()
 	login, uuid, err := AuthenticateUser(payload.Username, payload.Password)
+	authTime := time.Since(authStart)
+
 	if err != nil {
 		log.Printf("Authentication error: %v", err)
 		http.Error(w, "Something went wrong", http.StatusInternalServerError)
@@ -109,9 +114,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Print(uuid)
+	jwtStart := time.Now()
 	GenerateJwtToken(w, payload.Username, uuid)
+	jwtSince := time.Since(jwtStart)
 	w.Header().Set("Content-Type", "application/json")
 
+	respStart := time.Now()
 	response := map[string]interface{}{
 		"message": "Login Successful!",
 		"user": map[string]string{
@@ -119,6 +127,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
             "uuid": uuid,
         },
 	}
+	respTime := time.Since(respStart)
 
+	totalTime := time.Since(start)
 	json.NewEncoder(w).Encode(response)
+	log.Printf("Login timing - Parse: %v, Auth: %v, JWT: %v, Response: %v, Total: %v",
+        parsetime, authTime, jwtSince, respTime, totalTime)
 }

@@ -1,5 +1,5 @@
 import { baseSlice } from "../base/baseSlice";
-import { setCredentials } from "../state/authstate";
+import { logOut, setCredentials } from "../state/authstate";
 
 export const authApiSlice = baseSlice.injectEndpoints({
     endpoints: builder => ({
@@ -25,8 +25,11 @@ export const authApiSlice = baseSlice.injectEndpoints({
             query: () => ({
                 url: "/logout",
                 method: "POST",
-                credentials: 'include',
-            })
+            }),
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                await queryFulfilled; 
+                dispatch(logOut());
+            }
         })
     })
 })

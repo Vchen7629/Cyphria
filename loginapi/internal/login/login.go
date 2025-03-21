@@ -75,9 +75,10 @@ func GenerateJwtToken(w http.ResponseWriter, username string, uuid string)  {
     }
 
 	cookie := http.Cookie{
-		Name: "accessToken",
-		Value: tokenString,
-		Expires: time.Now().Add(24 * time.Hour),
+		Name: 		"accessToken",
+		Value: 		tokenString,
+		Expires: 	time.Now().Add(24 * time.Hour),
+		Path: 		"/",
 	}
 
 	http.SetCookie(w, &cookie)

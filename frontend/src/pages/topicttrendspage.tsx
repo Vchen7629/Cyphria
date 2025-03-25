@@ -13,7 +13,7 @@ export default function SentimentEnhancedTrendsPage() {
             <div className="flex flex-col w-full font-bold">
                 <HeaderComponent/>
                 <section className="flex flex-col ml-[5vw] overflow-auto">
-                    <div className="relative flex items-center w-[85vw] h-[10vh] mt-[1vh]  space-x-[2vw]">
+                    <div className="relative flex items-center w-[85vw] h-[10vh] mt-[3vh]  space-x-[2vw]">
                         <div className="flex justify-center items-center">   
                             <Layers className="w-10 h-10"/>
                         </div>

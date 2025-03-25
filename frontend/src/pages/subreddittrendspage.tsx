@@ -13,8 +13,8 @@ export default function SubredditStatisticsPage() {
             <SidebarComponent/>
             <section className="flex flex-col w-full items-center font-bold">
                 <HeaderComponent/>
-                <section className="flex flex-col ml-[5vw] overflow-auto">
-                    <div className="relative flex items-center w-[85vw] h-[10vh] mt-[1vh]  space-x-[2vw]">
+                <section className="flex flex-col w-full px-[5vw] overflow-auto">
+                    <div className="relative flex items-center w-full h-[10vh] mt-[3vh]  space-x-[2vw]">
                         <div className="flex justify-center items-center">   
                             <Layers2 className="w-10 h-10"/>
                         </div>
@@ -22,25 +22,25 @@ export default function SubredditStatisticsPage() {
                             <span className="text-lg">Trends for "Subreddit"</span>
                             <span className="text-sm text-gray-400">Sentiment enhanced trends</span>
                         </div>
-                        <div className="absolute right-[6vw]">
+                        <div className="absolute right-0">
                            <DatePickerWithRange/> 
                         </div>
                     </div>
-                    <div className="flex mt-[2vh] space-x-[2vw]">
-                        <div>
-                            <div className="flex w-full items-center space-x-[2vw]">
-                                <div className="bg-[#141414] w-[25vw] h-[40vh] pl-[1.5vw] pt-[1.5vh] rounded-2xl border-2 border-bordercolor">
-                                    <header className="w-full h-fit py-2">
-                                        <span className="text-2xl font-thin text-gray-400">Trending Topics</span>
-                                    </header>
-                                </div>
-                                <TopTopicsBarChart/>
+                    <div className="flex flex-col mt-[2vh]">
+                        <div className="flex w-full items-center space-x-[2vw]">
+                            <div className="bg-[#141414] w-[25vw] h-[40vh] pl-[1.5vw] pt-[1.5vh] rounded-2xl border-2 border-bordercolor">
+                                <header className="w-full h-fit py-2">
+                                    <span className="text-2xl font-thin text-gray-400">Trending Topics</span>
+                                </header>
                             </div>
-                            <div className="bg-[#141414] w-[52vw] mt-[5vh]">
-                                <TrendsTimeChart/>
-                            </div>
+                            <TopTopicsBarChart/>
                         </div>
-                        <PostingFrequencyHeatMapChart/>
+                        <div className="bg-[#141414] w-full mt-[5vh]">
+                            <TrendsTimeChart/>
+                        </div>
+                        <div className="w-full mt-[5vh]">
+                            <PostingFrequencyHeatMapChart/>
+                        </div>                    
                     </div>
                 </section>
             </section>

@@ -8,7 +8,11 @@ from dataprocessing import generate_vector_embeddings, sentimentAnalysis, catego
 
 class Apache_Spark:
     def __init__(self):
-        self.spark = SparkSession.builder.getOrCreate()
+        self.spark = (
+            SparkSession.builder
+                .config("spark.ui.port", "9095")
+                .getOrCreate()
+        )
         
         self.schema = StructType([
             StructField("post_id", StringType(), True),

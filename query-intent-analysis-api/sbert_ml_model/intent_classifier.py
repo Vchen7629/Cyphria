@@ -1,5 +1,4 @@
 from sentence_transformers import SentenceTransformer, util
-import numpy as np
 import time
 
 
@@ -45,18 +44,14 @@ class IntentClassifier:
         start_time = time.time()
         query_embeddings = self.model.encode(query, convert_to_tensor=True)
 
-        sim_factual = util.cos_sim(query_embeddings, self.embeddings_factual)
-        sim_comparison = util.cos_sim(query_embeddings, self.embeddings_comparison)
-        sim_opinion = util.cos_sim(query_embeddings, self.embeddings_opinion)
-
-        avg_factual = sim_factual.mean().item()
-        avg_comparison = sim_comparison.mean().item()
-        avg_opinion = sim_opinion.mean().item()
+        sim_factual = util.cos_sim(query_embeddings, self.embeddings_factual).mean().item()
+        sim_comparison = util.cos_sim(query_embeddings, self.embeddings_comparison).mean().item()
+        sim_opinion = util.cos_sim(query_embeddings, self.embeddings_opinion).mean().item()
 
         scores = {
-            'FACTUAL': avg_factual,
-            'COMPARISON': avg_comparison,
-            'OPINION': avg_opinion
+            'FACTUAL': sim_factual,
+            'COMPARISON': sim_comparison,
+            'OPINION': sim_opinion
         }
 
         print(f"Word vectors loaded in {time.time() - start_time:.4f} seconds")

@@ -1,16 +1,14 @@
-from sentence_transformers import SentenceTransformer
-import time
+import sys, os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from components import sbert_model
 
 class Gen_Vector_Embeddings:
     def __init__(self):
-        start_time = time.time()
-
-        self.model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", backend="onnx")
-        print(f"Initialized the sbert ml model in: {time.time() - start_time:.4f} seconds")
-
+        self.model = sbert_model.get_model()
+    
     def Generate_Vector_Embeddings(self, query):
         embeddings = self.model.encode(query)
-        
         return embeddings
 
 Embedding = Gen_Vector_Embeddings()

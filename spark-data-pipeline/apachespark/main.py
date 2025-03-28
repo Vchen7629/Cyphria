@@ -4,7 +4,7 @@ from pyspark.sql.functions import array, lit
 import json, threading, os, sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from dataprocessing import generate_vector_embeddings, sentimentAnalysis
+from dataprocessing import generate_vector_embeddings, sentimentAnalysis, categoryClassifier
 
 class Apache_Spark:
     def __init__(self):
@@ -12,6 +12,7 @@ class Apache_Spark:
         
         self.schema = StructType([
             StructField("post_id", StringType(), True),
+            StructField("category", StringType(), True),
             StructField("vector_embedding", ArrayType(FloatType()), True),
             StructField("sentiment_score", FloatType(), True),
             StructField("body", StringType(), True),
@@ -34,6 +35,7 @@ class Apache_Spark:
             data.get("id", ""),
             None,
             None,
+            None,
             data.get("body", ""),
             data.get("subreddit", ""),
             data.get("date", "")
@@ -54,11 +56,13 @@ class Apache_Spark:
         processed_data = []
         for row in batch_df.collect():
             body = row.body
+            category = categoryClassifier.Category.Classify_Category(body)
             vector_embedding = generate_vector_embeddings.Embedding.Generate_Vector_Embeddings(body)
             sentiment_score = sentimentAnalysis.Sentiments.SentimentAnalysis(body)
             
             processed_data.append([
                 row.post_id,
+                category,
                 vector_embedding.tolist(), 
                 sentiment_score,
                 body, 

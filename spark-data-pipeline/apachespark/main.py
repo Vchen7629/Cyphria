@@ -4,23 +4,23 @@ from pyspark.sql.functions import array, lit
 import json, threading, os, sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from dataprocessing import generate_vector_embeddings
+from dataprocessing import generate_vector_embeddings, sentimentAnalysis
 
 class Apache_Spark:
     def __init__(self):
         self.spark = SparkSession.builder.getOrCreate()
         
         self.schema = StructType([
+            StructField("post_id", StringType(), True),
             StructField("vector_embedding", ArrayType(FloatType()), True),
+            StructField("sentiment_score", FloatType(), True),
             StructField("body", StringType(), True),
             StructField("subreddit", StringType(), True),
             StructField("date", StringType(), True)
         ])
         
-        #creating batch processing q
-
         self.vector_embedding_dataframe = self.spark.createDataFrame([], self.schema)
-        self.vector_embedding_dataframe
+        self.batch_buffer = []
         
         self.lock = threading.Lock()
     
@@ -29,38 +29,50 @@ class Apache_Spark:
             data = query
         else:
             data = json.loads(query)
-            
-        post_body = data['body']
-        vector_embedding = generate_vector_embeddings.Embedding.Generate_Vector_Embeddings(post_body)
-        
-        print("Vector Embedding Type:", type(vector_embedding))
-        print("Vector Embedding:", vector_embedding)
-        print("Vector Embedding Shape:", vector_embedding.shape if hasattr(vector_embedding, 'shape') else "N/A")
                         
-        rows = [(
-            vector_embedding.tolist(),
+        row = (
+            data.get("id", ""),
+            None,
+            None,
             data.get("body", ""),
             data.get("subreddit", ""),
             data.get("date", "")
-        )]
-        
-        new_row_df = self.spark.createDataFrame(rows, self.schema)
+        )
         
         with self.lock:
-            self.vector_embedding_dataframe = self.vector_embedding_dataframe.union(new_row_df)
+            self.batch_buffer.append(row)
         
-        return self.vector_embedding_dataframe
-
     def Process_Batch(self):
         with self.lock:
-            batch = self.vector_embedding_dataframe
-            data = batch.collect()
-            for row in data:
-                print(row)
-            self.vector_embedding_dataframe = self.spark.createDataFrame([], self.schema)
-            self.vector_embedding_dataframe
+            batch_data = self.batch_buffer[:]
+            self.batch_buffer = []
+        
+        if not batch_data:
+            return 0
+        
+        batch_df = self.spark.createDataFrame(batch_data, schema=self.schema)
+        processed_data = []
+        for row in batch_df.collect():
+            body = row.body
+            vector_embedding = generate_vector_embeddings.Embedding.Generate_Vector_Embeddings(body)
+            sentiment_score = sentimentAnalysis.Sentiments.SentimentAnalysis(body)
             
-        count = batch.count()
+            processed_data.append([
+                row.post_id,
+                vector_embedding.tolist(), 
+                sentiment_score,
+                body, 
+                row.subreddit, 
+                row.date
+            ])
+
+        processed_df = self.spark.createDataFrame(processed_data, self.schema)
+        
+        with self.lock:
+            self.vector_embedding_dataframe = self.vector_embedding_dataframe.union(processed_df) # this creates an entirely new dataframe/doesnt
+            self.vector_embedding_dataframe.show()                                                # append to previous ones when processing each batch maybe needs fix
+            
+        count = len(processed_data)
         print(f"Processing batch with {count} records")
         return count
         

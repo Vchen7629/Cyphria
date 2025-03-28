@@ -20,19 +20,18 @@ def PostData():
         return jsonify({"error": "Request must be Json"}), 400
     
     data = request.json
-    df_result = main.Spark.inputData(data)
+    main.Spark.inputData(data)
 
     return jsonify({
         "message": "Successfully Sent Query to ml model",
-        "predicted_category": df_result.count(),
     }), 200
 
 @app.route("/batch", methods=["POST"])
 def Process_Batch():
     batchCount = main.Spark.Process_Batch()
     return jsonify({
-        "message": "Successfully Sent Query to ml model",
-        "predicted_category": batchCount,
+        "message": "Successfully Generated Vector Embeddings for batch",
+        "Batch Count": batchCount,
     }), 200
     
 if __name__ == "__main__":

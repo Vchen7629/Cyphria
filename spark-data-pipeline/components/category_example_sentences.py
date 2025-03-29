@@ -171,3 +171,19 @@ housing = [
     "Urban vs. suburban vs. rural living comparisons and experiences",
     "Moving advice, relocation tips, and settling into new homes"
 ]
+
+category_names = {
+    "technology": technology,
+    "fitness": fitness,
+    "sports": sports,
+    "finance": finance,
+    "food": food,
+    "gaming": gaming,
+    "news": news,
+    "science": science,
+    "animals": animals,
+    "entertainment": entertainment,
+    "education": education,
+    "travel": travel,
+    "housing": housing,
+}

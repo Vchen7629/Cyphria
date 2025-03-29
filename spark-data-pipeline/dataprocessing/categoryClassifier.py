@@ -1,62 +1,77 @@
-import sys, os, time
+import time
 from sentence_transformers import util
+import torch
+import pandas as pd
+from pyspark.sql.functions import pandas_udf
+from pyspark.sql.types import StringType, ArrayType, FloatType
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from components import sbert_model, category_example_sentences
+from components.category_example_sentences import category_names
+
+category_instance = None
+
+def Get_Classifier_Instance():
+    global category_instance
+    if category_instance is None:
+        category_instance = CategoryClassifier()
+    return category_instance
 
 class CategoryClassifier:
-    def __init__(self):
-        self.model = sbert_model.get_model()
+    model_instance = sbert_model.get_model()
+    category_embeddings_computed = False
+    
         
-        self.technology_embedding = self.model.encode(category_example_sentences.technology, convert_to_tensor=True)
-        self.fitness_embedding = self.model.encode(category_example_sentences.fitness, convert_to_tensor=True)
-        self.sports_embedding = self.model.encode(category_example_sentences.sports, convert_to_tensor=True)
-        self.finance_embedding = self.model.encode(category_example_sentences.finance, convert_to_tensor=True)
-        self.food_embedding = self.model.encode(category_example_sentences.food, convert_to_tensor=True)
-        self.gaming_embedding = self.model.encode(category_example_sentences.gaming, convert_to_tensor=True)
-        self.news_embedding = self.model.encode(category_example_sentences.news, convert_to_tensor=True)
-        self.science_embedding = self.model.encode(category_example_sentences.science, convert_to_tensor=True)
-        self.animal_embedding = self.model.encode(category_example_sentences.animals, convert_to_tensor=True)
-        self.entertainment_embedding = self.model.encode(category_example_sentences.entertainment, convert_to_tensor=True)
-        self.education_embedding = self.model.encode(category_example_sentences.education, convert_to_tensor=True)
-        self.travel_embedding = self.model.encode(category_example_sentences.travel, convert_to_tensor=True)
-        self.housing_embedding = self.model.encode(category_example_sentences.housing, convert_to_tensor=True)
-        
-    def Classify_Category(self, query):
-        start_time = time.time()
-        input_vector = self.model.encode(query, convert_to_tensor=True)
-        
-        technology_sim = util.cos_sim(input_vector, self.technology_embedding).mean().item()
-        Sports_sim = util.cos_sim(input_vector, self.sports_embedding).mean().item()
-        fitness_sim = util.cos_sim(input_vector, self.fitness_embedding).mean().item()
-        finance_sim = util.cos_sim(input_vector, self.finance_embedding).mean().item()
-        food_sim = util.cos_sim(input_vector, self.food_embedding).mean().item()
-        gaming_sim = util.cos_sim(input_vector, self.gaming_embedding).mean().item()
-        news_sim = util.cos_sim(input_vector, self.news_embedding).mean().item()
-        science_sim = util.cos_sim(input_vector, self.science_embedding).mean().item()
-        animal_sim = util.cos_sim(input_vector, self.animal_embedding).mean().item()
-        entertainment_sim = util.cos_sim(input_vector, self.entertainment_embedding).mean().item()
-        education_sim = util.cos_sim(input_vector, self.education_embedding).mean().item()
-        travel_sim = util.cos_sim(input_vector, self.travel_embedding).mean().item()
-        housing_sim = util.cos_sim(input_vector, self.housing_embedding).mean().item()
-        
-        scores = {
-            "technology": technology_sim,
-            "sports": Sports_sim,
-            "fitness": fitness_sim,
-            "finance": finance_sim,
-            "food": food_sim,
-            "gaming": gaming_sim,
-            "news": news_sim,
-            "science": science_sim,
-            "animal": animal_sim,
-            "entertainment": entertainment_sim,
-            "education": education_sim,
-            "travel": travel_sim,
-            "housing": housing_sim
-        }
-        print(f"Classified in: {time.time() - start_time:.4f} seconds")
-        return max(scores, key=scores.get)
+    @classmethod
+    def get_category_embeddings(cls):
+        if not cls.category_embeddings_computed:
+            cls.category_mapping = []
+            embeddings_list = []
+            for name, sentences in category_names.items():
+                embeddings = cls.model_instance.encode(sentences, convert_to_tensor=True)
+                embeddings_list.append(embeddings)
+                cls.category_mapping.extend([name] * len(sentences))
 
-Category = CategoryClassifier()
+            cls.category_tensor = torch.cat(embeddings_list, dim=0)
+            cls.category_embeddings_computed = True
+            print("Category embeddings computed for worker.")
+        return cls.category_tensor, cls.category_mapping
+    
+    def __init__(self):
+        self.model = self.model_instance
+        self.category_tensor, self.category_name = self.get_category_embeddings()
+        if self.category_tensor is None or self.category_name is None:
+            raise RuntimeError("Category Classifier embeddings failed to initialize.")
+        
+    def Classify_Category(self, query: pd.Series) -> pd.Series:     
+        try:
+            input_embeddings = self.model.encode(query.tolist(), convert_to_tensor=True, batch_size=64)
+            
+            sim = util.semantic_search(
+                input_embeddings,
+                self.category_tensor,
+                top_k=1
+            )
+            
+            results = []
+            for sim_list in sim:
+                if sim_list:
+                    best_sim_category_index = sim_list[0]['corpus_id']
+                    category_name = self.category_name[best_sim_category_index]
+                    results.append(category_name)
+                else:
+                    results.append(None)
+                    
+            return pd.Series(results)
+
+        except Exception as e:
+            print(f"Error generating embedding batch. Error: {e}")
+            return pd.Series([None] * len(query))
+            
+@pandas_udf(StringType())
+def Category_Classifier_Pandas_Udf(text: pd.Series) -> pd.Series:
+    start_time = time.time()
+    category = Get_Classifier_Instance()
+    print(f"Classified Category in: {time.time() - start_time:.4f} seconds")
+    return category.Classify_Category(text)
+    
 

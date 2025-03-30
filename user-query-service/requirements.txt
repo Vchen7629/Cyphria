@@ -1,0 +1,4 @@
+# Required Dependencies/Imports
+Flask,
+Sbert,
+ratelimiter

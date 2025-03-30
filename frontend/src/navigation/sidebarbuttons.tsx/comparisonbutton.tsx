@@ -1,11 +1,13 @@
 import { GitCompareArrows } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
-import { expand } from "./types";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { selectExpandState } from "../../app/stateSlices/expandSlice";
 
-export function ComparisonButton({ expand }: expand) {
+export function ComparisonButton() {
     const navigate = useNavigate();
     const location = useLocation();
+    const expand = useSelector(selectExpandState)
     const [active, setActive] = useState(false)
 
     function handleNavigate() {

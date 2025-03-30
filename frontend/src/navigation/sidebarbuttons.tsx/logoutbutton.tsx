@@ -1,11 +1,13 @@
 import { LogOut } from 'lucide-react';
-import { useLogoutMutation } from '../../api/auth-slices/authApiSlice';
+import { useLogoutMutation } from '../../app/auth-slices/authApiSlice';
 import { useNavigate } from 'react-router';
-import { expand } from './types';
+import { useSelector } from 'react-redux';
+import { selectExpandState } from '../../app/stateSlices/expandSlice';
 
-export function LogoutButton({ expand }: expand) {
+export function LogoutButton() {
     const navigate = useNavigate()
     const [logout, {isSuccess, isError}] = useLogoutMutation()
+    const expand = useSelector(selectExpandState)
 
     async function handleLogout() {
         try {

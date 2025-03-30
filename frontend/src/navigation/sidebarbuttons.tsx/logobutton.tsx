@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router"
 import Logo from "../../assets/logo.svg"
-import { expand } from "./types"
+import { useSelector } from "react-redux"
+import { selectExpandState } from "../../app/stateSlices/expandSlice"
 
-export function LogoButton({ expand }: expand) {
+export function LogoButton() {
     const navigate = useNavigate()
+    const expand = useSelector(selectExpandState)
     
     function handleNavigate() {
         navigate("/")

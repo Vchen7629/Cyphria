@@ -1,4 +1,4 @@
-import { Bookmark, ChartSpline, Home, TextSearch, TrendingUp, User } from "lucide-react";
+import { Bookmark, ChartColumnStacked, ChartSpline, GitCompareArrowsIcon, Home, MessageSquareShare, TextSearch, TrendingUp, User } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { selectCurrentUsername } from "../../api/state/authstate";
@@ -13,11 +13,15 @@ export function HeaderComponent() {
     return (
         <header className="flex border-b-[1px] justify-between items-center border-bordercolor h-[10vh] w-[100%] px-[3vw]">
             <div className="flex items-center space-x-[2vw]">
-                {PageName === "search" ? (
+                {PageName === "comparison" ? (
                     <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">
-                        <TextSearch />
+                        <GitCompareArrowsIcon/>
                     </div>
-                ) : PageName === "subredditstatistics" ? (
+                ) : PageName === "topic" ? (
+                    <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">
+                        <MessageSquareShare />
+                    </div>
+                ) : PageName === "subreddit" ? (
                     <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">
                         <ChartSpline />
                     </div>
@@ -25,26 +29,29 @@ export function HeaderComponent() {
                     <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">
                         <Bookmark />
                     </div>
-                ) : PageName === "userstatistics" ? (
+                ) : PageName === "user" ? (
                     <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">
                         <User />
                     </div>
-                ) : PageName === "trendingtopics" ? (
+                ) : PageName === "category" ? (
                     <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">
-                        <TrendingUp />
+                        <ChartColumnStacked />
                     </div>
                 ) : (
                     <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">
                         <Home/>
                     </div>
                 )}
-                {PageName === "trendingtopics" ? (
-                    <span className="text-xl font-bold">{"Trending Topics For Category"}</span>
+                {PageName === "comparison" ? (
+                    <span className="text-xl font-bold">{"Sentiment enhanced Comparison for topics"}</span>
+                ) : PageName === "topic" ? (
+                    <span className="text-xl font-bold">{"Topic Sentiments and Trends"}</span>
+                ) : PageName === "category" ? (
+                    <span className="text-xl font-bold">{"Category Sentiments and Trends"}</span>
+                ) : PageName === "subreddit" ? (
+                    <span className="text-xl font-bold">{"Subreddit Sentiments and Trends"}</span>
 
-                ) : PageName === "subredditstatistics" ? (
-                    <span className="text-xl font-bold">{"Subreddit Statistics"}</span>
-
-                ) : PageName === "userstatistics" ? (
+                ) : PageName === "user" ? (
                     <span className="text-xl font-bold">{"Your Statistics"}</span>
                 ) : (
                     <span className="text-xl font-bold">{PageName || "Home"}</span>

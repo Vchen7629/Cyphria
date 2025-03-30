@@ -129,7 +129,7 @@ class Apache_Spark:
             
             processed_df.cache()
             
-            processed_df.show(5, vertical=True) # this adds 8 seconds
+            #processed_df.show(5, vertical=True) # this adds 8 seconds
                 
             processed_count = processed_df.count()
             

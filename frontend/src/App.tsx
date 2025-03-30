@@ -2,9 +2,10 @@ import { lazy, useEffect } from "react"
 import { Routes, Route, useLocation } from "react-router"
 
 const Homepage = lazy(() => (import("./pages/homepage.tsx")))
-const Searchpage = lazy(() => (import("./pages/searchpage.tsx")))
-const Trendingtopicspage = lazy(() => (import("./pages/topicttrendspage.tsx")))
+const Searchpage = lazy(() => (import("./pages/topictrendspage.tsx")))
+const CategoryTrendsPage = lazy(() => (import("./pages/categorytrendspage.tsx")))
 const Subredditstatisticspage = lazy(() => (import("./pages/subreddittrendspage.tsx")))
+const ComparisonPage = lazy(() => (import("./pages/comparisonpage.tsx")))
 const UserStatisticsPage = lazy(() => (import("./pages/userstatisticspage.tsx")))
 const Bookmarkpage = lazy(() => (import("./pages/bookmarkpage.tsx")))
 const Profilepage = lazy(() => (import("./pages/profilepage.tsx")))
@@ -21,10 +22,11 @@ function App() {
   return (
     <Routes>
       <Route path="" element={<Homepage/>}/>
-      <Route path="/search" element={<Searchpage/>}/>
-      <Route path="/subredditstatistics" element={<Subredditstatisticspage />}/>
-      <Route path="/trendingtopics" element={<Trendingtopicspage/>}/>
-      <Route path="/userstatistics" element={<UserStatisticsPage/>}/>
+      <Route path="/topic" element={<Searchpage/>}/>
+      <Route path="/subreddit" element={<Subredditstatisticspage />}/>
+      <Route path="/category" element={<CategoryTrendsPage/>}/>
+      <Route path="/comparison" element={<ComparisonPage/>}/>
+      <Route path="/user" element={<UserStatisticsPage/>}/>
       <Route path="/bookmarks" element={<Bookmarkpage/>}/>
       <Route path="/profile" element={<Profilepage/>}/>
       <Route path="/login" element={<LoginPage/>} />

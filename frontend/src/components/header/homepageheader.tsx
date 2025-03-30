@@ -17,7 +17,7 @@ export default function HomepageHeader() {
     }
 
     function handleGetStarted() {
-        navigate("/search")
+        navigate("topic")
     }
 
 

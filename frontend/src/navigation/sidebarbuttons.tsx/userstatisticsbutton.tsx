@@ -5,7 +5,7 @@ export function UserStatisticsButton() {
     const navigate = useNavigate()
 
     function handleNavigate() {
-        navigate("/userstatistics")
+        navigate("/user")
     }
     
     return (

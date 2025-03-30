@@ -5,7 +5,7 @@ export function SubredditStatisticsButton() {
     const navigate = useNavigate()
 
     function handleNavigate() {
-        navigate("/subredditstatistics")
+        navigate("/subreddit")
     }
 
     return (

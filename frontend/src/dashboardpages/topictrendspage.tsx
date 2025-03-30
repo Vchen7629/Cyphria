@@ -9,10 +9,10 @@ export default function SearchPage() {
     return (
         <main className="flex  w-[100vw] h-[100vh] bg-background">
             <SidebarComponent/>
-            <div className="flex flex-col w-full font-bold">
+            <div className="flex flex-col w-[85vw] font-bold">
                 <HeaderComponent/>
                 <section className="flex flex-col ml-[5vw] overflow-auto">
-                    <div className="relative flex items-center w-[85vw] h-[10vh] mt-[3vh]  space-x-[2vw]">
+                    <div className="relative flex items-center w-full h-[10vh] mt-[3vh]  space-x-[2vw]">
                         <div className="flex justify-center items-center">   
                             <MessageSquareMore className="w-10 h-10"/>
                         </div>
@@ -29,7 +29,7 @@ export default function SearchPage() {
                             <span className="text-2xl font-thin text-gray-400">Trending Topics</span>
                         </header>
                     </div>
-                    <div className="bg-[#141414] w-[85vw] mt-[5vh]">
+                    <div className="bg-[#141414] w-[95%] mt-[5vh]">
                         <TrendsTimeChart/>
                     </div>
                 </section>

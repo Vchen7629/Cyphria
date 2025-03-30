@@ -11,7 +11,7 @@ export default function SubredditStatisticsPage() {
     return (
         <main className="flex  w-[100vw] h-[100vh] bg-background">
             <SidebarComponent/>
-            <section className="flex flex-col w-full items-center font-bold">
+            <section className="flex flex-col w-[85vw] items-center font-bold">
                 <HeaderComponent/>
                 <section className="flex flex-col w-full px-[5vw] overflow-auto">
                     <div className="relative flex items-center w-full h-[10vh] mt-[3vh]  space-x-[2vw]">

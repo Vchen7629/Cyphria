@@ -1,7 +1,7 @@
 import { lazy, useEffect } from "react"
 import { Routes, Route, useLocation } from "react-router"
 
-const Homepage = lazy(() => (import("./dashboardpages/homepage.tsx")))
+const Homepage = lazy(() => (import("./homesubpages/homepage.tsx")))
 const FeaturesPage = lazy(() => (import("./homesubpages/featurespage.tsx")))
 const ContactPage = lazy(() => (import("./homesubpages/contactpage.tsx")))
 const SearchPage = lazy(() => (import("./dashboardpages/topictrendspage.tsx")))

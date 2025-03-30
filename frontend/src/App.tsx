@@ -1,15 +1,17 @@
 import { lazy, useEffect } from "react"
 import { Routes, Route, useLocation } from "react-router"
 
-const Homepage = lazy(() => (import("./pages/homepage.tsx")))
-const Searchpage = lazy(() => (import("./pages/topictrendspage.tsx")))
-const CategoryTrendsPage = lazy(() => (import("./pages/categorytrendspage.tsx")))
-const Subredditstatisticspage = lazy(() => (import("./pages/subreddittrendspage.tsx")))
-const ComparisonPage = lazy(() => (import("./pages/comparisonpage.tsx")))
-const UserStatisticsPage = lazy(() => (import("./pages/userstatisticspage.tsx")))
-const Bookmarkpage = lazy(() => (import("./pages/bookmarkpage.tsx")))
-const Profilepage = lazy(() => (import("./pages/profilepage.tsx")))
-const LoginPage = lazy(() => (import("./pages/loginpage.tsx")))
+const Homepage = lazy(() => (import("./dashboardpages/homepage.tsx")))
+const FeaturesPage = lazy(() => (import("./homesubpages/featurespage.tsx")))
+const ContactPage = lazy(() => (import("./homesubpages/contactpage.tsx")))
+const SearchPage = lazy(() => (import("./dashboardpages/topictrendspage.tsx")))
+const CategoryTrendsPage = lazy(() => (import("./dashboardpages/categorytrendspage.tsx")))
+const SubredditStatisticsPage = lazy(() => (import("./dashboardpages/subreddittrendspage.tsx")))
+const ComparisonPage = lazy(() => (import("./dashboardpages/comparisonpage.tsx")))
+const UserStatisticsPage = lazy(() => (import("./dashboardpages/userstatisticspage.tsx")))
+const BookmarkPage = lazy(() => (import("./dashboardpages/bookmarkpage.tsx")))
+const ProfilePage = lazy(() => (import("./dashboardpages/profilepage.tsx")))
+const LoginPage = lazy(() => (import("./dashboardpages/loginpage.tsx")))
 
 function App() {
   const location = useLocation();
@@ -22,13 +24,15 @@ function App() {
   return (
     <Routes>
       <Route path="" element={<Homepage/>}/>
-      <Route path="/topic" element={<Searchpage/>}/>
-      <Route path="/subreddit" element={<Subredditstatisticspage />}/>
+      <Route path="features" element={<FeaturesPage/>}/>
+      <Route path="contact" element={<ContactPage/>}/>
+      <Route path="/topic" element={<SearchPage/>}/>
+      <Route path="/subreddit" element={<SubredditStatisticsPage />}/>
       <Route path="/category" element={<CategoryTrendsPage/>}/>
       <Route path="/comparison" element={<ComparisonPage/>}/>
       <Route path="/user" element={<UserStatisticsPage/>}/>
-      <Route path="/bookmarks" element={<Bookmarkpage/>}/>
-      <Route path="/profile" element={<Profilepage/>}/>
+      <Route path="/bookmarks" element={<BookmarkPage/>}/>
+      <Route path="/profile" element={<ProfilePage/>}/>
       <Route path="/login" element={<LoginPage/>} />
     </Routes>
   )

@@ -1,7 +1,4 @@
-import { ChartLine } from 'lucide-react';
-import { HeaderComponent } from '../components/header/header';
 import HomepageHeader from '../components/header/homepageheader';
-import { SidebarComponent } from '../components/sidebar';
 
 export default function Homepage() {
 

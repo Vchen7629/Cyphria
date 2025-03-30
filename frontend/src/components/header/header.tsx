@@ -1,4 +1,4 @@
-import { Bookmark, ChartColumnStacked, ChartSpline, GitCompareArrowsIcon, Home, MessageSquareShare, TextSearch, TrendingUp, User } from "lucide-react";
+import { Bookmark, ChartColumnStacked, ChartSpline, GitCompareArrowsIcon, Home, MessageSquareShare, User } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { selectCurrentUsername } from "../../api/state/authstate";

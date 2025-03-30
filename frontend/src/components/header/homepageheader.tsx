@@ -9,7 +9,7 @@ export default function HomepageHeader() {
     }
 
     function handleFeatures() {
-        navigate("/navigate")
+        navigate("/features")
     }   
 
     function handleContact() {

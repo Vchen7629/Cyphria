@@ -1,15 +1,18 @@
-import { ArrowRightLeft } from "lucide-react"
+import { ArrowRightLeft, Home } from "lucide-react"
 import { HeaderComponent } from "../components/header/header"
 import { SidebarComponent } from "../components/sidebar"
 import { DatePickerWithRange } from "../components/TopicTrendsPageComponents/datefilter"
 import { TrendsTimeChart } from "../components/TopicTrendsPageComponents/timeserieschart"
+import { selectExpandState } from "../app/stateSlices/expandSlice"
+import { useSelector } from "react-redux"
 
 const ComparisonPage = () => {
+    const expand = useSelector(selectExpandState)
 
     return (
         <main className="flex  w-[100vw] h-[100vh] bg-background">
             <SidebarComponent/>
-            <div className="flex flex-col w-[85vw] font-bold">
+            <div className={`flex flex-col ${expand ? "w-[85vw]" : "w-[95vw]"} font-bold`}>
                 <HeaderComponent/>
                 <section className="flex flex-col ml-[5vw] overflow-auto">
                     <div className="relative flex items-center w-full h-[10vh] mt-[3vh]  space-x-[2vw]">
@@ -32,6 +35,12 @@ const ComparisonPage = () => {
                     <div className="bg-[#141414] w-[95%] mt-[5vh]">
                         <TrendsTimeChart/>
                     </div>
+                    <a 
+                        className="fixed flex justify-center items-center bottom-4 right-4 w-12 h-12 bg-card hover:bg-logo rounded-xl border-2 border-interactive"
+                        href="/"
+                    >
+                        <Home/>
+                    </a>
                     
                 </section>
             </div>

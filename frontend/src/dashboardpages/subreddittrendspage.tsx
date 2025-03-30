@@ -1,17 +1,20 @@
-import { Layers2 } from "lucide-react";
+import { Home, Layers2 } from "lucide-react";
 import { HeaderComponent } from "../components/header/header";
 import { SidebarComponent } from "../components/sidebar";
 import { DatePickerWithRange } from "../components/TopicTrendsPageComponents/datefilter";
 import { TrendsTimeChart } from "../components/TopicTrendsPageComponents/timeserieschart";
 import { TopTopicsBarChart } from "../components/SubredditTrendsPageComponents/toptopicsbarchart";
 import { PostingFrequencyHeatMapChart } from "../components/SubredditTrendsPageComponents/postingfrequencyheatmap";
+import { useSelector } from "react-redux";
+import { selectExpandState } from "../app/stateSlices/expandSlice";
 
 export default function SubredditStatisticsPage() {
+    const expand = useSelector(selectExpandState)
 
     return (
         <main className="flex  w-[100vw] h-[100vh] bg-background">
             <SidebarComponent/>
-            <section className="flex flex-col w-[85vw] items-center font-bold">
+            <section className={`flex flex-col ${expand ? "w-[85vw]" : "w-[95vw]"} font-bold`}>
                 <HeaderComponent/>
                 <section className="flex flex-col w-full px-[5vw] overflow-auto">
                     <div className="relative flex items-center w-full h-[10vh] mt-[3vh]  space-x-[2vw]">
@@ -22,7 +25,7 @@ export default function SubredditStatisticsPage() {
                             <span className="text-lg">Trends for "Subreddit"</span>
                             <span className="text-sm text-gray-400">Sentiment enhanced trends</span>
                         </div>
-                        <div className="absolute right-0">
+                        <div className="absolute right-[3vw]">
                            <DatePickerWithRange/> 
                         </div>
                     </div>
@@ -42,6 +45,12 @@ export default function SubredditStatisticsPage() {
                             <PostingFrequencyHeatMapChart/>
                         </div>                    
                     </div>
+                    <a 
+                        className="fixed flex justify-center items-center bottom-4 right-8 w-12 h-12 bg-card hover:bg-logo rounded-xl border-2 border-interactive"
+                        href="/"
+                    >
+                        <Home/>
+                    </a>
                 </section>
             </section>
         </main>

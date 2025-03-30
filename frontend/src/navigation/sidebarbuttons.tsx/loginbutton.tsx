@@ -1,9 +1,11 @@
 import { LogIn } from 'lucide-react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { expand } from './types';
+import { selectExpandState } from '../../app/stateSlices/expandSlice';
 
-export function LoginButton({ expand }: expand) {
+export function LoginButton() {
     const navigate = useNavigate()
+    const expand = useSelector(selectExpandState)
 
     function handleLogin() {
         navigate("/login")

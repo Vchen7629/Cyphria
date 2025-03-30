@@ -1,12 +1,14 @@
 import { Bookmark } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
-import { expand } from "./types";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { selectExpandState } from "../../app/stateSlices/expandSlice";
 
-export function BookmarkButton({ expand }: expand) {
+export function BookmarkButton() {
     const navigate = useNavigate()
     const location = useLocation();
     const [active, setActive] = useState(false)
+    const expand = useSelector(selectExpandState)
 
     useEffect(() => {
         if (location.pathname === "/bookmarks") {

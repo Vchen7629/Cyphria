@@ -1,7 +1,7 @@
-import { baseSlice } from "../base/baseSlice";
+import { authSlice } from "../base/authSlice";
 import { logOut, setCredentials } from "../state/authstate";
 
-export const authApiSlice = baseSlice.injectEndpoints({
+export const authApiSlice = authSlice.injectEndpoints({
     endpoints: builder => ({
         login: builder.mutation({
             query: credentials => ({

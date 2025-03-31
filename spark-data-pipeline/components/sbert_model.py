@@ -13,7 +13,7 @@ def get_model():
     # Fast path check
     if _model_instance is not None:
         return _model_instance
-
+        
     # Acquire lock before modifying global state
     with _model_lock:
         # Double-check inside lock

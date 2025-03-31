@@ -25,6 +25,7 @@ class Apache_Spark:
             .config("spark.driver.memory", "4g") \
             .config("spark.executor.memory", "4g") \
             .config("spark.sql.execution.arrow.pyspark.enabled", "true")
+            .config("spark.python.worker.reuse", "true")
             .getOrCreate()
         )
         
@@ -74,14 +75,24 @@ class Apache_Spark:
             dummy_data = [("warmup_id", "This is dummy text for warm-up.", "dummy_subreddit", "dummy_date")]
             dummy_df = self.spark.createDataFrame(dummy_data, schema=self.input_schema)
             
-            (dummy_df
+            processed_dummy_df = (dummy_df
                 .withColumn("category", Category_Classifier_Pandas_Udf(col("body")))
                 .withColumn("vector_embedding", Generate_Vector_Embeddings_udf(col("body")))
                 .withColumn("sentiment_score", Sentiment_Analysis_Pandas_Udf(col("body")))
-                .limit(1)
-                .count()
+                .select(
+                    col("post_id"),
+                    col("category"),
+                    col("vector_embedding"),
+                    col("sentiment_score"),
+                    col("body"),
+                    col("subreddit"),
+                    col("date")
+                )
             )
             print("UDFs triggered successfully.")
+            count_result =  processed_dummy_df.count()
+            print(f"Result: {count_result} ---")
+
         except Exception as e:
             print(f"WARNING: Spark warm-up failed: {e}")
     
@@ -100,7 +111,9 @@ class Apache_Spark:
         
         self.batch_buffer.append(row)
         
-    def Process_Batch(self):        
+    def Process_Batch(self):      
+        batch_start_time = time.time()
+        print(f"--- Process_Batch: Starting processing for {len(self.batch_buffer)} records ---")  
         if not self.batch_buffer:
             print("No data in buffer to process.")
             return 0
@@ -109,9 +122,11 @@ class Apache_Spark:
         self.batch_buffer = []
         
         try:
+            t0 = time.time()
             input_df = self.spark.createDataFrame(batch_data, schema=self.input_schema)
-            input_df.cache()
-            
+            print(f"--- Process_Batch: Created input DataFrame in {time.time() - t0:.4f} seconds ---")
+
+            t1 = time.time()
             processed_df = (input_df
                 .withColumn("category", Category_Classifier_Pandas_Udf(col("body")))
                 .withColumn("vector_embedding", Generate_Vector_Embeddings_udf(col("body")))
@@ -126,15 +141,16 @@ class Apache_Spark:
                     col("date")
                  )
             )
-            
-            processed_df.cache()
-            
+            print(f"--- Process_Batch: Defined processing transformations in {time.time() - t1:.4f} seconds ---")
+                        
             #processed_df.show(5, vertical=True) # this adds 8 seconds
-                
-            processed_count = processed_df.count()
             
-            processed_df.unpersist()
-            input_df.unpersist()
+            t2 = time.time()
+            processed_count = processed_df.count()
+            print(f"--- Process_Batch: Action (.count()) took {time.time() - t2:.4f} seconds. Count: {processed_count} ---")
+            
+            total_batch_time = time.time() - batch_start_time
+            print(f"--- Process_Batch: Completed successfully in {total_batch_time:.4f} seconds ---")
             return processed_count
         except Exception as e:
             return 0

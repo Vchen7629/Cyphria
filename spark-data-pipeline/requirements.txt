@@ -1,0 +1,7 @@
+pyspark
+Flask
+Torch
+Pandas
+pyarrow
+sentence-transformers
+vaderSentiment

@@ -7,12 +7,14 @@ import { DateRange } from "react-day-picker"
  
 import { cn } from "../../lib/utils"
 import { Button } from "../../ui/shadcn/button"
-import { Calendar } from "../../ui/shadcn/calendar"
+import { Calendar } from "../../ui/shadcn/calendar.tsx"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "../../ui/shadcn/popover"
+} from "../../ui/shadcn/popover.tsx"
+import "react-day-picker/style.css";
+
  
 export function DatePickerWithRange({
   className,

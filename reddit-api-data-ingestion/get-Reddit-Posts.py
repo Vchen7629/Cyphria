@@ -1,6 +1,6 @@
 from oauth import Oauth
 from langdetect import detect
-import requests, requests.auth, os
+import requests, requests.auth
 from kafka_components.reddit_api_producer import r_producer
 
 class RedditPosts:

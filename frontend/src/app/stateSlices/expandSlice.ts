@@ -12,10 +12,10 @@ export const uiSlice = createSlice({
     name: 'ui',
     initialState,
     reducers: {
-      toggleExpand: (state) => {
+      toggleExpand: (state: UIState) => {
         state.expand = !state.expand;
       },
-      setExpand: (state, action) => {
+      setExpand: (state: UIState, action: any) => {
         state.expand = action.payload;
       }
     }

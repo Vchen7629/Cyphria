@@ -1,4 +1,4 @@
-from kafka import KafkaProducer, KafkaConsumer
+from kafka import KafkaProducer
 import logging, time
 
 #logging.basicConfig(level=logging.DEBUG)

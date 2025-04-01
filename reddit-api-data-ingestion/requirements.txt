@@ -1,0 +1,3 @@
+dotenv
+oauth
+langdetect

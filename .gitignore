@@ -3,3 +3,6 @@
 pgdata
 .venv
 venv
+kafka-data
+__pycache__
+__pycache__/

@@ -72,8 +72,17 @@ class Apache_Spark:
     
     def warm_up_udf(self):
         try:
-            dummy_data = [("warmup_id", "This is dummy text for warm-up.", "dummy_subreddit", "dummy_date")]
-            dummy_df = self.spark.createDataFrame(dummy_data, schema=self.input_schema)
+            num_slots = self.spark.sparkContext.defaultParallelism
+            print(f"--- warm_up_udf: Target parallelism = {num_slots} ---")
+
+            dummy_data = [(f"warmup_id_{i}", f"Warmup text {i}", "dummy_subreddit", "dummy_date")
+                           for i in range(num_slots)]
+            
+            dummy_rdd = self.spark.sparkContext.parallelize(dummy_data, numSlices=num_slots)
+
+            dummy_df = self.spark.createDataFrame(dummy_rdd, schema=self.input_schema)
+            print(f"--- warm_up_udf: Created dummy DataFrame with {dummy_df.rdd.getNumPartitions()} partitions ---")
+
             
             processed_dummy_df = (dummy_df
                 .withColumn("category", Category_Classifier_Pandas_Udf(col("body")))
@@ -90,7 +99,7 @@ class Apache_Spark:
                 )
             )
             print("UDFs triggered successfully.")
-            count_result =  processed_dummy_df.count()
+            count_result =  processed_dummy_df.show()
             print(f"Result: {count_result} ---")
 
         except Exception as e:
@@ -142,15 +151,11 @@ class Apache_Spark:
                  )
             )
             print(f"--- Process_Batch: Defined processing transformations in {time.time() - t1:.4f} seconds ---")
-                        
-            #processed_df.show(5, vertical=True) # this adds 8 seconds
             
             t2 = time.time()
-            processed_count = processed_df.count()
-            print(f"--- Process_Batch: Action (.count()) took {time.time() - t2:.4f} seconds. Count: {processed_count} ---")
-            
-            total_batch_time = time.time() - batch_start_time
-            print(f"--- Process_Batch: Completed successfully in {total_batch_time:.4f} seconds ---")
+            processed_count = processed_df.show( vertical=True)
+            print(f"--- Process_Batch: Action (.show()) took {time.time() - t2:.4f} seconds. Show: {processed_count} ---")
+
             return processed_count
         except Exception as e:
             return 0

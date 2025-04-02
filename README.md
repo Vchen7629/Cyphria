@@ -1,8 +1,17 @@
 # Cyphria
-Reddit Sentiment and Trend Analysis Platform
-
+<h2>Introduction</h2>
+<p>
+  This project aims to implement an web application that allows Users to draw insights from Reddit Posts. 
+  Users should be able to filter by topics/categories/subreddits to view trends and Sentiments torward the topic/category/subreddit.
+</p>
+<h2>Motivation</h2>
+<p>
+  Since Reddit is my most frequently used social media application, i thought it would be cool to build an project that allows me to view insights from a large portion of reddit that
+  isn't possible from just searching up topics. I also wanted to learn about distributed systems and various open source software. These motivation combined led me to 
+  start working on this project. 
+</p>
 <h2>Architecture</h2>
-<img src="architecture.svg" alt="Architecture image" />
+<img src="architecture_2.0.svg" alt="Architecture image" />
 <h2>Key Technologies Used</h2>
 <h3>Frontend</h3>
 <ul>

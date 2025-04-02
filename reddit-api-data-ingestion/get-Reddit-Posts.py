@@ -30,12 +30,14 @@ class RedditPosts:
                     if post_data and (post_data['body']):
                         if self.isEnglish(post_data):
                             english_only.append(post_data)
+                            subreddit = post_data['subreddit']
+                            print("hiiiiiiiiiiiiii", subreddit)
             
             else:
                 print(f"Error {response.status_code}: {response.text}")
                 return None
             
-            r_producer.Send_Message(english_only)
+            r_producer.Send_Message(subreddit, english_only)
             
             print("english only: ", english_only)
 
@@ -78,4 +80,9 @@ class RedditPosts:
             return None
            
 posts = RedditPosts()
-posts.GetPosts()
+
+if __name__ == "__main__":
+    for i in range(5):
+        posts.GetPosts()
+    print("Closing producer.")
+    r_producer.producer.close()

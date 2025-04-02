@@ -1,7 +1,9 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, ArrayType, FloatType, StringType
 from pyspark.sql.functions import col
-import json, os, time
+import json, os, time, sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from dataprocessing.categoryClassifier import Category_Classifier_Pandas_Udf
 from dataprocessing.generate_vector_embeddings import Generate_Vector_Embeddings_udf
@@ -24,6 +26,7 @@ class Apache_Spark:
             .config("spark.executor.extraJavaOptions", java_opts) \
             .config("spark.driver.memory", "4g") \
             .config("spark.executor.memory", "4g") \
+            .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.5") \
             .config("spark.sql.execution.arrow.pyspark.enabled", "true")
             .config("spark.python.worker.reuse", "true")
             .getOrCreate()
@@ -131,7 +134,8 @@ class Apache_Spark:
         self.batch_buffer = []
         
         try:
-            t0 = time.time()
+            t0 = time.time()       
+                
             input_df = self.spark.createDataFrame(batch_data, schema=self.input_schema)
             print(f"--- Process_Batch: Created input DataFrame in {time.time() - t0:.4f} seconds ---")
 
@@ -159,4 +163,32 @@ class Apache_Spark:
             return processed_count
         except Exception as e:
             return 0
+        
+    def test_consumer(self):
+        test = self.spark \
+                .readStream \
+                .format("kafka") \
+                .option("kafka.bootstrap.servers", "localhost:9092") \
+                .option("subscribe", "test-topic") \
+                .load() 
+        
+        parsed_df = test.selectExpr(
+            "CAST(key AS STRING) as key", 
+            "CAST(value AS STRING) as value_str"
+        )
+        query = parsed_df \
+            .select("key", "value_str") \
+            .writeStream \
+            .outputMode("append") \
+            .format("console") \
+            .option("truncate", "false") \
+            .start()
+    
+        # Keep the application running until manually terminated
+        print("Stream started. Waiting for messages...")
+        query.awaitTermination()
+
 Spark = Apache_Spark()
+
+if __name__ == "__main__":
+    Spark.test_consumer()

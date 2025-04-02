@@ -7,7 +7,7 @@ NC='\033[0m'
 
 setup_python_venv() {
     echo "Setting up Python virtual environment..."
-    cd ..
+    cd ../..
 
     # Create venv if it doesn't exist
     if [ ! -d ".venv" ]; then

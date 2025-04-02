@@ -11,7 +11,7 @@ export function HeaderComponent() {
     console.log(location.pathname)
 
     return (
-        <header className="flex border-b-[1px] justify-between items-center border-bordercolor h-[10vh] w-[100%] px-[3vw]">
+        <header className="flex border-b-[1px] justify-between items-center border-bordercolor h-[10vh] py-[2vh] w-[100%] px-[3vw]">
             <div className="flex items-center space-x-[2vw]">
                 {PageName === "comparison" ? (
                     <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">

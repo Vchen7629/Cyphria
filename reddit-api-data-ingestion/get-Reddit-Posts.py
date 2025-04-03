@@ -1,7 +1,7 @@
 from oauth import Oauth
-from langdetect import detect
 import requests, requests.auth
-from kafka_components.reddit_api_producer import r_producer
+from components.reddit_api_producer import r_producer
+from components.post_filtering import filter
 
 class RedditPosts:
     def __init__(self):
@@ -11,7 +11,7 @@ class RedditPosts:
     
     def GetPosts(self):
         headers = {"Authorization": "Bearer " + self.Oauth_Token, "User-Agent": "ChangeMeClient/0.1 by YourUsername"}
-        params = {"limit": 5, "lang": "en"}
+        params = {"limit": 100, "lang": "en"}
         
         if self.last_post_name:
             params["after"] = self.last_post_name
@@ -27,11 +27,11 @@ class RedditPosts:
                 for post in res['data']['children']:
                     post_data = self.Extract_Relevant_Data(post)
                     
-                    if post_data and (post_data['body']):
-                        if self.isEnglish(post_data):
+                    if post_data and (post_data['body']) and (post_data['title'] != "What is this?"):
+                        if filter.isEnglish(post_data):
                             english_only.append(post_data)
                             subreddit = post_data['subreddit']
-                            print("hiiiiiiiiiiiiii", subreddit)
+                            
             
             else:
                 print(f"Error {response.status_code}: {response.text}")
@@ -50,13 +50,6 @@ class RedditPosts:
         else:
             print(f"Error {response.status_code}: {response.text}")
             return None
-    
-    def isEnglish(self, text):
-        try:
-            combined_text = text.get('body', '')
-            return detect(combined_text) == 'en'
-        except:
-            return False
     
     def Extract_Relevant_Data(self, text):
         try:
@@ -82,7 +75,7 @@ class RedditPosts:
 posts = RedditPosts()
 
 if __name__ == "__main__":
-    for i in range(5):
+    for i in range(1):
         posts.GetPosts()
     print("Closing producer.")
     r_producer.producer.close()

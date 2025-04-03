@@ -20,7 +20,7 @@ class Gen_Vector_Embeddings:
     def Generate_Vector_Embeddings(self, query: pd.Series) -> pd.Series:
         try:
             start_time = time.time()
-            embeddings = self.model.encode(query.tolist(), batch_size=32)
+            embeddings = self.model.encode(query.tolist(), batch_size=128)
             print(f"Classified in: {time.time() - start_time:.4f} seconds")
             return pd.Series(list(embeddings))
         except Exception as e:

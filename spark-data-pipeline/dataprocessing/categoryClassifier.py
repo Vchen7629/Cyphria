@@ -44,7 +44,7 @@ class CategoryClassifier:
         
     def Classify_Category(self, query: pd.Series) -> pd.Series:     
         try:
-            input_embeddings = self.model.encode(query.tolist(), convert_to_tensor=True, batch_size=64)
+            input_embeddings = self.model.encode(query.tolist(), convert_to_tensor=True, batch_size=128)
             
             sim = util.semantic_search(
                 input_embeddings,

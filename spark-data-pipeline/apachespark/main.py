@@ -8,6 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from dataprocessing.categoryClassifier import Category_Classifier_Pandas_Udf
 from dataprocessing.generate_vector_embeddings import Generate_Vector_Embeddings_udf
 from dataprocessing.sentimentAnalysis import Sentiment_Analysis_Pandas_Udf
+#from components.kafka_consumer import kafka
 
 class Apache_Spark:
     def __init__(self):
@@ -55,7 +56,8 @@ class Apache_Spark:
             StructField("post_id", StringType(), True),
             StructField("body", StringType(), True),
             StructField("subreddit", StringType(), True),
-            StructField("date", StringType(), True)
+            StructField("created_utc", StringType(), True),
+            StructField("title", StringType(), True),
         ])
         
         self.output_schema = StructType([
@@ -65,7 +67,8 @@ class Apache_Spark:
             StructField("sentiment_score", FloatType(), True),
             StructField("body", StringType(), True),
             StructField("subreddit", StringType(), True),
-            StructField("date", StringType(), True)
+            StructField("created_utc", StringType(), True),
+            StructField("title", StringType(), True),
         ])
         
         print("Warming up Spark UDFs...")
@@ -78,7 +81,7 @@ class Apache_Spark:
             num_slots = self.spark.sparkContext.defaultParallelism
             print(f"--- warm_up_udf: Target parallelism = {num_slots} ---")
 
-            dummy_data = [(f"warmup_id_{i}", f"Warmup text {i}", "dummy_subreddit", "dummy_date")
+            dummy_data = [(f"warmup_id_{i}", f"Warmup text {i}", "dummy_subreddit", "dummy_date", "dummy_title")
                            for i in range(num_slots)]
             
             dummy_rdd = self.spark.sparkContext.parallelize(dummy_data, numSlices=num_slots)
@@ -97,8 +100,9 @@ class Apache_Spark:
                     col("vector_embedding"),
                     col("sentiment_score"),
                     col("body"),
-                    col("subreddit"),
-                    col("date")
+                    col("created_utc"),
+                    col("title"),
+                    col("subreddit")
                 )
             )
             print("UDFs triggered successfully.")
@@ -107,88 +111,9 @@ class Apache_Spark:
 
         except Exception as e:
             print(f"WARNING: Spark warm-up failed: {e}")
-    
-    def inputData(self, query):
-        if isinstance(query, dict):
-            data = query
-        else:
-            data = json.loads(query)
-                        
-        row = (
-            data.get("id", ""),
-            data.get("body", ""),
-            data.get("subreddit", ""),
-            data.get("date", "")
-        )
-        
-        self.batch_buffer.append(row)
-        
-    def Process_Batch(self):      
-        batch_start_time = time.time()
-        print(f"--- Process_Batch: Starting processing for {len(self.batch_buffer)} records ---")  
-        if not self.batch_buffer:
-            print("No data in buffer to process.")
-            return 0
-        
-        batch_data = self.batch_buffer[:]
-        self.batch_buffer = []
-        
-        try:
-            t0 = time.time()       
-                
-            input_df = self.spark.createDataFrame(batch_data, schema=self.input_schema)
-            print(f"--- Process_Batch: Created input DataFrame in {time.time() - t0:.4f} seconds ---")
-
-            t1 = time.time()
-            processed_df = (input_df
-                .withColumn("category", Category_Classifier_Pandas_Udf(col("body")))
-                .withColumn("vector_embedding", Generate_Vector_Embeddings_udf(col("body")))
-                .withColumn("sentiment_score", Sentiment_Analysis_Pandas_Udf(col("body")))
-                .select(
-                    col("post_id"),
-                    col("category"),
-                    col("vector_embedding"),
-                    col("sentiment_score"),
-                    col("body"),
-                    col("subreddit"),
-                    col("date")
-                 )
-            )
-            print(f"--- Process_Batch: Defined processing transformations in {time.time() - t1:.4f} seconds ---")
-            
-            t2 = time.time()
-            processed_count = processed_df.show( vertical=True)
-            print(f"--- Process_Batch: Action (.show()) took {time.time() - t2:.4f} seconds. Show: {processed_count} ---")
-
-            return processed_count
-        except Exception as e:
-            return 0
-        
-    def test_consumer(self):
-        test = self.spark \
-                .readStream \
-                .format("kafka") \
-                .option("kafka.bootstrap.servers", "localhost:9092") \
-                .option("subscribe", "test-topic") \
-                .load() 
-        
-        parsed_df = test.selectExpr(
-            "CAST(key AS STRING) as key", 
-            "CAST(value AS STRING) as value_str"
-        )
-        query = parsed_df \
-            .select("key", "value_str") \
-            .writeStream \
-            .outputMode("append") \
-            .format("console") \
-            .option("truncate", "false") \
-            .start()
-    
-        # Keep the application running until manually terminated
-        print("Stream started. Waiting for messages...")
-        query.awaitTermination()
 
 Spark = Apache_Spark()
 
 if __name__ == "__main__":
-    Spark.test_consumer()
+    Spark()
+    

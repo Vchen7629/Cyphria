@@ -2,7 +2,7 @@ import { Home, Layers2 } from "lucide-react";
 import { HeaderComponent } from "../components/header/header";
 import { SidebarComponent } from "../components/sidebar";
 import { DatePickerWithRange } from "../components/TopicTrendsPageComponents/datefilter";
-import { TrendsTimeChart } from "../components/TopicTrendsPageComponents/timeserieschart";
+import { TopicSentimentsTimeChart } from "../components/TopicTrendsPageComponents/TopicSentimentsChart";
 import { TopTopicsBarChart } from "../components/SubredditTrendsPageComponents/toptopicsbarchart";
 import { PostingFrequencyHeatMapChart } from "../components/SubredditTrendsPageComponents/postingfrequencyheatmap";
 import { useSelector } from "react-redux";
@@ -39,7 +39,7 @@ export default function SubredditStatisticsPage() {
                             <TopTopicsBarChart/>
                         </div>
                         <div className="bg-[#141414] w-full mt-[5vh]">
-                            <TrendsTimeChart/>
+                            <TopicSentimentsTimeChart/>
                         </div>
                         <div className="w-full mt-[5vh]">
                             <PostingFrequencyHeatMapChart/>

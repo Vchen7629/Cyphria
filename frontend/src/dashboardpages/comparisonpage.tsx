@@ -2,7 +2,7 @@ import { ArrowRightLeft, Home } from "lucide-react"
 import { HeaderComponent } from "../components/header/header"
 import { SidebarComponent } from "../components/sidebar"
 import { DatePickerWithRange } from "../components/TopicTrendsPageComponents/datefilter"
-import { TrendsTimeChart } from "../components/TopicTrendsPageComponents/timeserieschart"
+import { TrendsTimeChart } from "../components/TopicTrendsPageComponents/TopicSentimentsChart"
 import { selectExpandState } from "../app/stateSlices/expandSlice"
 import { useSelector } from "react-redux"
 

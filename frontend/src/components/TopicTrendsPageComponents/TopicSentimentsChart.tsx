@@ -133,7 +133,7 @@ const chartConfig = {
     color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig
-export function TrendsTimeChart() {
+export function TopicSentimentsTimeChart() {
   const [timeRange, setTimeRange] = React.useState("90d")
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date)

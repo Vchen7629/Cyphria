@@ -15,6 +15,14 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../../ui/shadcn/chart"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "../../ui/shadcn/select"
+import { useState } from "react"
 const chartData = [
   { date: "2024-04-01", desktop: 222, mobile: 150 },
   { date: "2024-04-02", desktop: 97, mobile: 180 },
@@ -124,15 +132,49 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function PostingFrequencyChart() {
+    const [timeRange, setTimeRange] = useState("90d")
+    const filteredData = chartData.filter((item) => {
+        const date = new Date(item.date)
+        const referenceDate = new Date("2024-06-30")
+        let daysToSubtract = 90
+        if (timeRange === "30d") {
+          daysToSubtract = 30
+        } else if (timeRange === "7d") {
+          daysToSubtract = 7
+        }
+        const startDate = new Date(referenceDate)
+        startDate.setDate(startDate.getDate() - daysToSubtract)
+        return date >= startDate
+    })
+
     return (
         <Card className="bg-[#141414] border-2 border-bordercolor">
         <CardHeader className="flex items-center gap-2 space-y-0 py-5 sm:flex-row">
             <div className="grid flex-1 gap-1 text-center sm:text-left">
-            <CardTitle className="text-2xl font-thin text-gray-400">Number of Posts Over Time</CardTitle>
-            <CardDescription>
-                Showing total visitors for the last 3 months
-            </CardDescription>
+                <CardTitle className="text-2xl font-thin text-gray-400">Number of Posts Over Time</CardTitle>
+                <CardDescription>
+                    Showing total visitors for the last 3 months
+                </CardDescription>
             </div>
+            <Select value={timeRange} onValueChange={setTimeRange}>
+                <SelectTrigger
+                    className="w-[160px] rounded-lg sm:ml-auto text-gray-400 border-2 border-bordercolor"
+                    aria-label="Select a value"
+                >
+                    <SelectValue placeholder="Last 3 months" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl bg-[#141414] border-2 border-gray-700">
+                    <SelectItem value="90d" className="rounded-lg text-white">
+                    Last 3 months
+                    </SelectItem>
+                    <SelectItem value="30d" className="rounded-lg text-white">
+                    Last 30 days
+                    </SelectItem>
+                    <SelectItem value="7d" className="rounded-lg text-white">
+                    Last 7 days
+                    </SelectItem>
+                </SelectContent>
+                </Select>
         </CardHeader>
         <CardContent className="px-2 sm:p-6">
             <ChartContainer
@@ -141,7 +183,7 @@ export function PostingFrequencyChart() {
             >
             <LineChart
                 accessibilityLayer
-                data={chartData}
+                data={filteredData}
                 margin={{
                 left: 12,
                 right: 12,

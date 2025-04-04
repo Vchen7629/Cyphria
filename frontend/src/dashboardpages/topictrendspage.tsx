@@ -1,4 +1,4 @@
-import { Home, MessageSquareMore } from "lucide-react";
+import { Home, MessageSquareMore, MoonIcon } from "lucide-react";
 import { HeaderComponent } from "../components/header/header";
 import { SidebarComponent } from "../components/sidebar";
 import { DatePickerWithRange } from "../components/TopicTrendsPageComponents/datefilter";
@@ -12,7 +12,7 @@ import { EmotionsSentimentChart } from "../components/TopicTrendsPageComponents/
 
 export default function SearchPage() {
     const expand = useSelector(selectExpandState)
-
+    
     return (
         <main className="flex  w-[100vw] h-[100vh] bg-background">
             <SidebarComponent/>
@@ -42,12 +42,11 @@ export default function SearchPage() {
                     <div className="bg-[#141414] w-[95%] my-[5vh]">
                         <PostingFrequencyChart/>
                     </div>
-                    <a 
-                        className="fixed flex justify-center items-center bottom-4 right-4 w-12 h-12 bg-card hover:bg-logo rounded-xl border-2 border-interactive"
-                        href="/"
+                    <button 
+                        className="fixed flex justify-center items-center bottom-4 right-8 w-12 h-12 bg-card hover:bg-logo rounded-xl border-2 border-interactive"
                     >
-                        <Home/>
-                    </a>
+                        <MoonIcon/>
+                    </button>
                 </section>
             </div>
         </main>

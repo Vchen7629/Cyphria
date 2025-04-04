@@ -34,7 +34,7 @@ export function EngagementMetricsChart() {
     <Card className="bg-[#141414] border-2 border-bordercolor w-[24vw] h-[40vh]">
       <CardHeader>
         <CardTitle className="text-2xl font-thin text-gray-400">Engagement Metrics</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardDescription>Average Upvotes/Downvotes/comments for "topic"</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

@@ -12,31 +12,26 @@ from dataprocessing.sentimentAnalysis import Sentiment_Analysis_Pandas_Udf
 
 class Apache_Spark:
     def __init__(self):
-        java_opts = (
-            "--add-opens=java.base/java.nio=ALL-UNNAMED "
-            "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED "
-            "--add-opens=java.base/java.lang=ALL-UNNAMED "
-            "--add-opens=java.base/java.util=ALL-UNNAMED "
-            "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED" 
-        )
-
+        project_root = os.path.dirname(os.path.abspath(__file__))
+        config_dir = os.path.join(project_root, "..", "configs")
+        dataprocessing_zip_path = os.path.join(project_root, "..", "dataprocessing.zip")
+        components_zip_path = os.path.join(project_root, "..", "components.zip")
+        tensor_file = os.path.join(project_root, "..", "precomputed_category_sentences_files", "category_tensor.pt")
+        mapping_file = os.path.join(project_root, "..", "precomputed_category_sentences_files", "category_mapping.pkl")
+        prometheus_metrics_file = os.path.join(config_dir, "metrics.properties") 
 
         self.spark = (SparkSession.builder
             .master("local[4]") \
-            .config("spark.driver.extraJavaOptions", java_opts) \
-            .config("spark.executor.extraJavaOptions", java_opts) \
+            .config("spark.metrics.conf", prometheus_metrics_file) \
             .config("spark.driver.memory", "4g") \
             .config("spark.executor.memory", "4g") \
             .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.5") \
-            .config("spark.sql.execution.arrow.pyspark.enabled", "true")
+            .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer") \
+            .config("spark.sql.streaming.metricsEnabled","true") \
+            .config("spark.sql.execution.arrow.pyspark.enabled", "true") \
             .config("spark.python.worker.reuse", "true")
             .getOrCreate()
         )
-        
-        
-        project_root = os.path.dirname(os.path.abspath(__file__))
-        dataprocessing_zip_path = os.path.join(project_root, "..", "dataprocessing.zip")
-        components_zip_path = os.path.join(project_root, "..", "components.zip")
         
         if os.path.exists(dataprocessing_zip_path):
             print(f"Adding py file: {dataprocessing_zip_path}")
@@ -50,7 +45,12 @@ class Apache_Spark:
         else:
              print(f"ERROR: Required zip file not found at {components_zip_path}")
              raise FileNotFoundError(f"Required zip file 'components.zip' not found at {components_zip_path}")
-
+        
+        print(f"Adding file: {tensor_file}")
+        self.spark.sparkContext.addFile(tensor_file)
+        print(f"Adding file: {mapping_file}")
+        self.spark.sparkContext.addFile(mapping_file)
+    
         
         self.input_schema = StructType([
             StructField("post_id", StringType(), True),
@@ -91,9 +91,9 @@ class Apache_Spark:
 
             
             processed_dummy_df = (dummy_df
-                .withColumn("category", Category_Classifier_Pandas_Udf(col("body")))
                 .withColumn("vector_embedding", Generate_Vector_Embeddings_udf(col("body")))
                 .withColumn("sentiment_score", Sentiment_Analysis_Pandas_Udf(col("body")))
+                .withColumn("category", Category_Classifier_Pandas_Udf(col("vector_embedding")))
                 .select(
                     col("post_id"),
                     col("category"),

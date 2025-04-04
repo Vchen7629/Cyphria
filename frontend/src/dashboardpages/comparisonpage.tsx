@@ -2,7 +2,7 @@ import { ArrowRightLeft, Home } from "lucide-react"
 import { HeaderComponent } from "../components/header/header"
 import { SidebarComponent } from "../components/sidebar"
 import { DatePickerWithRange } from "../components/TopicTrendsPageComponents/datefilter"
-import { TrendsTimeChart } from "../components/TopicTrendsPageComponents/TopicSentimentsChart"
+import { TopicSentimentsTimeChart} from "../components/TopicTrendsPageComponents/TopicSentimentsChart"
 import { selectExpandState } from "../app/stateSlices/expandSlice"
 import { useSelector } from "react-redux"
 
@@ -33,7 +33,7 @@ const ComparisonPage = () => {
                         </header>
                     </div>
                     <div className="bg-[#141414] w-[95%] mt-[5vh]">
-                        <TrendsTimeChart/>
+                        <TopicSentimentsTimeChart/>
                     </div>
                     <a 
                         className="fixed flex justify-center items-center bottom-4 right-4 w-12 h-12 bg-card hover:bg-logo rounded-xl border-2 border-interactive"

@@ -8,6 +8,7 @@ import { selectExpandState } from "../app/stateSlices/expandSlice";
 import { TopSubredditAppearancesChart } from "../components/TopicTrendsPageComponents/topSubredditChart";
 import { EngagementMetricsChart } from "../components/TopicTrendsPageComponents/EngagementMetricsChart";
 import { PostingFrequencyChart } from "../components/TopicTrendsPageComponents/PostingFrequencyOverTimeChart";
+import { EmotionsSentimentChart } from "../components/TopicTrendsPageComponents/EmotionsSentimentChart";
 
 export default function SearchPage() {
     const expand = useSelector(selectExpandState)
@@ -31,11 +32,7 @@ export default function SearchPage() {
                         </div>
                     </div>
                     <div className="flex w-full items-center space-x-[2vw]">
-                        <div className="bg-[#141414] w-[23vw] h-[40vh] pl-[1.5vw] pt-[1.5vh] rounded-2xl border-2 border-bordercolor">
-                            <header className="w-full h-fit py-2">
-                                <span className="text-2xl font-thin text-gray-400">Frequently co-occured Keywords</span>
-                            </header>
-                        </div>
+                        <EmotionsSentimentChart/>
                         <TopSubredditAppearancesChart/>
                         <EngagementMetricsChart />
                     </div>

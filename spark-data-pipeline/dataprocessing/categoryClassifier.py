@@ -1,12 +1,11 @@
 import time
 from sentence_transformers import util
-import torch
+import torch, pickle, os
 import pandas as pd
+import numpy as np
+from pyspark import SparkFiles
 from pyspark.sql.functions import pandas_udf
-from pyspark.sql.types import StringType, ArrayType, FloatType
-
-from components import sbert_model, category_example_sentences
-from components.category_example_sentences import category_names
+from pyspark.sql.types import StringType
 
 category_instance = None
 
@@ -17,40 +16,55 @@ def Get_Classifier_Instance():
     return category_instance
 
 class CategoryClassifier:
-    model_instance = sbert_model.get_model()
-    category_embeddings_computed = False
-    
-        
-    @classmethod
-    def get_category_embeddings(cls):
-        if not cls.category_embeddings_computed:
-            cls.category_mapping = []
-            embeddings_list = []
-            for name, sentences in category_names.items():
-                embeddings = cls.model_instance.encode(sentences, convert_to_tensor=True)
-                embeddings_list.append(embeddings)
-                cls.category_mapping.extend([name] * len(sentences))
-
-            cls.category_tensor = torch.cat(embeddings_list, dim=0)
-            cls.category_embeddings_computed = True
-            print("Category embeddings computed for worker.")
-        return cls.category_tensor, cls.category_mapping
-    
     def __init__(self):
-        self.model = self.model_instance
-        self.category_tensor, self.category_name = self.get_category_embeddings()
-        if self.category_tensor is None or self.category_name is None:
-            raise RuntimeError("Category Classifier embeddings failed to initialize.")
-        
-    def Classify_Category(self, query: pd.Series) -> pd.Series:     
         try:
-            input_embeddings = self.model.encode(query.tolist(), convert_to_tensor=True, batch_size=128)
+            tensor_filename = 'category_tensor.pt'
+            mapping_filename = 'category_mapping.pkl'
+
+            tensor_path = SparkFiles.get(tensor_filename)
+            mapping_path = SparkFiles.get(mapping_filename)
+
+            if not os.path.exists(tensor_path):
+                 raise FileNotFoundError(f"SparkFiles resolved path does not exist: {tensor_path}. Check if '{tensor_filename}' was added via --files or addFile.")
+            print(f"Loading category tensor from: {tensor_path}")
+            self.category_tensor = torch.load(tensor_path)
+
+
+            print(f"Attempting to load category mapping from resolved path: {mapping_path}")
+            if not os.path.exists(mapping_path):
+                 raise FileNotFoundError(f"SparkFiles resolved path does not exist: {mapping_path}. Check if '{mapping_filename}' was added via --files or addFile.")
+            with open(mapping_path, 'rb') as f:
+                self.category_name = pickle.load(f)
+
+            print(f"CategoryClassifier initialized with pre-computed data ({len(self.category_name)} references).")
+
+            if self.category_tensor is None or self.category_name is None:
+                raise RuntimeError("Category Classifier reference embeddings failed to initialize.")
+            if self.category_tensor.numel() == 0:
+                print("WARN: CategoryClassifier initialized with empty reference embeddings.")
+        except Exception as e:
+            print(f"ERROR loading pre-computed category data: {e}")
+
+
+    def Classify_Category(self, vector_embedding: pd.Series) -> pd.Series:     
+        try:
+            t0 = time.time()
+            valid_indices = vector_embedding.notna()
+            valid_embeddings_list = vector_embedding[valid_indices].tolist()
+
+            if not valid_embeddings_list:
+                return pd.Series([None] * len(vector_embedding), dtype=object)
             
+            numpy_array = np.array(valid_embeddings_list, dtype=np.float32)
+            input_tensor = torch.from_numpy(numpy_array)
+            
+            t1 = time.time()
             sim = util.semantic_search(
-                input_embeddings,
+                input_tensor,
                 self.category_tensor,
                 top_k=1
             )
+            print(f"Semantic search in: {time.time() - t1:.4f} seconds")
             
             results = []
             for sim_list in sim:
@@ -60,18 +74,19 @@ class CategoryClassifier:
                     results.append(category_name)
                 else:
                     results.append(None)
-                    
+            
+            print(f"Classified entirely took: {time.time() - t0:.4f} seconds")
             return pd.Series(results)
 
         except Exception as e:
-            print(f"Error generating embedding batch. Error: {e}")
-            return pd.Series([None] * len(query))
+            print(f"Error classifying category. Error: {e}")
+            return pd.Series([None] * len(vector_embedding))
             
 @pandas_udf(StringType())
-def Category_Classifier_Pandas_Udf(text: pd.Series) -> pd.Series:
+def Category_Classifier_Pandas_Udf(embeddings: pd.Series) -> pd.Series:
     start_time = time.time()
     category = Get_Classifier_Instance()
     print(f"Classified Category in: {time.time() - start_time:.4f} seconds")
-    return category.Classify_Category(text)
+    return category.Classify_Category(embeddings)
     
 

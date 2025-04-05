@@ -20,8 +20,8 @@ class Gen_Vector_Embeddings:
     def Generate_Vector_Embeddings(self, query: pd.Series) -> pd.Series:
         try:
             start_time = time.time()
-            embeddings = self.model.encode(query.tolist(), batch_size=128)
-            print(f"Classified in: {time.time() - start_time:.4f} seconds")
+            embeddings = self.model.encode(query.tolist(), batch_size=256)
+            print(f"Classified in: {time.time() - start_time:.4f}")
             return pd.Series(list(embeddings))
         except Exception as e:
             print(f"Error generating embedding batch. Error: {e}")
@@ -29,7 +29,5 @@ class Gen_Vector_Embeddings:
 
 @pandas_udf(ArrayType(FloatType()))
 def Generate_Vector_Embeddings_udf(texts: pd.Series) -> pd.Series:
-    start_time = time.time()
     embedder = get_vector_embedder()
-    print(f"Generated Vector Embeddings in: {time.time() - start_time:.4f} seconds")
     return embedder.Generate_Vector_Embeddings(texts)

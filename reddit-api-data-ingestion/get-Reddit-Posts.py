@@ -21,11 +21,11 @@ class RedditPosts:
             res = response.json()
             english_only = []
             
-            if 'data' in res and 'children' in res['data']:
+            if filter.postExists(res) == True:
                 if res['data']['children'] and 'data' in res['data']['children'][-1]:
                     self.last_post_name = res['data']['children'][-1]['data']['name']
                 for post in res['data']['children']:
-                    post_data = self.Extract_Relevant_Data(post)
+                    post_data = filter.Extract_Relevant_Data(post)
                     
                     if post_data and (post_data['body']) and (post_data['title'] != "What is this?"):
                         if filter.isEnglish(post_data):
@@ -49,27 +49,6 @@ class RedditPosts:
             self.Oauth_Token = Oauth_init.get_Oauth_token()
         else:
             print(f"Error {response.status_code}: {response.text}")
-            return None
-    
-    def Extract_Relevant_Data(self, text):
-        try:
-            if 'data' in text:
-                post_data = text['data']
-            else:
-                post_data = text
-            
-            extracted = {
-                'title': post_data.get('title', ''),
-                'body': post_data.get('selftext', ''),
-                'subreddit': post_data.get('subreddit', ''),
-                'post_id': post_data.get('id', ''),
-                'created_utc': post_data.get('created_utc', '')
-            }
-            
-            #print(extracted)
-            
-            return extracted
-        except Exception as e:
             return None
            
 posts = RedditPosts()

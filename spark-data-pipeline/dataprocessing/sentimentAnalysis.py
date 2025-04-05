@@ -21,11 +21,13 @@ class VaderSentimentAnalysis:
         input_len = len(input)
         results = []
         try:
+            start_time = time.time()
             for text in input:
                 score = self.analyzer.polarity_scores(text)            
                 overall = score['compound']
                 results.append(overall)
-            
+            print(f"Sentiment analysis in: {time.time() - start_time:.4f} seconds")
+
             output = pd.Series(results, dtype=float)
             output_len = len(output)
             
@@ -40,7 +42,5 @@ class VaderSentimentAnalysis:
     
 @pandas_udf(FloatType())
 def Sentiment_Analysis_Pandas_Udf(texts: pd.Series) -> pd.Series:
-    start_time = time.time()
     vader = Get_Vader_Analyzer()
-    print(f"Sentiment analysis in: {time.time() - start_time:.4f} seconds")
     return vader.SentimentAnalysis(texts)

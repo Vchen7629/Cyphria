@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, ArrayType, FloatType, StringType
+from pyspark.sql.types import StructType, StructField, ArrayType, FloatType, StringType, IntegerType
 from pyspark.sql.functions import col
 import json, os, time, sys
 
@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from dataprocessing.categoryClassifier import Category_Classifier_Pandas_Udf
 from dataprocessing.generate_vector_embeddings import Generate_Vector_Embeddings_udf
 from dataprocessing.sentimentAnalysis import Sentiment_Analysis_Pandas_Udf
-#from components.kafka_consumer import kafka
+from dataprocessing.keywordextraction import Keyword_Extraction_Pandas_UDF
 
 class Apache_Spark:
     def __init__(self):
@@ -56,21 +56,12 @@ class Apache_Spark:
             StructField("post_id", StringType(), True),
             StructField("body", StringType(), True),
             StructField("subreddit", StringType(), True),
+            StructField("upvotes", IntegerType(), True),
+            StructField("downvotes", IntegerType(), True),
             StructField("created_utc", StringType(), True),
             StructField("title", StringType(), True),
         ])
-        
-        self.output_schema = StructType([
-            StructField("post_id", StringType(), True),
-            StructField("category", StringType(), True),
-            StructField("vector_embedding", ArrayType(FloatType()), True),
-            StructField("sentiment_score", FloatType(), True),
-            StructField("body", StringType(), True),
-            StructField("subreddit", StringType(), True),
-            StructField("created_utc", StringType(), True),
-            StructField("title", StringType(), True),
-        ])
-        
+
         print("Warming up Spark UDFs...")
         self.warm_up_udf()
         print("Warm-up complete.")
@@ -81,7 +72,7 @@ class Apache_Spark:
             num_slots = self.spark.sparkContext.defaultParallelism
             print(f"--- warm_up_udf: Target parallelism = {num_slots} ---")
 
-            dummy_data = [(f"warmup_id_{i}", f"Warmup text {i}", "dummy_subreddit", "dummy_date", "dummy_title")
+            dummy_data = [(f"warmup_id_{i}", f"Warmup text, uc berkeley is cool{i}", "dummy_subreddit", 1, 2, "dummy_date", "dummy_title")
                            for i in range(num_slots)]
             
             dummy_rdd = self.spark.sparkContext.parallelize(dummy_data, numSlices=num_slots)
@@ -94,15 +85,19 @@ class Apache_Spark:
                 .withColumn("vector_embedding", Generate_Vector_Embeddings_udf(col("body")))
                 .withColumn("sentiment_score", Sentiment_Analysis_Pandas_Udf(col("body")))
                 .withColumn("category", Category_Classifier_Pandas_Udf(col("vector_embedding")))
+                .withColumn("keywords", Keyword_Extraction_Pandas_UDF(col("body")))
                 .select(
                     col("post_id"),
                     col("category"),
                     col("vector_embedding"),
                     col("sentiment_score"),
+                    col("keywords"),
                     col("body"),
                     col("created_utc"),
                     col("title"),
-                    col("subreddit")
+                    col("subreddit"),
+                    col("upvotes"),
+                    col("downvotes")
                 )
             )
             print("UDFs triggered successfully.")

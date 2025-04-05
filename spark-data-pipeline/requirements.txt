@@ -5,3 +5,4 @@ Pandas
 pyarrow
 sentence-transformers
 vaderSentiment
+keyBert

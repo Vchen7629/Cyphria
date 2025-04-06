@@ -37,12 +37,34 @@ class run_pipeline:
                     try:
                         print(processed_df)
                         producer.publish_message(processed_df)
-                        producer_instance.producer_config.close()
                     except Exception as e:
                         print(f"Error publishing message to producer: {e}")
         except Exception as e:
             print(f"Critical error during application startup or execution: {e}")
             traceback.print_exc()
+        finally:
+            print("INFO: Cleaning up resources...")
+            if producer_instance and producer_instance.producer_config:
+                try:
+                    print("INFO: Closing Kafka Producer...")
+                    producer_instance.producer_config.close(timeout=5) # Add timeout
+                    print("INFO: Kafka Producer closed.")
+                except Exception as e_close_prod:
+                    print(f"WARN: Error closing Kafka Producer: {e_close_prod}")
+            else:
+                 print("INFO: Producer instance not available for closing.")
+
+            if consumer_instance and consumer_instance.consumer_config:
+                try:
+                    print("INFO: Closing Kafka Consumer...")
+                    consumer_instance.consumer_config.close()
+                    print("INFO: Kafka Consumer closed.")
+                except Exception as e_close_cons:
+                    print(f"WARN: Error closing Kafka Consumer: {e_close_cons}")
+            else:
+                 print("INFO: Consumer instance not available for closing.")
+
+            print("INFO: Shutdown complete.")
 
 if __name__ == "__main__":
     run_pipeline()

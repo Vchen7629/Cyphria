@@ -1,0 +1,30 @@
+FROM python:3.11-slim
+
+# creating a new user and user group for security
+RUN groupadd -r appuser && useradd -r -g appuser appuser 
+
+#creating cache file for sentence transformers to download the model to
+ENV SENTENCE_TRANSFORMERS_HOME=/app/.cache/sentence_transformers
+ENV TRANSFORMERS_CACHE=/app/.cache/transformers
+ENV HF_HOME=/app/.cache/huggingface
+
+COPY requirements.txt .
+
+RUN python -m pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir --requirement requirements.txt
+
+#predownload model to folder
+RUN mkdir -p /app/.cache && \
+    python -c "from sentence_transformers import SentenceTransformer; print('Downloading model all-MiniLM-L6-v2...'); SentenceTransformer('all-MiniLM-L6-v2'); \
+print('Model downloaded.')"
+
+COPY --chown=appuser:appuser . .
+RUN chown -R appuser:appuser /app/.cache
+
+# Healthcheck to check to see if container fails
+HEALTHCHECK --interval=30s --timeout=10s --start-period=1m --retries=3 \
+  CMD pgrep -f "python main.py" > /dev/null || exit 1
+
+USER appuser
+
+ENTRYPOINT [ "python", "main.py" ]

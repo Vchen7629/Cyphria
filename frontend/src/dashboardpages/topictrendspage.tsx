@@ -1,4 +1,4 @@
-import { Home, MessageSquareMore, MoonIcon } from "lucide-react";
+import { MessageSquareMore, MoonIcon } from "lucide-react";
 import { HeaderComponent } from "../components/header/header";
 import { SidebarComponent } from "../components/sidebar";
 import { DatePickerWithRange } from "../components/TopicTrendsPageComponents/datefilter";

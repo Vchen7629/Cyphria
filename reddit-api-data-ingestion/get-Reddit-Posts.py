@@ -11,7 +11,7 @@ class RedditPosts:
     
     def GetPosts(self):
         headers = {"Authorization": "Bearer " + self.Oauth_Token, "User-Agent": "ChangeMeClient/0.1 by YourUsername"}
-        params = {"limit": 100, "lang": "en"}
+        params = {"limit": 2, "lang": "en"}
         
         if self.last_post_name:
             params["after"] = self.last_post_name

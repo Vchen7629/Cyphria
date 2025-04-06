@@ -4,7 +4,7 @@ def test_consumer(timeout=100):
     print("Reading message")
     try:
         consumer = KafkaConsumer(
-            'test-topic',
+            'processed_data',
             bootstrap_servers=['localhost:9092'],
             auto_offset_reset='latest',
             value_deserializer=lambda m: m.decode('utf-8'),

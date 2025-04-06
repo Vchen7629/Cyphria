@@ -1,6 +1,4 @@
 import pandas as pd
-from pyspark.sql.functions import pandas_udf
-from pyspark.sql.types import ArrayType, FloatType
 import time
 
 from components import sbert_model
@@ -26,8 +24,3 @@ class Gen_Vector_Embeddings:
         except Exception as e:
             print(f"Error generating embedding batch. Error: {e}")
             return pd.Series([None] * len(query))
-
-@pandas_udf(ArrayType(FloatType()))
-def Generate_Vector_Embeddings_udf(texts: pd.Series) -> pd.Series:
-    embedder = get_vector_embedder()
-    return embedder.Generate_Vector_Embeddings(texts)

@@ -2,8 +2,6 @@ import torch, pickle
 from sbert_model import get_model
 from category_example_sentences import category_names
 
-    
-
 class GenerateSentenceEmbeddingFiles:
     def __init__(self):
         self.model_instance = get_model()

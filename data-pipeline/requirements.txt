@@ -1,0 +1,7 @@
+Pandas
+kafka-python
+keyBert
+Torch
+numpy
+vaderSentiment
+sentence-transformers

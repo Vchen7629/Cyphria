@@ -3,9 +3,6 @@ from sentence_transformers import util
 import torch, pickle, os
 import pandas as pd
 import numpy as np
-from pyspark import SparkFiles
-from pyspark.sql.functions import pandas_udf
-from pyspark.sql.types import StringType
 
 category_instance = None
 
@@ -18,26 +15,24 @@ def Get_Classifier_Instance():
 class CategoryClassifier:
     def __init__(self):
         try:
-            tensor_filename = 'category_tensor.pt'
-            mapping_filename = 'category_mapping.pkl'
+            tensor_path = '../data-pipeline/precomputed_category_sentences_files/category_tensor.pt'
+            mapping_path =  '../data-pipeline/precomputed_category_sentences_files/category_mapping.pkl'
 
-            tensor_path = SparkFiles.get(tensor_filename)
-            mapping_path = SparkFiles.get(mapping_filename)
+            abs_tensor_path = os.path.abspath(tensor_path)
+            abs_mapping_path = os.path.abspath(mapping_path)
 
             if not os.path.exists(tensor_path):
-                 raise FileNotFoundError(f"SparkFiles resolved path does not exist: {tensor_path}. Check if '{tensor_filename}' was added via --files or addFile.")
+                raise FileNotFoundError(f"tensor resolved path does not exist: {abs_tensor_path}.")
             print(f"Loading category tensor from: {tensor_path}")
             self.category_tensor = torch.load(tensor_path)
 
 
-            print(f"Attempting to load category mapping from resolved path: {mapping_path}")
             if not os.path.exists(mapping_path):
-                 raise FileNotFoundError(f"SparkFiles resolved path does not exist: {mapping_path}. Check if '{mapping_filename}' was added via --files or addFile.")
+                 raise FileNotFoundError(f"mapping resolved path does not exist: {abs_mapping_path}.")
             with open(mapping_path, 'rb') as f:
                 self.category_name = pickle.load(f)
 
             print(f"CategoryClassifier initialized with pre-computed data ({len(self.category_name)} references).")
-
             if self.category_tensor is None or self.category_name is None:
                 raise RuntimeError("Category Classifier reference embeddings failed to initialize.")
             if self.category_tensor.numel() == 0:
@@ -82,11 +77,3 @@ class CategoryClassifier:
             print(f"Error classifying category. Error: {e}")
             return pd.Series([None] * len(vector_embedding))
             
-@pandas_udf(StringType())
-def Category_Classifier_Pandas_Udf(embeddings: pd.Series) -> pd.Series:
-    start_time = time.time()
-    category = Get_Classifier_Instance()
-    print(f"Classified Category in: {time.time() - start_time:.4f} seconds")
-    return category.Classify_Category(embeddings)
-    
-

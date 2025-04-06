@@ -1,6 +1,4 @@
 import pandas as pd
-from pyspark.sql.functions import pandas_udf
-from pyspark.sql.types import ArrayType, FloatType
 import time
 
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
@@ -39,8 +37,3 @@ class VaderSentimentAnalysis:
         except Exception as e:
             print(f"Error generating embedding batch. Error: {e}")
             return pd.Series([None] * len(input))
-    
-@pandas_udf(FloatType())
-def Sentiment_Analysis_Pandas_Udf(texts: pd.Series) -> pd.Series:
-    vader = Get_Vader_Analyzer()
-    return vader.SentimentAnalysis(texts)

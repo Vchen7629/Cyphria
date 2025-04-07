@@ -8,5 +8,5 @@ NC='\033[0m'
 cd ..
 
 echo -e "${YELLOW}Preparing to build DockerFile...${NC}"
-docker build -t keyword-embedding-category-service .
+docker build -t sentiment-analysis-service .
 echo -e "${GREEN}Successfully built DockerFile!${NC}"

@@ -3,7 +3,7 @@ import os
 
 class Data_Ingestion:
     def __init__(self):
-        ipaddr = os.getenv('Sentiment-Analysis-Consumer-Ip','localhost:9092')
+        ipaddr = os.getenv('KAFKA_BOOTSTRAP_SERVERS','localhost:9092')
 
         try:
             self.consumer_config = KafkaConsumer(

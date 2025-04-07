@@ -3,7 +3,7 @@ import os, json
 
 class elasticsearch_producer:
     def __init__(self):
-        ipaddr = os.getenv('Sentiment-Analysis-Producer-Ip','localhost:9092')
+        ipaddr = os.getenv('KAFKA_BOOTSTRAP_SERVERS','localhost:9092')
         try:
             self.producer_config = KafkaProducer(
                 bootstrap_servers=[ipaddr],

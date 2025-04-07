@@ -3,7 +3,7 @@ from kafka_components.producer import elasticsearch_producer
 from kafka_components.transformdata import TransformData
 from kafka_components.publish_message import PublishMessage
 from model.deberta import deberta
-import traceback
+import traceback, time
 
 class Sentiment_Analysis:
     def __init__(self):

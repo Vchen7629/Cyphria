@@ -1,6 +1,4 @@
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch.nn.functional as F
-import numpy as np
 import torch, traceback, time
 
 class Aspect_Based_Sentiment_Analysis:

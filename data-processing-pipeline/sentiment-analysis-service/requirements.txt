@@ -2,3 +2,4 @@ transformers
 sentencepiece
 kafka-python
 pandas
+numpy

@@ -2,11 +2,11 @@ import traceback, time
 
 from kafka_components.consumer import topic_consumer
 from kafka_components.transform_data import TransformData
-from kafka_components.elasticsearch_producer import ElasticSearch_Producer
+from kafka_components.producer import Sentiment_Analysis_Producer
 from kafka_components.pub_message import Publish_Messages
 
 # This class defines the entry point
-class run_pipeline:
+class start_service:
     def __init__(self):
         transformer = None
         producer = None
@@ -15,8 +15,11 @@ class run_pipeline:
             if topic_consumer is None:
                 raise ValueError("Kafka consumer instance is not initialized!")
             
+            if Sentiment_Analysis_Producer is None:
+                raise ValueError("Kafka producer instance is not initialized!")
+            
             consumer_instance = topic_consumer() 
-            producer_instance = ElasticSearch_Producer()
+            producer_instance = Sentiment_Analysis_Producer()
             transformer = TransformData(consumer_instance=consumer_instance)
             producer = Publish_Messages(publisher_instance=producer_instance)
             while running:
@@ -35,7 +38,6 @@ class run_pipeline:
 
                 if processed_df is not None and not processed_df.empty:
                     try:
-                        print(processed_df)
                         producer.publish_message(processed_df)
                     except Exception as e:
                         print(f"Error publishing message to producer: {e}")
@@ -67,5 +69,5 @@ class run_pipeline:
             print("INFO: Shutdown complete.")
 
 if __name__ == "__main__":
-    run_pipeline()
+    start_service()
     

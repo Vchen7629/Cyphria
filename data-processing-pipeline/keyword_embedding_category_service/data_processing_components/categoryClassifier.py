@@ -15,8 +15,8 @@ def Get_Classifier_Instance():
 class CategoryClassifier:
     def __init__(self):
         try:
-            tensor_path = '../data-pipeline/precomputed_category_sentences_files/category_tensor.pt'
-            mapping_path =  '../data-pipeline/precomputed_category_sentences_files/category_mapping.pkl'
+            tensor_path = os.getenv("CATEGORY_TENSOR_FILE_PATH", "../keyword_embedding_category_service/precomputed_category_sentences_files/category_tensor.pt")
+            mapping_path =  os.getenv("CATEGORY_MAPPING_FILE_PATH", '../keyword_embedding_category_service/precomputed_category_sentences_files/category_mapping.pkl')
 
             abs_tensor_path = os.path.abspath(tensor_path)
             abs_mapping_path = os.path.abspath(mapping_path)

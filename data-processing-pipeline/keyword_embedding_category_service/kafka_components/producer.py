@@ -2,7 +2,7 @@ import json, os
 from kafka import KafkaProducer
 
 #This class sends configures the producer for the processed data topic
-class ElasticSearch_Producer:
+class Sentiment_Analysis_Producer:
     def __init__(self):
         try:
             kafka_server = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092')

@@ -11,7 +11,7 @@ class RedditPosts:
     
     def GetPosts(self):
         headers = {"Authorization": "Bearer " + self.Oauth_Token, "User-Agent": "ChangeMeClient/0.1 by YourUsername"}
-        params = {"limit": 2, "lang": "en"}
+        params = {"limit": 3, "lang": "en"}
         
         if self.last_post_name:
             params["after"] = self.last_post_name
@@ -30,14 +30,14 @@ class RedditPosts:
                     if post_data and (post_data['body']) and (post_data['title'] != "What is this?"):
                         if filter.isEnglish(post_data):
                             english_only.append(post_data)
-                            subreddit = post_data['subreddit']
+                            #subreddit = post_data['subreddit']
                             
             
             else:
                 print(f"Error {response.status_code}: {response.text}")
                 return None
             
-            r_producer.Send_Message(subreddit, english_only)
+            r_producer.Send_Message(english_only)
             
             print("english only: ", english_only)
 

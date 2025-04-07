@@ -29,10 +29,10 @@ class Reddit_Api_Producer:
     def on_send_error(self, excp):
         print(f"Error sending message: {excp}")
 
-    def Send_Message(self, key, message_body):
+    def Send_Message(self, message_body):
         print("sending message")
         try:
-            test_message = self.producer.send('test-topic', key=key, value=message_body)
+            test_message = self.producer.send('test-topic', value=message_body)
             test_message.add_callback(r_producer.on_send_success)
             test_message.add_errback(r_producer.on_send_error)
 

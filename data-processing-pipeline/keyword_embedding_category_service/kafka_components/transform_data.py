@@ -2,7 +2,7 @@ import sys, os, json, time, traceback
 import pandas as pd
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from data_processing_components import keywordextraction, generate_vector_embeddings, sentimentAnalysis, categoryClassifier
+from data_processing_components import keywordextraction, generate_vector_embeddings, categoryClassifier
 
 class TransformData:
     def __init__(self, consumer_instance):
@@ -11,7 +11,6 @@ class TransformData:
         try:
             self.keyword_extractor = keywordextraction.KeywordExtraction()
             self.vector_embedder = generate_vector_embeddings.Gen_Vector_Embeddings()
-            self.vader_sentiment = sentimentAnalysis.VaderSentimentAnalysis()
             self.category_classifier = categoryClassifier.CategoryClassifier()
         except Exception as e:
             print(f"FATAL ERROR initializing models: {e}")
@@ -58,21 +57,15 @@ class TransformData:
 
     def process_data(self, extracted_data):
         start = time.time()
-        start2 = time.time()
         reddit_post_dataframe = pd.DataFrame(data=extracted_data) # create initial dataframe with raw reddit post data
         try:
             keyword_series = self.keyword_extractor.Extraction(reddit_post_dataframe['body'])
             vector_embedding_series = self.vector_embedder.Generate_Vector_Embeddings(reddit_post_dataframe['body'])
-            vader_series = self.vader_sentiment.SentimentAnalysis(reddit_post_dataframe['body'])
             category_embeddings = self.category_classifier.Classify_Category(vector_embedding_series)
             reddit_post_dataframe['keywords'] = keyword_series
             reddit_post_dataframe['vector_embedding'] = vector_embedding_series
-            reddit_post_dataframe['sentiment_score'] = vader_series
             reddit_post_dataframe['category'] = category_embeddings
         except Exception as e:
-            print(f"Error transforming data: {e}")
-        print(f"Entire pipeline without printing took: {time.time() - start2}")
-        #df_vert = reddit_post_dataframe.T
-        #print(df_vert)
+            raise ValueError(f"Error transforming data: {e}")
         print(f"Entire pipeline took: {time.time() - start}")
         return reddit_post_dataframe

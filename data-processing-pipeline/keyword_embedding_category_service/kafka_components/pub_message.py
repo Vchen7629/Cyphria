@@ -22,7 +22,6 @@ class Publish_Messages:
                         if 'vector_embedding' in row and isinstance(row['vector_embedding'], np.ndarray): 
                             row['vector_embedding'] = row['vector_embedding'].tolist() 
                         output.append(row)
-                        num_sent += 1
                     except Exception as e:
                         print(f"Error publishing to topic: {e}")
                 self.instance.producer_config.send('sentiment-analysis', output)

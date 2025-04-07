@@ -102,6 +102,7 @@ class TransformData:
             start4 = time.time()
             final_df = dataframe.join(aggregated_data, how='left')
             print(f"time for join: {time.time() - start4}")
+            print(f"time for processing: {time.time() - start}")
 
             return final_df
         except Exception as e:

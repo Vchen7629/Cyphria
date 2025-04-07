@@ -8,6 +8,9 @@ ENV SENTENCE_TRANSFORMERS_HOME=/app/.cache/sentence_transformers
 ENV TRANSFORMERS_CACHE=/app/.cache/transformers
 ENV HF_HOME=/app/.cache/huggingface
 
+RUN python -m pip install --no-cache-dir torch==2.5.0 torchvision==0.20 torchaudio==2.5 --index-url https://download.pytorch.org/whl/cpu
+
+
 COPY requirements.txt .
 
 RUN python -m pip install --no-cache-dir --upgrade pip && \

@@ -6,6 +6,7 @@ RED='\u001b[31m'
 NC='\033[0m'
 
 cd ..
+
 echo -e "${YELLOW}Preparing to build DockerFile...${NC}"
 docker build -t data-processing-pipeline .
 echo -e "${GREEN}Successfully built DockerFile!${NC}"

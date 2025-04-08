@@ -21,13 +21,12 @@
 
 <h3>Data Processing</h3>
 <ul>
-  <li>Apache Spark: </li>
-  <li>Apache Kafka: </li>
+  <li>Apache Kafka: Kafka is used as the data streaming and messenging service that connects my data pipeline components and provides fault tolerance and scalability to my system</li>
 </ul>
 
 <h3>Database</h3>
 <ul>
-  <li>Milvus: Milvus is the vector database used to store the various social media post vector embeddings</li>
+  <li>ElasticSearch: ElasticSearch is the main database used to store reddit post data including vector embeddings,text,keywords,sentiments,etc</li>
   <li>Postgres: Postgres is used to store the user account data for the application</li>
   <li>Redis: Redis is used in my system to handle caching, reducing the load on my database and decreasing latency</li>
 </ul>
@@ -40,3 +39,5 @@
 </ul>
 
 <h2>Getting Started</h2>
+
+<h2>Project Structure</h2>

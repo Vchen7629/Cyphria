@@ -15,7 +15,7 @@ class Aspect_Based_Sentiment_Analysis:
         if not pair:
             return []
         all_results = []
-        num_batches = math.ceil(len(pair) / self.model_batch_size)
+        num_batches = len(pair)
         try:
             for i in range(0, num_batches, self.model_batch_size):
                 current_batch_pairs = pair[i : i + self.model_batch_size]

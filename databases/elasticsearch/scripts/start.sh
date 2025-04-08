@@ -6,6 +6,7 @@ set -eu
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "${SCRIPT_DIR}"
 today=$(date +%s)
+cd ..
 . ./.env
 # Check disk space
 available_gb=$(($(df -k / | awk 'NR==2 {print $4}') / 1024 / 1024))

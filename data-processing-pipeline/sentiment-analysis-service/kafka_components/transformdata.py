@@ -114,9 +114,9 @@ class TransformData:
             
     def aggregate_results(self, group):
         try:
-            return dict(zip(group['keyword'], group['sentiment']))
+            return [{"keyword": k, "sentiment": s} for k, s in zip(group['keyword'], group['sentiment'])]
         except Exception as e:
             print(f"ERROR inside aggregate_results for group index {group.name}: {e}")
-            return {}
+            return []
 
             

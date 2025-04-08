@@ -1,10 +1,10 @@
 from kafka import KafkaConsumer
 
-def test_consumer(timeout=100):
+def test_consumer(timeout=10000000000):
     print("Reading message")
     try:
         consumer = KafkaConsumer(
-            'processed_data',
+            'test-dlq',
             bootstrap_servers=['localhost:9092'],
             auto_offset_reset='latest',
             value_deserializer=lambda m: m.decode('utf-8'),

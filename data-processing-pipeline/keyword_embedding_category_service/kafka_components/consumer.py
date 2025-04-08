@@ -8,7 +8,7 @@ class topic_consumer:
             kafka_server = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092')
             # setting up the consume to read raw data from kafka topic
             self.consumer_config = KafkaConsumer(
-                'test-topic',
+                'raw-data',
                 bootstrap_servers=[kafka_server],
                 auto_offset_reset='latest',
                 value_deserializer=lambda m: m.decode('utf-8'),

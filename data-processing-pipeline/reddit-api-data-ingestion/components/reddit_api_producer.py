@@ -15,7 +15,7 @@ class Reddit_Api_Producer:
                 request_timeout_ms=15000, 
                 max_block_ms=30000,
                 key_serializer=lambda k: str(k).encode('utf-8'),
-                value_serializer=lambda m: json.dumps(m).encode('utf-8')
+                value_serializer=lambda v: json.dumps(v).encode('utf-8')
             )
             print("Producer connected...")
 
@@ -32,7 +32,7 @@ class Reddit_Api_Producer:
     def Send_Message(self, message_body):
         print("sending message")
         try:
-            test_message = self.producer.send('test-topic', value=message_body)
+            test_message = self.producer.send('raw-data', value=message_body)
             test_message.add_callback(r_producer.on_send_success)
             test_message.add_errback(r_producer.on_send_error)
 

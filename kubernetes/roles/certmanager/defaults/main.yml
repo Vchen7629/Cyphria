@@ -1,0 +1,3 @@
+certmanager_vars:
+  kubernetes:
+    

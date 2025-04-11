@@ -1,0 +1,12 @@
+- name: Restart Service
+  ansible.builtin.systemd:
+    state: restarted
+    name: k3s
+
+- name: Restart Sysctl
+  ansible.builtin.command:
+    cmd: sysctl --system
+  changed_when: false
+
+- name: Reboot
+  ansible.builtin.reboot:

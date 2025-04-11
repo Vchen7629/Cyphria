@@ -1,0 +1,68 @@
+---
+- name: Ansible Vault
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_prompt:
+    - name: user_action
+      prompt: "Select an action to perform\n
+        1) List Encrypted Variables
+        2) Encrypt Variables
+        3) update global password \n"
+      private: false
+  tasks:
+    - name: Encrypted Variables
+      when: user_action in ['1', '1)']
+      block: 
+        - name: Set encrypted variables fact
+          ansible.builtin.set_fact:
+            encrypted_variables:
+              ansible_password: '{{ ansible_password }}'
+              global_map:
+                credentials:
+                  cluster:
+                    postfix:
+                      user:
+                        alias: '{{ global_map.credentials.cluster.postfix.user.alias }}'
+                        name: '{{ global_map.credentials.cluster.postfix.user.name }}'
+                        password: '{{ global_map.credentials.cluster.postfix.user.password }}'
+                  
+          no_log: true
+
+        - name: List encrypted variables
+          ansible.builtin.debug:
+            var: encrypted_variables
+
+
+    - name: Encrypt Variables
+      when: user_action in ['2', '2)']
+      
+    - name: Update Global Password
+      when: user_action in ['3', '3)']
+      block:
+        - name: update global password
+          ansible.builtin.pause:
+            prompt: '{{ item }}'
+            echo: false
+          loop:
+            - 'New Global Password'
+            - 'Confirm New Global Password'
+          register: password
+
+        - name: Validate password
+          ansible.builtin.assert:
+            that: password.results[0].user_input == password.results[1].user_input
+            fail_msg: Passwords do not match
+            quiet: True
+        
+        - name: create password file
+          ansible.builtin.tempfile:
+            path: .
+          register: vault_file
+        
+        - name: Register Global Password
+          ansible.builtin.lineinfile:
+            line: '{{ password.results[0].user_input }}'
+            path: '{{ vault_file.path }}'
+            mode: '0644'
+          no_log: true

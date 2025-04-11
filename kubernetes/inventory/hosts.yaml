@@ -1,0 +1,23 @@
+# To enable HA just add in more than one host in the server.hosts #
+server: # 
+  hosts:
+    tiamat:
+      ansible_host: 10.0.0.167
+      ansible_user: vchen7629
+      ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+      ansible_become_password: Zebcityofdoom24
+    #ryujin:
+
+    #tachyon:
+
+agent:
+  tempest:
+  fafnir:
+  glaurung:
+  bahumat:
+  nidhog:
+
+cluster:
+  children:
+    server:
+    agent:

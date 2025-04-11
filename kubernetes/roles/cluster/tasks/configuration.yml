@@ -1,0 +1,40 @@
+- name: OS configuration
+  block:
+    - name: disable cloud-init service
+      ansible.builtin.file:
+        path: /etc/cloud/cloud-init.disabled
+        access_time: preserve
+        modification_time: preserve
+        state: touch
+        owner: root
+        group: root
+        mode: '700'
+      notify: Reboot   
+
+    - name: disable firewall
+      ansible.builtin.systemd_service:
+        name: ufw.service
+        state: stopped
+        enabled: false
+
+    - name: disable snapd services
+      ansible.builtin.systemd_service:
+        name: '{{ item }}'
+        state: stopped
+        enabled: false
+      loop:
+        - snapd.apparmor.service
+        - snapd.service
+        - snapd.seeded.service
+        - snapd.socket
+
+    - name: load kernel modules for kubernetes
+      ansible.builtin.copy:
+        content: |
+          - br_netfilter
+          - overlay
+        dest: /etc/modules-load.d/kubernetes.conf
+        owner: root
+        group: root
+        mode: '644'
+      notify: Reboot

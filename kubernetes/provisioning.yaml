@@ -1,0 +1,26 @@
+
+- name: OS configuration
+  hosts: cluster
+  become: true
+  gather_facts: true
+  roles:
+    - cluster
+  tags: cluster
+
+#- name: Provision Load Balancer
+#  hosts: cluster
+#  become: true
+#  gather_facts: true
+
+- name: k3s Provisioning
+  hosts: cluster
+  become: true
+  gather_facts: true
+  roles: 
+    - k3s
+    - helm
+  serial:
+    - 1
+    - 2
+    - 5
+  tags: kubernetes

@@ -117,7 +117,7 @@
     
     - name: remove archive
       ansible.builtin.file:
-        path: /tmp/kubepug_linux_arm64.tar.gz
+        path: /tmp/kubepug_linux_amd64.tar.gz
         state: absent
       check_mode: false
 
@@ -126,7 +126,7 @@
     - k3s_vars.cluster.kubeconfig.local is truthy
     - inventory_hostname in ['localhost', k3s_map.server.default_host]
   run_once: true
-  no_log: true
+  #no_log: true
   block:
     - name: create temp file
       ansible.builtin.tempfile:
@@ -158,10 +158,10 @@
             - cluster:
                 certificate-authority-data: "{{ datasource.clusters[0].cluster['certificate-authority-data']}}"
                 server: https://{{ k3s_vars.server.api.host if k3s_map.server.ha else k3s_node.ip }}:{{ k3s_vars.server.api.port }}
-              name: '{{ datasource.ckysters[0].name}}'
+              name: '{{ datasource.clusters[0].name}}'
               
     - name: Create local .kube directory
-      ansible.builtin.tempfile:
+      ansible.builtin.file:
         path: '{{ k3s_vars.cluster.kubeconfig.path}}'
         mode: '755'
         state: directory

@@ -1,7 +1,9 @@
-- name: Restart Service
-  ansible.builtin.systemd:
+- name: Restart service
+  ansible.builtin.systemd_service:
+    name: '{{ k3s_map.service.name }}.service'
     state: restarted
-    name: k3s
+    daemon_reload: true
+    enabled: true
 
 - name: Restart Sysctl
   ansible.builtin.command:

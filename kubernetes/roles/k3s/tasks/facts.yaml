@@ -2,7 +2,8 @@
   ansible.builtin.set_fact:
     k3s_map:
       cluster:
-
+        dns: 10.43.0.10
+        label: default
       node:
         default_registry_endpoint:
           enabled: true
@@ -49,17 +50,14 @@
           vm.overcommit_memory: 1
           vm.swappiness: 1
         tolerations:
-          - key: node.cilium.io/agent-not-ready
-            operator: Exists
-            effect: NoExecute
           - key: node-role.kubernetes.io/control-plane
             operator: Exists
             effect: NoSchedule
       server: # this is from the hosts.yaml file in inventory folder
-        default_host: '{{ hostvars[groups.server[0]].ansible_hostname | default(groups.server[0]) }}'
+        default_host: '{{ hostvars[groups.server[0]].hosts.ansible_hostname | default(groups.server[0]) }}'
         ha: '{{ groups.server | length > 2 }}'
         hosts: '{{ groups.server }}'
-        non-ha: '{{ groups.server | length == 1}}'
+        non_ha: '{{ groups.server | length == 1}}'
       service:
         name: "k3s{{ '-agent' if inventory_hostname not in groups.server }}"
   run_once: true
@@ -70,12 +68,13 @@
       cluster:
         token: "{{ hostvars[k3s_map.server.default_host].k3s_project.cluster.token | default('') }}"
         tolerations: ""
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
       node:
         binary: /usr/local/bin/k3s
       release:
         kubepug: 
           checksum: 'https://github.com/kubepug/kubepug/releases/download/v1.7.1/kubepug_1.7.1_checksums.txt'
-          file: 'https://github.com/kubepug/kubepug/releases/download/v1.7.1/kubepug_linux_arm64.tar.gz'
+          file: 'https://github.com/kubepug/kubepug/releases/download/v1.7.1/kubepug_linux_amd64.tar.gz'
 
 - name: Set Node fact
   ansible.builtin.set_fact:
@@ -96,22 +95,13 @@
           value: cpu=1,ephemeral-storage=5Gi,memory=1Gi
       service: "{{ 'agent' if inventory_hostname not in k3s_map.server.hosts else 'server' }}"
 
-- name: set project kubelete arguments fact
+- name: set project kubelet arguments fact
   ansible.builtin.set_fact:
-    k3s_project_kublet_args: "{{ k3s_project_kublet_args | default([]) | union([':'.join((taint.key | string, taint.effect | string))]) | sort }}"
-  loop: '{{ k3s_map.node.tolerations }}'
+    k3s_project_kublet_args: "{{ k3s_project_kublet_args | default([]) | union(['='.join((kubelet.arg | string, kubelet.value | string))]) | sort }}"
+  loop: '{{ k3s_node.kubelet }}'
   loop_control:
-    loop_var: taint
+    loop_var: kubelet
   run_once: true
-
-- name: Set project taints fact
-  ansible.builtin.set_fact:
-    k3s_project_taints: "{{ k3s_project_taints | default([]) | union([':'.join((taint.key | string, taint.effect | string))]) | sort }}"
-  loop: '{{ k3s_map.node.tolerations }}'
-  loop_control:
-    loop_var: taint
-  run_once: true
-
 
 - name: set resources fact
   ansible.builtin.set_fact:
@@ -119,9 +109,6 @@
       node:
         kubelet:
           args: '{{ k3s_project_kublet_args }}'
-        taint:
-          agent: "{{ k3s_project_taints | select('search', 'agent-not-ready') | default('') }}"
-          server: "{{ k3s_project_taints | select('search', 'control-plane') | default('') }}"
   run_once: true
 
 

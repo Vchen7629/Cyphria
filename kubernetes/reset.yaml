@@ -34,7 +34,7 @@
         #- metrics-server
        # - victoria-logs
        # - victoria-metrics
-        - helm
+       # - helm
       loop_control:
         loop_var: reset
       tags: always

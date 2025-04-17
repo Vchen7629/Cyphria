@@ -8,33 +8,15 @@ cluster-domain: {{ k3s_vars.cluster.domain }}
 {% if k3s_map.server.ha is truthy and k3s_postinstall is falsy and inventory_hostname == k3s_map.server.default_host %}
 cluster-init: true
 {% endif %}
-disable:
-  - coredns
-  - local-storage
-  - metrics-server
-  - servicelb
-  - traefik
-disable-cloud-controller: true
-disable-kube-proxy: true
-disable-network-policy: true
 embedded-registry: true
 {% if k3s_map.server.ha %}
 etcd-expose-metrics: true
 {% endif %}
-flannel-backend: none
 kube-controller-manager-arg: bind-address={{ k3s_node.ip }}
 kube-scheduler-arg: bind-address={{ k3s_node.ip }}
 {% endif %}
 kubelet-arg:
   {{ k3s_resources.node.kubelet.args | to_nice_yaml | indent(2) }}
-{%- if
-  (k3s_resources.node.taint.agent | length > 0) or
-  (k3s_vars.cluster.controlplane.tainted is truthy and k3s_node.service | lower == 'server' and k3s_resources.node.taint.server | length > 0)
-%}
-node-taint:
-{% if k3s_resources.node.taint.agent | length > 0 %}
-  {{ k3s_resources.node.taint.agent | to_nice_yaml | indent(2) }}
-{%- endif %}
 {% if k3s_vars.cluster.controlplane.tainted is truthy and k3s_node.service | lower == 'server' and k3s_resources.node.taint.server | length > 0 %}
   {{ k3s_resources.node.taint.server | to_nice_yaml | indent(2) }}
 {%- endif %}

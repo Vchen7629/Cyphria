@@ -18,7 +18,6 @@
   gather_facts: true
   roles: 
     - k3s
-    - helm
   serial:
     - 1
     - 2

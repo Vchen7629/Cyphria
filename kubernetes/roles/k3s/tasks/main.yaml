@@ -21,6 +21,37 @@
       ansible.builtin.shell: sh /tmp/k3-installer.sh
       args: 
         chdir: /tmp/
+    
+    - name: Set role postinstall fact
+      ansible.builtin.set_fact:
+        k3s_postinstall: false
+    
+    - name: Create configuration directory
+      ansible.builtin.file:
+        path: /etc/rancher/k3s
+        state: directory
+        owner: root
+        group: root
+        mode: '755'
+
+    - name: Create service file
+      ansible.builtin.template:
+        src: service.j2
+        dest: /etc/systemd/system/{{ k3s_map.service.name }}.service
+        owner: root
+        group: root
+        mode: '644'
+
+    - name: Create service environment file
+      ansible.builtin.file:
+        path: /etc/systemd/system/{{ k3s_map.service.name }}.service.env
+        access_time: preserve
+        modification_time: preserve
+        state: touch
+        owner: root
+        group: root
+        mode: '600'
+      
 
 - name: flush handlers
   ansible.builtin.meta: flush_handlers
@@ -30,7 +61,7 @@
     file: configuration.yaml
 
 - name: Server configuration
-  notify: Restart Service
+  notify: Restart service
   block:
     - name: finish role postinitialization
       ansible.builtin.set_fact:
@@ -39,7 +70,7 @@
     - name: set server config file
       ansible.builtin.template:
         src: config.j2
-        dest: ../../etc/systemd/system/k3s.service
+        dest: /etc/rancher/k3s/config.yaml
         owner: root
         group: root
         mode: '600'

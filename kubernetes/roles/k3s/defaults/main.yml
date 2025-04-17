@@ -1,7 +1,7 @@
 k3s_vars:
   cluster:
     controlplane:
-      tainted: false
+      tainted: true
     domain: cluster.local
     kubeconfig:
       local: true
@@ -12,11 +12,11 @@ k3s_vars:
     tls_san: 
       - 10.0.0.167 # wlol in ip a
   network: 
-    interface: eth0
+    interface: wlo1
   release:
     kubepug:
       checksum: checksums.txt
-      file: kubepug_linux_arm64.tar.gz
+      file: kubepug_linux_amd64.tar.gz
       name: kubepug
       repository:
         name: kubepug
@@ -24,7 +24,7 @@ k3s_vars:
       version: v1.7.1
   server:
     api:
-      #host: 10.0.0.167
+      host: 10.0.0.167
       port: 6443
   service:
     debug: false

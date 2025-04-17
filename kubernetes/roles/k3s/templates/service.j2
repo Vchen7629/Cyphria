@@ -12,21 +12,14 @@ Type=notify
 Delegate=yes
 EnvironmentFile=-/etc/default/%N
 EnvironmentFile=-/etc/sysconfig/%N
-EnvironmentFile=-/etc/systemd/system/Cyphria.k3s.service.env
+EnvironmentFile=-/etc/systemd/system/{{ k3s_map.service.name }}.service.env
+ExecStart={{ k3s_project.node.binary }} {{ k3s_node.service }}{{ ' --debug' if k3s_vars.service.debug }}
+ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=process
-User=root
-# Having non-zero Limit*s causes performance problems due to accounting overhead
-# in the kernel. We recommend using cgroups to do container-local accounting.
-LimitNOFILE=1048576
+LimitNOFILE=infinity
 LimitNPROC=infinity
 LimitCORE=infinity
 TasksMax=infinity
 TimeoutStartSec=0
-Restart=always
+Restart=on-failure
 RestartSec=5s
-ExecStartPre=/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service 2>/dev/null'
-ExecStartPre=-/sbin/modprobe br_netfilter
-ExecStartPre=-/sbin/modprobe overlay
-ExecStart=/usr/local/bin/k3s \
-    server \
-

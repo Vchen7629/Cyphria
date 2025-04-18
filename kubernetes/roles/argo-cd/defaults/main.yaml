@@ -1,0 +1,18 @@
+argocd_vars:
+  kubernetes:
+    helm:
+      chart:  
+        name: argo-cd
+        version: v7.8.26
+      repository:
+        name: argo-helm
+        org: argoproj
+        url: https://argoproj.github.io
+    namespace: kube-system
+  release: 
+    checksum: cli_checksums.txt
+    file: argocd-linux-amd64
+    repository:
+      name: argo-cd
+      org: argoproj
+    version: v2.14.10

@@ -23,3 +23,11 @@
     - 2
     - 5
   tags: kubernetes
+
+- name: Application Provisioning
+  hosts: cluster
+  become: true
+  gather_facts: true
+  roles: 
+    - argo-cd
+  tags: charts

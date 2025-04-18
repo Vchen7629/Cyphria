@@ -15,7 +15,6 @@ server: #
 
 agent:
   tempest:
-    ansible_host:
   fafnir:
   glaurung:
   bahumat:

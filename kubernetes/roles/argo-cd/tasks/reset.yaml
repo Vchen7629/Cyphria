@@ -1,0 +1,13 @@
+- name: Role Reset
+  when: inventory_hostname in k3s_map.server.hosts
+  block:
+    - name: Remove Repo
+      kubernetes.core.helm_repository:
+        name: '{{ argocd_vars.kubernetes.helm.repository.org }}'
+        repo_state: absent
+      when: "'helm' in ansible_facts.packages"
+      
+    - name: remove binary
+      ansible.builtin.file: 
+        path: /usr/local/bin/argocd
+        state: absent

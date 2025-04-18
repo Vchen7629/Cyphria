@@ -1,0 +1,33 @@
+- name: Set map fact
+  ansible.builtin.set_fact:
+    argocd_map:
+      helm:
+        chart:
+          reference: '{{ argocd_vars.kubernetes.helm.repository.org }}/{{ argocd_vars.kubernetes.helm.chart.name }}'
+          version: '{{ argocd_vars.kubernetes.helm.chart.version[1:] }}'
+        platform: 
+          key: https://github.com
+          raw: https://raw.githubusercontent.com
+        repository:
+          name: '{{ argocd_vars.kubernetes.helm.repository.org }}/{{ argocd_vars.kubernetes.helm.repository.name }}'
+          url: '{{ argocd_vars.kubernetes.helm.repository.url }}/{{ argocd_vars.kubernetes.helm.repository.name }}'
+        timeout: 10m0s
+
+
+
+- name: set project fact
+  ansible.builtin.set_fact:
+    argocd_project:
+      release:
+        checksum: '{{ argocd_vars.release.version }}/{{ argocd_vars.release.checksum }}'
+        file: '{{ argocd_vars.release.version}}/{{ argocd_vars.release.file}}'
+        url: https://github.com/argoproj/argo-cd/releases/download
+      
+
+
+
+- name: Set variables fact
+  ansible.builtin.set_fact:
+    argocd_vars: '{{ argocd_vars }}'
+  run_once: true
+    

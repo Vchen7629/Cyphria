@@ -24,7 +24,7 @@
       loop:
         - cluster
         - k3s
-        #- argo-cd
+        - argo-cd
         #- cert-manager
         #- cilium
         #- coredns

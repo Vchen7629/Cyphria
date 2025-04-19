@@ -50,6 +50,7 @@
             kubeconfig: '{{ k3s_project.cluster.kubeconfig }}'
             name: '{{ argocd_vars.kubernetes.helm.chart.name }}'
             namespace: '{{ argocd_vars.kubernetes.namespace}}'
+            values: "{{ lookup('ansible.builtin.template', 'values.j2') | from_yaml }}"
             timeout: '{{ argocd_map.helm.timeout }}'
             create_namespace: true
             update_repo_cache: true

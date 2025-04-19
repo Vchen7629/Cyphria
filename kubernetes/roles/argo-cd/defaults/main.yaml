@@ -9,6 +9,72 @@ argocd_vars:
         org: argoproj
         url: https://argoproj.github.io
     namespace: kube-system
+    controller:
+      replicas: 1
+      resources:
+        limits:
+          cpu: null
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 512Mi
+    dex: 
+      resources:
+        limits: 
+          cpu: null
+          memory: 128Mi
+        requests: 
+          cpu: 10m
+          memory: 128Mi
+    redis:
+      ha:
+        enabled: false # turn this on if we have 3+ worker nodes
+      resources:
+        limits: 
+          cpu: null
+          memory: 128Mi
+        requests: 
+          cpu: 10m
+          memory: 128Mi
+    repo_server:
+      autoscaling: 
+        enabled: true
+        min_replicas: 1
+        max_replicas: 3
+        target: 
+          utilization_percentage:
+            cpu: null
+            memory: 80
+      resources:
+        limits:
+          cpu: null
+          memory: 128Mi
+        requests: 
+          cpu: 10m
+          memory: 128Mi
+    server: 
+      autoscaling:
+        enabled: true
+        min_replicas: 1
+        max_replicas: 3
+        target: 
+          utilization_percentage:
+            cpu: null
+            memory: 80
+      credentials:
+        admin:
+          password: testing
+        user: 
+          name: zephyrus
+          password: 5526
+      resources:
+        limits:
+          cpu: null
+          memory: 128Mi
+        requests: 
+          cpu: 10m
+          memory: 128Mi
+
   kubeconfig:
     path: /etc/rancher/k3s/k3s.yaml
   release: 

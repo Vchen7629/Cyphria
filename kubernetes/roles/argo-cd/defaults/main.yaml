@@ -9,6 +9,8 @@ argocd_vars:
         org: argoproj
         url: https://argoproj.github.io
     namespace: kube-system
+  kubeconfig:
+    path: /etc/rancher/k3s/k3s.yaml
   release: 
     checksum: cli_checksums.txt
     file: argocd-linux-amd64

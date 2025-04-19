@@ -1,0 +1,13 @@
+
+- name: Role Reset
+  when: inventory_hostname in k3s_map.server.hosts
+  block:
+    - name: Remove Repo
+      kubernetes.core.helm_repository:
+        name: '{{ calico_vars.kubernetes.helm.repository.org }}'
+        repo_state: absent
+    
+    - name: Remove calicoctl
+      ansible.builtin.file:
+        path: /usr/local/bin/calicoctl
+        state: absent

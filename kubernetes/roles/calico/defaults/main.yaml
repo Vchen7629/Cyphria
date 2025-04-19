@@ -1,0 +1,14 @@
+---
+calico_vars:
+  kubernetes:
+    helm: 
+      chart:
+        name: tigera-operator
+        version: v3.29.3
+      repository:
+        name: projectcalico
+        org: calico
+        url: https://docs.tigera.io
+      namespace: networking
+    calicoctl:
+      version: calicoctl-linux-amd64

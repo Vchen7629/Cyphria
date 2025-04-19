@@ -18,6 +18,7 @@
   gather_facts: true
   roles: 
     - k3s
+    - helm
   serial:
     - 1
     - 2
@@ -28,6 +29,16 @@
   hosts: cluster
   become: true
   gather_facts: true
+  post_tasks:
+    - name: post install tasks
+      ansible.builtin.include_role:
+        name: "{{ postinstall }}"
+        tasks_from: postinstall
+      loop: 
+        - argo-cd
+      loop_control:
+        loop_var: postinstall
   roles: 
+    - calico
     - argo-cd
   tags: charts

@@ -9,6 +9,10 @@ cluster-domain: {{ k3s_vars.cluster.domain }}
 cluster-init: true
 {% endif %}
 embedded-registry: true
+disable:
+  - traefik
+disable-network-policy: true
+flannel-backend: none
 {% if k3s_map.server.ha %}
 etcd-expose-metrics: true
 {% endif %}
@@ -17,10 +21,6 @@ kube-scheduler-arg: bind-address={{ k3s_node.ip }}
 {% endif %}
 kubelet-arg:
   {{ k3s_resources.node.kubelet.args | to_nice_yaml | indent(2) }}
-{% if k3s_vars.cluster.controlplane.tainted is truthy and k3s_node.service | lower == 'server' and k3s_resources.node.taint.server | length > 0 %}
-  {{ k3s_resources.node.taint.server | to_nice_yaml | indent(2) }}
-{%- endif %}
-{% endif %}
 {% if k3s_map.server.ha is truthy and (k3s_postinstall is truthy or k3s_node.service | lower == 'agent') %}
 server: https://{{ k3s_vars.server.api.host }}:{{ k3s_vars.server.api.port }}
 {% elif

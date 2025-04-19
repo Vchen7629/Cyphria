@@ -25,6 +25,7 @@
         - cluster
         - k3s
         - argo-cd
+        - calico
         #- cert-manager
         #- cilium
         #- coredns

@@ -1,0 +1,7 @@
+- name: Uninstall nginx application in argocd
+  kubernetes.core.k8s:
+    api_version: argoproj.io/v1alpha1
+    state: absent
+    kind: Application
+    name: prometheus-crds
+    namespace: argocd

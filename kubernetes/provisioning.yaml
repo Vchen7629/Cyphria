@@ -41,4 +41,7 @@
   roles: 
     - calico
     - argo-cd
+    - nginx
+    - prometheus
+    - nginx
   tags: charts

@@ -5,7 +5,14 @@
       kubernetes.core.helm_repository:
         name: '{{ argocd_vars.kubernetes.helm.repository.org }}'
         repo_state: absent
-      when: "'helm' in ansible_facts.packages"
+    
+    - name: Remove Calico CNI config files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/cni/net.d/10-calico.conflist
+        - /etc/cni/net.d/calico-kubeconfig
       
     - name: remove binary
       ansible.builtin.file: 

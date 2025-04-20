@@ -7,3 +7,4 @@
     - argo-cd
   loop_control:
     loop_var: role
+

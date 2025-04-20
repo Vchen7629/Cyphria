@@ -1,0 +1,9 @@
+- name: Post Install configuration
+  when: inventory_hostname in k3s_map.server.hosts
+  run_once: true
+  block:
+    - name: Add User Account
+      kubernetes.core.k8s:
+        kubeconfig: "{{ k3s_project.cluster.kubeconfig }}"
+        definition: "{{ lookup('ansible.builtin.template', 'credentials.j2') | from_yaml }}"
+        wait: true

@@ -1,5 +1,6 @@
 .env
 .env.yml
+env.yaml
 pgdata
 .venv
 venv

@@ -1,0 +1,32 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: argocd-server-network-policy
+  namespace: argocd
+spec:
+  order: 80
+  selector: app.kubernetes.io/name == "argocd-server"
+  types:
+    - Ingress
+    - Egress
+  ingress:
+    - action: Allow # grPC + webUI for argocd server
+      protocol: TCP
+      destination:
+        ports: [80, 443]
+  egress:
+    - action: Allow # allowing argocd server -> argocd repo server for application state
+      protocol: TCP
+      destination:
+        selector: app.kubernetes.io/name == "argocd-repo-server"
+        ports: [8081]
+    - action: Allow # allowing argocd server -> dex server for 3rd party authentication
+      protocol: TCP
+      destination:
+        selector: app.kubernetes.io/name == "argocd-dex-server"
+        ports: [5556, 5557]
+    - action: Allow # allowing argocd server -> redis for HA caching
+      protocol: TCP
+      destination:
+        selector: app.kubernetes.io/name == "argocd-redis"
+        ports: [6379]

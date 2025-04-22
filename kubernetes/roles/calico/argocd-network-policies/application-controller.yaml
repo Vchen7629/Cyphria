@@ -1,0 +1,21 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: argocd-application-controller-network-policy
+  namespace: argocd
+spec:
+  order: 80
+  selector: app.kubernetes.io/name == "argocd-application-controller"
+  types:
+    - Egress
+  egress:
+    - action: Allow # allowing application controller -> repo server to pull generated manifests
+      protocol: TCP
+      destination:
+        selector: app.kubernetes.io/name == "argocd-repo-server"
+        ports: [8081]
+    - action: Allow # allowing application controller -> redis (HA Mode) for caching
+      protocol: TCP
+      destination:
+        selector: app.kubernetes.io/name == "argocd-redis"
+        ports: [6379]

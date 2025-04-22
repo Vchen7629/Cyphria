@@ -35,6 +35,7 @@
         name: "{{ postinstall }}"
         tasks_from: postinstall
       loop: 
+        - calico
         - argo-cd
       loop_control:
         loop_var: postinstall

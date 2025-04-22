@@ -1,0 +1,34 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: argocd-repo-server-network-policy
+  namespace: argocd
+spec:
+  order: 80
+  selector: app.kubernetes.io/name == "argocd-repo-server"
+  types:
+    - Ingress
+    - Egress
+  ingress:
+    - action: Allow # exposing ingress for argocd repo server application controller
+      protocol: TCP
+      source:
+        selector: "app.kubernetes.io/name == 'argocd-server' || 
+                  app.kubernetes.io/name == 'argocd-application-controller' || 
+                  app.kubernetes.io/name == 'argocd-applicationset-controller' ||
+                  app.kubernetes.io/name == 'argocd-notifications-controller'"
+      destination:
+        ports: [8081]
+  egress:
+    - action: Allow # Allowing ArgoCD repo server to communicate with Github to pull repo updates
+      protocol: TCP
+      destination:
+        nets:
+        - 0.0.0.0/0
+        ports: [443, 22]
+    - action: Allow # Allowing ArgoCD repo server -> redis for caching
+      protocol: TCP
+      destination:
+        selector: app.kubernetes.io/name == "argocd-redis"
+        ports: [6379]
+    

@@ -22,12 +22,12 @@
         name: '{{ reset }}'
         tasks_from: reset
       loop:
+        - cluster
+        - k3s
+        - calico
+        - argo-cd
         - prometheus
         - nginx
-        - k3s
-        - argo-cd
-        - calico
-        - cluster
         #- cert-manager
         #- cilium
         #- coredns

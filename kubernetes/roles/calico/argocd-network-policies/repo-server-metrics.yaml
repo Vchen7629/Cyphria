@@ -1,0 +1,15 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: argocd-repo-server-metrics-network-policy
+  namespace: argocd
+spec:
+  order: 80
+  selector: app.kubernetes.io/name == "argocd-repo-server-metrics"
+  types:
+    - Ingress
+  ingress:
+    - action: Allow # exposing ArgoCD repo server metrics endpoint
+      protocol: TCP
+      destination:
+        ports: [8084]

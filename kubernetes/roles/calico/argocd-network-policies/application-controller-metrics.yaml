@@ -1,0 +1,15 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: argocd-application-controller-metrics-network-policy
+  namespace: argocd
+spec:
+  order: 80
+  selector: app.kubernetes.io/name == "argocd-metrics"
+  types:
+    - Ingress
+  ingress:
+    - action: Allow # exposing ArgoCD application controller metrics endpoint
+      protocol: TCP
+      destination:
+        ports: [8082]

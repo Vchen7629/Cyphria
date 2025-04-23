@@ -9,6 +9,14 @@ spec:
   types:
     - Ingress # stateful so don't need duplicate egress rules
   ingress:
+    - action: Allow # exposing ArgoCD redis metrics endpoint
+      protocol: TCP
+      source: 
+        namespaceSelector: projectcalico.org/name == "prometheus"
+        selector: app.kubernetes.io/instance == "prometheus-operator"
+      destination:
+        ports: [9121]
+
     - action: Allow # exposing redis port for pods -> redis
       protocol: TCP
       source:

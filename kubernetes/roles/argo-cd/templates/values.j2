@@ -31,7 +31,12 @@ dex:
     pdb: 
         enabled: true
         maxUnavailable: 1
-    
+    metrics:
+        enabled: true
+        serviceMonitor:
+            enabled: true
+            interval: {{ argocd_map.metrics.monitor.scrape.interval }}
+            namespace: {{ argocd_map.metrics.namespace }}
     resources:  
         limits:
         {% if argocd_vars.kubernetes.dex.resources.limits.cpu is truthy %}
@@ -41,6 +46,27 @@ dex:
         requests:
             cpu: {{ argocd_vars.kubernetes.dex.resources.requests.cpu }}
             memory: {{ argocd_vars.kubernetes.dex.resources.requests.memory }}
+redis:
+    pdb:
+        enabled: true
+        maxUnavailable: 1
+    exporter:
+        enabled: true
+    metrics:
+        enabled: true
+        serviceMonitor:
+            enabled: true
+            interval: {{ argocd_map.metrics.monitor.scrape.interval }}
+            namespace: {{ argocd_map.metrics.namespace }}
+    resources:
+        limits:
+        {% if argocd_vars.kubernetes.redis.resources.limits.cpu is truthy %}
+            cpu: {{ argocd_vars.kubernetes.redis.resources.limits.cpu }}
+        {% endif %}
+            memory: {{ argocd_vars.kubernetes.redis.resources.limits.memory }}
+        requests:
+            cpu: {{ argocd_vars.kubernetes.redis.resources.requests.cpu }}
+            memory: {{ argocd_vars.kubernetes.redis.resources.requests.memory }}
 repoServer:
 {% if argocd_vars.kubernetes.repo_server.autoscaling.enabled is truthy %}
     autoScaling:

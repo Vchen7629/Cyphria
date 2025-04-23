@@ -1,17 +1,18 @@
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: argocd-application-controller-metrics-network-policy
-  namespace: argocd
-spec:
+  name: nginx-ingress-network-policy
+  namespace: nginx
+spec: 
   order: 80
-  selector: app.kubernetes.io/name == "argocd-metrics"
+  selector: app.kubernetes.io/name == "ingress-nginx"
   types:
     - Ingress
   ingress:
-    - action: Allow # exposing ArgoCD application controller metrics endpoint
+    - action: Allow  # exposing port 10254 for prometheus to scrape metrics
       protocol: TCP
-      destination:
+      source: 
         namespaceSelector: projectcalico.org/name == "prometheus"
         selector: app.kubernetes.io/instance == "prometheus-operator"
-        ports: [8082]
+      destination:
+        ports: [10254]

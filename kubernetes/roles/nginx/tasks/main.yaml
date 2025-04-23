@@ -1,4 +1,5 @@
 - name: Deploy helm chart to argocd
+  become: true
   block:
     - name: Create nginx monitor namespace
       kubernetes.core.k8s:

@@ -2,5 +2,11 @@
 - name: Apply Prometheus operator crds to ArgoCD
   kubernetes.core.k8s:
     state: present
-    definition: "{{ lookup('ansible.builtin.template', 'argocd.yaml') | from_yaml }}"
+    definition: "{{ lookup('ansible.builtin.template', 'prometheus-operator-crds.yaml') | from_yaml }}"
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+- name: Install Prometheus Operator via ArgoCD
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('ansible.builtin.template', 'prometheus-operator.yaml') | from_yaml }}"
     kubeconfig: /etc/rancher/k3s/k3s.yaml

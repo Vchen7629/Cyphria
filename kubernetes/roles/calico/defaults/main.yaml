@@ -12,3 +12,16 @@ calico_vars:
       namespace: networking
     calicoctl:
       version: calicoctl-linux-amd64
+    felix_metrics:
+      name: felix-metrics-svc
+      namespace: calico-monitoring
+      ports:
+        port: 9091
+        target: 9091
+    typha_metrics:
+      name: typha-metrics-svc
+      namespace: calico-monitoring
+      ports:
+        port: 9093
+        target: 9093
+    

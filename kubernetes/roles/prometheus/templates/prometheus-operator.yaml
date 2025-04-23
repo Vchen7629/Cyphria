@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata: 
+  name: prometheus-operator
+  namespace: argocd
+spec:
+  project: default
+  source: 
+    chart: prometheus-operator
+    repoURL: https://arldka.github.io/helm-charts
+    targetRevision: v13.0.1
+
+    helm:
+      valuesObject:
+        tls:
+          enabled: false
+        admissionWebhooks:
+          enabled: false # enable this later when i get cert manager up to generate tls certs
+      skipCrds: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prometheus
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

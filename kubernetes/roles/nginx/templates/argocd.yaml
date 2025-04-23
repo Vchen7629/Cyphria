@@ -36,7 +36,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: nginx
 
   syncPolicy:
     automated:

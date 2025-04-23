@@ -1,0 +1,51 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: prometheus-operator-network-policy
+  namespace: prometheus
+spec: 
+  order: 80
+  selector: app.kubernetes.io/instance == "prometheus-operator"
+  types:  
+    - Egress
+  egress:
+    - action: Allow # exposing ArgoCD application controller metrics
+      protocol: TCP
+      destination:
+        namespaceSelector: projectcalico.org/name == "argocd"
+        selector: app.kubernetes.io/name == "argocd-metrics"
+        ports: [8082]
+
+    - action: Allow # Scraping ArgoCD Server metrics
+      protocol: TCP
+      destination:
+        namespaceSelector: projectcalico.org/name == "argocd"
+        selector: app.kubernetes.io/name == "argocd-server" 
+        ports: [8083]
+
+    - action: Allow # Scraping ArgoCD Repo Server metrics
+      protocol: TCP
+      destination:
+        namespaceSelector: projectcalico.org/name == "argocd"
+        selector: app.kubernetes.io/name == "argocd-repo-server"
+        ports: [8084]
+    
+    - action: Allow # exposing ArgoCD redis metrics endpoint
+      protocol: TCP
+      destination:
+        namespaceSelector: projectcalico.org/name == "argocd"
+        selector: app.kubernetes.io/name == "argocd-redis"
+        ports: [9121]
+    
+    - action: Allow # exposing ArgoCD dex server metrics endpoint
+      protocol: TCP
+      destination:
+        namespaceSelector: projectcalico.org/name == "argocd"
+        selector: app.kubernetes.io/name == "argocd-dex-server"
+        ports: [5558]
+
+    - action: Allow # exposing nginx ingress metrics endpoint
+      protocol: TCP
+      destination:
+        namespaceSelector: projectcalico.org/name == "nginx"
+        selector: app.kubernetes.io/name == "ingress-nginx"

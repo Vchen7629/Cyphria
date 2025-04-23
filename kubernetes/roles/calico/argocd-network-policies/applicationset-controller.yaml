@@ -13,6 +13,8 @@ spec:
     - action: Allow # exposing ArgoCD applicationset controller metrics endpoint
       protocol: TCP
       destination:
+        namespaceSelector: projectcalico.org/name == "prometheus"
+        selector: app.kubernetes.io/instance == "prometheus-operator"
         ports: [8080]
   egress:
     - action: Allow # Allowing ArgoCD applicationset -> ArgoCD repo server for template processing

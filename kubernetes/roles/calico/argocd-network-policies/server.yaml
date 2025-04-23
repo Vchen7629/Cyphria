@@ -5,7 +5,8 @@ metadata:
   namespace: argocd
 spec:
   order: 80
-  selector: app.kubernetes.io/name == "argocd-server"
+  selector: "app.kubernetes.io/name == 'argocd-server' ||
+             app.kubernetes.io/name == 'argocd-server-metrics'"
   types:
     - Ingress
     - Egress
@@ -14,6 +15,13 @@ spec:
       protocol: TCP
       destination:
         ports: [80, 443]
+    - action: Allow # exposing port 8083 for prometheus to scrape metrics
+      protocol: TCP
+      source:
+        namespaceSelector: projectcalico.org/name == "prometheus"
+        selector: app.kubernetes.io/instance == "prometheus-operator"
+      destination:
+        ports: [8083]
   egress:
     - action: Allow # allowing argocd server -> argocd repo server for application state
       protocol: TCP

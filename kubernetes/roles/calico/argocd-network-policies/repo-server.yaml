@@ -5,7 +5,8 @@ metadata:
   namespace: argocd
 spec:
   order: 80
-  selector: app.kubernetes.io/name == "argocd-repo-server"
+  selector: "app.kubernetes.io/name == 'argocd-repo-server' ||
+             app.kubernetes.io/name == 'argocd-repo-server-metrics'"
   types:
     - Ingress
     - Egress
@@ -19,6 +20,13 @@ spec:
                   app.kubernetes.io/name == 'argocd-notifications-controller'"
       destination:
         ports: [8081]
+    - action: Allow # exposing ArgoCD repo server metrics endpoint
+      protocol: TCP
+      source: 
+        namespaceSelector: projectcalico.org/name == "prometheus"
+        selector: app.kubernetes.io/instance == "prometheus-operator"
+      destination:
+        ports: [8084]
   egress:
     - action: Allow # Allowing ArgoCD repo server to communicate with Github to pull repo updates
       protocol: TCP

@@ -16,10 +16,10 @@ FROM node:23-alpine
 
 WORKDIR /app
 
-COPY --from=build /app/build ./build
+COPY --from=build /app/dist ./build
 
 RUN npm install -g serve
 
 EXPOSE 965
 
-CMD ["server", "-s", "build", "-l", "3000"]
+CMD ["serve", "-s", "build", "-l", "3000"]

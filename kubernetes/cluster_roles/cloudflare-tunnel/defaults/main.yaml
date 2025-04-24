@@ -1,0 +1,3 @@
+cloudflare_vars:
+  kubernetes:
+    namespace: cloudflare

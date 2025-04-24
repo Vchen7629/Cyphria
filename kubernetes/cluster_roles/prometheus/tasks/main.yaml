@@ -1,0 +1,35 @@
+- name: Configuring Prometheus
+  block:
+  - name: Apply Prometheus operator crds to ArgoCD
+    kubernetes.core.k8s:
+      state: present
+      definition: "{{ lookup('ansible.builtin.template', 'prometheus-operator-crds.yaml') | from_yaml }}"
+      kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+  - name: Install Prometheus Operator via ArgoCD
+    kubernetes.core.k8s:
+      state: present
+      definition: "{{ lookup('ansible.builtin.template', 'prometheus-operator.yaml') | from_yaml }}"
+      kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+  - name: Creating Cluster Role
+    kubernetes.core.k8s:
+      state: present
+      definition:
+        kind: ServiceAccount
+        apiVersion: v1
+        metadata: 
+          name: prometheus
+          namespace: prometheus
+
+  - name: Applying Cluster Role configs
+    kubernetes.core.k8s:
+      state: present
+      definition: "{{ lookup('ansible.builtin.template', 'prometheus-operator.yaml') | from_yaml }}"
+      kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+  - name: Cluster Role Binding
+
+  - name: adding argocd scrape endpoints
+
+  - name: Starting Prometheus Server

@@ -1,0 +1,45 @@
+- name: Deleting Network Policies
+  block:
+  - name: deleting argocd deny all
+    ansible.builtin.shell:
+      cmd: calicoctl delete globalnetworkpolicy default.default-deny-all
+
+  - name: Deleting All ArgoCD component Network Policies
+    block:
+    - name: deleting argocd server policy
+      ansible.builtin.shell:
+        cmd: calicoctl delete networkpolicy default.argocd-server-network-policy -n argocd
+
+    - name: deleting argocd repo server policy
+      ansible.builtin.shell:
+        cmd: calicoctl delete networkpolicy default.argocd-repo-server-network-policy -n argocd
+
+    - name: deleting argocd redis policy
+      ansible.builtin.shell:
+        cmd: calicoctl delete networkpolicy default.argocd-redis-network-policy -n argocd
+
+    - name: deleting argocd dex server policy
+      ansible.builtin.shell:
+        cmd: calicoctl delete networkpolicy default.argocd-dex-server-network-policy -n argocd
+
+    - name: deleting applicationset controller policy
+      ansible.builtin.shell:
+        cmd: calicoctl delete networkpolicy default.argocd-applicationset-controller-network-policy -n argocd
+
+    - name: deleting application controller policy
+      ansible.builtin.shell:
+        cmd: calicoctl delete networkpolicy default.argocd-application-controller-network-policy -n argocd
+
+    - name: deleteing application controller metrics policy
+      ansible.builtin.shell:
+        cmd: calicoctl delete networkpolicy default.argocd-application-controller-metrics-network-policy -n argocd
+  
+  - name: Deleting All Deployed ArgoCD Application Network Policies
+    block:
+      - name: Deleting Ingress Nginx Network Policy
+        ansible.builtin.shell:
+          cmd: calicoctl delete networkpolicy default.nginx-ingress-network-policy -n nginx
+
+      - name: Deleting Prometheus Network Policy
+        ansible.builtin.shell:
+          cmd: calicoctl delete networkpolicy default.prometheus-operator-network-policy -n prometheus

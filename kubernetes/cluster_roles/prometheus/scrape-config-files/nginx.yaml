@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ArgoCD-Service-Monitor
+  namespace: prometheus
+  labels:
+    release: prometheus
+spec: 
+  replicas: 3
+  namespaceSelector:
+    matchName: [nginx]
+  endpoint:
+    - targetPort: [10254] # nginx ingress metrics
+      path: /metrics
+      interval: 30s

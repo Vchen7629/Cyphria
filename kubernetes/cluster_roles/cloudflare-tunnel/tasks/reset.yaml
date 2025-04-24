@@ -1,0 +1,4 @@
+- name: Remove binary
+  ansible.builtin.file:
+    path: "{{ k3s_map.node.directory.bin}}/cloudflared"
+    state: absent

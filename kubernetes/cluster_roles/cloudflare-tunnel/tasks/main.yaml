@@ -1,0 +1,41 @@
+- name: Cloudflare tunnel configuration
+  block:
+    - name: Create Cloudflare namespace
+      kubernetes.core.k8s:
+        name: "{{ cloudflare_vars.kubernetes.namespace }}"
+        state: present 
+        kind: Namespace
+        api_version: v1
+      
+    - name: Create Cloudflare token Secret
+      vars:
+        cloudflare_token_env_data: "{{ lookup('ansible.builtin.template', 'env.yaml' ) | from_yaml }}"
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Secret
+          type: Opaque
+          metadata: 
+            name: Cloudflare token secret
+            namespace: "{{ cloudflare_vars.kubernetes.namespace }}"
+          stringData: 
+            apiKey: "{{ cloudflare_token_env_data['cloudflare-token'] }}"
+            email: "{{ cloudflare_token_env_data['email'] }}"
+    
+    - name: Install Cloudflared
+      ansible.builtin.get_url:
+        url: https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+        dest: "{{ k3s_map.node.directory.bin}}/cloudflared"
+        owner: root
+        group: root
+        mode: '755'
+      register: result
+      retries: 3
+      delay: 1
+      until: result is not failed
+
+    - name: Run binary  
+      ansible.builtin.command: "{{ k3s_map.node.directory.bin}}/cloudflared"
+      become: true
+ 

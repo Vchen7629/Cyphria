@@ -18,8 +18,4 @@ WORKDIR /app
 
 COPY --from=build /app/dist ./build
 
-RUN npm install -g serve
-
-EXPOSE 965
-
-CMD ["serve", "-s", "build", "-l", "3000"]
+RUN npm install

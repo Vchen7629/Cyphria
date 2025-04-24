@@ -1,18 +1,25 @@
-FROM node:22-alpine AS cache
+# build stage
+FROM node:23-alpine AS build
+
+WORKDIR /app
 
 COPY package*.json ./
 
 RUN npm ci --include=dev
 
-#build stage
+COPY . .
 
-FROM node:22-alpine
+RUN npm run build
+
+#Server
+FROM node:23-alpine
 
 WORKDIR /app
 
-COPY --from=cache ./node_modules ./node_modules
+COPY --from=build /app/build ./build
 
-COPY . .
+RUN npm install -g serve
 
-RUN npm install && npm run build
+EXPOSE 965
 
+CMD ["server", "-s", "build", "-l", "3000"]

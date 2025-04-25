@@ -20,7 +20,7 @@ spec:
         controller:
           metrics:
             enabled: true
-                
+            portName: metrics
             serviceMonitor:
               enabled: true
               namespace: ingress-nginx-monitor

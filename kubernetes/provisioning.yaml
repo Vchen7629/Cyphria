@@ -41,7 +41,7 @@
   roles: 
     - calico
     - argo-cd
+    - network-policies
     - nginx
     - prometheus
-    - network-policies
   tags: charts

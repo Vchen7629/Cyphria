@@ -1,3 +1,31 @@
+- name: Delete Prometheus StatefulSet
+  kubernetes.core.k8s:
+    state: absent
+    api_version: apps/v1
+    kind: StatefulSet
+    name: prometheus-prometheus
+    namespace: prometheus  # adjust namespace if needed
+
+- name: Delete Prometheus Operator Deployment
+  kubernetes.core.k8s:
+    state: absent
+    api_version: apps/v1
+    kind: Deployment
+    name: prometheus-operator
+    namespace: prometheus  # adjust namespace if needed
+
+
+- name: Delete Prometheus Services
+  kubernetes.core.k8s:
+    state: absent
+    api_version: v1
+    kind: Service
+    name: "{{ item }}"
+    namespace: prometheus  # adjust namespace if needed
+  loop:
+    - prometheus-operated
+    - prometheus-operator
+
 - name: Uninstall prometheus crds in argocd
   kubernetes.core.k8s:
     api_version: argoproj.io/v1alpha1
@@ -13,4 +41,5 @@
     kind: Application
     name: prometheus-operator
     namespace: argocd
+
 

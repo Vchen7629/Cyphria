@@ -13,6 +13,8 @@ spec:
       protocol: TCP
       source: 
         namespaceSelector: projectcalico.org/name == "prometheus"
-        selector: app.kubernetes.io/instance == "prometheus-operator"
+        selector: "app.kubernetes.io/instance == 'prometheus-operator' || 
+                  app.kubernetes.io/instance == 'prometheus' || 
+                  managed-by == 'prometheus-operator'"
       destination:
         ports: [10254]

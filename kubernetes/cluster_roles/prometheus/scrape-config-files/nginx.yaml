@@ -1,15 +1,18 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: ArgoCD-Service-Monitor
+  name: nginx-service-monitor
   namespace: prometheus
   labels:
     release: prometheus
 spec: 
-  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: nginx-ingress-loadbalancer
   namespaceSelector:
-    matchName: [nginx]
-  endpoint:
-    - targetPort: [10254] # nginx ingress metrics
+    matchName: 
+      - nginx
+  endpoints:
+    - port: metrics # nginx ingress metrics
       path: /metrics
       interval: 30s

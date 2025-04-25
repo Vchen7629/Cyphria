@@ -1,57 +1,69 @@
+- name: Configure namespaces
+  ansible.builtin.import_tasks:
+    file: namespaces.yaml
+  any_errors_fatal: true
+
+
 - name: Configure Network Policies
-  block:
-    - name: Apply default deny all Policy
-      ansible.builtin.shell: 
-        cmd: "calicoctl create -f -"
-        stdin: "{{ lookup('file', playbook_dir + '/roles/calicotwo/general/deny-all.yaml') }}"
-    
+  block:    
     - name: Configuring ArgoCD components Network Policies
       block:
-      - name: Apply Argocd Server Network Policy
-        ansible.builtin.shell:
-          cmd: "calicoctl create -f -"
-          stdin: "{{ lookup('file', playbook_dir + '/roles/calicotwo/argocd-network-policies/server.yaml') }}"  
-      
-      - name: Apply Argocd Repo Server Network Policy
-        ansible.builtin.shell:
-          cmd: "calicoctl create -f -"
-          stdin: "{{ lookup('file', playbook_dir + '/roles/calicotwo/argocd-network-policies/repo-server.yaml') }}"
-      
-      - name: Apply Argocd Redis Network Policy
-        ansible.builtin.shell:
-          cmd: "calicoctl create -f -"
-          stdin: "{{ lookup('file', playbook_dir + '/roles/calicotwo/argocd-network-policies/redis.yaml') }}"
-      
-      - name: Apply Argocd Dex Server Network Policy
-        ansible.builtin.shell:
-          cmd: "calicoctl create -f -"
-          stdin: "{{ lookup('file', playbook_dir + '/roles/calicotwo/argocd-network-policies/dex-server.yaml') }}"
-      
-      - name: Apply ArgoCD Applicationset Controller Network Policy
-        ansible.builtin.shell:
-          cmd: "calicoctl create -f -"
-          stdin: "{{ lookup('file', playbook_dir + '/roles/calicotwo/argocd-network-policies/applicationset-controller.yaml') }}"
-      
-      - name: Apply ArgoCD Application Controller Network Policy
-        ansible.builtin.shell:
-          cmd: "calicoctl create -f -"
-          stdin: "{{ lookup('file', playbook_dir + '/roles/calicotwo/argocd-network-policies/application-controller.yaml') }}"
-
-      - name: Apply ArgoCD Application Controller Metrics Network Policy
-        ansible.builtin.shell:
-          cmd: "calicoctl create -f -"
-          stdin: "{{ lookup('file', playbook_dir + '/roles/calicotwo/argocd-network-policies/application-controller-metrics.yaml') }}"
+        - name: Apply Argocd Server Network Policy
+          ansible.builtin.shell:
+            cmd: "calicoctl create -f -"
+            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/argocd/server.yaml') }}"  
+        
+        - name: Apply Argocd Repo Server Network Policy
+          ansible.builtin.shell:
+            cmd: "calicoctl create -f -"
+            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/argocd/repo-server.yaml') }}"
+        
+        - name: Apply Argocd Redis Network Policy
+          ansible.builtin.shell:
+            cmd: "calicoctl create -f -"
+            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/argocd/redis.yaml') }}"
+        
+        - name: Apply Argocd Dex Server Network Policy
+          ansible.builtin.shell:
+            cmd: "calicoctl create -f -"
+            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/argocd/dex-server.yaml') }}"
+        
+        - name: Apply ArgoCD Applicationset Controller Network Policy
+          ansible.builtin.shell:
+            cmd: "calicoctl create -f -"
+            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/argocd/applicationset-controller.yaml') }}"
+        
+        - name: Apply ArgoCD Application Controller Network Policy
+          ansible.builtin.shell:
+            cmd: "calicoctl create -f -"
+            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/argocd/application-controller.yaml') }}"
   
     - name: Configuring Applications Deployed By ArgoCD Network Policies
       block: 
         - name: Apply ingress nginx network Policy
           ansible.builtin.shell:
             cmd: "calicoctl create -f -"
-            stdin: "{{ lookup('file', playbook_dir + '/roles/calicotwo/argocd-deployed-application-network-policies/nginx.yaml') }}"
+            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/nginx/nginx.yaml') }}"
+          register: result
+          retries: 3
+          delay: 1
+          until: result is not failed
 
         - name: Apply prometheus operator network Policy
           ansible.builtin.shell:
             cmd: "calicoctl create -f -"
-            stdin: "{{ lookup('file', playbook_dir + '/roles/calicotwo/argocd-deployed-application-network-policies/prometheus-operator.yaml') }}"
+            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/prometheus/prometheus-operator.yaml') }}"
+          register: result
+          retries: 3
+          delay: 1
+          until: result is not failed
+    
+    - name: Apply default deny all Policy
+      ansible.builtin.shell: 
+        cmd: "calicoctl create -f -"
+        stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/general/deny-all.yaml') }}"
+    
+    
+          
 
         

@@ -14,22 +14,30 @@
 
   - name: Creating Cluster Role
     kubernetes.core.k8s:
-      state: present
-      definition:
-        kind: ServiceAccount
-        apiVersion: v1
-        metadata: 
-          name: prometheus
-          namespace: prometheus
-
-  - name: Applying Cluster Role configs
-    kubernetes.core.k8s:
-      state: present
-      definition: "{{ lookup('ansible.builtin.template', 'prometheus-operator.yaml') | from_yaml }}"
       kubeconfig: /etc/rancher/k3s/k3s.yaml
-
-  - name: Cluster Role Binding
+      state: present
+      definition: "{{ lookup('file', 'application/serviceAccount.yaml') | from_yaml_all }}"
 
   - name: adding argocd scrape endpoints
+    block:
+    - name: Applying argocd scrape config
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('file', 'scrape-config-files/argocd.yaml') | from_yaml }}"
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+      register: result
+      retries: 4
+      delay: 2
+      until: result is not failed
+    
+    - name: Applying nginx scrape config
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('file', 'scrape-config-files/nginx.yaml') | from_yaml }}"
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
 
   - name: Starting Prometheus Server
+    kubernetes.core.k8s:
+      state: present
+      definition: "{{ lookup('ansible.builtin.template', 'prometheus-server.yaml') | from_yaml }}"
+      kubeconfig: /etc/rancher/k3s/k3s.yaml

@@ -5,9 +5,21 @@ metadata:
   namespace: argocd
 spec:
   order: 80
-  selector: app.kubernetes.io/name == "argocd-application-controller"
+  selector: "app.kubernetes.io/name == 'argocd-application-controller' ||
+             app.kubernetes.io/name == 'argocd-metrics'"
   types:
+    - Ingress
     - Egress
+  ingress:
+    - action: Allow # exposing ArgoCD application controller metrics endpoint
+      protocol: TCP
+      source: 
+        namespaceSelector: kubernetes.io/metadata.name == "prometheus"
+        selector: "app.kubernetes.io/instance == 'prometheus-operator' || 
+                  app.kubernetes.io/instance == 'prometheus' || 
+                  managed-by == 'prometheus-operator'"
+      destination:
+        ports: [8082]
   egress:
     - action: Allow # allowing application controller -> repo server to pull generated manifests
       protocol: TCP

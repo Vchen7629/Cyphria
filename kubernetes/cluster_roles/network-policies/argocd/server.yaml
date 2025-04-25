@@ -15,11 +15,13 @@ spec:
       protocol: TCP
       destination:
         ports: [80, 443]
-    - action: Allow # exposing port 8083 for prometheus to scrape metrics
+    - action: Allow # exposing ArgoCD server metrics endpoint
       protocol: TCP
-      source:
-        namespaceSelector: projectcalico.org/name == "prometheus"
-        selector: app.kubernetes.io/instance == "prometheus-operator"
+      source: 
+        namespaceSelector: kubernetes.io/metadata.name == "prometheus"
+        selector: "app.kubernetes.io/instance == 'prometheus-operator' || 
+                  app.kubernetes.io/instance == 'prometheus' || 
+                  managed-by == 'prometheus-operator'"
       destination:
         ports: [8083]
   egress:

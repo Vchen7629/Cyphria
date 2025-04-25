@@ -5,7 +5,7 @@ metadata:
   namespace: cloudflare-tunnel
 spec:
   order: 80
-  selector: app == 'argocd-cloudflared-deployment'
+  selector: app == 'cloudflared'
   types:
     - Ingress
     - Egress

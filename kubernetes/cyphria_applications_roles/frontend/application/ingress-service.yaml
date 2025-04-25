@@ -6,7 +6,7 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
     external-dns.alpha.kubernetes.io/hostname: cyphria.com
-    external-dns.alpha.kubernetes.io/target: 1ce6caf3-289c-495d-b07a-c36146105c36.cfargotunnel.com
+    external-dns.alpha.kubernetes.io/target: c30f15f0-edba-4b45-a18c-d157c41683a0.cfargotunnel.com
 spec: 
   rules:
   - host: cyphria.com

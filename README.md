@@ -35,7 +35,6 @@
 <ul>
   <li>Grafana: I'm using my grafana cluster Verturus to aggregate and display my metrics and logs from various services in the application for ease of view</li>
   <li>Prometheus: Prometheus is used in my application to collect metrics from my various services and send it to my grafana cluster</li>
-  <li>Grafana Loki: Loki is used in my application to collect logs and send it to my grafana cluster</li>
 </ul>
 
 <h2>Getting Started</h2>

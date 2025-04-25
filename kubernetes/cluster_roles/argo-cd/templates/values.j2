@@ -33,14 +33,6 @@ dex:
     pdb: 
         enabled: true
         maxUnavailable: 1
-    metrics:
-        enabled: true
-        service:
-            portName: metrics
-        serviceMonitor:
-            enabled: true
-            interval: {{ argocd_map.metrics.monitor.scrape.interval }}
-            namespace: {{ argocd_map.metrics.namespace }}
     resources:  
         limits:
         {% if argocd_vars.kubernetes.dex.resources.limits.cpu is truthy %}

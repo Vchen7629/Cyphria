@@ -18,4 +18,6 @@ WORKDIR /app
 
 COPY --from=build /app/dist ./build
 
-RUN npm install
+RUN npm install -g serve
+
+CMD ["serve", "-s", "build", "-l", "3000"]

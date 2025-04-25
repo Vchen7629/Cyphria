@@ -1,23 +1,39 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager
+  name: external-dns
   namespace: argocd
 spec:
-  project: Cyphria
+  project: default
   source:
-    chart: cert-manager
-    repoURL: https://charts.jetstack.io
-    targetRevision: 1.17.1 
+    chart: external-dns 
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    targetRevision: v1.16.1
 
     helm: 
-      valueFiles:
-        - values.j2
+      valuesObject:
+        sources:
+          - ingress
+        policy: sync
+        provider:
+          name: cloudflare
+        env: 
+        - name: CF_API_TOKEN
+          valueFrom: 
+            secretKeyRef:
+              name: cloudflare-api-key
+              key: apiKey
+        service:
+          enabled: true
+
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: cert-manager
+    namespace: external-dns
 
-syncPolicy:
-  syncOptions:
-    - CreateNamespace=true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

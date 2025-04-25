@@ -6,9 +6,16 @@ metadata:
 spec: 
   project: default
   source:
-    repoURL: https://github.com/Vchen7629/Cyphria
+    repoURL: https://github.com/Vchen7629/Cyphria.git
     targetRevision: main
-  
+    path: kubernetes/cyphria_applications_roles/frontend/application
+    
   destination:
     server: https://kubernetes.default.svc
     namespace: frontend
+  
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

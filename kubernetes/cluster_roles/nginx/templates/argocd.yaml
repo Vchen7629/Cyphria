@@ -12,12 +12,16 @@ spec:
 
     helm: 
       valuesObject:
-        service:
-          type: clusterIP
-          ingressClassResource:
-            default: true
-
         controller:
+          service:
+            type: LoadBalancer
+            ingressClassResource:
+              default: true
+            internal:
+              enabled: true
+              targetPorts:
+                http: 3000
+                https: 3000
           metrics:
             enabled: true
             portName: metrics

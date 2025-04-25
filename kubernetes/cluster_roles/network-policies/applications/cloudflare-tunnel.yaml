@@ -42,3 +42,9 @@ spec:
         ports:
         - "32768:65535"
     
+    - action: Allow # allowing cloudflare tunnel -> nginx
+      protocol: TCP
+      destination:
+        namespaceSelector: projectcalico.org/name == "nginx"
+        ports: [80, 443]
+    

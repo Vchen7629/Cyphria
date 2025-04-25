@@ -19,6 +19,13 @@ spec:
                   managed-by == 'prometheus-operator'"
       destination:
         ports: [10254]
+    
+    - action: Allow # allowing traffic from cloudflare tunnel to nginx
+      protocol: TCP
+      source: 
+        selector: app == 'cloudflared'
+      destination:
+        ports: [80, 443]
   egress:
     - action: Allow # nginx -> frontend
       protocol: TCP

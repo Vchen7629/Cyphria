@@ -40,9 +40,13 @@
           ansible.builtin.shell:
             cmd: calicoctl delete networkpolicy default.frontend-network-policy -n frontend
         
-        - name: Deleting Frontend Network Policy
+        - name: Deleting External DNS Network Policy
           ansible.builtin.shell:
-            cmd: calicoctl delete networkpolicy default.frontend-network-policy -n frontend
+            cmd: calicoctl delete networkpolicy default.external-dns-network-policy -n external-dns
+        
+        - name: Deleting cloudflare tunnel Network Policy
+          ansible.builtin.shell:
+            cmd: calicoctl delete networkpolicy default.cloudflare-tunnel-network-policy -n cloudflare-tunnel
 
     - name: deleting argocd deny all
       ansible.builtin.shell:

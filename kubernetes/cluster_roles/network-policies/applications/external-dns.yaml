@@ -1,7 +1,7 @@
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: external-dns-tunnel-network-policy
+  name: external-dns-network-policy
   namespace: external-dns
 spec:
   order: 80

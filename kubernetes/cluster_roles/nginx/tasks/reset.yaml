@@ -1,3 +1,26 @@
+
+
+- name: Delete Nginx Operator Deployment
+  kubernetes.core.k8s:
+    state: absent
+    api_version: apps/v1
+    kind: Deployment
+    name: nginx-ingress-loadbalancer-ingress-nginx-controller
+    namespace: nginx
+
+
+- name: Delete Nginx Services
+  kubernetes.core.k8s:
+    state: absent
+    api_version: v1
+    kind: Service
+    name: "{{ item }}"
+    namespace: nginx
+  loop:
+    - nginx-ingress-loadbalancer-ingress-nginx-controller
+    - nginx-ingress-loadbalancer-ingress-nginx-controller-metrics
+    - nginx-ingress-loadbalancer-ingress-nginx-controller-admission
+
 - name: Uninstall nginx application in argocd
   kubernetes.core.k8s:
     api_version: argoproj.io/v1alpha1

@@ -43,7 +43,7 @@
         - name: Apply ingress nginx network Policy
           ansible.builtin.shell:
             cmd: "calicoctl create -f -"
-            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/nginx/nginx.yaml') }}"
+            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/applications/nginx.yaml') }}"
           register: result
           retries: 3
           delay: 1
@@ -52,11 +52,18 @@
         - name: Apply prometheus operator network Policy
           ansible.builtin.shell:
             cmd: "calicoctl create -f -"
-            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/prometheus/prometheus-operator.yaml') }}"
+            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/applications/prometheus-operator.yaml') }}"
           register: result
           retries: 3
           delay: 1
           until: result is not failed
+        
+
+        - name: Apply Argocd Server Network Policy
+          ansible.builtin.shell:
+            cmd: "calicoctl create -f -"
+            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/applications/frontend.yaml') }}" 
+             
     
     - name: Apply default deny all Policy
       ansible.builtin.shell: 

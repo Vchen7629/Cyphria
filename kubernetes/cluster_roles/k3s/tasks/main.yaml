@@ -21,6 +21,10 @@
       ansible.builtin.shell: sh /tmp/k3-installer.sh
       args: 
         chdir: /tmp/
+      register: binary
+      retries: 3
+      delay: 1
+      until: binary is not failed
     
     - name: Set role postinstall fact
       ansible.builtin.set_fact:

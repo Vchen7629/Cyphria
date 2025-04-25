@@ -14,10 +14,13 @@ spec:
     - action: Allow # exposing ingress for argocd repo server application controller
       protocol: TCP
       source:
+        namespaceSelector: "kubernetes.io/metadata.name == 'argocd' ||
+                            kubernetes.io/metadata.name == 'frontend'"
         selector: "app.kubernetes.io/name == 'argocd-server' || 
                   app.kubernetes.io/name == 'argocd-application-controller' || 
                   app.kubernetes.io/name == 'argocd-applicationset-controller' ||
-                  app.kubernetes.io/name == 'argocd-notifications-controller'"
+                  app.kubernetes.io/name == 'argocd-notifications-controller' ||
+                  app.kubernetes.io/name == 'frontend'"
       destination:
         ports: [8081]
     - action: Allow # exposing ArgoCD repo server metrics endpoint

@@ -4,7 +4,7 @@
     api_version: apps/v1
     kind: StatefulSet
     name: prometheus-prometheus
-    namespace: prometheus  # adjust namespace if needed
+    namespace: prometheus  
 
 - name: Delete Prometheus Operator Deployment
   kubernetes.core.k8s:
@@ -12,7 +12,7 @@
     api_version: apps/v1
     kind: Deployment
     name: prometheus-operator
-    namespace: prometheus  # adjust namespace if needed
+    namespace: prometheus 
 
 
 - name: Delete Prometheus Services
@@ -21,7 +21,7 @@
     api_version: v1
     kind: Service
     name: "{{ item }}"
-    namespace: prometheus  # adjust namespace if needed
+    namespace: prometheus 
   loop:
     - prometheus-operated
     - prometheus-operator

@@ -35,7 +35,11 @@
         - name: Deleting Prometheus Network Policy
           ansible.builtin.shell:
             cmd: calicoctl delete networkpolicy default.prometheus-operator-network-policy -n prometheus
-            
+        
+        - name: Deleting Frontend Network Policy
+          ansible.builtin.shell:
+            cmd: calicoctl delete networkpolicy default.frontend-network-policy -n frontend
+
     - name: deleting argocd deny all
       ansible.builtin.shell:
         cmd: calicoctl delete globalnetworkpolicy default.default-deny-all

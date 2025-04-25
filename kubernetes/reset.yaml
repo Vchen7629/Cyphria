@@ -26,18 +26,6 @@
         - k3s
         - calico
         - argo-cd
-        - prometheus
-        - nginx
-        #- cert-manager
-        #- cilium
-        #- coredns
-        #- external-dns
-        #- kured
-        #- longhorn
-        #- metrics-server
-       # - victoria-logs
-       # - victoria-metrics
-       # - helm
       loop_control:
         loop_var: reset
       tags: always

@@ -8,6 +8,7 @@ spec:
   selector: app.kubernetes.io/name == "ingress-nginx"
   types:
     - Ingress
+    - Egress
   ingress:
     - action: Allow  # exposing port 10254 for prometheus to scrape metrics
       protocol: TCP
@@ -18,3 +19,10 @@ spec:
                   managed-by == 'prometheus-operator'"
       destination:
         ports: [10254]
+  egress:
+    - action: Allow # nginx -> frontend
+      protocol: TCP
+      destination:
+        namespaceSelector: projectcalico.org/name == "frontend"
+        selector: app.kubernetes.io/name == "frontend"
+        ports: [3000]

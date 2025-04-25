@@ -44,4 +44,5 @@
     - network-policies
     - nginx
     - prometheus
+    - frontend
   tags: charts

@@ -11,7 +11,14 @@ spec:
   types:  
     - Egress
   egress:
-    - action: Allow # exposing ArgoCD application controller metrics
+    - action: Allow # cloudflare tunnel metrics
+      protocol: TCP
+      destination: 
+        namespaceSelector: projectcalico.org/name == "cloudflare-tunnel"
+        selector: app == 'argocd-cloudflared-deployment'
+        ports: [6940]
+
+    - action: Allow # ArgoCD application controller metrics
       protocol: TCP
       destination:
         namespaceSelector: projectcalico.org/name == "argocd"

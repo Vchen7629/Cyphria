@@ -57,12 +57,16 @@
           retries: 3
           delay: 1
           until: result is not failed
-        
 
         - name: Apply Argocd Server Network Policy
           ansible.builtin.shell:
             cmd: "calicoctl create -f -"
             stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/applications/frontend.yaml') }}" 
+
+        - name: Apply Cloudflare Tunnel Server Network Policy
+          ansible.builtin.shell:
+            cmd: "calicoctl create -f -"
+            stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/applications/cloudflare-tunnel.yaml') }}"  
              
     
     - name: Apply default deny all Policy

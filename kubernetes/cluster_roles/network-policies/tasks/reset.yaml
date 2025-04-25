@@ -39,6 +39,10 @@
         - name: Deleting Frontend Network Policy
           ansible.builtin.shell:
             cmd: calicoctl delete networkpolicy default.frontend-network-policy -n frontend
+        
+        - name: Deleting Frontend Network Policy
+          ansible.builtin.shell:
+            cmd: calicoctl delete networkpolicy default.frontend-network-policy -n frontend
 
     - name: deleting argocd deny all
       ansible.builtin.shell:

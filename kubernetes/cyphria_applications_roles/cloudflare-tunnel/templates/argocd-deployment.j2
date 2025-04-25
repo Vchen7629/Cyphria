@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-cloudflared-deployment
+  namespace: argocd
+spec:
+  project: default
+  source: 
+    chart: cloudflared
+    repoURL: https://charts.kubito.dev
+    targetRevision: v1.6.1
+
+    helm:
+      valuesObject:
+        metrics:
+          enabled: true
+          port: 6940
+
+        managed:
+          enabled: false
+
+        local:  
+          enabled: true
+          auth:
+            tunnelID: "{{ tunnel_id }}"
+            accountTag: "{{ account_tag }}"
+            tunnelName: cyphria
+            tunnelSecret: "{{ tunnel_secret }}"
+
+          ingress:
+            - hostname: cyphria.com
+              service: https://nginx-ingress-loadbalancer-ingress-nginx-controller-admission.nginx.svc.cluster.local:443
+            
+            - service: http_status:404
+              
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 256Mi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cloudflare-tunnel
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

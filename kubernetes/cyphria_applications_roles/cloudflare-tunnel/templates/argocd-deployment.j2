@@ -28,7 +28,10 @@ spec:
             tunnelSecret: "{{ tunnel_secret }}"
 
           ingress:
-            - hostname: "*.cyphria.com"
+            - hostname: cyphria.com
+              service: http://nginx-ingress-controller.nginx.svc.cluster.local:80
+
+            - hostname: '*.cyphria.com'
               service: http://nginx-ingress-loadbalancer-ingress-nginx-controller.nginx.svc.cluster.local:80
             
             - service: http_status:404

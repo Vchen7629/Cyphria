@@ -10,10 +10,11 @@ spec:
   rules:
   - host: myapp.127.0.0.1.nip.io
     http:
-    - paths: /
-      pathType: prefix
-      backend:
-        service:
-          name: frontend-svc
-          port:
-            number: 80
+      paths:
+      - path: /
+        pathType: prefix
+        backend:
+          service:
+            name: frontend-svc
+            port:
+              number: 80

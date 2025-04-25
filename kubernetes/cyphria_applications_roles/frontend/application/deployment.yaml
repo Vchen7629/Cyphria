@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: frontend
-    containers:
-      - name: cyphria-frontend
-        image: ghcr.io/vchen7629/cyphria-frontend:latest
+    spec:
+      containers:
+        - name: cyphria-frontend
+          image: ghcr.io/vchen7629/cyphria-frontend:latest

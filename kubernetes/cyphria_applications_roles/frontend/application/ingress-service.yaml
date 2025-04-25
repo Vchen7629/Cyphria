@@ -8,6 +8,7 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: cyphria.com
     external-dns.alpha.kubernetes.io/target: c3b222cb-dbc7-4048-9d1c-1c57738a882c.cfargotunnel.com
 spec: 
+  ingressClassName: nginx
   rules:
   - host: cyphria.com
     http:

@@ -3,6 +3,8 @@ kind: NetworkPolicy
 metadata:
   name: prometheus-operator-network-policy
   namespace: prometheus
+  annotations:
+    argocd.argoproj.io/sync-wave: "0" 
 spec: 
   order: 75
   selector: "app.kubernetes.io/instance == 'prometheus-operator' || 

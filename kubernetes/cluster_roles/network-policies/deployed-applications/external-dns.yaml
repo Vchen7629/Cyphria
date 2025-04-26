@@ -3,6 +3,8 @@ kind: NetworkPolicy
 metadata:
   name: external-dns-network-policy
   namespace: external-dns
+  annotations:
+    argocd.argoproj.io/sync-wave: "0" 
 spec:
   order: 80
   selector: app.kubernetes.io/instance == "external-dns"

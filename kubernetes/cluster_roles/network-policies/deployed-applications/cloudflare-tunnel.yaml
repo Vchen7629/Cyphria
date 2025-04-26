@@ -3,6 +3,8 @@ kind: NetworkPolicy
 metadata:
   name: cloudflare-tunnel-network-policy
   namespace: cloudflare-tunnel
+  annotations:
+    argocd.argoproj.io/sync-wave: "0" 
 spec:
   order: 80
   selector: app == 'cloudflared'

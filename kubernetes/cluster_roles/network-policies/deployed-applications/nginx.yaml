@@ -3,6 +3,8 @@ kind: NetworkPolicy
 metadata:
   name: nginx
   namespace: nginx
+  annotations:
+    argocd.argoproj.io/sync-wave: "0" 
 spec: 
   order: 80
   selector: app.kubernetes.io/name == "ingress-nginx"

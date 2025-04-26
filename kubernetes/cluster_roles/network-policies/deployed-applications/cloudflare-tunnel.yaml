@@ -1,0 +1,62 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: cloudflare-tunnel-network-policy
+  namespace: cloudflare-tunnel
+spec:
+  order: 80
+  selector: app == 'cloudflared'
+  types:
+    - Ingress
+    - Egress
+  ingress:
+    - action: Allow # exposing metrics for cloudflare tunnel
+      protocol: TCP
+      source:
+        namespaceSelector: projectcalico.org/name == "prometheus"
+        selector: "app.kubernetes.io/instance == 'prometheus-operator' || 
+                  app.kubernetes.io/instance == 'prometheus' || 
+                  managed-by == 'prometheus-operator'"
+      destination:
+        ports: [6940]
+
+    - action: Allow # Allow traffic from the Internet to Cloudflare Tunnel
+      protocol: TCP
+      source:
+        nets:
+          - 0.0.0.0/0
+
+    - action: Allow # Allow UDP traffic from the Internet
+      protocol: UDP
+      source:
+        nets:
+          - 0.0.0.0/0
+  egress:
+    - action: Allow # Allow QUIC connection to global edge network
+      protocol: TCP
+      destination:
+        nets:
+        - 0.0.0.0/0
+        ports: [7844]
+
+    - action: Allow # Allow QUIC connection to global edge network
+      protocol: UDP
+      destination:
+        nets:
+        - 0.0.0.0/0
+        ports: [7844]
+
+    - action: Allow # Allow QUIC connection to global edge network
+      protocol: UDP
+      destination:
+        nets:
+        - 0.0.0.0/0
+        ports:
+        - "32768:65535"
+    
+    - action: Allow # allowing cloudflare tunnel -> nginx
+      protocol: TCP
+      destination:
+        namespaceSelector: projectcalico.org/name == "nginx"
+        ports: [80, 443]
+    

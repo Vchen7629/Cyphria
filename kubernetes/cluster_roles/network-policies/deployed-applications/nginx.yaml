@@ -1,0 +1,36 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: nginx
+  namespace: nginx
+spec: 
+  order: 80
+  selector: app.kubernetes.io/name == "ingress-nginx"
+  types:
+    - Ingress
+    - Egress
+  ingress:
+    - action: Allow  # exposing port 10254 for prometheus to scrape metrics
+      protocol: TCP
+      source: 
+        namespaceSelector: projectcalico.org/name == "prometheus"
+        selector: "app.kubernetes.io/instance == 'prometheus-operator' || 
+                  app.kubernetes.io/instance == 'prometheus' || 
+                  managed-by == 'prometheus-operator'"
+      destination:
+        ports: [10254]
+    
+    - action: Allow # allowing traffic from cloudflare tunnel to nginx
+      protocol: TCP
+      source: 
+        selector: app == 'cloudflared'
+        namespaceSelector: projectcalico.org/name == "cloudflare-tunnel"
+      destination:
+        ports: [80, 443]
+  egress:
+    - action: Allow # nginx -> frontend
+      protocol: TCP
+      destination:
+        namespaceSelector: projectcalico.org/name == "frontend"
+        selector: app.kubernetes.io/name == "frontend"
+        ports: [3000]

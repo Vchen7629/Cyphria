@@ -1,0 +1,17 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: external-dns-network-policy
+  namespace: external-dns
+spec:
+  order: 80
+  selector: app.kubernetes.io/instance == "external-dns"
+  types:
+    - Egress
+  egress:
+    - action: Allow # allow for connection to cloudflare api
+      protocol: TCP
+      destination: 
+        nets:
+          - 0.0.0.0/0
+        ports: [443]

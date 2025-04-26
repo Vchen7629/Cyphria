@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata: 
+  name: prometheus
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prometheus
+  sources: 
+    - chart: prometheus-operator-crds
+      repoURL: https://prometheus-community.github.io/helm-charts
+      targetRevision: v19.0.0
+      
+    - chart: prometheus-operator
+      repoURL: https://arldka.github.io/helm-charts
+      targetRevision: v13.0.1
+
+      helm:
+        valuesObject:
+          tls:
+            enabled: false
+          admissionWebhooks:
+            enabled: false # enable this later when i get cert manager up to generate tls certs
+          service:  
+            type: NodePort
+        skipCrds: true
+    
+    - repoURL: https://github.com/Vchen7629/Cyphria.git
+      targetRevision: main
+      path: kubernetes/cluster_roles/prometheus/application
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=true

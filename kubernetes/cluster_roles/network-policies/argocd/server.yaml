@@ -1,8 +1,8 @@
-apiVersion: crd.projectcalico.org/v1
+apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
   name: argocd-server-network-policy
-  namespace: tigera-operator
+  namespace: argocd
 spec:
   order: 80
   selector: "app.kubernetes.io/name == 'argocd-server' ||
@@ -18,10 +18,8 @@ spec:
     - action: Allow # exposing ArgoCD server metrics endpoint
       protocol: TCP
       source: 
-        namespaceSelector: kubernetes.io/metadata.name == "prometheus"
-        selector: "app.kubernetes.io/instance == 'prometheus-operator' || 
-                  app.kubernetes.io/instance == 'prometheus' || 
-                  managed-by == 'prometheus-operator'"
+        namespaceSelector: projectcalico.org/name == "prometheus"
+        selector: all()
       destination:
         ports: [8083]
   egress:

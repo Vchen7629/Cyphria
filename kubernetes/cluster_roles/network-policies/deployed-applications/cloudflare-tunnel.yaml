@@ -1,13 +1,11 @@
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: cloudflare-tunnel-network-policy
+  name: cloudflare-tunnel
   namespace: cloudflare-tunnel
-  annotations:
-    argocd.argoproj.io/sync-wave: "0" 
 spec:
   order: 80
-  selector: app == 'cloudflared'
+  selector: all()
   types:
     - Ingress
     - Egress
@@ -15,10 +13,8 @@ spec:
     - action: Allow # exposing metrics for cloudflare tunnel
       protocol: TCP
       source:
-        namespaceSelector: projectcalico.org/name == "prometheus"
-        selector: "app.kubernetes.io/instance == 'prometheus-operator' || 
-                  app.kubernetes.io/instance == 'prometheus' || 
-                  managed-by == 'prometheus-operator'"
+        namespaceSelector: kubernetes.io/metadata.name == "prometheus"
+        selector: all()
       destination:
         ports: [6940]
 
@@ -59,6 +55,7 @@ spec:
     - action: Allow # allowing cloudflare tunnel -> nginx
       protocol: TCP
       destination:
-        namespaceSelector: projectcalico.org/name == "nginx"
+        namespaceSelector: kubernetes.io/metadata.name == "nginx"
+        selector: all()
         ports: [80, 443]
     

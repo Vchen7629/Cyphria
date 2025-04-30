@@ -2,7 +2,7 @@ apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
   name: argocd-repo-server-network-policy
-  namespace: tigera-operator
+  namespace: argocd
 spec:
   order: 80
   selector: "app.kubernetes.io/name == 'argocd-repo-server' ||
@@ -27,9 +27,7 @@ spec:
       protocol: TCP
       source: 
         namespaceSelector: kubernetes.io/metadata.name == "prometheus"
-        selector: "app.kubernetes.io/instance == 'prometheus-operator' || 
-                  app.kubernetes.io/instance == 'prometheus' || 
-                  managed-by == 'prometheus-operator'"
+        selector: all()
       destination:
         ports: [8084]
   egress:

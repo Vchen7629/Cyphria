@@ -3,8 +3,6 @@ kind: NetworkPolicy
 metadata:
   name: nginx
   namespace: nginx
-  annotations:
-    argocd.argoproj.io/sync-wave: "0" 
 spec: 
   order: 80
   selector: app.kubernetes.io/name == "ingress-nginx"
@@ -15,24 +13,22 @@ spec:
     - action: Allow  # exposing port 10254 for prometheus to scrape metrics
       protocol: TCP
       source: 
-        namespaceSelector: projectcalico.org/name == "prometheus"
-        selector: "app.kubernetes.io/instance == 'prometheus-operator' || 
-                  app.kubernetes.io/instance == 'prometheus' || 
-                  managed-by == 'prometheus-operator'"
+        namespaceSelector: kubernetes.io/metadata.name == "prometheus"
+        selector: all()
       destination:
         ports: [10254]
     
     - action: Allow # allowing traffic from cloudflare tunnel to nginx
       protocol: TCP
       source: 
-        selector: app == 'cloudflared'
-        namespaceSelector: projectcalico.org/name == "cloudflare-tunnel"
+        selector: all()
+        namespaceSelector: kubernetes.io/metadata.name == "cloudflare-tunnel"
       destination:
         ports: [80, 443]
   egress:
     - action: Allow # nginx -> frontend
       protocol: TCP
       destination:
-        namespaceSelector: projectcalico.org/name == "frontend"
+        namespaceSelector: kubernetes.io/metadata.name == "frontend"
         selector: app.kubernetes.io/name == "frontend"
         ports: [3000]

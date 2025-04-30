@@ -2,7 +2,7 @@ apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
   name: argocd-applicationset-controller-network-policy
-  namespace: tigera-operator
+  namespace: argocd
 spec:
   order: 80
   selector: app.kubernetes.io/name == "argocd-applicationset-controller"

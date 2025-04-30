@@ -29,6 +29,7 @@ controller:
         requests:
             cpu: {{ argocd_vars.kubernetes.controller.resources.requests.cpu }}
             memory: {{ argocd_vars.kubernetes.controller.resources.requests.memory }}
+
 dex:
     pdb: 
         enabled: true

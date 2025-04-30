@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - chart: cert-manager
+      repoURL: https://charts.jetstack.io
+      targetRevision: v1.17.2
+
+      helm: 
+        valuesObject:
+          prometheus:
+            servicemonitor: 
+              enabled: true
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 50Mi
+              memory: 256Mi
+          crds:
+            enabled: true
+
+    - repoURL: https://github.com/Vchen7629/Cyphria.git
+      targetRevision: main
+      path: kubernetes/cluster_roles/cert-manager/application
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+
+syncPolicy:
+  syncOptions:
+    - CreateNamespace=true

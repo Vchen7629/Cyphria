@@ -3,6 +3,8 @@ kind: Application
 metadata: 
   name: nginx
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source: 
@@ -34,7 +36,7 @@ spec:
             portName: metrics
             serviceMonitor:
               enabled: true
-              namespace: ingress-nginx-monitor
+              namespace: nginx
               namespaceSelector:
                 any: true
             

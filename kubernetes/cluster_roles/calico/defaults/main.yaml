@@ -9,7 +9,7 @@ calico_vars:
         name: projectcalico
         org: calico
         url: https://docs.tigera.io
-      namespace: networking
+      namespace: tigera-operator
     calicoctl:
       version: calicoctl-linux-amd64
     felix_metrics:

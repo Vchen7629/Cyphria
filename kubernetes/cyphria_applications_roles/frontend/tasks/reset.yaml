@@ -3,8 +3,8 @@
     state: absent
     api_version: apps/v1
     kind: Deployment
-    name: cyphria-frontend-deployment
-    namespace: frontend 
+    name: frontend
+    namespace: argocd
 
 
 - name: Delete Frontend Services
@@ -22,6 +22,6 @@
     api_version: argoproj.io/v1alpha1
     state: absent
     kind: Application
-    name: cyphria-frontend-argo-cd-deployment
-    namespace: frontend
+    name: frontend
+    namespace: argocd
 

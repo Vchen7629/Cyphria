@@ -1,8 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata: 
-  name: cyphria-frontend-argo-cd-deployment
+  name: frontend
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec: 
   project: default
   source:

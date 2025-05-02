@@ -15,5 +15,6 @@
     - frontend
     - cloudflare-tunnel
     - external-dns
+    - cert-manager
   loop_control:
     loop_var: namespace

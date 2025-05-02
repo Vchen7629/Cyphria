@@ -1,4 +1,4 @@
-name: Create GHCR container
+name: Create Frontend GHCR container
 
 on: 
     schedule: 

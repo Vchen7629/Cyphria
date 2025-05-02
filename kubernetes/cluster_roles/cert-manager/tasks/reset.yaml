@@ -5,3 +5,7 @@
     kind: Application
     name: cert-manager
     namespace: argocd
+
+- name: Delete Cluster Issuer
+  ansible.builtin.command:
+    cmd: kubectl delete clusterissuer letsencrypt-dns

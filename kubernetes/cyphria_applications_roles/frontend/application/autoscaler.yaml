@@ -5,7 +5,7 @@ metadata:
   namespace: frontend
 spec:
   scaleTargetRef:
-    apiVersion: v1
+    apiVersion: apps/v1
     kind: Deployment
     name: cyphria-frontend-deployment
   minReplicas: 1

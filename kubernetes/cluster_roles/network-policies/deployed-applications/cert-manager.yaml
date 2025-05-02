@@ -16,7 +16,7 @@ spec:
         namespaceSelector: app.kubernetes.io/instance == "default"
         selector: component == "apiserver"
       destination:
-        ports: [6443]
+        ports: [6443, 443]
     - action: Allow # metrics
       protocol: TCP
       source:

@@ -5,7 +5,7 @@ metadata:
   namespace: nginx
 spec: 
   order: 80
-  selector: app.kubernetes.io/name == "ingress-nginx"
+  selector: all()
   types:
     - Ingress
     - Egress
@@ -30,5 +30,5 @@ spec:
       protocol: TCP
       destination:
         namespaceSelector: kubernetes.io/metadata.name == "frontend"
-        selector: app.kubernetes.io/name == "frontend"
+        selector: all()
         ports: [3000]

@@ -6,9 +6,9 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
     external-dns.alpha.kubernetes.io/hostname: cyphria.com
-    external-dns.alpha.kubernetes.io/target: 37371dbf-2959-43a0-ad54-83f7ce21cb51.cfargotunnel.com
+    external-dns.alpha.kubernetes.io/target: 1b674eb4-2a44-4607-9495-e93759d4094f.cfargotunnel.com
 spec: 
-  ingressClassName: nginx
+  #ingressClassName: nginx
   rules:
     - host: cyphria.com
       http:
@@ -17,7 +17,7 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: frontend-service
+              name: frontend-ingress
               port:
                 number: 80
     - host: "*.cyphria.com"
@@ -27,6 +27,6 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: frontend-service
+              name: frontend-ingress
               port:
                 number: 80

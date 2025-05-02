@@ -39,3 +39,9 @@
     state: present
     definition: "{{ lookup('ansible.builtin.template', 'cert-issuer.j2') | from_yaml }}"
     kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+- name: Create Certificate
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('ansible.builtin.template', 'certificate.yaml') | from_yaml }}"
+    kubeconfig: /etc/rancher/k3s/k3s.yaml

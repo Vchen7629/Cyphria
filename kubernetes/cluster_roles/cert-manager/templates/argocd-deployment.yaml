@@ -25,10 +25,6 @@ spec:
           crds:
             enabled: true
 
-    - repoURL: https://github.com/Vchen7629/Cyphria.git
-      targetRevision: main
-      path: kubernetes/cluster_roles/cert-manager/application
-
   destination:
     server: https://kubernetes.default.svc
     namespace: cert-manager

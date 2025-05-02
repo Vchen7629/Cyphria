@@ -17,10 +17,11 @@ spec:
               enabled: true
           resources:
             limits:
+              cpu: 100m
               memory: 256Mi
             requests:
-              cpu: 50Mi
-              memory: 256Mi
+              cpu: 50m
+              memory: 128Mi
           crds:
             enabled: true
 
@@ -32,6 +33,8 @@ spec:
     server: https://kubernetes.default.svc
     namespace: cert-manager
 
-syncPolicy:
-  syncOptions:
-    - CreateNamespace=true
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -5,7 +5,6 @@ metadata:
   labels:
     app.kubernetes.io/name: frontend
 spec: 
-  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: frontend
@@ -17,3 +16,10 @@ spec:
       containers:
         - name: cyphria-frontend
           image: ghcr.io/vchen7629/cyphria-frontend:latest
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1024Mi
+            requests: 
+              cpu: 100m
+              memory: 800Mi

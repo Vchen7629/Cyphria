@@ -1,3 +1,7 @@
+- name: Include tunnel facts variables
+  ansible.builtin.include_vars:
+    file: "{{ playbook_dir }}/cyphria_applications_roles/cloudflare-tunnel/credentials/temp.yaml"
+
 - name: Deploy frontend
   kubernetes.core.k8s:
     state: present

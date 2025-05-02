@@ -46,7 +46,7 @@
       delegate_to: localhost
       become: false
       run_once: true
-
+  
     - name: Deploy to argocd
       kubernetes.core.k8s:
         state: present

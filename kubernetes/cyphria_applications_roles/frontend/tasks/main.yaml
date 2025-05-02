@@ -2,8 +2,22 @@
   ansible.builtin.include_vars:
     file: "{{ playbook_dir }}/cyphria_applications_roles/cloudflare-tunnel/credentials/temp.yaml"
 
+#- name: Render frontend-ingress YAML from Jinja2 template
+#  ansible.builtin.template:
+#    src: "{{ playbook_dir }}/cyphria_applications_roles/frontend/application/ingress-service.j2"
+ #   dest: "{{ playbook_dir }}/cyphria_applications_roles/frontend/application/ingress-service.yaml"
+ #   mode: '0644'
+ # delegate_to: localhost
+#  become: false
+
 - name: Deploy frontend
   kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('ansible.builtin.template', 'argo-cd-deployment.yaml') | from_yaml }}"
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+- name: Deploy frontend Ingress
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('ansible.builtin.template', 'ingress-service.j2') | from_yaml }}"
     kubeconfig: /etc/rancher/k3s/k3s.yaml

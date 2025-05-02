@@ -1,4 +1,4 @@
-- name: Uninstall Network Policies in argocd
+- name: Uninstall External DNS Policies in argocd
   kubernetes.core.k8s:
     api_version: argoproj.io/v1alpha1
     state: absent

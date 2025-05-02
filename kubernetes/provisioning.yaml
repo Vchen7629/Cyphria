@@ -25,24 +25,23 @@
     - 5
   tags: kubernetes
 
-- name: Application Provisioning
+- name: Core Application Provisioning
   hosts: cluster
   become: true
   gather_facts: true
-  post_tasks:
-    - name: post install tasks
-      ansible.builtin.include_role:
-        name: "{{ postinstall }}"
-        tasks_from: postinstall
-      loop: 
-        - argo-cd
-      loop_control:
-        loop_var: postinstall
   roles: 
     - calico
     - argo-cd
-    - network-policies
-    - nginx
+  tags: charts
+
+- name: ArgoCD deployed applications provisioning
+  hosts: cluster
+  become: true
+  roles: 
+    #- network-policies
     - prometheus
+    - nginx
+    - cloudflare-tunnel
+    - external-dns
     - frontend
   tags: charts

@@ -25,3 +25,6 @@
     name: frontend
     namespace: argocd
 
+- name: Delete Frontend Ingress
+  ansible.builtin.command:
+    cmd: kubectl delete ingress frontend-ingress -n frontend

@@ -9,3 +9,7 @@
 - name: Delete Cluster Issuer
   ansible.builtin.command:
     cmd: kubectl delete clusterissuer letsencrypt-dns
+
+- name: Delete Certificate
+  ansible.builtin.command:
+    cmd: kubectl delete certificate tls -n cert-manager

@@ -45,22 +45,6 @@ spec:
           requests:
             cpu: 100m
             memory: 256Mi
-    patches:
-        - target:
-            kind: Deployment
-            name: cloudflare-tunnel
-          patch: |-
-            spec:
-              template:
-                spec:
-                  containers:
-                    - name: cloudflared
-                      # Append the --loglevel flag to the default args:
-                      args:
-                        - "tunnel"
-                        - "run"
-                        - "--loglevel"
-                        - "debug"
   destination:
     server: https://kubernetes.default.svc
     namespace: cloudflare-tunnel

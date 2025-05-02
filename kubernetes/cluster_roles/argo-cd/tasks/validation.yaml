@@ -8,3 +8,12 @@
   loop_control:
     loop_var: role
 
+- name: Create ArgoCD namespace
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    definition: 
+      - apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: argocd

@@ -48,10 +48,10 @@ argocd_vars:
       resources:
         limits:
           cpu: null
-          memory: 512Mi
+          memory: 750Mi
         requests: 
           cpu: 10m
-          memory: 256Mi
+          memory: 512Mi
     server: 
       autoscaling:
         enabled: true

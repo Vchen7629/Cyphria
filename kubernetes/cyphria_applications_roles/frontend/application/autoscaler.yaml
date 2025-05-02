@@ -8,8 +8,8 @@ spec:
     apiVersion: v1
     kind: Deployment
     name: cyphria-frontend-deployment
-  min_replicas: 1
-  max_replicas: 6
+  minReplicas: 1
+  maxReplicas: 6
   metrics:
     - type: Resource
       resource:

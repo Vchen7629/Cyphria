@@ -31,10 +31,10 @@ spec:
 
           ingress:
             - hostname: cyphria.com
-              service: http://nginx-ingress-loadbalancer-ingress-nginx-controller.nginx.svc.cluster.local:80
+              service: http://nginx-ingress-nginx-controller.nginx.svc.cluster.local:80
 
             - hostname: '*.cyphria.com'
-              service: http://nginx-ingress-loadbalancer-ingress-nginx-controller.nginx.svc.cluster.local:80
+              service: http://nginx-ingress-nginx-controller.nginx.svc.cluster.local:80
             
             - service: http_status:404
               

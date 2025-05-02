@@ -1,0 +1,10 @@
+- name: Role Facts
+  ansible.builtin.include_role:
+    name: '{{ role }}'
+    tasks_from: facts
+  loop:
+    - k3s
+    - cloudflare-tunnel
+  loop_control:
+    loop_var: role
+

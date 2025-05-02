@@ -47,6 +47,10 @@
         - name: Deleting cloudflare tunnel Network Policy
           ansible.builtin.shell:
             cmd: calicoctl delete networkpolicy default.cloudflare-tunnel -n cloudflare-tunnel
+        
+        - name: Deleting cert manager Network Policy
+          ansible.builtin.shell:
+            cmd: calicoctl delete networkpolicy default.cert-manager -n cert-manager
 
     - name: deleting argocd deny all
       ansible.builtin.shell:

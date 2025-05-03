@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: calico-service-monitor
+  namespace: calico-system
+  labels:
+    release: calico
+spec:
+  selector:
+    matchLabels:
+      k8s-app: calico-kube-controllers, calico-felix-metrics, calico-typha-metrics
+  namespaceSelector:
+    matchNames:
+      - calico-system
+  endpoints:
+    - targetPort: 9091 # felix metrics
+      path: /metrics
+      interval: 30s
+    - targetPort: 9093 # typha metrics
+      path: /metrics
+      interval: 30s
+    - targetPort: 9094 # kube controller metrics
+      path: /metrics
+      interval: 30s
+      

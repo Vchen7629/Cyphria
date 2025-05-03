@@ -27,14 +27,51 @@
       until: result is not failed
   
 - name: Calicoctl Installation
+  ansible.builtin.get_url:
+    url: "{{ calico_map.calicoctl.url }}"
+    dest: "{{ k3s_map.node.directory.bin}}/calicoctl"
+    owner: root
+    group: root
+    mode: '755'
+
+- name: Enable Service Monitoring for Calico Felix and Typha
   block:
-    - name: Install binary
-      ansible.builtin.get_url:
-        url: "{{ calico_map.calicoctl.url }}"
-        dest: "{{ k3s_map.node.directory.bin}}/calicoctl"
-        owner: root
-        group: root
-        mode: '755'
+    - name: Enable Felix prometheus metrics
+      kubernetes.core.k8s:
+        api_version: projectcalico.org/v3
+        kind: FelixConfiguration
+        name: default
+        definition:
+          metadata:
+            name: default
+          spec:
+            prometheusMetricsEnabled: true
+        state: present
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+    
+    - name: Enable Typha prometheus metrics
+      kubernetes.core.k8s:
+        api_version: operator.tigera.io/v1
+        kind: Installation
+        name: default
+        definition:
+          metadata:
+            name: default
+          spec:
+            typhaMetricsPort: 9093
+        state: present
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+    - name: Apply Services to scrape ports
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('ansible.builtin.template', item) | from_yaml }}"
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+      with_items: 
+        - felix-metrics.j2
+        - typha-metrics.j2
+
+
 
 
     

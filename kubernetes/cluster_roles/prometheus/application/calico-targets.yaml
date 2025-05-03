@@ -6,10 +6,7 @@ metadata:
   labels:
     release: prometheus
 spec:
-  selector:
-    matchExpressions:
-      - { key: k8s-app, operator: In,
-          values: [calico-kube-controllers, calico-felix-metrics, calico-typha-metrics] }
+  selector: all()
   namespaceSelector:
     matchNames:
       - calico-system

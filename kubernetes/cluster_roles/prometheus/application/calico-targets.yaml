@@ -7,8 +7,9 @@ metadata:
     release: calico
 spec:
   selector:
-    matchLabels:
-      k8s-app: calico-kube-controllers, calico-felix-metrics, calico-typha-metrics
+    matchExpressions:
+      - { key: k8s-app, operator: In,
+          values: [calico-kube-controllers, calico-felix-metrics, calico-typha-metrics] }
   namespaceSelector:
     matchNames:
       - calico-system

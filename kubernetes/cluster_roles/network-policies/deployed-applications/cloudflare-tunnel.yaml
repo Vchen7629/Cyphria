@@ -10,14 +10,6 @@ spec:
     - Ingress
     - Egress
   ingress:
-    - action: Allow # exposing metrics for cloudflare tunnel
-      protocol: TCP
-      source:
-        namespaceSelector: kubernetes.io/metadata.name == "prometheus"
-        selector: all()
-      destination:
-        ports: [6940]
-
     - action: Allow # Allow traffic from the Internet to Cloudflare Tunnel
       protocol: TCP
       source:
@@ -29,6 +21,14 @@ spec:
       source:
         nets:
           - 0.0.0.0/0
+          
+    - action: Allow # exposing metrics for cloudflare tunnel
+      protocol: TCP
+      source:
+        namespaceSelector: kubernetes.io/metadata.name == "prometheus"
+        selector: all()
+      destination:
+        ports: [20241]
   egress:
     - action: Allow # Allow QUIC connection to global edge network
       protocol: TCP

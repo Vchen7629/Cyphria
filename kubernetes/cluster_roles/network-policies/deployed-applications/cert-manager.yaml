@@ -20,7 +20,7 @@ spec:
     - action: Allow # metrics
       protocol: TCP
       source:
-        namespaceSelector: app.kubernetes.io/instance == "prometheus"
+        namespaceSelector: projectcalico.org/name == "prometheus"
         selector: all()
       destination:
         ports: [9402]

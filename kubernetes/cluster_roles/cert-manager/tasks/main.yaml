@@ -40,12 +40,11 @@
     definition: "{{ lookup('ansible.builtin.template', 'cert-issuer.j2') | from_yaml }}"
     kubeconfig: /etc/rancher/k3s/k3s.yaml
 
-- name: Create Certificates
+- name: Create ArgoCD Certificates
   kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('ansible.builtin.template', item ) | from_yaml }}"
     kubeconfig: /etc/rancher/k3s/k3s.yaml
   with_items:
-    #- ./certificates/general.yaml
     - ./certificates/argocd-repo-server.yaml
     - ./certificates/argocd-dex-server.yaml

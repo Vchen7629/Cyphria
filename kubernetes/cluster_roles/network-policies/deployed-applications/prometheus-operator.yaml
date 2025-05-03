@@ -9,13 +9,6 @@ spec:
   types:  
     - Egress
   egress:
-    - action: Allow # cloudflare tunnel metrics
-      protocol: TCP
-      destination: 
-        namespaceSelector: kubernetes.io/metadata.name == "cloudflare-tunnel"
-        selector: app == 'argocd-cloudflared-deployment'
-        ports: [6940]
-
     - action: Allow # ArgoCD application controller metrics
       protocol: TCP
       destination:
@@ -43,6 +36,13 @@ spec:
         namespaceSelector: kubernetes.io/metadata.name == "argocd"
         selector: app.kubernetes.io/name == "argocd-redis"
         ports: [9121]
+    
+    - action: Allow # exposing cert-manager metrics endpoint
+      protocol: TCP
+      destination: 
+        namespaceSelector: kubernetes.io/metadata.name == "cert-manager"
+        selector: all()
+        ports: [9402]
 
     - action: Allow # exposing nginx ingress metrics endpoint
       protocol: TCP
@@ -50,3 +50,10 @@ spec:
         namespaceSelector: kubernetes.io/metadata.name == "nginx"
         selector: app.kubernetes.io/name == "ingress-nginx"
         ports: [10254]
+    
+    - action: Allow # cloudflare tunnel metrics
+      protocol: TCP
+      destination: 
+        namespaceSelector: kubernetes.io/metadata.name == "cloudflare-tunnel"
+        selector: all()
+        ports: [20241]

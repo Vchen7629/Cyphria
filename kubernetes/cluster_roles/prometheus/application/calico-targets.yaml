@@ -6,7 +6,8 @@ metadata:
   labels:
     release: prometheus
 spec:
-  selector: all()
+  selector:
+    matchLabels: all()
   namespaceSelector:
     matchNames:
       - calico-system

@@ -2,9 +2,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: calico-service-monitor
-  namespace: calico-system
+  namespace: prometheus
   labels:
-    release: calico
+    release: prometheus
 spec:
   selector:
     matchExpressions:

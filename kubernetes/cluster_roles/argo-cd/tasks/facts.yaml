@@ -36,9 +36,6 @@
         file: '{{ argocd_vars.release.version}}/{{ argocd_vars.release.file}}'
         url: https://github.com/argoproj/argo-cd/releases/download
       
-
-
-
 - name: Set variables fact
   ansible.builtin.set_fact:
     argocd_vars: '{{ argocd_vars }}'

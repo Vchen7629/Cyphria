@@ -6,7 +6,7 @@
     name: cert-manager
     namespace: argocd
 
-- name: Delete Old Certificate resourcs
+- name: Delete ArgoCD Certificate resourcs
   ansible.builtin.command:
     cmd: "{{ certificate_resource }}"
   loop:

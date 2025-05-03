@@ -37,6 +37,15 @@
 - name: ArgoCD deployed applications provisioning
   hosts: cluster
   become: true
+  post_tasks:
+    - name: Perform post-install tasks
+      ansible.builtin.include_role:
+        name: '{{ postinstall }}'
+        tasks_from: postinstall
+      loop:
+        - argo-cd
+      loop_control:
+        loop_var: postinstall
   roles: 
     #- network-policies
     - prometheus

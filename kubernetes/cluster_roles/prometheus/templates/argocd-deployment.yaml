@@ -22,9 +22,15 @@ spec:
       helm:
         valuesObject:
           tls:
-            enabled: false
+            enabled: true
           admissionWebhooks:
-            enabled: false # enable this later when i get cert manager up to generate tls certs
+            enabled: true 
+            certManager:
+              admissionCert:
+                duration: 2175h
+                issuerRef:
+                  name: letsencrypt-dns
+                  kind: ClusterIssuer
           service:  
             type: NodePort
         skipCrds: true

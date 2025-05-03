@@ -24,6 +24,14 @@ spec:
               targetPorts:
                 http: 3000
                 https: 3000
+          admissionWebhooks:
+            certManager:
+              enabled: true
+              admissionCert:
+                duration: 2175h
+                issuerRef:
+                  name: letsencrypt-dns
+                  kind: ClusterIssuer
           resources:
             limits:
               cpu: 250m

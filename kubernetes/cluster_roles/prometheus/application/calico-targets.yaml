@@ -7,7 +7,8 @@ metadata:
     release: prometheus
 spec:
   selector:
-    matchLabels: all()
+    matchLabels: 
+      k8s-app: calico-typha-metrics
   namespaceSelector:
     matchNames:
       - calico-system

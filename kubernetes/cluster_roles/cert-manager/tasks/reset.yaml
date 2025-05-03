@@ -6,10 +6,19 @@
     name: cert-manager
     namespace: argocd
 
-- name: Delete Cluster Issuer
+- name: Delete Old Certificate resourcs
   ansible.builtin.command:
-    cmd: kubectl delete clusterissuer letsencrypt-dns
+    cmd: "{{ certificate_resource }}"
+  loop:
+    - kubectl delete clusterissuer letsencrypt-dns
+    - kubectl delete certificate argocd-repo-tls -n argocd
+    - kubectl delete certificate argocd-dex-tls -n argocd
+    - kubectl delete secrets argocd-repo-server-tls -n argocd
+    - kubectl delete secrets argocd-dex-server-tls -n argocd
+    - kubectl -n cert-manager delete certificaterequests -l cert-manager.io/certificate-name=argocd-repo-tls
+    - kubectl -n cert-manager delete certificaterequests -l cert-manager.io/certificate-name=argocd-dex-tls
+    - kubectl -n cert-manager delete orders -l cert-manager.io/certificate-name=argocd-repo-tls
+    - kubectl -n cert-manager delete orders -l cert-manager.io/certificate-name=argocd-dex-tls
+  loop_control:
+    loop_var: certificate_resource
 
-- name: Delete Certificate
-  ansible.builtin.command:
-    cmd: kubectl delete certificate tls -n cert-manager

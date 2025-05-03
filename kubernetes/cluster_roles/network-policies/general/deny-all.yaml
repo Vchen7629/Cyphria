@@ -4,7 +4,8 @@ metadata:
   name: default-deny-all
 spec: 
   order: 100
-  namespaceSelector: has(projectcalico.org/name) && projectcalico.org/name not in {"kube-system", "calico-system", "calico-apiserver"}
+  namespaceSelector: "has(projectcalico.org/name) && projectcalico.org/name not in {'kube-system', 'calico-system', 'calico-apiserver'} ||
+                      kubernetes.io/metadata.name not in {'kube-system', 'calico-system', 'calico-apiserver'}"
   types: 
     - Ingress
     - Egress

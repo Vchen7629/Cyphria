@@ -97,6 +97,7 @@ repoServer:
         requests:
             cpu: {{ argocd_vars.kubernetes.repo_server.resources.requests.cpu }}
             memory: {{ argocd_vars.kubernetes.repo_server.resources.requests.memory }}
+
 server:
 {% if argocd_vars.kubernetes.server.autoscaling.enabled is truthy %}
     autoScaling:
@@ -128,3 +129,9 @@ server:
         requests:
             cpu: {{ argocd_vars.kubernetes.repo_server.resources.requests.cpu }}
             memory: {{ argocd_vars.kubernetes.repo_server.resources.requests.memory }}
+    certificate:
+        enabled: true
+        domain: cyphria.com
+        issuer:
+            name: letsencrypt-dns
+            kind: ClusterIssuer

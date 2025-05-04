@@ -33,7 +33,7 @@ const chartConfig = {
 
 export function EmotionsSentimentChart() {
   return (
-    <Card className="bg-[#141414] border-2 border-bordercolor w-[23vw] h-[40vh]">
+    <Card className="bg-[#141414] border-2 border-transparent shadow-lg shadow-[hsl(var(--shadow))] w-[23vw] h-[40vh]">
       <CardHeader>
         <CardTitle className="text-2xl font-thin text-gray-400">Emotions Sentiments torwards this topic</CardTitle>
         <CardDescription>

@@ -61,7 +61,7 @@ export function HeaderComponent() {
                 <div className="bg-gray-700 p-2 rounded-xl border-2 border-test2">
                     <User className="h-6 w-6"/>
                 </div>
-                {/*<span className=" text-md">{username || "Guest"}</span>*/}
+                <span className=" text-md">{username || "Guest"}</span>
             </div>
         </header>
     )

@@ -31,7 +31,7 @@ export default function SearchPage() {
                            <DatePickerWithRange/> 
                         </div>
                     </div>
-                    <div className="flex items-center justify-between ">
+                    <div className="flex space-x-[2vw]">
                         <EmotionsSentimentChart/>
                         <TopSubredditAppearancesChart/>
                         <EngagementMetricsChart />

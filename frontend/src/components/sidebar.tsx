@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { selectExpandState } from "../app/stateSlices/expandSlice";
 import { CollapseButton } from "../ui/buttons/collapseButton";
 import { selectLoginStatus } from "../app/state/authstate";
+import { HomePageButton } from "../navigation/sidebarbuttons.tsx/homepagebutton";
 
 export function SidebarComponent() {
     const expand = useSelector(selectExpandState)
@@ -31,6 +32,7 @@ export function SidebarComponent() {
                 </div>
             )}            
             <div className="flex flex-col space-y-[4vh] mt-[5vh]">
+                <HomePageButton/>
                 <ComparisonButton/>
                 <TopicButton/>
                 <CategoryTrendsButton/>

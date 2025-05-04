@@ -11,7 +11,7 @@ export function HeaderComponent() {
     console.log(location.pathname)
 
     return (
-        <header className="flex border-b-[1px] justify-between items-center border-bordercolor h-[10vh] py-[2vh] w-[100%] px-[3vw]">
+        <header className="flex border-b-[1px] justify-between items-center border-bordercolor h-[10vh] py-[2vh] w-full">
             <div className="flex items-center space-x-[2vw]">
                 {PageName === "comparison" ? (
                     <div className="flex w-12 h-12 rounded-xl justify-center bg-logo items-center">
@@ -61,7 +61,7 @@ export function HeaderComponent() {
                 <div className="bg-gray-700 p-2 rounded-xl border-2 border-test2">
                     <User className="h-6 w-6"/>
                 </div>
-                <span className=" text-md">{username || "Guest"}</span>
+                {/*<span className=" text-md">{username || "Guest"}</span>*/}
             </div>
         </header>
     )

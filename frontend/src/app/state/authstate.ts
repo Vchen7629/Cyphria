@@ -10,24 +10,24 @@ const authSlice = createSlice({
     initialState: { 
         userId: tokenData?.userId || null, 
         username: tokenData?.username || null, 
-        loggingOut: false 
+        loginStatus: false 
     }, 
     reducers: {
         setCredentials: (state, action) => {
             const { userId, username } = action.payload
             state.userId = userId
             state.username = username
-            state.loggingOut = false;
+            state.loginStatus = false;
         },
 
         logOut: (state) => {
             state.userId = null
             state.username = null
-            state.loggingOut = true;
+            state.loginStatus = true;
         },
 
         resetLoggingOutState: (state) => {
-            state.loggingOut = false; 
+            state.loginStatus = false; 
         }
     }
 })
@@ -38,6 +38,6 @@ export default authSlice.reducer
 
 export const selectCurrentuserId = (state: userId) => state.auth.userId
 export const selectCurrentUsername = (state: username) => state.auth.username;
-export const selectLoggingOut = (state: { auth: { loggingOut: boolean }}) => state.auth.loggingOut;
+export const selectLoginStatus = (state: { auth: { loginStatus: boolean }}) => state.auth.loginStatus;
 
 

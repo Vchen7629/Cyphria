@@ -11,12 +11,14 @@ import { ExpandButton } from "../ui/buttons/expandbutton";
 import { useSelector } from "react-redux";
 import { selectExpandState } from "../app/stateSlices/expandSlice";
 import { CollapseButton } from "../ui/buttons/collapseButton";
+import { selectLoginStatus } from "../app/state/authstate";
 
 export function SidebarComponent() {
     const expand = useSelector(selectExpandState)
+    const loginStatus = useSelector(selectLoginStatus)
 
     return (
-        <main className={`left-0 flex flex-col ${expand ? "w-[15vw] pl-[2vw]" : "w-[5vw] items-center"} pt-[2vh]  h-[100vh] border-r-[1px] border-bordercolor`}>
+        <main className={`left-0 flex flex-col rounded-xl bg-[#161617] ${expand ? "w-[13%] pl-[2vw]" : "w-[5vw] items-center"} pt-[2vh] border-bordercolor`}>
             {expand ? (
                 <div className="flex justify-between pr-[1.5vw]">
                     <LogoButton/>
@@ -37,8 +39,11 @@ export function SidebarComponent() {
                 <BookmarkButton/>
             </div>
             <div className="fixed flex flex-col bottom-[5vh] space-y-[3vh] items-center">
-                <LoginButton/>
-                <LogoutButton/>
+                {loginStatus ? (
+                    <LogoutButton/>
+                ) : (
+                    <LoginButton/>
+                )}
             </div>
         </main>
     )

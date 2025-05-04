@@ -14,11 +14,11 @@ export default function SearchPage() {
     const expand = useSelector(selectExpandState)
     
     return (
-        <main className="flex  w-[100vw] h-[100vh] bg-background">
+        <main className="flex w-[100vw] h-[100vh] bg-background p-[1vw]">
             <SidebarComponent/>
-            <div className={`flex flex-col ${expand ? "w-[85vw]" : "w-[95vw]"} font-bold`}>
+            <div className={`flex flex-col ${expand ? "w-[87%] px-[4%]" : "w-[95vw] px-[3%]"} font-bold  overflow-auto`}>
                 <HeaderComponent/>
-                <section className="flex flex-col ml-[5vw] overflow-auto">
+                <section className="flex flex-col w-full">
                     <div className="relative flex items-center w-full h-[10vh] my-[3vh]  space-x-[2vw]">
                         <div className="flex justify-center items-center">   
                             <MessageSquareMore className="w-10 h-10"/>
@@ -27,23 +27,23 @@ export default function SearchPage() {
                             <span className="text-lg">Trends for "Topic"</span>
                             <span className="text-sm text-gray-400">Sentiment enhanced Trends</span>
                         </div>
-                        <div className="absolute right-[3vw]">
+                        <div className="absolute right-0">
                            <DatePickerWithRange/> 
                         </div>
                     </div>
-                    <div className="flex w-full items-center space-x-[2vw]">
+                    <div className="flex items-center justify-between ">
                         <EmotionsSentimentChart/>
                         <TopSubredditAppearancesChart/>
                         <EngagementMetricsChart />
                     </div>
-                    <div className="bg-[#141414] w-[95%] mt-[5vh]">
+                    <div className="bg-[#141414] mt-[5vh]">
                         <TopicSentimentsTimeChart/>
                     </div>
-                    <div className="bg-[#141414] w-[95%] my-[5vh]">
+                    <div className="bg-[#141414] my-[5vh]">
                         <PostingFrequencyChart/>
                     </div>
                     <button 
-                        className="fixed flex justify-center items-center bottom-4 right-8 w-12 h-12 bg-card hover:bg-logo rounded-xl border-2 border-interactive"
+                        className="fixed flex justify-center items-center bottom-8 right-12 w-12 h-12 bg-card hover:bg-logo rounded-xl border-2 border-interactive"
                     >
                         <MoonIcon/>
                     </button>

@@ -7,19 +7,20 @@ metadata:
     release: prometheus
 spec:
   selector:
-    matchLabels: 
-      k8s-app: calico-typha-metrics
+    matchExpressions:
+      - { key: k8s-app, operator: In,
+          values: [calico-kube-controllers, calico-felix-metrics, calico-typha-metrics] }
   namespaceSelector:
     matchNames:
       - calico-system
   endpoints:
-    - targetPort: 9091 # felix metrics
+    - port: metrics # felix metrics
       path: /metrics
       interval: 30s
-    - targetPort: 9093 # typha metrics
+    - port: metrics # typha metrics
       path: /metrics
       interval: 30s
-    - targetPort: 9094 # kube controller metrics
+    - port: metrics-port # kube controller metrics
       path: /metrics
       interval: 30s
       

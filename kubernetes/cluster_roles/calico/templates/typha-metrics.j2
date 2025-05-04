@@ -10,5 +10,6 @@ spec:
     selector:
         k8s-app: calico-typha
     ports:
-    - port: {{ calico_vars.kubernetes.typha_metrics.ports.port }}
+    - name: metrics
+      port: {{ calico_vars.kubernetes.typha_metrics.ports.port }}
       targetPort: {{ calico_vars.kubernetes.typha_metrics.ports.target }}

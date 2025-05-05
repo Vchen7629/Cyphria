@@ -18,7 +18,7 @@ export default function LoginPage() {
             <section className="flex flex-col space-y-[2vh] items-center z-10 w-[25vw] h-[55vh] bg-[#141414] rounded-3xl py-[5vh]">
                 <LoginLogo />
                 <span className="text-3xl font-semibold">Welcome Back</span>
-                <span className="text-sm text-gray-400 font-semibold">Don't have an account yet? Sign up</span>
+                <span className="text-sm text-gray-400 font-semibold">Don't have an account yet? Sign up!</span>
                 <LoginForm/>
             </section>
 

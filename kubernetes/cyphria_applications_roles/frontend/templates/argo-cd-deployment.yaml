@@ -5,12 +5,16 @@ metadata:
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: ghcr.io/vchen7629/cyphria-frontend:latest
+    argocd-image-updater.argoproj.io/auto-update: "true"
+    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds
 spec: 
   project: default
   source:
     repoURL: https://github.com/Vchen7629/Cyphria.git
     targetRevision: main
-    path: kubernetes/cyphria_applications_roles/frontend/application
+    path: kubernetes/cyphria_applications_roles/frontend/overlay
     
   destination:
     server: https://kubernetes.default.svc
@@ -21,3 +25,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ApplyOutOfSyncOnly=false

@@ -17,7 +17,7 @@ import (
 
 
 func LoadEnvFile() {
-	err := godotenv.Load("../../.env")
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file\n")
 	}	
@@ -36,7 +36,7 @@ func main(){
 	corsRouter := middleware.CorsMiddleware(r)
 	srv := &http.Server {
 		Handler: corsRouter,
-		Addr: "127.0.0.1:3000",
+		Addr: "0.0.0.0:3000",
 	}
 	log.Fatal(srv.ListenAndServe())
 	defer dbconn.DBConn.Close()

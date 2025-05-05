@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-
+	"errors"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	dbconn "github.com/vchen7629/cyphria/login-api/internal/db_connection"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -29,6 +30,13 @@ func HashPassword(password string) (string, error) {
 
 func CreateNewUser(username, password string) (bool, error) {
 	var inserted bool
+
+	if username == "" {
+		return false, fmt.Errorf("Missing Username, please provide an username")
+	} else if password == "" {
+		return false, fmt.Errorf("Missing Password, please provide an password")
+	}
+	
 	err := dbconn.DBConn.QueryRow(context.Background(), `
 		INSERT INTO useraccount (uuid, username, password, creation)
 		VALUES (
@@ -37,7 +45,6 @@ func CreateNewUser(username, password string) (bool, error) {
 			$3,
 			$4
 		) 
-		ON CONFLICT (username) DO NOTHING
 		RETURNING true;
 	`, uuid.New(), username, password, time.Now()).Scan(&inserted)
 
@@ -46,7 +53,14 @@ func CreateNewUser(username, password string) (bool, error) {
 	}
 
 	if err != nil {
-		return false, fmt.Errorf("error creating a new user: %w", err)
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == "23505" {
+				return false, fmt.Errorf("Username already Exists")
+			}
+		} else {
+			return true, fmt.Errorf("error creating a new user: %w", pgErr.Message)
+		}
 	}
 	
 	return true, nil
@@ -67,20 +81,35 @@ func HttpHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	created, err := CreateNewUser(payload.Username, hashed)
+	_, err := CreateNewUser(payload.Username, hashed)
 
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error creating user: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	if !created {
 		w.Header().Set("Content-Type","application/json")
-		w.WriteHeader(http.StatusConflict)
-		json.NewEncoder(w).Encode(map[string]string{
-			"message": "username or uuid already exists",
-		})
-		return
+		if err.Error() == "Username already Exists" {
+			w.WriteHeader(http.StatusConflict)
+			json.NewEncoder(w).Encode(map[string]string{
+				"message": "Username Already Exists, Try Again!",
+			})
+			return
+		} else if err.Error() == "Missing Username, please provide an username" {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{
+				"message": err.Error(),
+			})
+			return
+		} else if err.Error() == "Missing Password, please provide an password" {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{
+				"message": err.Error(),
+			})
+			return
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]string{
+				"message": err.Error(),
+			})
+			return
+		}
 	}
 
 	response := map[string]string{

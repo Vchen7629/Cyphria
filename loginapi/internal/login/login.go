@@ -7,7 +7,8 @@ import (
 	"log"
 	"net/http"
 	"time"
-
+	"errors"
+	"database/sql"
 	"github.com/golang-jwt/jwt"
 	dbconn "github.com/vchen7629/cyphria/login-api/internal/db_connection"
 	"golang.org/x/crypto/bcrypt"
@@ -43,12 +44,12 @@ func AuthenticateUser(username, password string) (bool, string, error) {
 	username).Scan(&storedpasswordhash, &storeduuid)
 
 	if err != nil {
-		return false, "", fmt.Errorf("error querying database: %w", err)
+		return false, "", fmt.Errorf("Invalid username or password")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(storedpasswordhash), []byte(password))
 	if err != nil {
-		return false, "", nil
+		return false, "", fmt.Errorf("Invalid username or password")
 	}
 
 	return true, storeduuid, nil
@@ -101,16 +102,27 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	authTime := time.Since(authStart)
 
 	if err != nil {
-		log.Printf("Authentication error: %v", err)
-		http.Error(w, "Something went wrong", http.StatusInternalServerError)
+		if errors.Is(err, sql.ErrNoRows) {
+			w.Header().Set("Content-Type","application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(map[string]string{
+				"message": "Invalid username or password",
+			})
+		} else {
+			w.Header().Set("Content-Type","application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(map[string]string{
+				"message": "Invalid username or password",
+			})
+		}
 		return
 	}
 
 	if !login {
 		w.Header().Set("Content-Type","application/json")
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(map[string]string{
-			"message": "username or password doesn't match",
+			"message": "Invalid username or password",
 		})
 	}
 

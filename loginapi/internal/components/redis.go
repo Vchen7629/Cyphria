@@ -1,4 +1,4 @@
-package login
+package components
 
 import (
 	"context"
@@ -14,22 +14,7 @@ type UserData struct {
 
 var client, expireTime = redisClient.GetRedisClient(), time.Minute * 5
 
-func CreateReverseMapping(sessionID string, uuid string) (string, error) {
-	setErr := client.Set(
-		context.Background(),
-		uuid,
-		sessionID,
-		expireTime,
-	).Err()
-
-	if setErr != nil {
-		return "", fmt.Errorf("Error creating Reverse Mapping in Redis")
-	}
-
-	return sessionID, nil
-}
-
-func UpdateNewSessionID(sessionID string, username string, uuid string) error {
+func UpdateRedisSessionID(sessionID string, username string, uuid string) error {
 	userdata := &UserData{Username: username, UUID: uuid}
 
 	setErr := client.HSet(
@@ -55,12 +40,22 @@ func UpdateNewSessionID(sessionID string, username string, uuid string) error {
 	return nil
 }
 
+func CheckSessionExistsRedis(SessionID string) (bool, error) {
+	var cursor uint64
+	_, cursor, err := client.Scan(context.Background(), cursor, SessionID, 1).Result()
 
-func RedisSessionIDHandler(sessionID string, username string, uuid string) error {
-	sessionErr := UpdateNewSessionID(sessionID, username, uuid)
+	if err != nil {
+		return false, fmt.Errorf("Error Scanning %s", err.Error())
+	}
 
-	if sessionErr != nil {
-		return fmt.Errorf(sessionErr.Error())
+	return true, nil
+}
+
+func RemoveSessionTokenRedis(SessionID string) error {
+	result := client.Del(context.Background(), SessionID)
+
+	if result.Err() != nil {
+		return fmt.Errorf("Error Deleting Key %s", result.Err())
 	}
 
 	return nil

@@ -14,9 +14,7 @@ import (
 	"github.com/Vchen7629/Cyphria/loginapi/config/poolconfig"
 	dbconn "github.com/Vchen7629/Cyphria/loginapi/config/postgres"
 	"github.com/Vchen7629/Cyphria/loginapi/config/redis"
-	"github.com/Vchen7629/Cyphria/loginapi/internal/login"
-	"github.com/Vchen7629/Cyphria/loginapi/internal/logout"
-	"github.com/Vchen7629/Cyphria/loginapi/internal/signup"
+	"github.com/Vchen7629/Cyphria/loginapi/internal/accountComponents"
 	"github.com/Vchen7629/Cyphria/loginapi/internal/authenticatedRequests"
 )
 
@@ -30,9 +28,9 @@ func LoadEnvFile() {
 
 func RouteHandlers(r *mux.Router) {
 	r.HandleFunc("/", helloWorld)
-	r.HandleFunc("/login", login.LoginHandler).Methods(http.MethodPost, http.MethodOptions)
-	r.HandleFunc("/logout", logout.Logout).Methods(http.MethodPost, http.MethodOptions)
-	r.HandleFunc("/signup",  signup.HttpHandler).Methods(http.MethodPost, http.MethodOptions)
+	r.HandleFunc("/login", accountComponents.LoginHandler).Methods(http.MethodPost, http.MethodOptions)
+	r.HandleFunc("/logout", accountComponents.LogoutHandler).Methods(http.MethodPost, http.MethodOptions)
+	r.HandleFunc("/signup",  accountComponents.SignUpHandler).Methods(http.MethodPost, http.MethodOptions)
 	r.HandleFunc("/getuserdata", authenticatedRequests.FetchUserDataHandler).Methods(http.MethodPost, http.MethodOptions)
 	http.Handle("/", r)
 }

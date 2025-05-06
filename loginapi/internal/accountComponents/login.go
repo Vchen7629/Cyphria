@@ -1,4 +1,4 @@
-package login
+package accountComponents
 
 import (
 	"context"
@@ -9,6 +9,7 @@ import (
 	"time"
 	"errors"
 	"database/sql"
+	"github.com/Vchen7629/Cyphria/loginapi/internal/components"
 	dbconn "github.com/Vchen7629/Cyphria/loginapi/config/postgres"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -46,6 +47,51 @@ func AuthenticateUser(username, password string) (bool, string, error) {
 	}
 
 	return true, storeduuid, nil
+}
+
+func SessionHandler(w http.ResponseWriter, username string, uuid string) {
+	tokenString, err := components.GenerateSessionToken()
+
+	if err != nil {
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": "Error Generating Session Token",
+		})
+	}
+
+	redisErr := components.UpdateRedisSessionID(tokenString, username, uuid)
+
+	if redisErr != nil {
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": "error updating redis session id",
+		})
+	}
+
+	sessionErr := components.SaveSessionTokenPostgres(username, tokenString)
+
+	if sessionErr != nil && sessionErr.Error() == "Error updating sessionID for username" {
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": sessionErr.Error(),
+		})
+	}
+
+	cookie := http.Cookie{
+		Name: 		"accessToken",
+		Value: 		tokenString,
+		Expires: 	time.Now().Add(24 * time.Hour),
+		Path: 		"/",
+		Secure:     true,
+		HttpOnly:   true,
+		SameSite:   http.SameSiteLaxMode,
+	}
+
+	http.SetCookie(w, &cookie)
+
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {

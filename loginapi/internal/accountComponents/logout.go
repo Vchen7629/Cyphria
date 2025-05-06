@@ -1,15 +1,45 @@
-package logout
+package accountComponents
 
 import (
+	"fmt"
 	"net/http"
 	"encoding/json"
+	"github.com/Vchen7629/Cyphria/loginapi/internal/components"
 )
 
 type LogoutCredentials struct {
 	UUID string `json:"uuid"`
 }
 
-func Logout(w http.ResponseWriter, r *http.Request) {
+func RedisHandler(sessionIDCookie string) (bool, error) {
+	exists, sessionErr := components.CheckSessionExistsRedis(sessionIDCookie)
+
+	if sessionErr != nil {
+		return false, fmt.Errorf(sessionErr.Error())
+	}
+
+	if exists {
+		sessionErr := components.RemoveSessionTokenRedis(sessionIDCookie)
+
+		if sessionErr != nil {
+			return false, fmt.Errorf(sessionErr.Error())
+		}
+	}
+
+	return true, nil
+}
+
+func PostgresHandler(UUID string) (bool, error) {
+	err := components.RemoveSessionTokenPostgres(UUID)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	var payload LogoutCredentials
 	sessionIDCookie, cookieErr := r.Cookie("accessToken")
 	sessionID := sessionIDCookie.Value

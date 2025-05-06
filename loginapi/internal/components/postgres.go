@@ -1,10 +1,28 @@
-package logout
+package components
 
 import (
-	"context"
 	"fmt"
+	"context"
 	dbconn "github.com/Vchen7629/Cyphria/loginapi/config/postgres"
 )
+
+func SaveSessionTokenPostgres(username string, token string) (error) {
+	result, err := dbconn.DBConn.Exec(context.Background(), `
+		UPDATE useraccount
+		SET sessionid = $2
+		WHERE username = $1
+	`, username, token)
+
+	if err != nil {
+		return fmt.Errorf("Error updating sessionID for username")
+	}
+
+	if result.RowsAffected() == 0 {
+		return fmt.Errorf("No rows were updated")
+	}
+	
+	return nil
+}
 
 func RemoveSessionTokenPostgres(uuid string) error {
 	if uuid == "" {
@@ -26,14 +44,4 @@ func RemoveSessionTokenPostgres(uuid string) error {
 	}
 
 	return nil
-}
-
-func PostgresHandler(UUID string) (bool, error) {
-	err := RemoveSessionTokenPostgres(UUID)
-
-	if err != nil {
-		return false, err
-	}
-
-	return true, nil
 }

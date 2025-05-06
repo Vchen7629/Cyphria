@@ -12,6 +12,14 @@ export const authApiSlice = authSlice.injectEndpoints({
             }),
             invalidatesTags: ['User'], 
         }),
+        SignUp: builder.mutation<any, { username: string, password: string}>({
+            query: credentials => ({
+                url: "/signup",
+                method: "POST",
+                body: {...credentials},
+                credentials: "include",
+            })
+        }),
         Logout: builder.mutation({
             query: (credentials) => ({
                 url: "/logout",
@@ -29,5 +37,6 @@ export const authApiSlice = authSlice.injectEndpoints({
 
 export const {
     useLoginMutation,
+    useSignUpMutation,
     useLogoutMutation
 } = authApiSlice

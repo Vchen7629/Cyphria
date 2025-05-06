@@ -12,25 +12,23 @@ import {
   FormMessage,
 } from "../../ui/shadcn/form"
 import { Input } from "../../ui/shadcn/input"
-import { useLoginMutation } from "../../app/auth-slices/authApiSlice"
+import { useSignUpMutation } from "../../app/auth-slices/authApiSlice"
 import { useNavigate } from "react-router"
 import { toast } from "sonner"
-import { useGetUserDataQuery } from "../../app/auth-slices/authenticatedActionsApiSlice"
-import { useDispatch } from "react-redux"
 import { setCredentials } from "../../app/state/authstate"
+import { useDispatch } from "react-redux"
 
 const formSchema = z.object({
     username: z.string().min(2, {
         message: "Username must be at least 2 characters"
     }),
     password: z.string().min(3, {
-        message: "Please enter a password"
+        message: "Please enter a valid password (at least 3 characters)"
     })
 })
 
-export function LoginForm() {
-    const [login] = useLoginMutation()
-    const {} = useGetUserDataQuery()
+const SignUpForm = () =>{
+    const [SignUp] = useSignUpMutation()
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
@@ -43,7 +41,7 @@ export function LoginForm() {
     }) 
     
     function onSubmit(values: z.infer<typeof formSchema>) {
-        const promise = login({
+        const promise = SignUp({
             username: values.username,
             password: values.password
         }).unwrap();
@@ -52,7 +50,7 @@ export function LoginForm() {
             success: () => {
                 dispatch(setCredentials({username: values.username}))
                 navigate("/")
-                return "sucessfully logged in"
+                return "Successfully Signed Up!"
             },
             error: (error) => {
                 if (error?.status === 404) {
@@ -94,7 +92,9 @@ export function LoginForm() {
                     )}
                 />
             </form>
-            <Button type="submit" form="login-form" className=" bg-blue-400 w-[85%] rounded-md hover:bg-blue-300">Login</Button>
+            <Button type="submit" form="login-form" className=" bg-blue-400 w-[85%] rounded-md hover:bg-blue-300">Sign Up</Button>
         </Form>
     )
 }
+
+export default SignUpForm

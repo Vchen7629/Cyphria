@@ -13,6 +13,7 @@ import { selectExpandState } from "../app/stateSlices/expandSlice";
 import { CollapseButton } from "../ui/buttons/collapseButton";
 import { selectLoginStatus } from "../app/state/authstate";
 import { HomePageButton } from "../navigation/sidebarbuttons.tsx/homepagebutton";
+import { SignUpButton } from "../navigation/sidebarbuttons.tsx/signupbutton";
 
 export function SidebarComponent() {
     const expand = useSelector(selectExpandState)
@@ -44,7 +45,10 @@ export function SidebarComponent() {
                 {loginStatus ? (
                     <LogoutButton/>
                 ) : (
-                    <LoginButton/>
+                    <>
+                        <LoginButton/>
+                        <SignUpButton/>
+                    </>
                 )}
             </div>
         </main>

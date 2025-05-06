@@ -13,7 +13,6 @@ export function LogoutButton() {
 
     async function handleLogout() {
         try {
-            console.log("uuid", uuid)
             await logout({
                 uuid: uuid
             }).unwrap();

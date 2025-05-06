@@ -15,8 +15,6 @@ import { Input } from "../../ui/shadcn/input"
 import { useLoginMutation } from "../../app/auth-slices/authApiSlice"
 import { useNavigate } from "react-router"
 import { toast } from "sonner"
-import { useSelector } from "react-redux"
-import { selectLoginStatus } from "../../app/state/authstate"
 import { useGetUserDataMutation } from "../../app/auth-slices/authenticatedActionsApiSlice"
 
 const formSchema = z.object({

@@ -13,6 +13,7 @@ import (
 	"github.com/Vchen7629/Cyphria/loginapi/config/middleware"
 	"github.com/Vchen7629/Cyphria/loginapi/config/poolconfig"
 	dbconn "github.com/Vchen7629/Cyphria/loginapi/config/postgres"
+	"github.com/Vchen7629/Cyphria/loginapi/config/redis"
 	"github.com/Vchen7629/Cyphria/loginapi/internal/login"
 	"github.com/Vchen7629/Cyphria/loginapi/internal/logout"
 	"github.com/Vchen7629/Cyphria/loginapi/internal/signup"
@@ -41,6 +42,7 @@ func main(){
 	LoadEnvFile()
 	config.PoolConfig()
 	dbconn.Main()
+	redisClient.GetRedisClient()
 	RouteHandlers(r)
 	
 	corsRouter := middleware.CorsMiddleware(r)

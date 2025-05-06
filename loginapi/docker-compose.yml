@@ -14,3 +14,16 @@ services:
     restart: always
     ports:
       - 8080:8080
+  redis:
+    image: redis/redis-stack:latest
+    ports:
+      - "6379:6379"
+  
+  redis-insight:
+    image: redislabs/redisinsight:latest 
+    ports:
+      - "5540:5540"
+    volumes:
+      - redisinsight_data:/db
+volumes:
+  redisinsight_data:

@@ -13,7 +13,6 @@ import (
 
 func GenerateSessionToken() (string, error) {
 	tokenString := rand.Text()
-	log.Println("token string is: ", tokenString)	
 
 	if tokenString == "" {
 		return "", fmt.Errorf("Error Generating Random Token")
@@ -22,7 +21,7 @@ func GenerateSessionToken() (string, error) {
 	return tokenString, nil
 }
 
-func SaveSessionToken(username string, token string) (error) {
+func SaveSessionTokenPostgres(username string, token string) (error) {
 	result, err := dbconn.DBConn.Exec(context.Background(), `
 		UPDATE useraccount
 		SET sessionid = $2
@@ -40,7 +39,7 @@ func SaveSessionToken(username string, token string) (error) {
 	return nil
 }
 
-func SessionHandler(w http.ResponseWriter, username string) {
+func SessionHandler(w http.ResponseWriter, username string, uuid string) {
 	tokenString, err := GenerateSessionToken()
 
 	if err != nil {
@@ -51,7 +50,13 @@ func SessionHandler(w http.ResponseWriter, username string) {
 		})
 	}
 
-	sessionErr := SaveSessionToken(username, tokenString)
+	redisErr := RedisSessionIDHandler(tokenString, username, uuid)
+
+	if redisErr != nil {
+		log.Println("hi")
+	}
+
+	sessionErr := SaveSessionTokenPostgres(username, tokenString)
 
 	if sessionErr != nil && sessionErr.Error() == "Error updating sessionID for username" {
 		w.Header().Set("content-type", "application/json")
@@ -68,7 +73,7 @@ func SessionHandler(w http.ResponseWriter, username string) {
 		Path: 		"/",
 		Secure:     true,
 		HttpOnly:   true,
-		SameSite: http.SameSiteLaxMode,
+		SameSite:   http.SameSiteLaxMode,
 	}
 
 	http.SetCookie(w, &cookie)

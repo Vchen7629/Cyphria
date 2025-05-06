@@ -58,7 +58,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "error parsing json body", http.StatusBadRequest)
 		return
 	}
-	defer r.Body.Close()
 
 	authStart := time.Now()
 	login, uuid, err := AuthenticateUser(payload.Username, payload.Password)
@@ -88,7 +87,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Print(uuid)
 	jwtStart := time.Now()
-	SessionHandler(w, payload.Username)
+	SessionHandler(w, payload.Username, uuid)
 	jwtSince := time.Since(jwtStart)
 	w.Header().Set("Content-Type", "application/json")
 

@@ -1,24 +1,73 @@
 package authenticatedRequests
 
 import (
+	"log"
 	"fmt"
+	"time"
 	"errors"
 	"context"
 	"net/http"
 	"database/sql"
 	"encoding/json"
+	"github.com/Vchen7629/Cyphria/loginapi/config/redis"
 	dbconn "github.com/Vchen7629/Cyphria/loginapi/config/postgres"
 )
 
-func CheckSessionInDatabase(SessionID string) (string, string, error) {
+var client = redisClient.GetRedisClient()
+
+
+func FetchSessionDataRedis(SessionID string) (string, string, error) {
+	databaseQuery := time.Now()
+	expireTime := time.Minute * 5
+
+	UserData, err := client.HGetAll(context.Background(), SessionID).Result()
+
+	if err != nil {
+		return "", "", fmt.Errorf("Error Fetching User Data")
+	}
+
+	expireErr := client.Expire(
+		context.Background(), 
+		SessionID, 
+		expireTime,
+	).Err()
+
+	if expireErr != nil {
+		return "", "", fmt.Errorf("Error Updating Expire time")
+	}
+
+	username, uuid := UserData["username"], UserData["uuid"]
+	
+	timeTotal := time.Since(databaseQuery)
+	log.Println("You Queried the Redis Database!", timeTotal)
+
+	return username, uuid, nil
+}
+
+func CheckSessionInRedis(SessionID string) ( bool, error) {
+	var cursor uint64
+
+	_, cursor, err := client.Scan(context.Background(), cursor, SessionID, 1).Result()
+	if err != nil {
+		return false, fmt.Errorf("Error Scanning %s", err)
+	}
+
+	return true, nil
+}
+
+func CheckSessionInPostgres(SessionID string) (string, string, error) {
 	var username string
 	var uuid string
+	log.Println("You Queried the Database!")
 
+	databaseQuery := time.Now()
 	err := dbconn.DBConn.QueryRow(context.Background(), `
 		SELECT username, uuid 
 		FROM useraccount
 		WHERE sessionid = $1
 	`, SessionID).Scan(&username, &uuid)
+	timeTotal := time.Since(databaseQuery)
+	log.Println("You Queried the Database!", timeTotal)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -32,6 +81,11 @@ func CheckSessionInDatabase(SessionID string) (string, string, error) {
 }
 
 func FetchUserDataHandler(w http.ResponseWriter, r *http.Request) {
+	var (
+		username 	string
+		uuid 		string
+		sessionErr 	error
+	)
 	cookie, cookieErr := r.Cookie("accessToken")
 
 	if cookieErr != nil {
@@ -46,7 +100,17 @@ func FetchUserDataHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	username, uuid, sessionErr := CheckSessionInDatabase(cookie.Value)
+	found, err := CheckSessionInRedis(cookie.Value)
+
+	if err != nil {
+
+	}
+
+	if found {
+		username, uuid, sessionErr = FetchSessionDataRedis(cookie.Value)
+	} else {
+		username, uuid, sessionErr = CheckSessionInPostgres(cookie.Value)
+	}
 
 	w.Header().Set("Content-Type", "Application/json")
 

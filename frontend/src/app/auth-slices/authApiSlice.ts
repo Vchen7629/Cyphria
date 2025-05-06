@@ -1,5 +1,5 @@
 import { authSlice } from "../base/authSlice";
-import { logOut, setCredentials } from "../state/authstate";
+import { logOut } from "../state/authstate";
 
 export const authApiSlice = authSlice.injectEndpoints({
     endpoints: builder => ({
@@ -10,21 +10,12 @@ export const authApiSlice = authSlice.injectEndpoints({
                 body: { ...credentials},   
                 credentials: 'include', 
             }),
-            async onQueryStarted(_, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled
-                    const { uuid, username } = data.user
-                    const result = dispatch(setCredentials({ uuid, username }))
-                    console.log(result)
-                } catch (err) {
-                    console.error('Login Error', err)
-                }
-            }
         }),
         Logout: builder.mutation({
-            query: () => ({
+            query: (credentials) => ({
                 url: "/logout",
                 method: "POST",
+                body: {...credentials}
             }),
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 await queryFulfilled; 

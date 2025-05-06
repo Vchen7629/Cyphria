@@ -14,16 +14,16 @@ const authSlice = createSlice({
     }, 
     reducers: {
         setCredentials: (state, action) => {
-            const { userId, username } = action.payload
-            state.userId = userId
+            const { uuid, username } = action.payload
+            state.userId = uuid
             state.username = username
-            state.loginStatus = false;
+            state.loginStatus = true;
         },
 
         logOut: (state) => {
             state.userId = null
             state.username = null
-            state.loginStatus = true;
+            state.loginStatus = false;
         },
 
         resetLoggingOutState: (state) => {
@@ -36,7 +36,7 @@ export const { setCredentials, logOut, resetLoggingOutState } = authSlice.action
 
 export default authSlice.reducer
 
-export const selectCurrentuserId = (state: userId) => state.auth.userId
+export const selectCurrentUserId = (state: userId) => state.auth.userId
 export const selectCurrentUsername = (state: username) => state.auth.username;
 export const selectLoginStatus = (state: { auth: { loginStatus: boolean }}) => state.auth.loginStatus;
 

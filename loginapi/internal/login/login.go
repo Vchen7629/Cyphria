@@ -9,8 +9,7 @@ import (
 	"time"
 	"errors"
 	"database/sql"
-	"github.com/golang-jwt/jwt"
-	dbconn "github.com/vchen7629/cyphria/login-api/internal/db_connection"
+	dbconn "github.com/Vchen7629/Cyphria/loginapi/config/postgres"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -27,12 +26,6 @@ type LoginResponse struct {
 type UserInfo struct {
 	UserId string
 	Username string
-}
-
-type Claims struct {
-	*jwt.StandardClaims
-	TokenType string
-	UserInfo
 }
 
 func AuthenticateUser(username, password string) (bool, string, error) {
@@ -55,36 +48,6 @@ func AuthenticateUser(username, password string) (bool, string, error) {
 	return true, storeduuid, nil
 }
 
-func GenerateJwtToken(w http.ResponseWriter, username string, uuid string)  {
-	claims := &Claims{
-		UserInfo: UserInfo{
-			Username: 	username,
-			UserId: 	uuid,
-		},
-		StandardClaims: &jwt.StandardClaims{
-			ExpiresAt: 	time.Now().Add(24 * time.Hour).Unix(),
-			Issuer: 	"Cyphria",
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	tokenString, err := token.SignedString([]byte("AllYourBase"))
-    if err != nil {
-        http.Error(w, "Failed to generate token", http.StatusInternalServerError)
-        return
-    }
-
-	cookie := http.Cookie{
-		Name: 		"accessToken",
-		Value: 		tokenString,
-		Expires: 	time.Now().Add(24 * time.Hour),
-		Path: 		"/",
-	}
-
-	http.SetCookie(w, &cookie)
-}
-
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	var payload LoginCredentials
@@ -101,21 +64,18 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	login, uuid, err := AuthenticateUser(payload.Username, payload.Password)
 	authTime := time.Since(authStart)
 
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			w.Header().Set("Content-Type","application/json")
-			w.WriteHeader(http.StatusNotFound)
-			json.NewEncoder(w).Encode(map[string]string{
-				"message": "Invalid username or password",
-			})
-		} else {
-			w.Header().Set("Content-Type","application/json")
-			w.WriteHeader(http.StatusNotFound)
-			json.NewEncoder(w).Encode(map[string]string{
-				"message": "Invalid username or password",
-			})
-		}
-		return
+	if err != nil && errors.Is(err, sql.ErrNoRows) {
+		w.Header().Set("Content-Type","application/json")
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": "Invalid username or password",
+		})
+	} else if err != nil {
+		w.Header().Set("Content-Type","application/json")
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": "Invalid username or password",
+		})
 	}
 
 	if !login {
@@ -128,7 +88,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Print(uuid)
 	jwtStart := time.Now()
-	GenerateJwtToken(w, payload.Username, uuid)
+	SessionHandler(w, payload.Username)
 	jwtSince := time.Since(jwtStart)
 	w.Header().Set("Content-Type", "application/json")
 

@@ -4,15 +4,19 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
+	"os"
+	"os/signal"
+    "syscall"
+	"context"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-	"github.com/vchen7629/cyphria/login-api/config/middleware"
-	"github.com/vchen7629/cyphria/login-api/config/poolconfig"
-	"github.com/vchen7629/cyphria/login-api/internal/db_connection"
-	"github.com/vchen7629/cyphria/login-api/internal/login"
-	"github.com/vchen7629/cyphria/login-api/internal/logout"
-	"github.com/vchen7629/cyphria/login-api/internal/signup"
+	"github.com/Vchen7629/Cyphria/loginapi/config/middleware"
+	"github.com/Vchen7629/Cyphria/loginapi/config/poolconfig"
+	dbconn "github.com/Vchen7629/Cyphria/loginapi/config/postgres"
+	"github.com/Vchen7629/Cyphria/loginapi/internal/login"
+	"github.com/Vchen7629/Cyphria/loginapi/internal/logout"
+	"github.com/Vchen7629/Cyphria/loginapi/internal/signup"
+	"github.com/Vchen7629/Cyphria/loginapi/internal/authenticatedRequests"
 )
 
 
@@ -23,23 +27,50 @@ func LoadEnvFile() {
 	}	
 }
 
+func RouteHandlers(r *mux.Router) {
+	r.HandleFunc("/", helloWorld)
+	r.HandleFunc("/login", login.LoginHandler).Methods(http.MethodPost, http.MethodOptions)
+	r.HandleFunc("/logout", logout.Logout).Methods(http.MethodPost, http.MethodOptions)
+	r.HandleFunc("/signup",  signup.HttpHandler).Methods(http.MethodPost, http.MethodOptions)
+	r.HandleFunc("/getuserdata", authenticatedRequests.FetchUserDataHandler).Methods(http.MethodPost, http.MethodOptions)
+	http.Handle("/", r)
+}
+
 func main(){
 	r := mux.NewRouter()
 	LoadEnvFile()
 	config.PoolConfig()
 	dbconn.Main()
-	r.HandleFunc("/", helloWorld)
-	r.HandleFunc("/login", login.LoginHandler).Methods(http.MethodPost, http.MethodOptions)
-	r.HandleFunc("/logout", logout.Logout).Methods(http.MethodPost, http.MethodOptions)
-	r.HandleFunc("/signup",  signup.HttpHandler).Methods(http.MethodPost, http.MethodOptions)
-	http.Handle("/", r)
+	RouteHandlers(r)
+	
 	corsRouter := middleware.CorsMiddleware(r)
 	srv := &http.Server {
 		Handler: corsRouter,
 		Addr: "0.0.0.0:3000",
 	}
-	log.Fatal(srv.ListenAndServe())
-	defer dbconn.DBConn.Close()
+	
+	// go channel to listen for os quit command
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		<-quit 
+		log.Println("Shutting down Server")
+
+		err := srv.Shutdown(context.Background())
+
+		if err != nil {
+			log.Fatalf("Error Shutting Down Server: %s", err)
+		}
+
+		dbconn.DBConn.Close()
+	}()
+
+	err := srv.ListenAndServe() 
+	
+	if err != nil && err != http.ErrServerClosed {
+		log.Fatalf("ListenAndServe(): %s", err)
+	}
 }
 
 func helloWorld(w http.ResponseWriter, r *http.Request) {

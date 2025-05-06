@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
-	dbconn "github.com/vchen7629/cyphria/login-api/internal/db_connection"
+	dbconn "github.com/Vchen7629/Cyphria/loginapi/config/postgres"
 	"golang.org/x/crypto/bcrypt"
 )
 

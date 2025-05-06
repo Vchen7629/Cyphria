@@ -15,6 +15,9 @@ import { Input } from "../../ui/shadcn/input"
 import { useLoginMutation } from "../../app/auth-slices/authApiSlice"
 import { useNavigate } from "react-router"
 import { toast } from "sonner"
+import { useSelector } from "react-redux"
+import { selectLoginStatus } from "../../app/state/authstate"
+import { useGetUserDataMutation } from "../../app/auth-slices/authenticatedActionsApiSlice"
 
 const formSchema = z.object({
     username: z.string().min(2, {
@@ -28,6 +31,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
     const [login] = useLoginMutation()
+    const [userdata] = useGetUserDataMutation()
     const navigate = useNavigate()
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -46,7 +50,8 @@ export function LoginForm() {
         toast.promise(promise, {
             loading: "loading...",
             success: () => {
-                navigate("/search")
+                userdata().unwrap()
+                navigate("/")
                 return "sucessfully logged in"
             },
             error: (error) => {

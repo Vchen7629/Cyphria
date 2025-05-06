@@ -3,15 +3,20 @@ import { useLogoutMutation } from '../../app/auth-slices/authApiSlice';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { selectExpandState } from '../../app/stateSlices/expandSlice';
+import { selectCurrentUserId } from '../../app/state/authstate';
 
 export function LogoutButton() {
     const navigate = useNavigate()
     const [logout, {isSuccess, isError}] = useLogoutMutation()
     const expand = useSelector(selectExpandState)
+    const uuid = useSelector(selectCurrentUserId)
 
     async function handleLogout() {
         try {
-            await logout({}).unwrap();
+            console.log("uuid", uuid)
+            await logout({
+                uuid: uuid
+            }).unwrap();
             if (isSuccess) {
                 navigate("/")
             } else if (isError) {

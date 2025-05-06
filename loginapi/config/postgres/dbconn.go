@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/vchen7629/cyphria/login-api/config/poolconfig"
+	"github.com/Vchen7629/Cyphria/loginapi/config/poolconfig"
 )
 
 var DBConn *pgxpool.Pool

@@ -41,6 +41,7 @@ func initializeAccountsTable() error {
 			uuid UUID UNIQUE PRIMARY KEY,
 			username VARCHAR(100) UNIQUE, 
 			password VARCHAR(100),
+			sessionid VARCHAR(100),
 			creation TIMESTAMP
 		)
 	`)

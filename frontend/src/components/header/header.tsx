@@ -8,7 +8,6 @@ export function HeaderComponent() {
     const username = useSelector(selectCurrentUsername)
     
     const PageName = location.pathname.slice(1, 30)
-    console.log(location.pathname)
 
     return (
         <header className="flex border-b-[1px] justify-between items-center border-bordercolor h-[10vh] py-[2vh] w-full">

@@ -15,7 +15,9 @@ import { Input } from "../../ui/shadcn/input"
 import { useLoginMutation } from "../../app/auth-slices/authApiSlice"
 import { useNavigate } from "react-router"
 import { toast } from "sonner"
-import { useGetUserDataMutation } from "../../app/auth-slices/authenticatedActionsApiSlice"
+import { useGetUserDataQuery } from "../../app/auth-slices/authenticatedActionsApiSlice"
+import { useDispatch } from "react-redux"
+import { setCredentials } from "../../app/state/authstate"
 
 const formSchema = z.object({
     username: z.string().min(2, {
@@ -26,11 +28,11 @@ const formSchema = z.object({
     })
 })
 
-
 export function LoginForm() {
     const [login] = useLoginMutation()
-    const [userdata] = useGetUserDataMutation()
+    const {} = useGetUserDataQuery()
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -48,7 +50,7 @@ export function LoginForm() {
         toast.promise(promise, {
             loading: "loading...",
             success: () => {
-                userdata().unwrap()
+                dispatch(setCredentials({username: values.username}))
                 navigate("/")
                 return "sucessfully logged in"
             },

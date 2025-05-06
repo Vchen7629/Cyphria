@@ -8,5 +8,6 @@ const authApiQuery = fetchBaseQuery({
 export const authSlice = createApi({
     reducerPath: 'authApi',
     baseQuery: authApiQuery,
-    endpoints: () => ({})
+    endpoints: () => ({}),
+    tagTypes: ["User"]
 })

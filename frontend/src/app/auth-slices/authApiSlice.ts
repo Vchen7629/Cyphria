@@ -3,13 +3,14 @@ import { logOut } from "../state/authstate";
 
 export const authApiSlice = authSlice.injectEndpoints({
     endpoints: builder => ({
-        login: builder.mutation({
+        login: builder.mutation<any, { username: string, password: string }>({
             query: credentials => ({
                 url: "/login",
                 method: "POST",
                 body: { ...credentials},   
                 credentials: 'include', 
             }),
+            invalidatesTags: ['User'], 
         }),
         Logout: builder.mutation({
             query: (credentials) => ({
@@ -19,6 +20,7 @@ export const authApiSlice = authSlice.injectEndpoints({
             }),
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 await queryFulfilled; 
+                sessionStorage.clear();
                 dispatch(logOut());
             }
         })

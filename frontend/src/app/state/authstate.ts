@@ -1,16 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { userId, username } from "./types.ts";
-import { getUserDataFromToken } from "../../utils/tokenUtils.ts";
 
-
-const tokenData = getUserDataFromToken()
+const preloadedUsername = sessionStorage.getItem('username'); 
 
 const authSlice = createSlice({
     name: "auth",
     initialState: { 
-        userId: tokenData?.userId || null, 
-        username: tokenData?.username || null, 
-        loginStatus: false 
+        userId: null, 
+        username: preloadedUsername ?? null, 
+        loginStatus: false,
     }, 
     reducers: {
         setCredentials: (state, action) => {
@@ -29,7 +27,7 @@ const authSlice = createSlice({
         resetLoggingOutState: (state) => {
             state.loginStatus = false; 
         }
-    }
+    },
 })
 
 export const { setCredentials, logOut, resetLoggingOutState } = authSlice.actions

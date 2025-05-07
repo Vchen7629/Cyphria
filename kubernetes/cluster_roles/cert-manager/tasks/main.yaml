@@ -34,11 +34,15 @@
     definition: "{{ lookup('ansible.builtin.template', 'argocd-deployment.yaml') | from_yaml }}"
     kubeconfig: /etc/rancher/k3s/k3s.yaml
 
-- name: Deploy Cert Issuer
+- name: Deploy Issuers
   kubernetes.core.k8s:
     state: present
-    definition: "{{ lookup('ansible.builtin.template', 'cert-issuer.j2') | from_yaml }}"
+    definition: "{{ lookup('ansible.builtin.template', item) | from_yaml }}"
     kubeconfig: /etc/rancher/k3s/k3s.yaml
+  with_items: 
+    - cert-issuer.j2
+    - selfsigned-issuer.yaml
+    - ca-issuer.yaml
   register: result
   retries: 20
   delay: 15
@@ -53,4 +57,5 @@
     - ./certificates/argocd-repo-server.yaml
     - ./certificates/argocd-dex-server.yaml
     - ./certificates/argocd-server.yaml
-    - ./certificates/postgres.yaml
+    - ./certificates/postgres-ca.yaml
+    - ./certificates/postgres-tls.yaml

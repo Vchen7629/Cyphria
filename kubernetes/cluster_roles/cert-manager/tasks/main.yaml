@@ -34,19 +34,24 @@
     definition: "{{ lookup('ansible.builtin.template', 'argocd-deployment.yaml') | from_yaml }}"
     kubeconfig: /etc/rancher/k3s/k3s.yaml
 
-- name: Deploy Issuers
+- name: Deploy Cert Issuer
   kubernetes.core.k8s:
     state: present
-    definition: "{{ lookup('ansible.builtin.template', item) | from_yaml }}"
+    definition: "{{ lookup('ansible.builtin.template', 'cert-issuer.j2') | from_yaml }}"
     kubeconfig: /etc/rancher/k3s/k3s.yaml
-  with_items: 
-    - cert-issuer.j2
-    - selfsigned-issuer.yaml
-    - ca-issuer.yaml
   register: result
   retries: 20
   delay: 15
   until: result is not failed
+
+- name: Load all Kubernetes manifests
+  set_fact:
+    k8s_manifests: "{{ lookup('template', 'postgres-selfsigned-ca.yaml') | ansible.builtin.from_yaml_all | list }}"
+
+- name: Apply each manifest
+  k8s:
+    definition: "{{ item }}"
+  loop: "{{ k8s_manifests }}"
 
 - name: Create ArgoCD Certificates
   kubernetes.core.k8s:
@@ -57,5 +62,4 @@
     - ./certificates/argocd-repo-server.yaml
     - ./certificates/argocd-dex-server.yaml
     - ./certificates/argocd-server.yaml
-    - ./certificates/postgres-ca.yaml
     - ./certificates/postgres-tls.yaml

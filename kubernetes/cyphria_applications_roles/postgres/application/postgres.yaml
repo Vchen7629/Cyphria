@@ -20,6 +20,6 @@ spec:
     enablePodMonitor: true
   
   certificates:
-    serverCASecret: postgres-ca-secret
+    serverCASecret: postgres-ca
     serverTLSSecret: postgres-tls-secret
     

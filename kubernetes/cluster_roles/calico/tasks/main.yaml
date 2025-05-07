@@ -48,6 +48,10 @@
             prometheusMetricsEnabled: true
         state: present
         kubeconfig: /etc/rancher/k3s/k3s.yaml
+      register: result
+      retries: 20
+      delay: 15
+      until: result is not failed
     
     - name: Enable Typha prometheus metrics
       kubernetes.core.k8s:

@@ -1,6 +1,5 @@
 
 - name: Role Reset
-  when: inventory_hostname in k3s_map.server.hosts
   block:
     - name: Remove Repo
       kubernetes.core.helm_repository:
@@ -11,3 +10,12 @@
       ansible.builtin.file:
         path: /usr/local/bin/calicoctl
         state: absent
+    
+    - name: Remove services
+      kubernetes.core.k8s:
+        state: absent
+        definition: "{{ lookup('ansible.builtin.template', item) | from_yaml }}"
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+      with_items: 
+        - felix-metrics.j2
+        - typha-metrics.j2

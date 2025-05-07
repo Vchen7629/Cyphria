@@ -13,12 +13,20 @@
     - kubectl delete clusterissuer letsencrypt-dns
     - kubectl delete certificate argocd-repo-tls -n argocd
     - kubectl delete certificate argocd-dex-tls -n argocd
+    - kubectl delete certificate argocd-server-tls -n argocd
+    - kubectl delete certificate postgres-tls -n postgres
     - kubectl delete secrets argocd-repo-server-tls -n argocd
     - kubectl delete secrets argocd-dex-server-tls -n argocd
+    - kubectl delete secrets argocd-server-tls -n argocd
+    - kubectl delete secrets postgres-tls-secret -n postgres
     - kubectl -n cert-manager delete certificaterequests -l cert-manager.io/certificate-name=argocd-repo-tls
     - kubectl -n cert-manager delete certificaterequests -l cert-manager.io/certificate-name=argocd-dex-tls
+    - kubectl -n cert-manager delete certificaterequests -l cert-manager.io/certificate-name=argocd-server-tls
+    - kubectl -n cert-manager delete certificaterequests -l cert-manager.io/certificate-name=postgres-tls
     - kubectl -n cert-manager delete orders -l cert-manager.io/certificate-name=argocd-repo-tls
     - kubectl -n cert-manager delete orders -l cert-manager.io/certificate-name=argocd-dex-tls
+    - kubectl -n cert-manager delete orders -l cert-manager.io/certificate-name=argocd-server-tls
+    - kubectl -n cert-manager delete orders -l cert-manager.io/certificate-name=postgres-tls
   loop_control:
     loop_var: certificate_resource
 

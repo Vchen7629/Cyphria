@@ -43,7 +43,7 @@ func AuthenticateUser(username, password string) (bool, string, error) {
 
 	err = bcrypt.CompareHashAndPassword([]byte(storedpasswordhash), []byte(password))
 	if err != nil {
-		return false, "", fmt.Errorf("Invalid username or password")
+		return false, "", fmt.Errorf("Invalid username or password!")
 	}
 
 	return true, storeduuid, nil

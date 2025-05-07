@@ -16,6 +16,8 @@ WORKDIR /app
 
 COPY --from=builder /app/myapp .
 
+COPY .env .env
+
 EXPOSE 3000
 
-ENTRYPOINT [ "go", "run", "main.go" ]
+ENTRYPOINT ["./myapp"]

@@ -26,7 +26,18 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-            
+      
+      - name: Create Env file
+        uses: SpicyPizza/create-envfile@v2.0
+        with: 
+          envKey_DATABASEURI: ${{ secrets.Postgres_DB_URI }}
+          envKey_Redis_DB: ${{ secrets.Redis_DB }}
+          envKey_Redis_Addr: ${{ secrets.Redis_Addr }}
+          envKey_Redis_Password: ${{ secrets.Redis_Password }}
+          directory: .
+          file_name: .env
+          fail_on_empty: true
+          
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:

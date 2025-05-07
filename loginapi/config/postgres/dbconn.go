@@ -25,7 +25,7 @@ func ConnectDatabase() error {
 
 	connection, err := dbconn.Acquire(context.Background())
 	if err != nil {
-		log.Fatal("Error Aquiring the connection from database")
+		log.Fatal("Error Aquiring the connection from database!")
 	}
 
 	defer connection.Release()

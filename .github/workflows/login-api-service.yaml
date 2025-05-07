@@ -34,7 +34,7 @@ jobs:
           envKey_Redis_DB: ${{ secrets.Redis_DB }}
           envKey_Redis_Addr: ${{ secrets.Redis_Addr }}
           envKey_Redis_Password: ${{ secrets.Redis_Password }}
-          directory: .
+          directory: loginapi 
           file_name: .env
           fail_on_empty: true
           

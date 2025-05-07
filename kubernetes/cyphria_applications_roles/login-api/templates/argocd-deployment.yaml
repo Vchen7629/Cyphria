@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: login-api
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Vchen7629/Cyphria.git
+    targetRevision: main
+    path: kubernetes/cyphria_applications_roles/login-api/overlay
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: loginapi
+
+  syncOptions:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=false

@@ -28,3 +28,15 @@
     kind: Application
     name: nginx
     namespace: argocd
+  
+
+- name: Delete Nginx Certificate resourcs
+  ansible.builtin.command:
+    cmd: "{{ certificate_resource }}"
+  loop:
+    - kubectl delete certificate nginx-ingress-nginx-admission -n nginx
+    - kubectl delete certificate nginx-ingress-nginx-root-cert -n nginx
+    - kubectl delete secrets nginx-ingress-nginx-admission -n nginx
+    - kubectl delete secrets nginx-ingress-nginx-root-cert -n nginx
+  loop_control:
+    loop_var: certificate_resource

@@ -1,0 +1,4 @@
+- name: Deploy Login Api via ArgoCD
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('ansible.builtin.template', 'argocd-deployment.yaml') | from_yaml }}"

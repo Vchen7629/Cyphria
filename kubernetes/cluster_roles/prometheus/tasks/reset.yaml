@@ -33,5 +33,3 @@
     kind: Application
     name: prometheus
     namespace: argocd
-
-

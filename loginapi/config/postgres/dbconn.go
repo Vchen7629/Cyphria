@@ -1,4 +1,4 @@
-package dbconn
+package postgres
 
 import (
 	"context"
@@ -6,13 +6,12 @@ import (
 	"log"
 	"time"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/Vchen7629/Cyphria/loginapi/config/poolconfig"
 )
 
 var DBConn *pgxpool.Pool
 
 func ConnectDatabase() error {
-	dbconn, err := pgxpool.NewWithConfig(context.Background(), config.PoolConfig())
+	dbconn, err := pgxpool.NewWithConfig(context.Background(), PoolConfig())
 	if err != nil {
 		return fmt.Errorf("error connecting to the database: %w", err)
 	}

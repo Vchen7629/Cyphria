@@ -16,6 +16,18 @@ func PgConn() string {
 	dbname := os.Getenv("PG_DB")
 	sslmode := "allow"
 
+	if host == "" {
+		log.Fatal("No Host provided")
+	} else if port == "" {
+		log.Fatal("No Port provided")
+	} else if user == "" {
+		log.Fatal("No user provided")
+	} else if password == "" {
+		log.Fatal("No password provide")
+	} else if dbname == "" {
+		log.Fatal("No dbname provided")
+	}
+
 	databaseuri := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=%s", user, password, host, port, dbname, sslmode)
 
 	if databaseuri == "" {
@@ -37,12 +49,12 @@ func PoolConfig() *pgxpool.Config {
 	DatabaseURI := PgConn()
 
 	if DatabaseURI == "" {
-		log.Fatalf("No database uri provided!")
+		log.Fatalln("No database uri provided!")
 	}
 
 	poolConfig, err := pgxpool.ParseConfig(DatabaseURI)
 	if err != nil {
-		log.Fatalf("Error Applying Config")
+		log.Fatalf("Error Applying Config: %v", err)
 	}
 
 	poolConfig.MaxConns = DefaultMaxConns

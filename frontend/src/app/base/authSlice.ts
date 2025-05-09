@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const authApiQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:3000',
+    //baseUrl: 'http://localhost:3000',
+    baseUrl: 'http://loginapi-service-backend-svc-cluster-local:449',
     credentials: 'include',
 })
 

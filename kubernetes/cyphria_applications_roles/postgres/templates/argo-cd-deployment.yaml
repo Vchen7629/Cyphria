@@ -25,7 +25,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: postgres
+    namespace: backend
   
   syncPolicy:
     automated:

@@ -1,34 +1,9 @@
-- name: Create Login Api Namespace
-  kubernetes.core.k8s:
-    state: present
-    kubeconfig: /etc/rancher/k3s/k3s.yaml
-    definition: 
-      - apiVersion: v1
-        kind: Namespace
-        metadata:
-          name: loginapi
-
-- name: Load Environment variables
-  vars:
-    db_env_data: "{{ lookup('ansible.builtin.template', './env/env.yaml' ) | from_yaml }}"
-  ansible.builtin.set_fact:
-    pg_svc_host:    "{{ db_env_data['pg_svc_host'] }}"
-    pg_svc_port:    "{{ db_env_data['pg_svc_port'] }}"
-    pg_svc_user:    "{{ db_env_data['pg_svc_user'] }}"
-    pg_svc_pass:    "{{ db_env_data['pg_svc_pass'] }}"
-    pg_svc_db:      "{{ db_env_data['pg_svc_db'] }}"
-    pg_ssl_mode: "{{ db_env_data['pg_ssl_mode'] }}"
-    redis_addr:     "{{ db_env_data['redis_addr'] }}"
-    redis_db:       "{{ db_env_data['redis_db'] }}"
-    redis_pass:     "{{ db_env_data['redis_pass'] }}"
-
 - name: Deploy Secrets For DB
   kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('ansible.builtin.template', item) | from_yaml }}"
     kubeconfig: /etc/rancher/k3s/k3s.yaml
   with_items: 
-    - postgres-secret.j2
     - redis-secret.j2
 
 - name: Deploy Login Api via ArgoCD

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: cyphria-loginapi-deployment
   labels:
-    app.kubernetes.io/name: loginapi
+    app.kubernetes.io/name: backend
 spec: 
   selector:
     matchLabels:
@@ -14,7 +14,7 @@ spec:
         app.kubernetes.io/name: loginapi
     spec:
       containers:
-        - name: cyphria-frontend
+        - name: loginapi
           image: ghcr.io/vchen7629/loginapi
           resources:
             limits:
@@ -23,8 +23,29 @@ spec:
             requests: 
               cpu: 125m
               memory: 256Mi
-          envFrom:
-            - secretRef:
-                name: postgres-creds
-            - secretRef:
-                name: redis-creds
+          env:
+            - name: PG_HOST
+              valuesFrom:
+                secretKeyRef:
+                  name: postgres-db-app
+                  key: host
+            - name: PG_PORT
+              valuesFrom:
+                secretKeyRef:
+                  name: postgres-db-app
+                  key: port
+            - name: PG_USER
+              valuesFrom:
+                secretKeyRef:
+                  name: postgres-db-app
+                  key: user
+            - name: PG_PASS
+              valuesFrom:
+                secretKeyRef:
+                  name: postgres-db-app
+                  key: pgpass
+            - name: PG_DB
+              valuesFrom:
+                secretKeyRef:
+                  name: postgres-db-app
+                  key: dbname

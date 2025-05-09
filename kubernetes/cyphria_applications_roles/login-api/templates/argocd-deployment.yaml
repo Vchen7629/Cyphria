@@ -18,7 +18,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: loginapi
+    namespace: backend
 
   syncPolicy:
     automated:

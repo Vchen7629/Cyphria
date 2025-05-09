@@ -16,7 +16,7 @@ func PgConn() string {
 	dbname := os.Getenv("PG_DB")
 	sslmode := "allow"
 
-	databaseuri := fmt.Sprintf(user, password, host, port, dbname, sslmode)
+	databaseuri := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=%s", user, password, host, port, dbname, sslmode)
 
 	if databaseuri == "" {
 		return ""

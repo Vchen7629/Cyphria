@@ -37,12 +37,12 @@ func PoolConfig() *pgxpool.Config {
 	DatabaseURI := PgConn()
 
 	if DatabaseURI == "" {
-		log.Println("No database uri provided")
+		log.Fatalf("No database uri provided!")
 	}
 
 	poolConfig, err := pgxpool.ParseConfig(DatabaseURI)
 	if err != nil {
-		fmt.Println("Error Applying Config")
+		log.Fatalf("Error Applying Config")
 	}
 
 	poolConfig.MaxConns = DefaultMaxConns

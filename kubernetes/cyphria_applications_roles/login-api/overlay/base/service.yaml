@@ -8,7 +8,7 @@ spec:
   selector: 
     app.kubernetes.io/name: loginapi
   ports:
-    - port: 449
+    - port: 443
       targetPort: 3000
       protocol: TCP
-      name: http
+      name: https

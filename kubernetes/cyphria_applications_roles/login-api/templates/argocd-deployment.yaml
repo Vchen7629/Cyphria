@@ -20,9 +20,8 @@ spec:
     server: https://kubernetes.default.svc
     namespace: loginapi
 
-  syncOptions:
+  syncPolicy:
     automated:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ApplyOutOfSyncOnly=false

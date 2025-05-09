@@ -23,3 +23,8 @@ spec:
             requests: 
               cpu: 125m
               memory: 256Mi
+          envFrom:
+            - secretRef:
+                name: postgres-creds
+            - secretRef:
+                name: redis-creds

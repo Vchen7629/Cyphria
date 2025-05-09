@@ -5,3 +5,10 @@
     kind: Deployment
     name: loginapi
     namespace: argocd
+
+- name: Remove Secrets
+  ansible.builtin.command:
+    cmd: kubectl delete secrets item -n loginapi
+  with_items: 
+    - postgres-creds
+    - redis-creds

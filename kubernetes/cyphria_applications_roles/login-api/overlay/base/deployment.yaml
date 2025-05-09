@@ -43,7 +43,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: postgres-db-app
-                  key: pgpass
+                  key: password
             - name: PG_DB
               valueFrom:
                 secretKeyRef:

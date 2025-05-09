@@ -14,10 +14,10 @@ func PgConn() string {
 	user := os.Getenv("PG_USER")
 	password := os.Getenv("PG_PASS")
 	dbname := os.Getenv("PG_DB")
-	sslmode := os.Getenv("PG_SSL_MODE")
+	sslmode := "allow"
 
 	databaseuri := fmt.Sprintf(user, password, host, port, dbname, sslmode)
-	
+
 	if databaseuri == "" {
 		return ""
 	}

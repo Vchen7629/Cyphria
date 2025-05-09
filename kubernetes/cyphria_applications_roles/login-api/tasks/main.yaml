@@ -1,3 +1,11 @@
+- name: Load Environment variables
+  vars:
+    db_env_data: "{{ lookup('ansible.builtin.template', './env/env.yaml' ) | from_yaml }}"
+  ansible.builtin.set_fact:
+    redis_addr:     "{{ db_env_data['redis_addr'] }}"
+    redis_db:       "{{ db_env_data['redis_db'] }}"
+    redis_pass:     "{{ db_env_data['redis_pass'] }}"
+
 - name: Deploy Secrets For DB
   kubernetes.core.k8s:
     state: present

@@ -25,27 +25,27 @@ spec:
               memory: 256Mi
           env:
             - name: PG_HOST
-              valuesFrom:
+              valueFrom:
                 secretKeyRef:
                   name: postgres-db-app
                   key: host
             - name: PG_PORT
-              valuesFrom:
+              valueFrom:
                 secretKeyRef:
                   name: postgres-db-app
                   key: port
             - name: PG_USER
-              valuesFrom:
+              valueFrom:
                 secretKeyRef:
                   name: postgres-db-app
                   key: user
             - name: PG_PASS
-              valuesFrom:
+              valueFrom:
                 secretKeyRef:
                   name: postgres-db-app
                   key: pgpass
             - name: PG_DB
-              valuesFrom:
+              valueFrom:
                 secretKeyRef:
                   name: postgres-db-app
                   key: dbname

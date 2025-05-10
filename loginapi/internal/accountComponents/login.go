@@ -2,6 +2,7 @@ package accountComponents
 
 import (
 	"log"
+	"fmt"
 	"time"
 	"context"
 	"net/http"
@@ -49,7 +50,7 @@ func AuthenticateUser(username, password string) (bool, string) {
 	return true, storeduuid
 }
 
-func SessionHandler(w http.ResponseWriter, username string, uuid string) {
+func SessionHandler(w http.ResponseWriter, username string, uuid string) (error, bool){
 	tokenString, err, sessionSuccess := components.GenerateSessionToken()
 
 	if err != nil {
@@ -62,22 +63,12 @@ func SessionHandler(w http.ResponseWriter, username string, uuid string) {
 
 	redisErr := components.UpdateRedisSessionID(tokenString, username, uuid)
 
-	if redisErr != nil {
-		w.Header().Set("content-type", "application/json")
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(map[string]string{
-			"message": "error updating redis session id",
-		})
-	}
-
 	sessionErr := components.SaveSessionTokenPostgres(username, tokenString)
 
-	if sessionErr != nil && sessionErr.Error() == "Error updating sessionID for username" {
-		w.Header().Set("content-type", "application/json")
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(map[string]string{
-			"message": sessionErr.Error(),
-		})
+	if redisErr != nil {
+		return fmt.Errorf("error updating redis session id"), false
+	} else if sessionErr != nil {
+		return fmt.Errorf("Error updating sessionID for username"), false
 	} else if sessionSuccess {
 		cookie := http.Cookie{
 			Name: 		"accessToken",
@@ -90,8 +81,11 @@ func SessionHandler(w http.ResponseWriter, username string, uuid string) {
 		}
 	
 		http.SetCookie(w, &cookie)
+
+		return nil, true
 	}
 
+	return nil, true
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -110,7 +104,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	authTime := time.Since(authStart)
 
 	jwtStart := time.Now()
-	SessionHandler(w, payload.Username, uuid)
+	err, sessionSuccess := SessionHandler(w, payload.Username, uuid)
 	jwtSince := time.Since(jwtStart)
 
 	if !login {
@@ -119,6 +113,20 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]string{
 			"message": "Invalid username or password",
 		})
+	} else if !sessionSuccess {
+		if err.Error() == "error updating redis session id" {
+			w.Header().Set("content-type", "application/json")
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]string{
+				"message": err.Error(),
+			})
+		} else if err.Error() == "Error updating sessionID for username" {
+			w.Header().Set("content-type", "application/json")
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]string{
+				"message": err.Error(),
+			})
+		}
 	} else {
 		w.Header().Set("Content-Type", "application/json")
 

@@ -1,17 +1,14 @@
 package accountComponents
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
 	"log"
-	"net/http"
 	"time"
-	"errors"
-	"database/sql"
+	"context"
+	"net/http"
+	"encoding/json"
+	"golang.org/x/crypto/bcrypt"
 	"github.com/Vchen7629/Cyphria/loginapi/internal/components"
 	dbconn "github.com/Vchen7629/Cyphria/loginapi/config/postgres"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type LoginCredentials struct {
@@ -29,7 +26,7 @@ type UserInfo struct {
 	Username string
 }
 
-func AuthenticateUser(username, password string) (bool, string, error) {
+func AuthenticateUser(username, password string) (bool, string) {
 	var storedpasswordhash string;
 	var storeduuid string;
 
@@ -38,15 +35,18 @@ func AuthenticateUser(username, password string) (bool, string, error) {
 	username).Scan(&storedpasswordhash, &storeduuid)
 
 	if err != nil {
-		return false, "", fmt.Errorf("Invalid username or password")
+		log.Println("Invalid username or password")
+		return false, ""
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(storedpasswordhash), []byte(password))
-	if err != nil {
-		return false, "", fmt.Errorf("Invalid username or password!")
+	bcryptErr := bcrypt.CompareHashAndPassword([]byte(storedpasswordhash), []byte(password))
+
+	if bcryptErr != nil {
+		log.Println("Invalid password from comparing hashes")
+		return false, ""
 	}
 
-	return true, storeduuid, nil
+	return true, storeduuid
 }
 
 func SessionHandler(w http.ResponseWriter, username string, uuid string) {
@@ -106,22 +106,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	authStart := time.Now()
-	login, uuid, err := AuthenticateUser(payload.Username, payload.Password)
+	login, uuid := AuthenticateUser(payload.Username, payload.Password)
 	authTime := time.Since(authStart)
 
-	if err != nil && errors.Is(err, sql.ErrNoRows) {
-		w.Header().Set("Content-Type","application/json")
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(map[string]string{
-			"message": "Invalid username or password",
-		})
-	} else if err != nil {
-		w.Header().Set("Content-Type","application/json")
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(map[string]string{
-			"message": "Invalid username or password",
-		})
-	}
+	//jwtStart := time.Now()
+	//SessionHandler(w, payload.Username, uuid)
+	//jwtSince := time.Since(jwtStart)
 
 	if !login {
 		w.Header().Set("Content-Type","application/json")
@@ -129,26 +119,22 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]string{
 			"message": "Invalid username or password",
 		})
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+
+		respStart := time.Now()
+		response := map[string]interface{}{
+			"message": "Login Successful!",
+			"user": map[string]string{
+				"username": payload.Username,
+				"uuid": uuid,
+			},
+		}
+		respTime := time.Since(respStart)
+
+		totalTime := time.Since(start)
+		json.NewEncoder(w).Encode(response)
+		log.Printf("Login timing - Parse: %v, Auth: %v, JWT: %v, Response: %v, Total: %v",
+			parsetime, authTime, /*jwtSince,*/ respTime, totalTime)
 	}
-
-	fmt.Print(uuid)
-	jwtStart := time.Now()
-	SessionHandler(w, payload.Username, uuid)
-	jwtSince := time.Since(jwtStart)
-	w.Header().Set("Content-Type", "application/json")
-
-	respStart := time.Now()
-	response := map[string]interface{}{
-		"message": "Login Successful!",
-		"user": map[string]string{
-            "username": payload.Username,
-            "uuid": uuid,
-        },
-	}
-	respTime := time.Since(respStart)
-
-	totalTime := time.Since(start)
-	json.NewEncoder(w).Encode(response)
-	log.Printf("Login timing - Parse: %v, Auth: %v, JWT: %v, Response: %v, Total: %v",
-        parsetime, authTime, jwtSince, respTime, totalTime)
 }

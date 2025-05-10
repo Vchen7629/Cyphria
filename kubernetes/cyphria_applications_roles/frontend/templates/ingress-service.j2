@@ -7,7 +7,7 @@ metadata:
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
     external-dns.alpha.kubernetes.io/hostname: cyphria.com,*.cyphria
     external-dns.alpha.kubernetes.io/target: {{ tunnel_id }}.cfargotunnel.com
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/strip-prefix: "true"
 spec: 
   ingressClassName: nginx
   rules:
@@ -38,3 +38,10 @@ spec:
               name: frontend-service
               port:
                 number: 80
+         - path: /loginapi
+            pathType: Prefix
+            backend:
+              service:
+                name: loginapi-service
+                port:
+                  number: 443

@@ -29,8 +29,8 @@ func RedisHandler(sessionIDCookie string) (bool, error) {
 	return true, nil
 }
 
-func PostgresHandler(UUID string) (bool, error) {
-	err := components.RemoveSessionTokenPostgres(UUID)
+func PostgresHandler(sessionIDCookie string) (bool, error) {
+	err := components.RemoveSessionTokenPostgres(sessionIDCookie)
 
 	if err != nil {
 		return false, err
@@ -41,8 +41,8 @@ func PostgresHandler(UUID string) (bool, error) {
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	var payload LogoutCredentials
-	/*sessionIDCookie, cookieErr := r.Cookie("accessToken")
-	sessionID := sessionIDCookie.Value*/
+	sessionIDCookie, cookieErr := r.Cookie("accessToken")
+	sessionID := sessionIDCookie.Value
 	w.Header().Set("Content-Type","application/json")
 
 	requestbodyerr := json.NewDecoder(r.Body).Decode(&payload)
@@ -52,12 +52,11 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 			"message": "error parsing json body",
 		})
 	}
-	uuid := payload.UUID
 
-	/*if cookieErr != nil {
+	if cookieErr != nil {
         http.Error(w, "Unauthorized", http.StatusUnauthorized)
         return
-    }*/
+    }
 
 	if requestbodyerr != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -68,7 +67,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 
 	//successRedis, redisErr := RedisHandler(sessionID)
 
-	successPostgres, postgresErr := PostgresHandler(uuid)
+	successPostgres, postgresErr := PostgresHandler(sessionID)
 
 	if /*successRedis &&*/ successPostgres {
 		cookie := &http.Cookie{

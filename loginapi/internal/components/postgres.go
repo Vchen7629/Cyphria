@@ -24,8 +24,8 @@ func SaveSessionTokenPostgres(username string, token string) (error) {
 	return nil
 }
 
-func RemoveSessionTokenPostgres(uuid string) error {
-	if uuid == "" {
+func RemoveSessionTokenPostgres(sessionIDCookie string) error {
+	if sessionIDCookie == "" {
 		return fmt.Errorf("No uuid provided")
 	}
 
@@ -33,7 +33,7 @@ func RemoveSessionTokenPostgres(uuid string) error {
 		UPDATE useraccount
 		SET sessionid = NULL
 		WHERE uuid = $1
-	`, uuid)
+	`, sessionIDCookie)
 
 	if updateErr != nil {
 		return fmt.Errorf("Internal Error")

@@ -55,35 +55,33 @@ func CheckSessionInRedis(SessionID string) ( bool, error) {
 	return true, nil
 }
 
-func CheckSessionInPostgres(SessionID string) (string, string, error) {
+func CheckSessionInPostgres(SessionID string) (string, error) {
 	var username string
-	var uuid string
 	log.Println("You Queried the Database!")
 
 	databaseQuery := time.Now()
 	err := dbconn.DBConn.QueryRow(context.Background(), `
-		SELECT username, uuid 
+		SELECT username
 		FROM useraccount
 		WHERE sessionid = $1
-	`, SessionID).Scan(&username, &uuid)
+	`, SessionID).Scan(&username)
 	timeTotal := time.Since(databaseQuery)
 	log.Println("You Queried the Database!", timeTotal)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return "", "", fmt.Errorf("No matching SessionID found in database")
+			return "", fmt.Errorf("No matching SessionID found in database")
 		} else {
-			return "", "", fmt.Errorf("Error Occured %s", err)
+			return "", fmt.Errorf("Error Occured %s", err)
 		}
 	}
 
-	return username, uuid, nil
+	return username, nil
 }
 
 func FetchUserDataHandler(w http.ResponseWriter, r *http.Request) {
 	var (
 		username 	string
-		uuid 		string
 		sessionErr 	error
 	)
 	cookie, cookieErr := r.Cookie("accessToken")
@@ -109,7 +107,7 @@ func FetchUserDataHandler(w http.ResponseWriter, r *http.Request) {
 	if found {
 		username, uuid, sessionErr = FetchSessionDataRedis(cookie.Value)
 	} else {*/
-		username, uuid, sessionErr = CheckSessionInPostgres(cookie.Value)
+		username, sessionErr = CheckSessionInPostgres(cookie.Value)
 	//}
 
 	w.Header().Set("Content-Type", "Application/json")
@@ -129,6 +127,5 @@ func FetchUserDataHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{
 		"username": username,
-		"uuid": uuid,
 	})
 }

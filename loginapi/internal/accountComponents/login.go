@@ -17,16 +17,6 @@ type LoginCredentials struct {
 	Password string `json:"password"`
 }
 
-type LoginResponse struct {
-	Token string `json:"token"`
-	Message string `json:"message"`
-}
-
-type UserInfo struct {
-	UserId string
-	Username string
-}
-
 func AuthenticateUser(username, password string) (bool, string) {
 	var storedpasswordhash string;
 	var storeduuid string;
@@ -50,43 +40,28 @@ func AuthenticateUser(username, password string) (bool, string) {
 	return true, storeduuid
 }
 
-func SessionHandler(w http.ResponseWriter, username string, uuid string) (error, bool){
+func SessionHandler(username string, uuid string) (error, string, bool){
 	tokenString, err, sessionSuccess := components.GenerateSessionToken()
 
 	if err != nil {
-		w.Header().Set("content-type", "application/json")
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(map[string]string{
-			"message": "Error Generating Session Token",
-		})
+		return fmt.Errorf("Error Generating Session Token"), "", false
 	}
 
 	redisErr := components.UpdateRedisSessionID(tokenString, username, uuid)
 
 	if redisErr != nil {
-		return fmt.Errorf("error updating redis session id"), false
-	} else if sessionSuccess {
-		cookie := http.Cookie{
-			Name: 		"accessToken",
-			Value: 		tokenString,
-			Expires: 	time.Now().Add(24 * time.Hour),
-			Path: 		"/",
-			Secure:     true,
-			HttpOnly:   true,
-			SameSite:   http.SameSiteLaxMode,
-		}
-	
-		http.SetCookie(w, &cookie)
-
-		return nil, true
+		return fmt.Errorf("error updating redis session id"), "", false
+	} else if !sessionSuccess {
+		return fmt.Errorf("error generating session id"), "", false
 	}
-
-	return nil, true
+	
+	return nil, tokenString, true
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	var payload LoginCredentials
+	w.Header().Set("Content-Type", "application/json")
 
 	requestbodyerr := json.NewDecoder(r.Body).Decode(&payload)
 	parsetime := time.Since(start)
@@ -100,31 +75,36 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	authTime := time.Since(authStart)
 
 	jwtStart := time.Now()
-	err, sessionSuccess := SessionHandler(w, payload.Username, uuid)
+	err, tokenString, sessionSuccess := SessionHandler(payload.Username, uuid)
 	jwtSince := time.Since(jwtStart)
 
 	if !login {
-		w.Header().Set("Content-Type","application/json")
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(map[string]string{
 			"message": "Invalid username or password",
 		})
 	} else if !sessionSuccess && err != nil {
-		w.Header().Set("content-type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]string{
 			"message": err.Error(),
 		})
 	} else {
-		w.Header().Set("Content-Type", "application/json")
+		cookie := http.Cookie{
+			Name: 		"accessToken",
+			Value: 		tokenString,
+			Expires: 	time.Now().Add(24 * time.Hour),
+			Path: 		"/",
+			Secure:     true,
+			HttpOnly:   true,
+			SameSite:   http.SameSiteLaxMode,
+		}
+	
+		http.SetCookie(w, &cookie)
 
 		respStart := time.Now()
-		response := map[string]interface{}{
+		response := map[string]string{
 			"message": "Login Successful!",
-			"user": map[string]string{
-				"username": payload.Username,
-				"uuid": uuid,
-			},
+			"username": payload.Username,
 		}
 		respTime := time.Since(respStart)
 

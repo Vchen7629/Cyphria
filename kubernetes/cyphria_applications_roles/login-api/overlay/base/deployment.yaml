@@ -55,6 +55,6 @@ spec:
                   name: redis
                   key: redis-password
             - name: Redis_Addr
-              value: redis-master.backend.svc.cluster.local:5432
+              value: redis-master.backend.svc.cluster.local:6379
             - name: Redis_DB
               value: "0"

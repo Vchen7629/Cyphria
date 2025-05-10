@@ -1,3 +1,3 @@
 kustomize:
   images:
-  - ghcr.io/vchen7629/loginapi:latest@sha256:a2d16a88487481c6cfb306c468da00be6bff5f21a8838c7465177cd07f4be421
+  - ghcr.io/vchen7629/loginapi:latest@sha256:d919ea93d536fef6ca89da9950e9b636e3a929478007451ccb5b9d524dba1e9a

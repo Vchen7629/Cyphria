@@ -22,7 +22,7 @@
       delay: 1
       until: result is not failed
   
-    - name: Apply ingress nginx network Policy
+    - name: Apply Applications network Policy
       ansible.builtin.shell:
         cmd: "calicoctl apply -f -"
         stdin: "{{ lookup('file', item) }}"
@@ -33,6 +33,7 @@
         - "{{ playbook_dir }}/cluster_roles/network-policies/deployed-applications/cloudflare-tunnel.yaml"
         - "{{ playbook_dir }}/cluster_roles/network-policies/deployed-applications/external-dns.yaml"
         - "{{ playbook_dir }}/cluster_roles/network-policies/deployed-applications/cert-manager.yaml"
+        - "{{ playbook_dir }}/cluster_roles/network-policies/deployed-applications/postgres.yaml"
       register: result
       retries: 3
       delay: 1

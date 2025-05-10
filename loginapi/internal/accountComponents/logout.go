@@ -7,10 +7,6 @@ import (
 	"github.com/Vchen7629/Cyphria/loginapi/internal/components"
 )
 
-type LogoutCredentials struct {
-	UUID string `json:"uuid"`
-}
-
 func RedisHandler(sessionIDCookie string) (bool, error) {
 	exists, sessionErr := components.CheckSessionExistsRedis(sessionIDCookie)
 
@@ -33,37 +29,25 @@ func PostgresHandler(sessionIDCookie string) (bool, error) {
 	err := components.RemoveSessionTokenPostgres(sessionIDCookie)
 
 	if err != nil {
-		return false, err
+		if err.Error() == "SessionID not found" {
+			return false, fmt.Errorf("SessionID not found")
+		} else {
+			return false, err
+		}
 	}
 
 	return true, nil
 }
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
-	var payload LogoutCredentials
 	sessionIDCookie, cookieErr := r.Cookie("accessToken")
 	sessionID := sessionIDCookie.Value
 	w.Header().Set("Content-Type","application/json")
-
-	requestbodyerr := json.NewDecoder(r.Body).Decode(&payload)
-	if requestbodyerr != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]string{
-			"message": "error parsing json body",
-		})
-	}
 
 	if cookieErr != nil {
         http.Error(w, "Unauthorized", http.StatusUnauthorized)
         return
     }
-
-	if requestbodyerr != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]string{
-			"message": "error parsing json body",
-		})
-	}
 
 	//successRedis, redisErr := RedisHandler(sessionID)
 

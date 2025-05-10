@@ -26,7 +26,7 @@ func SaveSessionTokenPostgres(username string, token string) (error) {
 
 func RemoveSessionTokenPostgres(sessionIDCookie string) error {
 	if sessionIDCookie == "" {
-		return fmt.Errorf("No uuid provided")
+		return fmt.Errorf("SessionID not found")
 	}
 
 	result, updateErr := dbconn.DBConn.Exec(context.Background(), `

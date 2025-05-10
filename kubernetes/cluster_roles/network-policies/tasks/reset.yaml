@@ -52,6 +52,14 @@
           ansible.builtin.shell:
             cmd: calicoctl delete networkpolicy default.cert-manager -n cert-manager
 
+        - name: Deleting postgres Network Policy
+          ansible.builtin.shell:
+            cmd: calicoctl delete networkpolicy default.postgres -n backend
+
+        - name: Deleting login-api Network Policy
+          ansible.builtin.shell:
+            cmd: calicoctl delete networkpolicy default.loginapi -n backend
+
     - name: deleting argocd deny all
       ansible.builtin.shell:
         cmd: calicoctl delete globalnetworkpolicy default.default-deny-all

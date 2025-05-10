@@ -34,6 +34,7 @@
         - "{{ playbook_dir }}/cluster_roles/network-policies/deployed-applications/external-dns.yaml"
         - "{{ playbook_dir }}/cluster_roles/network-policies/deployed-applications/cert-manager.yaml"
         - "{{ playbook_dir }}/cluster_roles/network-policies/deployed-applications/postgres.yaml"
+        - "{{ playbook_dir }}/cluster_roles/network-policies/deployed-applications/login-api.yaml"
       register: result
       retries: 3
       delay: 1

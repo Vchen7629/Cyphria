@@ -1,8 +1,8 @@
 - name: Delete Login Api Deployment
   kubernetes.core.k8s:
     state: absent
-    api_version: apps/v1
-    kind: Deployment
+    api_version: argoproj.io/v1alpha1
+    kind: Application
     name: login-api
     namespace: argocd
 

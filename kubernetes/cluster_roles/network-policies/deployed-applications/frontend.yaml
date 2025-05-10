@@ -24,3 +24,9 @@ spec:
         namespaceSelector: kubernetes.io/metadata.name == "argocd"
         selector: app.kubernetes.io/name == "argocd-repo-server"
         ports: [8081]
+    - action: Allow # frontend -> login api traffic
+      protocol: TCP
+      destination:
+        selector: "app.kubernetes.io/name == 'loginapi' || argocd.argoproj.io/instance == 'login-api'"
+        namespaceSelector: kubernetes.io/metadata.name == "backend"
+        ports: [3000]

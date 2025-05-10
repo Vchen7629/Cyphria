@@ -32,3 +32,9 @@ spec:
         namespaceSelector: kubernetes.io/metadata.name == "frontend"
         selector: all()
         ports: [3000]
+    - action: Allow # nginx -> loginapi
+      protocol: TCP
+      destination:
+        namespaceSelector: kubernetes.io/metadata.name == "backend"
+        selector: "app.kubernetes.io/name == 'loginapi' || argocd.argoproj.io/instance == 'login-api'"
+        ports: [3000]

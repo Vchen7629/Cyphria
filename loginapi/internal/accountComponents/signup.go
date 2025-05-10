@@ -46,9 +46,9 @@ func CreateNewUser(username, password string) (bool, string, error) {
 		log.Fatal()
 	}
 
-	redisErr := components.UpdateRedisSessionID(sessionID, username, uuid.String())
+	//redisErr := components.UpdateRedisSessionID(sessionID, username, uuid.String())
 	
-	if sessionErr == nil && redisErr == nil {
+	if sessionErr == nil /*&& redisErr == nil*/ {
 		err := dbconn.DBConn.QueryRow(context.Background(), `
 			INSERT INTO useraccount (uuid, username, password, sessionid, creation)
 			VALUES (

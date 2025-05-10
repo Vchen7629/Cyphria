@@ -41,8 +41,8 @@ func PostgresHandler(UUID string) (bool, error) {
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	var payload LogoutCredentials
-	sessionIDCookie, cookieErr := r.Cookie("accessToken")
-	sessionID := sessionIDCookie.Value
+	/*sessionIDCookie, cookieErr := r.Cookie("accessToken")
+	sessionID := sessionIDCookie.Value*/
 	w.Header().Set("Content-Type","application/json")
 
 	requestbodyerr := json.NewDecoder(r.Body).Decode(&payload)
@@ -54,10 +54,10 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	uuid := payload.UUID
 
-	if cookieErr != nil {
+	/*if cookieErr != nil {
         http.Error(w, "Unauthorized", http.StatusUnauthorized)
         return
-    }
+    }*/
 
 	if requestbodyerr != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -66,11 +66,11 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	successRedis, redisErr := RedisHandler(sessionID)
+	//successRedis, redisErr := RedisHandler(sessionID)
 
 	successPostgres, postgresErr := PostgresHandler(uuid)
 
-	if successRedis && successPostgres {
+	if /*successRedis &&*/ successPostgres {
 		cookie := &http.Cookie{
 			Name: 	"accessToken",
 			Value: 	"",
@@ -92,9 +92,9 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		} else if postgresErr.Error() == "No rows were updated" {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"message": postgresErr.Error()})
-		} else {
+		} /*else {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"message": redisErr.Error()})
-		}
+		}*/
 	}
 }

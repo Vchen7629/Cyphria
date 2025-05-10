@@ -100,7 +100,7 @@ func FetchUserDataHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	found, err := CheckSessionInRedis(cookie.Value)
+	/*found, err := CheckSessionInRedis(cookie.Value)
 
 	if err != nil {
 
@@ -108,9 +108,9 @@ func FetchUserDataHandler(w http.ResponseWriter, r *http.Request) {
 
 	if found {
 		username, uuid, sessionErr = FetchSessionDataRedis(cookie.Value)
-	} else {
+	} else {*/
 		username, uuid, sessionErr = CheckSessionInPostgres(cookie.Value)
-	}
+	//}
 
 	w.Header().Set("Content-Type", "Application/json")
 

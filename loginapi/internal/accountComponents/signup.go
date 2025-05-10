@@ -49,7 +49,7 @@ func CreateNewUser(username, password string) (bool, string, error) {
 	
 	if sessionSuccess && redisErr == nil {
 		err := dbconn.DBConn.QueryRow(context.Background(), `
-			INSERT INTO useraccount (uuid, username, password, sessionid, creation)
+			INSERT INTO useraccount (uuid, username, password, creation)
 			VALUES (
 				$1,
 				$2,
@@ -58,7 +58,7 @@ func CreateNewUser(username, password string) (bool, string, error) {
 				$5
 			) 
 			RETURNING true;
-		`, uuid, username, password, sessionID, time.Now()).Scan(&inserted)
+		`, uuid, username, password, time.Now()).Scan(&inserted)
 
 		if err == pgx.ErrNoRows {
 			return false, "", nil
@@ -100,37 +100,11 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.Header().Set("Content-Type","application/json")
-		if err.Error() == "Username already Exists" {
-			w.WriteHeader(http.StatusConflict)
-			json.NewEncoder(w).Encode(map[string]string{
-				"message": "Username Already Exists, Try Again!",
-			})
-			return
-		} else if err.Error() == "Missing Username, please provide an username" {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{
-				"message": err.Error(),
-			})
-			return
-		} else if err.Error() == "Missing Password, please provide an password" {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{
-				"message": err.Error(),
-			})
-			return
-		} else if err.Error() == "Error Generating Random Token" {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{
-				"message": err.Error(),
-			})
-			return
-		} else {
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{
-				"message": err.Error(),
-			})
-			return
-		}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": err.Error(),
+		})
+		return
 	}
 
 	cookie := http.Cookie{

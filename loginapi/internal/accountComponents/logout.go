@@ -25,20 +25,6 @@ func RedisHandler(sessionIDCookie string) (bool, error) {
 	return true, nil
 }
 
-func PostgresHandler(sessionIDCookie string) (bool, error) {
-	err := components.RemoveSessionTokenPostgres(sessionIDCookie)
-
-	if err != nil {
-		if err.Error() == "SessionID not found" {
-			return false, fmt.Errorf("SessionID not found")
-		} else {
-			return false, err
-		}
-	}
-
-	return true, nil
-}
-
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	sessionIDCookie, cookieErr := r.Cookie("accessToken")
 	sessionID := sessionIDCookie.Value
@@ -51,9 +37,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 
 	successRedis, redisErr := RedisHandler(sessionID)
 
-	successPostgres, postgresErr := PostgresHandler(sessionID)
-
-	if successRedis && successPostgres {
+	if successRedis {
 		cookie := &http.Cookie{
 			Name: 	"accessToken",
 			Value: 	"",
@@ -66,18 +50,9 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]string{"message": "Successfully Logged Out!"})
 	} else {
-		if postgresErr.Error() == "No uuid provided" {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{"message": "Logout Failed, Missing UUID"})
-		} else if postgresErr.Error() == "Internal Error" {
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{"message": postgresErr.Error()})
-		} else if postgresErr.Error() == "No rows were updated" {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{"message": postgresErr.Error()})
-		} else {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{"message": redisErr.Error()})
-		}
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": redisErr.Error(),
+		})
 	}
 }

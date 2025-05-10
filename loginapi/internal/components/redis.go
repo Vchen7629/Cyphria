@@ -1,9 +1,10 @@
 package components
 
 import (
-	"context"
+	"log"
 	"fmt"
 	"time"
+	"context"
 	"github.com/Vchen7629/Cyphria/loginapi/config/redis"
 )
 
@@ -13,6 +14,36 @@ type UserData struct {
 }
 
 var client, expireTime = redisClient.GetRedisClient(), time.Minute * 5
+
+
+func FetchSessionDataRedis(SessionID string) (string, error) {
+	databaseQuery := time.Now()
+	expireTime := time.Minute * 5
+
+	UserData, err := client.HGetAll(context.Background(), SessionID).Result()
+
+	if err != nil {
+		return "", fmt.Errorf("Error Fetching User Data")
+	}
+
+	expireErr := client.Expire(
+		context.Background(), 
+		SessionID, 
+		expireTime,
+	).Err()
+
+	if expireErr != nil {
+		return "", fmt.Errorf("Error Updating Expire time")
+	}
+
+	username := UserData["username"]
+	
+	timeTotal := time.Since(databaseQuery)
+	log.Println("You Queried the Redis Database!", timeTotal)
+
+	return username, nil
+}
+
 
 func UpdateRedisSessionID(sessionID string, username string, uuid string) error {
 	userdata := &UserData{Username: username, UUID: uuid}

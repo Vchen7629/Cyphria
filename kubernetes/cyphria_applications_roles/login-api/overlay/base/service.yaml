@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: loginapi-service
   namespace: backend
+  
 spec: 
   type: ClusterIP
   selector: 

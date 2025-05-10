@@ -49,3 +49,12 @@ spec:
                 secretKeyRef:
                   name: postgres-db-app
                   key: dbname
+            - name: Redis_Password
+              valueFrom:
+                secretKeyRef:
+                  name: redis
+                  key: redis-password
+            - name: Redis_Addr
+              value: redis-master.backend.svc.cluster.local:5432
+            - name: Redis_DB
+              value: "0"

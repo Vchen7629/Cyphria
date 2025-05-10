@@ -3,7 +3,7 @@
     state: absent
     api_version: apps/v1
     kind: Deployment
-    name: loginapi
+    name: login-api
     namespace: argocd
 
 - name: Remove Secrets

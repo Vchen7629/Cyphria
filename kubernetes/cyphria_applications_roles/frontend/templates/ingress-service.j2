@@ -20,6 +20,13 @@ spec:
               name: frontend-service
               port:
                 number: 80
+        - path: /loginapi
+          pathType: Prefix
+          backend: 
+            service:
+              name: loginapi-proxy
+              port:
+                number: 443
     - host: "*.cyphria.com"
       http:
         paths:

@@ -32,7 +32,7 @@ func RemoveSessionTokenPostgres(sessionIDCookie string) error {
 	result, updateErr := dbconn.DBConn.Exec(context.Background(), `
 		UPDATE useraccount
 		SET sessionid = NULL
-		WHERE uuid = $1
+		WHERE sessionid = $1
 	`, sessionIDCookie)
 
 	if updateErr != nil {

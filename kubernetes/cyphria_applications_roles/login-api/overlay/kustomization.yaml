@@ -5,6 +5,7 @@ resources:
   - base/deployment.yaml
   - base/service.yaml
   - base/autoscaler.yaml
+  - base/proxy.yaml
 
 images:
   - name: ghcr.io/vchen7629/loginapi

@@ -2,7 +2,6 @@ package accountComponents
 
 import (
 	"fmt"
-	"log"
 	"time"
 	"errors"
 	"context"
@@ -39,16 +38,16 @@ func CreateNewUser(username, password string) (bool, string, error) {
 		return false, "", fmt.Errorf("Missing Password, please provide an password")
 	}
 
-	sessionID, sessionErr := components.GenerateSessionToken()
+	sessionID, sessionErr, sessionSuccess := components.GenerateSessionToken()
 	uuid := uuid.New()
 
-	if sessionErr != nil {
-		log.Fatal()
-	}
-
 	//redisErr := components.UpdateRedisSessionID(sessionID, username, uuid.String())
+
+	if sessionErr != nil {
+		return false, "", fmt.Errorf("Error Generating Random Token")
+	}
 	
-	if sessionErr == nil /*&& redisErr == nil*/ {
+	if sessionSuccess /*&& redisErr == nil*/ {
 		err := dbconn.DBConn.QueryRow(context.Background(), `
 			INSERT INTO useraccount (uuid, username, password, sessionid, creation)
 			VALUES (
@@ -114,6 +113,12 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		} else if err.Error() == "Missing Password, please provide an password" {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{
+				"message": err.Error(),
+			})
+			return
+		} else if err.Error() == "Error Generating Random Token" {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{
 				"message": err.Error(),

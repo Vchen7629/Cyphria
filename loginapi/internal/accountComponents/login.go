@@ -50,7 +50,7 @@ func AuthenticateUser(username, password string) (bool, string) {
 }
 
 func SessionHandler(w http.ResponseWriter, username string, uuid string) {
-	tokenString, err := components.GenerateSessionToken()
+	tokenString, err, sessionSuccess := components.GenerateSessionToken()
 
 	if err != nil {
 		w.Header().Set("content-type", "application/json")
@@ -60,7 +60,7 @@ func SessionHandler(w http.ResponseWriter, username string, uuid string) {
 		})
 	}
 
-	redisErr := components.UpdateRedisSessionID(tokenString, username, uuid)
+	/*redisErr := components.UpdateRedisSessionID(tokenString, username, uuid)
 
 	if redisErr != nil {
 		w.Header().Set("content-type", "application/json")
@@ -68,7 +68,7 @@ func SessionHandler(w http.ResponseWriter, username string, uuid string) {
 		json.NewEncoder(w).Encode(map[string]string{
 			"message": "error updating redis session id",
 		})
-	}
+	}*/
 
 	sessionErr := components.SaveSessionTokenPostgres(username, tokenString)
 
@@ -78,19 +78,19 @@ func SessionHandler(w http.ResponseWriter, username string, uuid string) {
 		json.NewEncoder(w).Encode(map[string]string{
 			"message": sessionErr.Error(),
 		})
+	} else if sessionSuccess {
+		cookie := http.Cookie{
+			Name: 		"accessToken",
+			Value: 		tokenString,
+			Expires: 	time.Now().Add(24 * time.Hour),
+			Path: 		"/",
+			Secure:     true,
+			HttpOnly:   true,
+			SameSite:   http.SameSiteLaxMode,
+		}
+	
+		http.SetCookie(w, &cookie)
 	}
-
-	cookie := http.Cookie{
-		Name: 		"accessToken",
-		Value: 		tokenString,
-		Expires: 	time.Now().Add(24 * time.Hour),
-		Path: 		"/",
-		Secure:     true,
-		HttpOnly:   true,
-		SameSite:   http.SameSiteLaxMode,
-	}
-
-	http.SetCookie(w, &cookie)
 
 }
 
@@ -109,9 +109,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	login, uuid := AuthenticateUser(payload.Username, payload.Password)
 	authTime := time.Since(authStart)
 
-	//jwtStart := time.Now()
-	//SessionHandler(w, payload.Username, uuid)
-	//jwtSince := time.Since(jwtStart)
+	jwtStart := time.Now()
+	SessionHandler(w, payload.Username, uuid)
+	jwtSince := time.Since(jwtStart)
 
 	if !login {
 		w.Header().Set("Content-Type","application/json")
@@ -135,6 +135,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		totalTime := time.Since(start)
 		json.NewEncoder(w).Encode(response)
 		log.Printf("Login timing - Parse: %v, Auth: %v, JWT: %v, Response: %v, Total: %v",
-			parsetime, authTime, /*jwtSince,*/ respTime, totalTime)
+			parsetime, authTime, jwtSince, respTime, totalTime)
 	}
 }

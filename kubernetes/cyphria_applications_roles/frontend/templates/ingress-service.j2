@@ -38,10 +38,10 @@ spec:
               name: frontend-service
               port:
                 number: 80
-         - path: /loginapi
-            pathType: Prefix
-            backend:
-              service:
-                name: loginapi-service
-                port:
-                  number: 443
+        - path: /loginapi
+          pathType: Prefix
+          backend:
+            service:
+              name: loginapi-service
+              port:
+                number: 443

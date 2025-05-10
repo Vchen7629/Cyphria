@@ -18,10 +18,10 @@ spec:
           image: ghcr.io/vchen7629/loginapi
           resources:
             limits:
-              cpu: 1G
+              cpu: "1"
               memory: 512Mi
             requests: 
-              cpu: 512m
+              cpu: 500m
               memory: 256Mi
           env:
             - name: PG_HOST

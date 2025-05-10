@@ -16,14 +16,14 @@ import (
 var client = redisClient.GetRedisClient()
 
 
-func FetchSessionDataRedis(SessionID string) (string, string, error) {
+func FetchSessionDataRedis(SessionID string) (string, error) {
 	databaseQuery := time.Now()
 	expireTime := time.Minute * 5
 
 	UserData, err := client.HGetAll(context.Background(), SessionID).Result()
 
 	if err != nil {
-		return "", "", fmt.Errorf("Error Fetching User Data")
+		return "", fmt.Errorf("Error Fetching User Data")
 	}
 
 	expireErr := client.Expire(
@@ -33,15 +33,15 @@ func FetchSessionDataRedis(SessionID string) (string, string, error) {
 	).Err()
 
 	if expireErr != nil {
-		return "", "", fmt.Errorf("Error Updating Expire time")
+		return "", fmt.Errorf("Error Updating Expire time")
 	}
 
-	username, uuid := UserData["username"], UserData["uuid"]
+	username := UserData["username"]
 	
 	timeTotal := time.Since(databaseQuery)
 	log.Println("You Queried the Redis Database!", timeTotal)
 
-	return username, uuid, nil
+	return username, nil
 }
 
 func CheckSessionInRedis(SessionID string) ( bool, error) {
@@ -98,17 +98,13 @@ func FetchUserDataHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/*found, err := CheckSessionInRedis(cookie.Value)
+	found, err := CheckSessionInRedis(cookie.Value)
 
-	if err != nil {
-
-	}
-
-	if found {
-		username, uuid, sessionErr = FetchSessionDataRedis(cookie.Value)
-	} else {*/
+	if err == nil && found {
+		username, sessionErr = FetchSessionDataRedis(cookie.Value)
+	} else {
 		username, sessionErr = CheckSessionInPostgres(cookie.Value)
-	//}
+	}
 
 	w.Header().Set("Content-Type", "Application/json")
 

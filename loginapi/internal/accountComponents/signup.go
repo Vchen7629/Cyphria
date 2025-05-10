@@ -41,13 +41,13 @@ func CreateNewUser(username, password string) (bool, string, error) {
 	sessionID, sessionErr, sessionSuccess := components.GenerateSessionToken()
 	uuid := uuid.New()
 
-	//redisErr := components.UpdateRedisSessionID(sessionID, username, uuid.String())
+	redisErr := components.UpdateRedisSessionID(sessionID, username, uuid.String())
 
 	if sessionErr != nil {
 		return false, "", fmt.Errorf("Error Generating Random Token")
 	}
 	
-	if sessionSuccess /*&& redisErr == nil*/ {
+	if sessionSuccess && redisErr == nil {
 		err := dbconn.DBConn.QueryRow(context.Background(), `
 			INSERT INTO useraccount (uuid, username, password, sessionid, creation)
 			VALUES (

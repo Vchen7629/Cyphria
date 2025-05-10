@@ -49,11 +49,11 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-	//successRedis, redisErr := RedisHandler(sessionID)
+	successRedis, redisErr := RedisHandler(sessionID)
 
 	successPostgres, postgresErr := PostgresHandler(sessionID)
 
-	if /*successRedis &&*/ successPostgres {
+	if successRedis && successPostgres {
 		cookie := &http.Cookie{
 			Name: 	"accessToken",
 			Value: 	"",
@@ -75,9 +75,9 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		} else if postgresErr.Error() == "No rows were updated" {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"message": postgresErr.Error()})
-		} /*else {
+		} else {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"message": redisErr.Error()})
-		}*/
+		}
 	}
 }

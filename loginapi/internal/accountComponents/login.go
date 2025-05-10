@@ -60,7 +60,7 @@ func SessionHandler(w http.ResponseWriter, username string, uuid string) {
 		})
 	}
 
-	/*redisErr := components.UpdateRedisSessionID(tokenString, username, uuid)
+	redisErr := components.UpdateRedisSessionID(tokenString, username, uuid)
 
 	if redisErr != nil {
 		w.Header().Set("content-type", "application/json")
@@ -68,7 +68,7 @@ func SessionHandler(w http.ResponseWriter, username string, uuid string) {
 		json.NewEncoder(w).Encode(map[string]string{
 			"message": "error updating redis session id",
 		})
-	}*/
+	}
 
 	sessionErr := components.SaveSessionTokenPostgres(username, tokenString)
 

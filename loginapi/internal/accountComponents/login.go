@@ -74,43 +74,47 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	login, uuid := AuthenticateUser(payload.Username, payload.Password)
 	authTime := time.Since(authStart)
 
-	jwtStart := time.Now()
-	err, tokenString, sessionSuccess := SessionHandler(payload.Username, uuid)
-	jwtSince := time.Since(jwtStart)
-
 	if !login {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(map[string]string{
 			"message": "Invalid username or password",
 		})
-	} else if !sessionSuccess && err != nil {
+		return
+	}
+
+	jwtStart := time.Now()
+	err, tokenString, sessionSuccess := SessionHandler(payload.Username, uuid)
+	jwtSince := time.Since(jwtStart)
+
+	if !sessionSuccess && err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]string{
 			"message": err.Error(),
 		})
-	} else {
-		cookie := http.Cookie{
-			Name: 		"accessToken",
-			Value: 		tokenString,
-			Expires: 	time.Now().Add(24 * time.Hour),
-			Path: 		"/",
-			Secure:     true,
-			HttpOnly:   true,
-			SameSite:   http.SameSiteLaxMode,
-		}
-	
-		http.SetCookie(w, &cookie)
-
-		respStart := time.Now()
-		response := map[string]string{
-			"message": "Login Successful!",
-			"username": payload.Username,
-		}
-		respTime := time.Since(respStart)
-
-		totalTime := time.Since(start)
-		json.NewEncoder(w).Encode(response)
-		log.Printf("Login timing - Parse: %v, Auth: %v, JWT: %v, Response: %v, Total: %v",
-			parsetime, authTime, jwtSince, respTime, totalTime)
+		return
 	}
+	
+	cookie := http.Cookie{
+		Name: 		"accessToken",
+		Value: 		tokenString,
+		Expires: 	time.Now().Add(24 * time.Hour),
+		Path: 		"/",
+		Secure:     true,
+		HttpOnly:   true,
+		SameSite:   http.SameSiteLaxMode,
+	}
+
+	http.SetCookie(w, &cookie)
+
+	respStart := time.Now()
+	response := map[string]string{
+		"message": "Login Successful!",
+		"username": payload.Username,
+	}
+	respTime := time.Since(respStart)
+
+	totalTime := time.Since(start)
+	json.NewEncoder(w).Encode(response)
+	log.Printf("Login timing - Parse: %v, Auth: %v, JWT: %v, Response: %v, Total: %v",
+		parsetime, authTime, jwtSince, respTime, totalTime)
 }

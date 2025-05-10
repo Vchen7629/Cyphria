@@ -49,10 +49,11 @@ func FetchUserDataHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]string{
 			"message": sessionErr.Error(),
 		})
-	}  else {
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]string{
-			"username": username,
-		})
-	}
+		return
+	} 
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{
+		"username": username,
+	})
 }

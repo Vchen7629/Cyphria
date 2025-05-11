@@ -16,6 +16,7 @@ import (
 	"github.com/Vchen7629/Cyphria/loginapi/internal/authenticatedRequests"
 )
 
+
 func RouteHandlers(r *mux.Router) {
 	r.HandleFunc("/", helloWorld)
 	r.HandleFunc("/login", accountComponents.LoginHandler).Methods(http.MethodPost, http.MethodOptions)
@@ -27,7 +28,6 @@ func RouteHandlers(r *mux.Router) {
 
 func main(){
 	r := mux.NewRouter()
-	LoadEnvFile()
 	postgres.PoolConfig()
 	postgres.Main()
 	redisClient.GetRedisClient()

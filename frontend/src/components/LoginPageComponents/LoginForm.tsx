@@ -55,7 +55,7 @@ export function LoginForm() {
                 return "sucessfully logged in"
             },
             error: (error) => {
-                if (error?.status === 404) {
+                if (error?.status === 401) {
                     return error?.data?.message || "Invalid Username or Password";
                 } else {
                     return "An unexpected error occurred";

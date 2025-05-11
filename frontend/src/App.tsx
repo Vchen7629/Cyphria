@@ -1,8 +1,6 @@
 import { lazy, useEffect } from "react"
 import { Routes, Route, useLocation } from "react-router"
 import { useGetUserDataQuery } from "./app/auth-slices/authenticatedActionsApiSlice.ts"
-import { useSelector } from "react-redux"
-import { selectCurrentUsername } from "./app/state/authstate.ts"
 
 const Homepage = lazy(() => (import("./dashboardpages/homepage.tsx")))
 const SearchPage = lazy(() => (import("./dashboardpages/topictrendspage.tsx")))
@@ -17,16 +15,6 @@ const SignUpPage = lazy(() => (import("./dashboardpages/signuppage.tsx")))
 
 function App() {
   const location = useLocation();
-  const username = useSelector(selectCurrentUsername)
-
-  useEffect(() => {
-    if (username) {
-      sessionStorage.setItem('username', username)
-    } else {
-      sessionStorage.removeItem('username')
-    }
-  }, [username])
-
   const {} = useGetUserDataQuery();
 
   useEffect(() => {

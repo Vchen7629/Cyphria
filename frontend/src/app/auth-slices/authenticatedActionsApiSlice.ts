@@ -1,5 +1,5 @@
 import { authSlice } from "../base/authSlice";
-import { setCredentials } from "../state/authstate";
+import { logOut, setCredentials } from "../state/authstate";
 
 export const authApiSlice = authSlice.injectEndpoints({
     endpoints: builder => ({
@@ -14,8 +14,11 @@ export const authApiSlice = authSlice.injectEndpoints({
                 try {
                     const { data } = await queryFulfilled
                     const { username, uuid } = data
+                    sessionStorage.setItem('username', username)
                     dispatch(setCredentials({ uuid, username }))
                 } catch (err) {
+                    sessionStorage.clear()
+                    dispatch(logOut())
                     console.error('Login Error', err)
                 }
             }

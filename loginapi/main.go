@@ -9,12 +9,21 @@ import (
     "syscall"
 	"context"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"github.com/Vchen7629/Cyphria/loginapi/config/middleware"
 	"github.com/Vchen7629/Cyphria/loginapi/config/postgres"
 	"github.com/Vchen7629/Cyphria/loginapi/config/redis"
 	"github.com/Vchen7629/Cyphria/loginapi/internal/accountComponents"
 	"github.com/Vchen7629/Cyphria/loginapi/internal/authenticatedRequests"
 )
+
+
+func LoadEnvFile() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file\n")
+	}	
+}
 
 func RouteHandlers(r *mux.Router) {
 	r.HandleFunc("/", helloWorld)
@@ -27,6 +36,7 @@ func RouteHandlers(r *mux.Router) {
 
 func main(){
 	r := mux.NewRouter()
+	LoadEnvFile()
 	postgres.PoolConfig()
 	postgres.Main()
 	redisClient.GetRedisClient()

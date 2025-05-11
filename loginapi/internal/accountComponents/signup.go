@@ -1,18 +1,20 @@
 package accountComponents
 
 import (
-	"fmt"
-	"time"
-	"errors"
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
+	"time"
+
+	dbconn "github.com/Vchen7629/Cyphria/loginapi/config/postgres"
+	"github.com/Vchen7629/Cyphria/loginapi/internal/components"
+	"github.com/Vchen7629/Cyphria/loginapi/internal/rediscomponents"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"golang.org/x/crypto/bcrypt"
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/Vchen7629/Cyphria/loginapi/internal/components"
-	dbconn "github.com/Vchen7629/Cyphria/loginapi/config/postgres"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type SignUpUserRequest struct {
@@ -41,7 +43,7 @@ func CreateNewUser(username, password string) (bool, string, error) {
 	sessionID, sessionErr, sessionSuccess := components.GenerateSessionToken()
 	uuid := uuid.New()
 
-	redisErr := components.UpdateRedisSessionID(sessionID, username, uuid.String())
+	redisErr := redisComponents.CreateRedisSessionID(sessionID, username, uuid.String())
 
 	if sessionErr != nil {
 		return false, "", fmt.Errorf("Error Generating Random Token")
@@ -109,7 +111,7 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	cookie := http.Cookie{
 		Name: 		"accessToken",
 		Value: 		sessionID,
-		Expires: 	time.Now().Add(24 * time.Hour),
+		Expires: 	time.Now().Add(12 * time.Hour),
 		Path: 		"/",
 		Secure:     true,
 		HttpOnly:   true,

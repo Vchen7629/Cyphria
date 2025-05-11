@@ -1,15 +1,16 @@
 package accountComponents
 
 import (
-	"log"
 	"fmt"
+	"log"
 	"time"
-	"context"
 	"net/http"
+	"context"
 	"encoding/json"
 	"golang.org/x/crypto/bcrypt"
-	"github.com/Vchen7629/Cyphria/loginapi/internal/components"
 	dbconn "github.com/Vchen7629/Cyphria/loginapi/config/postgres"
+	"github.com/Vchen7629/Cyphria/loginapi/internal/components"
+	"github.com/Vchen7629/Cyphria/loginapi/internal/rediscomponents"
 )
 
 type LoginCredentials struct {
@@ -47,7 +48,7 @@ func SessionHandler(username string, uuid string) (error, string, bool){
 		return fmt.Errorf("Error Generating Session Token"), "", false
 	}
 
-	redisErr := components.UpdateRedisSessionID(tokenString, username, uuid)
+	redisErr := redisComponents.CreateRedisSessionID(tokenString, username, uuid)
 
 	if redisErr != nil {
 		return fmt.Errorf("error updating redis session id"), "", false

@@ -1,27 +1,19 @@
 package accountComponents
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
-	"encoding/json"
-	"github.com/Vchen7629/Cyphria/loginapi/internal/components"
+	"github.com/Vchen7629/Cyphria/loginapi/internal/rediscomponents"
 )
 
 func RedisHandler(sessionIDCookie string) (bool, error) {
-	exists, sessionErr := components.CheckSessionExistsRedis(sessionIDCookie)
+	sessionErr := redisComponents.RemoveSessionTokenRedis(sessionIDCookie)
 
 	if sessionErr != nil {
 		return false, fmt.Errorf(sessionErr.Error())
 	}
-
-	if exists {
-		sessionErr := components.RemoveSessionTokenRedis(sessionIDCookie)
-
-		if sessionErr != nil {
-			return false, fmt.Errorf(sessionErr.Error())
-		}
-	}
-
+	
 	return true, nil
 }
 

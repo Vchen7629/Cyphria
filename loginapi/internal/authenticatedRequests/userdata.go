@@ -50,7 +50,10 @@ func FetchUserDataHandler(w http.ResponseWriter, r *http.Request) {
 	cookieTime := time.Since(ctime)
 
 	if cookieErr != nil {
-        http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": "no cookie provided",
+		})
         return
     }
 
@@ -105,7 +108,7 @@ func FetchUserDataHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	
 		http.SetCookie(w, cookie)
-		
+
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]string{
 			"message": sessionErr.Error(),

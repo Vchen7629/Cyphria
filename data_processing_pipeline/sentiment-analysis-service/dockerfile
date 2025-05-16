@@ -1,0 +1,27 @@
+FROM python:3.11-slim
+
+RUN groupadd -r appuser && useradd -r -g appuser appuser 
+
+ENV TRANSFORMERS_CACHE=/app/.cache/transformers
+ENV HF_HOME=/app/.cache/huggingface
+
+COPY requirements.txt .
+
+RUN python -m pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir --requirement requirements.txt
+
+RUN mkdir -p /app/.cache && \
+    python -c "from transformers import AutoTokenizer, AutoModelForSequenceClassification; print('Downloading model and tokenizer'); \
+    AutoTokenizer.from_pretrained('yangheng/deberta-v3-base-absa-v1.1'); \
+    AutoModelForSequenceClassification.from_pretrained('yangheng/deberta-v3-base-absa-v1.1'); \
+    print('Model downloaded.')"
+
+COPY --chown=appuser:appuser . .
+RUN chown -R appuser:appuser /app/.cache
+# Healthcheck to check to see if container fails
+HEALTHCHECK --interval=30s --timeout=10s --start-period=1m --retries=3 \
+  CMD pgrep -f "python main.py" > /dev/null || exit 1
+
+USER appuser
+
+ENTRYPOINT [ "python", "main.py" ]

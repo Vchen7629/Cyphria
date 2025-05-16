@@ -1,7 +1,8 @@
 from oauth import Oauth
 import requests, requests.auth
-from components.reddit_api_producer import r_producer
+#from components.reddit_api_producer import r_producer
 from components.post_filtering import filter
+from preprocessing import language_filter, url_remover, extract_data
 
 class RedditPosts:
     def __init__(self):
@@ -11,7 +12,7 @@ class RedditPosts:
     
     def GetPosts(self):
         headers = {"Authorization": "Bearer " + self.Oauth_Token, "User-Agent": "ChangeMeClient/0.1 by YourUsername"}
-        params = {"limit": 100, "lang": "en"}
+        params = {"limit": 2, "lang": "en"}
         
         if self.last_post_name:
             params["after"] = self.last_post_name
@@ -25,11 +26,12 @@ class RedditPosts:
                 if res['data']['children'] and 'data' in res['data']['children'][-1]:
                     self.last_post_name = res['data']['children'][-1]['data']['name']
                 for post in res['data']['children']:
-                    post_data = filter.Extract_Relevant_Data(post)
+                    post_data = extract_data.relevantData(post)
+                    print("ok", post_data[0])
                     
-                    if post_data and (post_data['body']) and (post_data['title'] != "What is this?"):
-                        if filter.isEnglish(post_data):
-                            english_only.append(post_data)
+                    #if post_data and (post_data['body']) and (post_data['title'] != "What is this?"):
+                    #    if language_filter.isEnglish(post_data):
+                    #        english_only.append(post_data)
                             #subreddit = post_data['subreddit']
                             
             
@@ -37,9 +39,9 @@ class RedditPosts:
                 print(f"Error {response.status_code}: {response.text}")
                 return None
             
-            r_producer.Send_Message(english_only)
+            #r_producer.Send_Message(english_only)
             
-            print("english only: ", english_only)
+            #print("english only: ", english_only)
 
             return english_only
         
@@ -57,4 +59,4 @@ if __name__ == "__main__":
     for i in range(1):
         posts.GetPosts()
     print("Closing producer.")
-    r_producer.producer.close()
+    #r_producer.producer.close()

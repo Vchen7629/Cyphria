@@ -1,0 +1,5156 @@
+Java
+JavaScript
+C
+Python
+SQL
+C++
+HTML
+Linux
+XML
+PHP
+Perl
+MATLAB
+Ruby
+C#
+Android
+MySQL
+Fortran
+SSH
+CSS
+R
+JSON
+iOS
+Go
+Scala
+Swift
+SwiftUI
+Ada
+COBOL
+Rust
+PostgreSQL
+Kotlin
+Arduino Programming Language
+PowerShell
+Pascal
+Haskell
+TypeScript
+SAS
+ARM
+Lisp
+Lua
+Julia
+Prolog
+Node.js
+HTTP
+Objective-C
+Clojure
+Scheme
+Assembly language
+Erlang
+Bash
+JQuery
+Mathematica
+ISBN
+Elixir
+CUDA
+Dart
+Emacs
+Modula-2
+MongoDB
+Visual Basic
+Tcl
+ActionScript
+VBA
+Vim
+Ruby on Rails
+WordPress
+BASIC
+Verilog
+awk
+Delphi
+Solidity
+ASCII
+AWS
+F#
+Regular Expressions
+OCaml
+ASP
+Eiffel
+Crystal
+Smalltalk
+Yacc
+Git
+Modula-3
+Elm
+Racket
+Groovy
+Unix
+D
+Common Lisp
+Reason
+UML
+Sage
+Maple
+Unicode
+CoffeeScript
+VHDL
+APL
+OpenCL
+MediaWiki
+Microsoft Azure
+PyYaml
+YAML
+DOI
+REST
+UTF-8
+Microsoft Excel
+XQuery
+PostScript
+Nginx
+GraphQL
+SPSS
+PowerPC
+Eclipse
+TLS
+FTP
+Visual Studio
+SOAP
+Matplotlib
+Vue
+Literate CoffeeScript
+Rexx
+X86
+TCP
+Nim
+ANTLR
+SciPy
+Scratch
+Pug
+LFE
+Smali
+LaTeX
+Markdown
+Visual Basic .NET
+Liquid
+Forth
+SMTP
+PureBasic
+ML
+Solaris
+Haxe
+VBScript
+WebAssembly
+CIL
+Chapel
+Oberon
+PDF
+LabVIEW G
+Applescript
+Oz
+Lasso
+fish
+LLVM IR
+ECMAScript
+Red
+Simula
+Protocol Buffers
+Idris
+Logo
+SQLite
+UDP
+AMPL
+OpenGL
+sed
+PicoLisp
+Visual Studio Code
+intellijidea
+IntelliJ IDEA
+IntelliJ
+Drupal
+FreeBSD
+Tex
+V
+BCPL
+PL/SQL
+JVM
+Standard ML
+Dylan
+REBOL
+Apache Maven
+Unity
+Processing
+Hack
+MIPS architecture
+Algol
+OWL
+URL
+Org
+PureScript
+Brainfuck
+SVG
+Monaco Editor
+FAT
+DOT
+FLUX
+Fantom
+Squirrel
+EuLisp
+Monkey
+FLEX
+AUTOCAD
+Limbo
+Agda
+BlitzBasic
+ABAP
+MUMPS
+Occam
+GAME
+HAML
+Emacs Lisp
+RDF
+ColdFusion
+Jinja
+Coq
+AutoIt
+Qt
+x86 Assembly
+Makefile
+Vala
+J
+Nearley
+NewLisp
+Nemerle
+Zig
+MIME
+XAML
+Jison
+MoonScript
+Icon
+Terra
+TOML
+Scikit-learn
+X10
+Ballerina
+Scilab
+Flow
+Io
+Turing
+idyll
+RPG
+Mercury
+Reverse Polish notation
+QML
+IDL
+Frege
+xBase
+GNU Octave
+Boo
+JSP
+PostCSS
+TensorFlow
+Object Pascal
+Slim
+MicroPython
+Hy
+highlight.js
+ALGOL 60
+Arc
+Zephir
+SPARQL
+Ceylon
+Redis
+LOLCODE
+Opa
+SPARC
+SuperCollider
+SystemVerilog
+QBasic
+Clean
+Lean
+SNOBOL
+Cython
+RFC
+Bison
+XPath
+WebGL
+Inform
+CLIPS
+Pony
+reStructuredText
+KiCad Legacy Layout
+vi
+vite
+RobotFramework
+PL/pgSQL
+Factor
+CMake
+NumPy
+Self
+Stata
+Multi-User Forth
+Sublime Text
+Nextflow
+JSON5
+SI
+Pike
+grep
+Deno
+Metal
+EDN
+PL/I
+Isabelle
+WSDL
+Gzip
+NetLogo
+D3.js
+Magit
+API Blueprint
+MiniD
+RAML
+HCL
+Perl 6
+Extensible Linking Format
+Ace Editor
+Click
+New Technology File System
+ATS
+AutoLISP
+S-algol
+YANG
+IA-32
+Csound
+OpenRC runscript
+F*
+Ini
+Sass
+Turtle
+Lex
+Subversion
+Gnuplot
+Xojo
+npm
+AGC
+Morse code
+FoxPRO
+FlatBuffers
+ClojureScript
+Ioke
+Java Bytecode
+S-expressions
+INTERCAL
+E
+CodeMirror
+Wren
+Alloy
+odin
+AXIOM
+LiveScript
+RDoc
+CSP
+Modelica
+Gradle
+Embedded Crystal
+Office Open XML
+Wavefront Object
+POV-Ray SDL
+Microsoft BASIC
+Clipper
+YARA
+ERB
+Batchfile
+Django
+MariaDB
+Whitespace
+GAMS
+DNS
+SYMBOL
+B
+AsciiDoc
+Pod
+BPMN
+M4
+Datalog
+Objective-J
+Marko
+Dafny
+chevrotain
+C--
+Ninja
+Dhall
+Base64
+Wolfram Language
+Oxygene
+Gambas
+JSON-LD
+Q
+Microsoft Notepad
+PEG.js
+Google Cloud Platform
+HyperTalk
+SPARK
+halide
+TLA
+Befunge
+GDB
+Puppet
+Miranda
+Speedie
+Bicep
+Bourne shell
+C3
+Visual FoxPro
+Seed7
+x86-64
+PowerBuilder
+BibTeX
+Twig
+Less
+XS
+eC
+SGML
+Coconut
+Simulink
+Oberon-2
+G-code
+Genie
+QuickBASIC
+Maxima
+Thrift
+NATO phonetic alphabet
+AutoHotkey
+Classroom Object Oriented Language
+Turbo Pascal
+PL/0
+GW-BASIC
+Homebrew
+SETL
+LINQ
+JSON Schema
+Z notation
+ECL
+Falcon
+SaltStack
+ALGOL 68
+XBase++
+Netwide Assembler
+Transact-SQL
+v8
+CLU
+Dc
+LiveCode
+COMTRAN
+Pandas
+ASN.1
+HHVM
+wisp
+ink
+ABC
+Ext4
+DIAGRAM
+Mercurial
+K
+YASnippet
+Scala.js
+RStudio
+Cap'n Proto
+Squeak
+nodejs
+React.js
+React Native
+PRQL
+HyperCard
+Jython
+Natural Language Toolkit
+Bluespec
+Croc
+KaTeX
+EJS
+DBase
+S
+True BASIC
+WxBasic
+Markwhen
+Stylus
+Ion
+UrWeb
+GAP
+Sather
+Vim script
+FreeBASIC
+MMX instruction set
+JScript
+Pygments
+Parrot
+Wolfram Mathematica
+unison
+CouchDB
+Pig Latin
+TXL
+RMarkdown
+Graph Modeling Language
+chrysaLisp
+CIL
+EML
+starlark
+FASTQ
+Numba
+Punched tape
+Latte
+Smarty
+Nu
+Multics
+DTD
+Malbolge
+Tiny BASIC
+Xtend
+ALGOL W
+IBM System z
+tornado
+JFlex
+DTrace
+Ragel
+AspectJ
+Caml
+Fortress
+PARI/GP
+jq
+Pure Data
+TRS-80 Color Computer
+Max
+muPad
+HLSL
+Unicon
+RDFa
+Ring
+HOPE
+Free Pascal
+XSLT
+RPL
+Diff
+NL
+mlir
+Gosu
+OpenVera
+SIL
+mermaid
+High Level Assembly
+commonmark
+Atmel AVR
+Eve
+Cue
+Fennel
+JCL
+RATFOR
+GLSL
+Curry
+MusicXML
+Slash
+Enso
+Luna
+Golo
+NSIS
+Gerber Image
+Expect
+BETA
+Action!
+TreeSheets
+janet
+AutoCAD DXF
+Ladder Logic
+beef-lang
+Hierarchical Data Format
+Inno Setup
+Dogescript
+PL/M
+Cg
+LilyPond
+MPS
+PEG
+FASTA
+datascript
+Shakespeare
+QB64
+SWI Prolog
+WDL
+Korn shell
+Imba
+Koka
+Closure Templates
+Altair BASIC
+Eagle
+IGOR Pro
+PhyloXML
+CWL
+RISC-V
+UNLAMBDA
+gravity
+Augmented Backus-Naur Form
+Java EE version history
+Ron
+Zip file format
+EBNF
+SourcePawn
+Textile
+Java Properties
+OpenLisp
+Blitz3D
+Ren'Py
+Commodore BASIC
+Taichi
+PIR
+LPC
+Xtext
+Reia
+carp
+GAMS
+CWEB
+.dwg
+Euphoria
+dynamo-visual-language
+Hjson
+BBCode
+ExFAT
+Microsoft Small Basic
+Guile
+GeoJSON
+Argdown
+Velocity
+Qualcomm Hexagon
+RoboMind
+RUNOFF
+Jule
+Aith
+MDX
+IMAP
+Dockerfile
+CFML
+KiXtart
+Pizza
+NewtonScript
+DDML
+AssemblyScript
+Information Presentation Facility
+Manim
+Velato
+Emojicode
+Rust MIR
+Plain English
+PIC microcontroller
+LotusScript
+DRAKON
+Microsoft Macro Assembler
+PyTorch
+Keras
+SubRip Text
+beads-lang
+Jekyll
+Yes It Is
+LyX
+JADE
+Pharo
+flowchart.fun
+Svelte
+PROMETHEUS
+Glyph Bitmap Distribution Format
+Mirah
+Ghostscript
+Sqlalchemy
+CPL
+Modula
+FFmpeg
+Asm.js
+Microdata HTML
+BlitzPlus
+Bel
+ACT-III
+Papyrus
+Clarion
+gogs-editor
+VRML
+tldr
+progsbase
+CSV
+X PixMap
+Spin
+XeTeX
+SQLPL
+ThinBasic
+Readable
+KML
+ARexx
+CLOS
+X BitMap
+PAWN
+Alice
+emberjs-framework
+Uno
+Futhark
+CSON
+JSON-stat
+ALGOL 58
+QR code
+JAI
+Nial
+mochajs
+Godot
+S3
+CodeQL
+Yoix
+Vcpkg
+Bazel
+mgmt
+Varnish Configuration Language
+Simple Binary Encoding
+Felix
+Ext3
+kaitai
+MBASIC
+Troff
+JavaCC
+FLOW-MATIC
+mustache
+Roslyn compiler
+Slope
+NetLinx
+Concise Encoding
+blockml
+Jakt
+BNF
+Shapefile
+chatterbot
+Fuzzy Markup Language
+Project Jupyter
+USB
+P4
+Nushell
+FIGlet Font
+Curl
+Visual Prolog
+GML
+Aldor
+micro-editor
+mavo
+Mathcad
+Joy
+QMake
+ProvideX
+dgraph
+XProc
+Cobra
+jasmine
+onnx
+HDMI
+Apache Hbase
+Cyclone
+Lisaac
+Tiny C Compiler
+SymPy
+UTC
+Advanced Message Queuing Protocol
+Scoop
+Pick operating system
+TI MSP430
+PgBouncer
+LookML
+Asymptote
+Rockstar
+Mindsdb
+JSFuck
+cloc
+Angelscript
+Dojo
+Iterm2
+Apex
+Triton
+Pop-11
+Z shell
+MQL5
+JMP
+GIF
+Volt
+CoNLL-U
+mal
+BBC BASIC
+DisplayPort
+DM
+Karel
+JSONiq
+wasmer
+Prism
+chaiscript
+DIGITAL Command Language
+capybara
+Linden Scripting Language
+Tea
+Kubernetes
+k8s
+k3s
+k0s
+k9s
+Ant Build System
+NCAR Command Language
+GNU Assembler
+gridstudio-editor
+J#
+fay
+GDScript
+F Prime
+BeanShell
+FutureBASIC
+Eclipse Command Language
+GOLD
+CSS Doodle
+PowerBASIC
+PIC
+Turbo Basic
+Kakoune
+ShaderLab
+dat-protocol
+Filebench WML
+Firestore
+Cloud Firestore Security Rules
+BPEL
+Meson
+docopt
+xsv-app
+Vimwiki
+TSV
+Nix
+Dartmouth BASIC
+sizzle
+Up-arrow notation
+RetDec
+Desmos
+MD5
+DNS Zone
+4G
+edgedb
+Ext2
+Gettext Catalog
+METAFONT
+StarOffice Basic
+PCRE
+Creole
+Semantic Versioning
+UPC
+noms-db
+COLLADA
+SHA-2
+Conan
+ISLISP
+htmx
+XL
+Automatically Programmed Tool
+binaryen
+Harbour
+Cryptol
+SHA-1
+Digital Visual Interface
+Rholang
+pyret
+Network Time Protocol
+COMPONENT PASCAL
+zephyr-asdl
+SQL-92
+Easybuild
+Refal
+Yorick
+Lightweight Directory Access Protocol
+Mask
+Omgrofl
+carth
+mckeeman-form
+Bucklescript
+Telnet
+chibicc
+Mu
+TextMate
+CartoCSS
+IcedCoffeeScript
+BMP file format
+Logica
+OPL
+Ravenscar profile
+WML
+TELCOMP
+Carbon
+Jasmin
+RenderScript
+Literate Agda
+Tagged Image File Format
+JOVIAL
+Grammar
+SysML
+Motif
+Zuo
+Thymeleaf
+bosque
+Spyder
+contracts.coffee
+ICD-10-CM diagnosis
+OpenSCAD
+Game Maker Language
+SAM file format
+penrose
+ToffeeScript
+BlackCoffee
+heap.coffee
+JRuby
+MarkovJunior
+UberScript
+Caffeine
+Not Quite C
+CLIST
+Context Diff
+tbox-lib
+BlitzMax
+LuaJIT
+Edje Data Collection
+Objective C++
+vyper
+skulpt
+hasklig
+Speakeasy
+codecept
+ooc
+Rascal
+ALEF
+Message Queuing Telemetry Transport
+Neko
+UNITY
+omega
+BLISS
+Power BI
+Elvish
+Tableau Software
+TiddlyWiki
+Google File System
+Euclidean geometry
+Lily
+Streem
+Nit
+m3db
+Blender
+OX
+Alpine Abuild
+Slice
+Beatnik
+clay
+Security Assertion Markup Language
+Perl Data Language
+Sweet.js
+HFS Plus
+YoptaScript
+ROFF
+HTTP/2
+SimCode
+EmberScript
+walt
+ohm
+xCard
+Binary notation
+SMIL
+Stripe company
+gleam
+GCC Machine Description
+Jupyter Notebook
+ActiveVFP
+Tree Notation
+TI-BASIC
+FM broadcasting
+Ante
+Atari BASIC
+UCSD Pascal
+Applesoft BASIC
+groff
+Cesil
+Praat Script
+Fibonacci
+Whiley
+Shen
+netbeans-editor
+netbeans
+MVEL
+skip
+AsciiDots
+ArkScript
+chef
+Melody
+SHA-3
+UCL
+chisel
+Brightscript
+verona
+SCSS
+Geography Markup Language
+MATHLAB
+Stan
+T
+IP Pascal
+Formulating On-Line Calculations in Algebraic Language
+Epigram
+SugarSS
+lmdb
+Cell
+JOSS
+ColaScript
+Laravel
+xlwings-editor
+GraphIt
+Cycript
+Raku
+Large-scale Atomic/Molecular Massively Parallel Simulator Format
+Tap code
+Strips
+ROOT
+Pure
+Committee on Uniform Security Identification Procedures
+Ch
+LOGLAN
+NetRexx
+winxed
+Caché Basic
+svgbob
+Fancy
+PogoScript
+rant
+manhood
+DokuWiki
+SMT
+Ezhil
+Real-time Transport Protocol
+VML
+Not eXactly C
+Mary
+Hindu-Arabic numeral system
+zz
+checked-c
+WebIDL
+Compiler-Compiler
+A-0 system
+Logtalk
+Mech
+DOML
+Open Data Protcol
+storyscript
+Cranelift
+mun-lang
+Nexus file
+Snowman
+Creative Basic
+FreeMarker
+TI Program
+Qalb
+packagist-pm
+Hyperscript
+SRecode Template
+Notepad++
+Observable
+gluon
+Impala
+oil
+Jargon
+MAXScript
+Sieve mail filtering language
+Common Object File Format
+DOODLE
+Esterel
+PL360
+Pan
+LoomScript
+P
+Luna
+Apache Lucene
+Property list
+Pep8
+invokator
+GFA BASIC
+ActivityPub
+Open Shading Language
+Stencil
+Vigil
+Umple
+mathics
+Basis Codec
+OpenEdge ABL
+Pandoc
+kitten
+Spatial
+Type Language
+Shakespeare
+SQL/PSM
+Flutter
+FP
+Please Build
+desktop
+Windows Registry Entries
+MOO
+Treelang
+GRASS
+Programming Language for Business
+UBASIC
+Unified Diff
+Almquist shell
+AviSynth
+Parrot Assembly
+WebP
+TIScript
+Hackett
+Kodu Game Lab
+XHTML
+Gopher
+EXPRESS
+Arden syntax
+Stutter
+ISWIM
+ARC processor
+Video Graphics Array
+json-graph-format
+Apache Cassandra
+Cassandra
+JSON with Comments
+jsil-compiler
+Post Office Protocol
+Script.NET
+Jolie
+bog
+NATURAL
+ColdFusion Components
+Blockly
+InfiniBand
+Bun
+VHDL-AMS
+Fable
+HeLang
+Txt2tags
+Blade
+RPM Spec
+pasukon
+Extensible Embeddable Language
+Operational Control Language
+Sheep
+MATH-MATIC
+Autodesk Revit
+TECO
+Handel-C
+Turbo Assembler
+souper
+dexvis
+M4Sugar
+llhd
+hurl
+Opal
+EGL
+Touch
+FML
+C2
+VCF
+Cypher Query Language
+Lingo
+MXML
+Hyperscript
+BQN
+plot
+asterius-compiler
+HL7
+Smiles
+ACL2
+Object Rexx
+Locomotive BASIC
+Quaint
+tidyverse
+Open Database Connectivity
+SRL
+XBLite
+PEARL
+opam-pm
+SSI
+WHOIS
+Lamdu
+lamdu-editor
+Jison Lex
+Maya Embedded Language
+Logos
+Carpet
+Molfile
+Google Apps Script
+erg
+Flix
+Kaggle
+Linotte
+Rpm
+I-expressions
+Speedcoding
+Wasp
+ALGO
+OpenNN
+SmallBASIC
+bpkg-pm
+crush
+spry
+Reko
+Query by Example
+network embedded systems C
+HiveQL
+Dak
+comby
+XC
+X Font Directory Index
+XCompose
+BlooP
+Violent ES
+YAWL
+Roc
+Newick format
+IBM 1620
+leo-editor
+Genshi
+Xgboost
+PDP-11
+ELLA
+Guix Workflow Language
+tiledb
+haste
+Ternary numeral system
+Cyber
+EEX
+JSX
+MACRO-10
+snakemake
+Flow9
+femtolisp
+Swallow
+Glicol
+Spline Font Database
+KRL
+Q#
+roy
+Sweave
+Newspeak
+NS Basic
+astroml
+kona
+Lux
+GNU nano
+3DS
+CFEngine
+Plus
+exkited
+Module Management System
+turnstile
+lobster
+XML Binding Language
+Superjson
+clash
+Punycode
+1C Enterprise Script
+tht
+monte
+dslx
+PLZ
+fetlang
+General Purpose Simulation System
+CLISP
+Earl Grey
+Rc
+F
+rason
+Berry
+Ć
+Xbasic
+Markus
+Mesa
+DNS over HTTPS
+TAP
+Sinclair BASIC
+PLANNER
+HP BASIC for OpenVMS
+SuperBASIC
+Asterisk
+MurmurHash
+Differential Datalog
+XPages
+Gentoo Ebuild
+Vale
+MIRC scripting language
+HXML
+gentee
+PROMAL
+Executable JSON
+relax
+Rescript
+Stackless Python
+kasaya
+dex
+MASM
+miniML_error
+lem-editor
+harlan
+sile
+FOCUS
+AsciiMath
+spider
+XUML
+Z-machine
+Interlisp
+NestedText
+JAL compiler
+Frost
+Cali-Lang
+Em
+FAUST
+Template Attribute Language
+GLBasic
+EXEC
+Zonnon
+reflex-framework
+tea
+Knitr
+Typed Lua
+hobbes
+Ch computer programming
+WML
+Hocon
+CIR
+Parrot BASIC
+circle-lang
+cityhash-hash-function
+Google Sheets
+Autocode
+Smartsheet
+lispyscript
+UnrealScript
+Grammatical Framework
+Parser 3
+BARE
+Hierarchical File System
+ferret
+score
+International System of Quantities
+XSD
+Assembly CLI
+COMAL
+AL
+Mako
+Rapira
+Simple Actor Language System and Architecture
+Adept
+Frink
+Nios II
+dub-pm
+atomspace
+bee
+Object Linking and Embedding
+NGS
+.QL
+fo
+BitBake
+Noweb
+Gherkin
+flagship
+Swagger
+Scroll
+LUCID
+Cayenne
+Fully Automated Compiling Technique
+Schema.org
+Pyret
+curv
+Confluence
+XBRL
+mpl
+SATySFi
+Sam Coupé
+Mond
+Handlebars
+ObjDump
+ApacheConf
+tcsh
+Orc
+Caltech Intermediate Form
+Recfiles
+ddfql
+Fast Healthcare Interoperability Resources
+BASIC Stamp
+NuGet
+Gerbil Scheme
+basic calculator
+Revolution
+GN
+Subleq
+Qore
+Avail
+neeilang
+hilvl
+PowerQuery M
+Ren
+Pomsky
+Dale
+BASIC Programming
+Wyvern
+Connection Machine
+Extended file system
+hamler
+xodio
+kitlang
+Passerine
+Integer BASIC
+AMOS
+Z++
+CFScript
+SdlBasic
+CSVw
+Yet Another Scripting Language
+Aheui
+Formatted Table
+holyc
+Babylonian numerals
+hashlink
+Redcode
+JavaFX Script
+Etoys
+Caramel
+SFC
+neut
+International Chemical Identifier
+Memex
+vdscript
+SQF
+txr
+Zimpl
+Genero Business Development Language
+firrtl
+Snap!
+Semantic Patch Language
+CORAL
+SISAL
+bloom
+APT Debian
+djangoql
+General feature format
+koara
+fe
+Oxyl
+RELAX NG
+Cirru
+Nymph
+Ubercode
+Jsonnet
+Boron
+ballerina-central-pm
+Atmel AVR instruction set
+S-PLUS
+Tuple space
+Michigan Algorithm Decoder
+WDDX
+Liberty BASIC
+Spec Sharp
+COWSEL
+Lisp Machine Lisp
+muon
+F-Script
+Catala
+TELOS
+Egison
+Lustre
+GNU Data Language
+NESL
+TextMate Language
+OCL
+Grace
+Adobe Font Metrics
+Crema
+Mouse
+NWScript
+p4p
+Language Server Index Format
+Hare
+Ligo
+HAGGIS
+Bucardo
+Flavors
+noulith
+Livr
+QuakeC
+Langchain
+Amiga E
+JSON Query Language
+BIND
+Potion
+spiral
+Adventure Game Studio Script
+C shell
+Charity
+MIMIC
+Pawn
+dlvm
+epsilon
+lav-format
+GraphQL Schema Definition Language
+noisecraft
+visdown
+Edge Side Includes
+raptorjit
+Marp
+eff
+Linda
+Yum
+XML Metadata Interchange
+CMS-2
+Djot
+OPS5
+Scribe
+humanhash-hash-function
+Bioconductor
+ark-lang
+jayfor
+RDF Schema
+DAX
+Z
+PeopleCode
+JS++
+PILOT
+SCRIPT markup
+Yacas
+Q
+Kid templating language
+REDUCE
+Flowgorithm
+Pact
+Acorn Atom
+Sibelius
+Vale
+tsquery
+ink-lang
+SIMSCRIPT
+POP-2
+NixOS
+sixten
+MACRO
+oden
+Family BASIC
+abs
+Groovy Server Pages
+Fun
+Uniform eXchange Format
+HMMM
+VisualWorks
+05AB1E
+Plankalkul
+WATFIV
+Cadence SKILL
+MiniZinc
+Parallax Propeller
+Jank
+MUSIC/SP
+MXF
+Watcom
+JSLT
+Oak
+Berkeley DB
+hacspec
+manool
+Judoscript
+parasail
+ArchieML
+Finite State Language
+Soy
+Airtable
+Deb file format
+GraphML
+Umka
+pie-lang
+Go!
+StarLogo
+Morfik
+Numbers
+astro
+multicodec
+AmigaBASIC
+XPL
+MSX BASIC
+Facelets
+ToonTalk
+TOM object-oriented
+RSS
+Note
+CHIP-8
+Property Specification Language
+HAL/S
+Thue
+GEL Genius
+silk
+Augeas
+Claro
+Vely
+Business Basic
+PBASIC
+KRC
+QUEL
+Casio BASIC
+TRAC
+Vvvv
+Structured text
+BLAKE
+partiql
+OpenType Feature File
+Fjölnir
+Nice
+z80
+JSON Graph Spec
+owen-lang
+Zot
+Sublime Syntax Test Lang
+verifpal
+StruQL
+Yedalog
+Coco
+pikelet
+forest-lang
+k-framework
+Standard Portable Intermediate Representation
+scribble
+Sketchpad
+Newsqueak
+hazel
+Li-Chen Wang
+Janus
+NeXML format
+Basic-256
+XOTcl
+JSL
+[x]it!
+Metalang99
+Hodor
+popr
+Wavefront Material
+Alma
+IBM i Control Language
+Battlestar
+kai
+Toi
+BANCStar
+BuddyScript
+latino
+fizz
+BALGOL
+Linux Kernel Module
+LOLA
+net-format
+BASIC-PLUS
+VSXu
+lemon
+Lucidchart
+Information Processing Language
+Hush
+co-dfns
+Strongtalk
+Joule
+Euler
+RubyGems
+MultiDimensional eXpressions
+httplang
+VisSim
+IBM POWER Instruction Set Architecture
+ldpl
+pointless
+JSON Lines
+FaCT
+MDL
+zenscript
+Gödel (Goedel)
+parenthetic
+cor
+OEM
+UCG
+Invisible XML
+Xidoc
+Project Mentat
+Velocity Template Language
+Conceptual
+Aime
+GAML
+Bro
+myia
+YARV
+ASDF
+Geany
+Forsyth-Edwards Notation
+Algebraic modeling language
+Analytical engine
+Mangle
+multiaddr
+MyBB
+RAPID
+FRACTRAN
+HP Time-Shared BASIC
+Coco/R
+NELIAC
+psyche-c
+RTL/2
+Zope
+STOS BASIC
+Sibilant
+Function block diagram
+OpenEXR
+Gwion
+BPML
+micro-mitten
+Lil
+JSON lambda
+fleck
+TriG syntax
+cat
+DataWeave
+Easytrieve
+Lite-C
+dyvil
+Draco
+File Oriented Interpretive Language
+M2001
+Zimbu
+Promela
+Z-flat
+Incipit
+Mscgen
+Picat
+Explorer
+orca-pl
+CBOR
+Text Adventure Development System
+A#
+topshell
+Textadept
+AIMMS
+LinearML
+Cone
+Boomerang Decompiler
+N-Triples
+COMIT
+Basic4ppc
+hakaru
+Rouge
+cuneiform
+World of Warcraft Addon Data
+tao3d
+Caché ObjectScript
+elena
+Sophia
+Document Structure Description
+Breccia
+Atomese
+Jevko
+mint
+Goal
+Manchester syntax
+Maude
+WMLScript
+april
+plam
+POPLOG
+Quicken Interchange Format
+quicklisp-pm
+Executive Systems Problem Oriented Language
+Color BASIC
+QtScript
+Interchange File Format
+Bython
+Tao
+HuJSON
+Kal
+Visual Objects
+THEOS
+titan
+STON
+bamboo
+Wu
+LC-3
+mirth
+dedukti
+Uniface
+tangledown
+Pod6
+Fuzuli
+Topaz
+concurnas
+PML
+tremor-query
+Austral
+Turbo-Basic XL
+stoneknifeforth
+minikanren
+PTX
+FL
+Jeeves
+MAGMA
+TAL
+ASIC
+Zeek
+infusion-framework
+buzz
+Pyrex
+AUTOCODER
+ulisp
+KUKA Robot Language
+Structured Query Reporter
+orange
+reforth
+Heron
+taf
+Blacklight
+jiyu
+gura
+Visual Tool Markup Language
+CEEMAC
+swizzle
+hoon
+Filterscript
+xTAO Modeling Language
+MessagePack
+t2b
+pipelines
+Links
+multibase
+Model 204
+Matrix protocol
+Notation3
+Euclid
+Semantic Web Rule Language
+OK
+ELFE
+Parlog
+CSpydr
+Ripple
+maraca-lang
+Ook
+Data Communications ALGOL
+jcard
+jplace
+Reactive Plan Language
+GorillaScript
+baysick
+Balanced ternary
+C/AL
+HyTime
+Linden Scripting Language
+PLEX
+datafun
+son
+GEORGE
+Matrix Market Coordinate Format
+praxis-lang
+SYNAPSE
+Optimized Systems Software
+NEWP
+fructure-editor
+Smile data interchange format
+Fossil
+SipHash
+GNU Guix
+SDF
+HyPhy
+mimium
+Quake
+Ohayo
+SMX
+Action Code Script
+CobolScript
+Đ
+Truth
+DAP FORTRAN
+Project MAC’s SYmbolic MAnipulator
+BeBasic
+Aardvark
+LispWorks
+Processor Technology
+Haxe Library Manager
+ko
+Visual Paradigm
+X BitMap
+Gremlin
+Winbatch
+Small-C
+Functional PHP Preprocessor
+SDTM
+Conway chained arrow notation
+crmsh
+juvix
+Lucid
+Kuroko
+DML
+Parenscript
+Virgil
+hexagony
+Scala Markup Language
+ODRL
+Forte 4GL
+XPL0
+GLMS
+kumir
+ISETL
+P*
+Boogie
+BrightScript
+Hspec
+Markdeep
+opengraph
+rosette-lang
+xsharp
+Linker Script
+rbs
+vega-editor-app
+Short Code computer language
+Simplicity
+Edinburgh IMP
+never
+expresso
+Gist
+WinWrap Basic
+Sawzall
+Irvine Dataflow
+ALGOL 68-R
+jeebox
+ARM Templates
+Continuity of Care Document
+CBASIC
+Atlas Autocode
+solid
+DATABUS
+OGNL
+Sublime Syntax
+sporth
+Pycket
+Energy Systems Language
+Flowcode
+Kuin
+Rocky Mountain BASIC
+Python for S60
+Pharen
+A+
+Clinical Document Architecture
+Axiom
+Vyxal
+xxl
+Literate Haskell
+RHTML
+Homa
+Gellish
+ObjectScript
+aretext
+Candy
+Pnuts
+Interactive C Interpreter
+ApeScript
+Speech Synthesis Markup Language
+Céu
+Bla
+D2
+dbml
+False
+Lexon
+Low*
+Sitemap
+2-pak
+Portable Bit Map Format
+Graphics BASIC
+IMP
+Lazy ML
+Mortran
+EXEC 2
+Phel
+ΜC++
+Instruction list
+DDA
+Synon
+XCAS
+PL/P
+categorical-query-language
+Simons' BASIC
+MetaComCo
+jinx
+Tabloid
+Laning and Zierler system
+Armed Bear Common Lisp
+redprl
+Advanced Authoring Format
+SAC
+IDL specification language
+yeti
+inko
+tampio
+Glyph
+WebDNA
+Scsh
+Kamby
+Nickle
+Sugar
+ten
+Nuua
+Toy
+Urbiscript
+Mudlle
+blz
+FOAF
+G-Portugol
+YESS
+Macchiato
+The Dog Programming Language
+world
+ca65 Assembly
+ctalk-lang
+GUIDE
+IRC chat logs
+v8torque
+Zork Implementation Language
+MLAB
+g-fu
+CHICKEN
+Tahoe-LAFS
+3D Manufacturing Format
+little
+Yabasic
+CRAM file format
+BEAM Erlang virtual machine
+MHEG-5
+Chinese BASIC
+lift
+Basic4android
+SequenceL
+Atari Microsoft BASIC
+Le-Lisp
+PL/C
+Google Data Protcol
+Frank
+clarity
+Pyth
+TMTP
+De Bruijn index
+Pro*C
+SP/k
+FloScript
+hr-code
+Binary Alignment Map
+Atari ST BASIC
+Obliq
+CYCL
+Wing
+A++
+Unity3D Asset
+Prograph
+Gren
+ATLAS Transformation Language
+Tandem Advanced Command Language
+Stockholm format
+Miva
+CLAIRE
+Rebeca Modeling Language
+CLPR
+ProbeVue
+iCalendar
+dllup
+Dashrep
+Acme
+AspectC++
+4th Dimension
+Fortran 90
+Netpbm grayscale image format
+ESC/P
+OQL
+Coda web development software
+Hotdog
+Apple ProDOS
+Meta Expressions
+Kaffeine
+General-purpose macro processor
+SenseTalk
+CodeGear Delphi
+Ruby Document format
+Dink Smallwood
+Nadesiko
+Netlib
+MAI Basic Four
+Crystallographic Information File
+candor
+Dasm
+ARITH-MATIC
+IBM BASICA
+ABC 80
+Lawvere
+Margin
+ecsharp
+SpiderBasic
+Silicon Graphics Image
+Schematron
+METAPOST
+IBM Informix-4GL
+zolang
+video
+Wart
+hamdown
+MUDDL
+Dolittle
+Sing Sharp
+Leda
+MACRO-11
+json->url
+MakeDoc
+Namespace-based Validation Dispatching Language
+Chrome
+Nord Programming Language
+funl
+FCL
+TI-89 series
+plink-ped-format
+texti
+Blox
+Binary Lambda Calculus
+myrddin
+nimrod
+OMG IDL
+stella
+bml
+chain-format
+Y
+elymas
+HAL Format
+Chipmunk Basic
+ILBM
+FXML
+Daisy Systems
+Preferred Executable Format
+Common Data Format
+SCM
+Split-C
+RapidQ
+tamgu
+arret
+GRAAL
+Charcoal
+ultralisp-pm
+Beta BASIC
+CECIL
+Meditech Interpretive Information System
+Ease
+JOSS Extended and Adapted for Nineteen-hundred
+ELAN
+IPTSCRAE
+moinmoin
+CodeStudAssembler
+Run BASIC
+Magik
+moya
+TUTOR
+Refer
+RLaB
+Flatline
+OptimJ
+Kaleidoscope
+Small
+3APL
+Enterprise Mashup Markup Language
+System Automatycznego Kodowania Operacji
+mimix-stream-language
+TQL
+AmbientTalk
+Devicetree
+Objective-S
+protium
+><>
+Make
+Robots.txt
+WHIRL
+Augment
+IBM BASIC
+DarkBASIC
+Apple BASIC
+Cambridge Algebra System
+PACT I
+LINC 4GL
+Spice Lisp
+Dataflex
+wah
+semicolon
+lever
+Wonkey
+Kalyn
+Piet
+Slony
+obsidian
+Text Executive Programming Language
+Wirth syntax notation
+egel
+QOIR
+Formula language
+NilScript
+OBJ
+CMS Pipelines
+DEVIL
+SQRL
+X PixMap
+mdl
+JCOF
+IPL
+Astatine
+jasper
+emfatic
+git-config
+LARP
+Lazy K
+Liso
+CBOR data definition language
+hop
+Ion Schema Language
+ppm-format
+Portable Standard Lisp
+Polymorphic Programming Language
+Stalin
+Cullinet
+Knowledge Interchange Format
+Nimskull
+clike
+Tynker
+XBEL
+HP-GL
+Game Oriented Assembly Lisp
+P′′
+Ecstasy
+Steinhaus-Moser notation
+MML
+Content Assembly Mechanism
+ColorForth
+ZBasic
+SIGNAL
+MARK IV
+TTM
+Corman Common Lisp
+QUIKSCRIPT
+co2
+Ren-C
+rhine
+ISBL
+Croma
+Mobl
+UBJSON
+cperl
+Tree and Tabular Combined Notation
+keli
+BASIC A+
+Mallard BASIC
+Janus
+LISP 2
+Ratfiv
+mlatu
+a Lisp Environment
+Steel Bank Common Lisp
+JIS X 0201
+Just Another Scripting Syntax
+Forml
+Ciel
+Ciao
+PICO
+Slideshow
+Join Java
+juniper
+RascalMPL
+TScript
+huginn
+Alumina
+tuplemarkup
+VlibTemplate
+Dern
+YAMP
+HCard
+Amazon Redshift
+strat
+Fardlang
+lila-lang
+HUGO
+BML
+coherence
+Procfile
+quorum
+USD
+wescheme
+Worst
+Joyfully Universal Language for (Inline) Assembly
+LIFE
+Myghty
+UIML
+Chomski
+Visual Test
+Argus
+GameMonkey Script
+LiteScript
+Om
+Avionics Architecture Design Language
+Trellis
+Kawa
+Data General Business Basic
+SnapTag
+Transaction Language 1
+Gene transfer format
+MEDUSA
+ana
+polyglot-compiler
+Savi
+Aztec C
+ΛProlog
+Scratchpad
+l2
+Vilnius BASIC
+Jisp
+mys
+Integrated Data Store
+DYNAMO
+Eurisko
+RamdaScript
+hivemind
+Gforth
+mythryl
+tablam
+Alma-0
+CHILL
+Abbreviated Test Language for All Systems
+Ante
+Proteus
+Rita
+JSONScript
+CGOL
+ZENO
+Z
+Little Implementation Language
+Daplex
+NXT-G
+vCard
+h
+Blue
+pinto
+TAO
+nydp
+JLang
+Link
+lain
+luau
+Marine Trading Markup Language
+Trex
+z2
+APL2
+bioscript
+blue
+EFL
+Emerald
+QCL
+sora
+specrtl
+SubX
+B32 Business Basic
+Sun Raster
+UPIC
+MAPPER
+WFL
+AgentSpeak
+BCX
+Cornell University Programming Language
+MacBASIC
+Jet Propulsion Laboratory Display Information System
+FastTrack Scripting Host
+PS-algol
+vivaldi
+PascalABC.NET
+kei
+mages
+BASICODE
+Knowledge Query and Manipulation Language
+Harwell-Boeing file format
+SPITBOL
+Ikarus Scheme implementation
+LYaPAS
+ObjectLOGO
+SAOL
+Southampton BASIC System
+Extended ML
+BASIC-E
+UniVerse
+Post production
+6gunz
+edgelisp
+jonprl
+D data language specification
+CONVERT
+GeneXus
+unseemly
+txtzyme
+typecobol
+Alternate Instruction Set
+loci
+r4
+Lava
+ScriptBasic
+Fenix Project
+BASIC09
+Encore
+Brain-Flak
+R++
+ktexteditor-editor
+hrqr
+Election Markup Language
+RenderMan Shading Language
+DragonBASIC
+Langage Sans Espoir
+fp
+Flapjax
+bootstrap
+Little b
+CheetahTemplate
+Lithe
+Plaid
+adamant
+nianiolang
+flua
+Ferite
+KAML
+Kami
+alan
+avro
+beautiful-report-language
+Copilot
+MathLingua
+Nasal
+plantuml
+s-lang
+Sweet Expressions
+verve
+CP
+Darcs Advanced Revision Control System
+rise
+SHIFT
+webql
+Continuity of Care Record
+AUI
+Amigas
+SPIP
+Hopscotch
+Nomad software
+Visual Smalltalk Enterprise
+PV-Wave
+APLX
+ABSET
+Agora
+MapBasic
+TMG
+Bounce
+Pascal Script
+ircis
+Elliott ALGOL
+SNOOP
+Concurrent ML
+DML
+THINK C
+OpenROAD
+GUIDO music notation
+SIMPL
+EasyLanguage
+Data Catalog Vocabulary
+Meta II
+Omnis Studio
+Easy Programming Language
+Systems Biology Markup Language
+ITL
+Protel
+Agilent VEE
+Digital Interactive Business Oriented Language
+lambda-zero
+Algebraic Logic Functional
+Onyx
+D4
+zl
+Texy!
+Alphard
+OpenComal
+nylo
+CLiX markup
+LEAP
+orca
+RTF
+rpscript
+awl
+juicy
+leaf
+RapidBatch
+starpial
+kerf
+GolfScript
+Indental
+LES
+The New Hampshire X Format
+Patient-Oriented Prescription Programming Language
+PromQL
+slim
+srv
+Eden
+emoticon
+kivy-lang
+mmix
+Red
+Structured Control Language
+ALGOL N
+Galaksija BASIC
+APSE
+String diagram
+Intuit Interchange Format
+PALASM
+WOL
+Framework office suite
+Star
+Jazz
+Twelf
+TASM
+Tosh
+Statsplorer
+FpgaC
+Object-Z
+SYMPL
+Basic4GL
+GNU E
+Nested Context Language
+SAM76
+SuperTalk
+CommonLoops
+CA-Realizer
+FLACC
+Object Oberon
+Ramis software
+Batari Basic
+Bywater BASIC
+NorthStar BASIC
+Todotxt
+Visual DataFlex
+Rexon
+Structured Product Labeling
+aplette
+RuleML
+GARP
+CS-Script
+PROIV
+SLIP
+DEMOS
+Flex language
+AlphaBasic
+BASIC-11
+mycroft
+glush
+Taijilang
+ralph
+CMU Common Lisp
+Common Lisp with Arc Macros and Procedures
+TOM
+Langage Implementation Systeme
+rainbow
+fjs
+phorth
+z-lang
+PLEXIL
+WCPS
+BRUIN
+icarus
+Ham
+DIANA
+WSFN
+badlanguage
+rel-lang
+KonsolScript
+gintonic
+jedlang
+blur-markup-language
+formality
+ASP.NET
+corescript
+MathML
+Namespace Routing Language
+lezer
+emesh
+flownote
+oopsilon
+elegance
+albatross
+empirical
+hecl
+qed-lang
+Slick
+Bossam Rule Language
+CSL
+phylip
+Public Key File
+REALBasic (now Xojo)
+Standard for Exchange of Non-clinical Data
+VAL
+Robot Battle
+INFER
+S/SL
+ALCOR
+Larceny Scheme implementation
+Acornsoft Logo
+Napier88
+Tymshare SuperBasic
+eco-editor
+sham
+Dexterity
+DARPA Agent Markup Language
+PASCAL/MT+
+LIMDEP
+SASL
+Atom
+grid-notation
+fork-lang
+MewMew
+Snit
+NCAR Command Language
+Khepri
+Typographical Number Theory
+SISC
+Scheme 2-D
+Secure Operations Language
+UNCOL
+sugartex
+Alpha
+ALTRAN
+PowerHouse
+ed
+y-lang
+Calypso
+Mama
+ZigZag
+Actor
+Gello Expression Language
+OMeta
+NPL
+SR
+IFPS
+Matita
+Abstract State Machine Language
+CA-Telon
+Lynx
+PIKT
+Snowball
+whack
+Distributed Application Specification Language
+preforth
+Smalltalk MT
+MINC
+OWBasic
+Phoenix Object Basic
+Occam π
+quaint-lang
+Gauche Scheme implementation
+Ecological Metadata Language
+muMath
+PALcode
+PICT
+YAP
+IBM HAScript
+PL-11
+ROOP
+ZOPL
+Kermeta
+FX-87
+JAWS Scripting Language
+MacroML
+remix
+ShEx
+Business Object Notation
+CYBIL
+Datapoint's Advanced Systems Language
+FORMAC
+neutron
+emerald-lang
+tibet
+Ad-hoc
+polymath
+Edina
+rocket
+Jammy
+nlpl
+lsd
+Calc4
+eskew
+Serious
+boa
+c-talk
+Freefem
+hilbert
+Lush
+Pickle
+pikachu
+Spice
+ttsneo
+Typoscript
+Algae
+ASCII Armor
+Homespring
+PLAIN
+Post-X
+prompter
+ssl-lang
+Squire
+Subtext
+CAL Actor Language
+FuzzyCLIPS
+Tektronix 4050
+IBM 1401 Symbolic Programming System
+Information Algebra
+PVS
+Real-time Cmix
+Strand
+Actor-Based Concurrent Language
+SBASIC
+Tiger-BASIC
+IBM Rational SQABasic
+High Tech BASIC
+Mentat
+BlazeX
+setlx
+Knight
+Hook
+Hummingbird QuickScript
+Stratego/XT
+DAML+OIL
+SIMPLE
+XCore Architecture
+Advanced Continuous Simulation Language
+Averest
+EUMEL
+Secure Scuttlebutt
+MathType
+flame-ir
+toki sona
+CokeScript
+QED
+Common Log Format
+Ethernet
+JPEG
+Open Financial Exchange
+patch
+ex
+Mass Energy Equation
+Autoconf
+Interpress
+XGMML
+FILETAB
+Service Modeling Language
+SA-C
+BEFLIX
+Data Access Language
+CorVision
+IAL
+Joe-E
+O-Matrix
+CHIP
+DATATRIEVE
+AIML
+System 2
+AMBIT
+Insitux
+o:XML
+Cane
+sill
+Business application language
+IITRAN
+r3
+Tefkat
+Compact Application Solution Language
+FXScript
+ProSet
+Minilang
+runiq
+20-GATE
+Citrine
+PCrap
+RigC
+Chika
+latte-js
+duro
+Lesma
+HuwCode
+penguor
+taxa
+acorn-lang
+newclay
+Idio
+Mewl
+codeflow
+Storymatic
+Esoteric Reaction
+Horse64
+passambler
+rockstar-rkt
+Workfl
+GamerLanguage
+Entropy
+links
+Loom
+o42a
+operon
+Planguage
+runic
+SARL
+Suneido
+whalecalf
+DAS
+g-expressions
+Metaweb Query Language
+Newton
+Pandora
+PSI
+rapidgen-rpl
+rbscript
+Rust HIR
+WebAssembly Text Format
+xduce
+euboea
+WLambda
+zlang
+Nuprl
+ABSYS
+KL0
+AIL
+cql
+nulan
+QUTE
+Hot Cocoa Lisp
+XDR Schema
+Schema for Object-Oriented XML
+LEXX
+COFFEE Cinema 4D
+Visual DialogScript
+Bayer Expressions
+ed script
+Datomic
+cytosol
+IpTables Rope
+Sort Merge Generator
+CLX
+Scriptol
+Adenine
+Lagoona
+TACPOL
+MARIA XML
+BBj
+BBx
+Yakou Lang
+Typecast.js
+Curly
+Rye
+R2ML
+JSML
+SYMBOLIC ASSEMBLY
+SheerPower4GL
+FleXML
+GRML
+Robic
+ThingLab
+51forth
+Concurrent METATEM
+LispMe
+Met-English
+ObjectPAL
+Tag Line Commands
+daonode
+RustScript
+mawk
+shadama
+rio
+RicScript
+RunRev
+XMTC
+APE100
+BasicX
+RASP
+CaPSL
+CorbaScript
+Bizubee
+KavaScript
+Octune
+Baby modula-3
+Hbasic
+mlpolyr
+Multi-user BASIC
+Riff
+GeoGebra
+Cotton
+ForthScript
+lamderp
+Iode
+PearScript
+woe
+H++
+Jingo
+Hina
+microl
+Fern
+MeanscriptCLI
+cosh
+mountain
+lambcalc
+Broccoli
+draconian
+mai
+8th
+arvelie-format
+converge
+Flare
+michelson
+MINI OBJECT-ORIENTED LANGUAGE
+plasma
+Timpani
+AArch64
+CLASS
+Edison
+Electre
+EverParse3D
+GRIN
+guru
+iikuse
+manticore
+Nelua
+PLEASE
+Seq
+strudel
+V
+XML Query Language
+xt3d
+MathJax
+nirvana
+truck
+X-BASIC
+t-lang
+Xupdate
+LSP
+root-format
+DomainKeys Identified Mail
+GHC
+JMAP
+PSYCO
+alfred
+Boost C++ libraries
+Docker
+parquet
+Linoleum (L.in.oleum)
+GraphQL+-
+mockingbird-notation
+kernel
+Soulver
+Sourcetree
+Abacus
+ADS-B
+Attic numerals
+Bit array
+Fast Fourier Transform Equation
+Feynman diagram
+Greek numerals
+Navier-Stokes Equation
+Pascal's calculator
+Roman abacus
+Roman numerals
+SPARQCode
+Sender Policy Framework
+ALOHAnet
+CueCat
+Etruscan numerals
+Liber Abaci
+Visual J++
+MonoDevelop
+Normal Distribution Equation
+SK8
+Vienna Development Method Specification Language
+Address
+AFS
+Ampère's Circuital Equation
+Apple I
+Atom
+Coulomb's Equation
+Steinberg Cubase
+Faraday's Induction Equation
+Gauss Flux Formula
+Gauss Magnetism Formula
+HCCB
+HLASM
+IMac
+Ingres database
+IPad
+IPhone
+IPv4
+Language H
+MacBook Air
+Macintosh
+MP3
+OpenDoc
+PL/I
+Price Equation
+Pythagorean Equation
+Set-builder notation
+Sprite Operating System
+COM Structured Storage
+SYBYL line notation
+Wiswesser line notation
+Bayes' Equation
+Dot Product Equation
+Gravity Equation
+Information Theory Equation
+InterPlanetary File System
+nroff
+PHIGS
+PNG
+QFX file format
+Razor
+Schoonschip
+Setun
+SQUOZE
+STRINGCOMP
+WATBOL
+ALGOL X
+Energy Momentum Equation
+HEIC
+Lincos
+Molecular Query Language
+Semi-Thue
+SHRDLU
+Superplan
+Advice Taker
+BBN-LISP
+eqn
+Euler's Equation
+GENSTAT
+HyperFun
+Kyma
+Macintosh Common Lisp
+Object Definition Language
+ObjVlisp
+PM2
+Prolog++
+FLANG
+General Activity Simulation Program
+Integral Equation
+Iota-and-jot
+Little Smalltalk
+Optimization Programming Language
+Parasolid
+Shared Dataspace Language
+DAD
+Gofer
+Programming Language for the University of Maryland
+Interscript
+ISO 8601
+Nyquist
+Rosetta-2
+Definite clause grammar
+Language for Your Remote Instruction by Computer
+ZPL
+Swym
+LOGIN
+Bistro
+gfoo
+SMILES arbitrary target specification
+Moescript
+tridash
+wats
+weebasic
+FutureScript
+TextFrame
+Broccoli
+stacklang
+psyche
+Broccoli
+clox
+rlox
+Biological Expression Language
+datev
+dynamo-pm
+eta
+foundry
+grain
+habit
+Linked Markdown
+liquidity
+mypy
+NumPad
+package-control-pm
+ScriptEase
+tablatal
+Afnix
+arrow
+axt-format
+Browser Extensible Data Format
+DUEL
+EQS
+EZ
+Interleaved Notation
+OASIS
+PAMELA
+System V ABI
+Titanium
+w
+Moby
+algobox
+COMSOL Script
+Nosica
+beagle
+BitC
+Boxx
+Hyper Basic
+MetaL
+Monesa
+Scieneer Common Lisp
+Smalltalk YX
+Tibbo BASIC
+TouchDevelop
+UJML
+WinDev
+Wlanguage
+XProfan
+Bigwig Programming Language
+Deesel
+Seph
+Simkin
+Timber
+Micro-PROLOG
+Superx++
+CHAIN
+Escapade
+Izibasic
+M
+Mocklisp
+Moonrock Basic Compiler
+Omikron BASIC
+PROC procedure language
+Bon
+Marmot
+Portal langage
+PowerLanguage
+HTTP/3
+MUSP
+NGL
+Klerer-May System
+Legal Knowledge Interchange Format
+OPL
+iScript
+SNOBOL4
+tsar
+RoyalScript
+dreamlisp
+Tawa
+Sugi
+bag-format
+calc
+clojars-pm
+cocoapods-pm
+cpan-pm
+crates-pm
+ctan-pm
+darklang
+dio
+enso
+Extempore
+goose
+grunt
+imp-lang
+JMESPath
+juttle
+kilo-lisp
+lasp
+Leazy
+melpha-pm
+PacmanConf
+Omega
+pgql
+PickCode
+PkgConfig
+plink-bed-format
+plumb
+powershell-gallery-pm
+PSeInt
+robotc
+rosie
+versioned-text-markup-language
+ABEL
+BOLT
+CCS
+Chimera
+Descartes
+DINO
+DLP
+HScript
+Lila
+Lorel
+MDL
+PAISley
+Relational Data File
+RAISE Specification Language
+SCAN
+Statement List
+Timeless Instruction Set (TL ISA)
+UnQL
+WATFOR
+Wikitax
+IT
+SQHTML
+Hedy
+Floral
+unlws
+WebStorm
+REC Studio
+thune
+BIPLAN
+bytecode-modeling-language
+coi-protocol
+Datalisp
+Farcaster
+iqr
+jedit-editor
+lunar
+marten
+Nova
+PhpStorm
+Plush
+resharper-editor
+rider-editor
+rsharp
+ruby-mine-editor
+scopes
+solaris-pm
+stx
+tetruss-app
+unicon-adl
+Vortex
+aubit-4gl
+AUR
+bscript-interpreter
+BScript
+chicken-lang
+cixl
+clickpath
+Coral
+domino
+frtime
+hac
+hsaml-format
+Imandra Protocol Language
+klisp
+kvsapi
+Lanai
+lazarus-editor
+listdown
+Mascara
+Multihash
+paperalgo
+powerloom-knowledgeBase
+quicksight-app
+rlmeta
+sepi
+shade
+shml
+SmartGameFormat
+SNBT
+tab
+tarot
+teal
+underlay
+Vim Scripts
+Visual Studio Marketplace
+yinyang
+Arturo
+BRL
+business-rule-language
+bx
+Cheri
+ctalk
+dec64
+gemini-protocol
+Gnome Basic
+google-data-studio-app
+General purpose
+helium
+holonforth
+JuliaHub Packages
+MathWorks File Exchange
+miso-framework
+objective-modula-2
+qbe
+Radish
+readable-lisp
+redpanda-app
+rhoscript
+Restricted Python
+sharpscript
+sierra
+slim-pl
+smalltalkhub-pm
+Boston College Statistical Software Components
+tengo
+tinygo-compiler
+Lambda Diagrams
+uml2-sp
+Wolfram Data Framework
+atomo
+B3 IR
+blank
+Spring boot
+springboot
+Blueprints
+C^3
+c-smile
+calc_var
+chaos-lang
+Cobol.NET
+coffeepp
+Conan Center
+dart-pm
+dfns
+dss
+Elm Packages
+emu
+fmj
+Genshi Text
+GNU Linear Programming Kit
+hackage-pm
+High-Level Virtual Machine
+Kefir
+klong
+kogut
+koi
+lllpg
+Maven Central Repository
+minihaskell
+miniprolog
+mir
+mlite
+Optimized Row Columnar
+piccola
+Pursuit PureScript Package Repository
+pyke
+Python Format Specification
+ra
+raco-pm
+redscript
+retroforth
+The Synthetic Biology Open Language
+sentient
+seph
+simit
+singular
+skookumscript
+socialite
+SOQL
+souffle
+soul
+squiggle
+sub
+tern
+terse
+tetra
+texpr
+thorn
+tilton
+typedefs
+Zoem
+AIR
+BUSH
+chirp
+cloe
+comm
+CorelScript
+crack
+cran-pm
+Descript
+D++
+DRAGOON
+Emacs Lisp Package Archive
+envoy-app
+flux-lang
+forthnet-pm
+fox
+GSQL
+Hex-Rays
+JSGF
+lambda
+levy
+loglo
+Maplesoft Application Center
+miniml
+New AWK
+nimble-pm
+oforth
+orca-lang
+polly
+poly
+popcorn-linux
+PyPI
+raptor
+RQL
+ru
+shill
+Smithy
+SOSL
+spark-pm
+stringbean
+subscript
+Table Query Language
+toadskin
+TWiki
+ugnis
+Visual Logic
+woofjs
+xmpp-protocol
+Xoc
+zim-format
+angr
+antha
+arend
+Apache Arrow
+Binary Ninja
+bjou
+charly
+circa
+cleanlang
+cx
+edgeql
+Elpi
+eno
+ForgeBox
+Ghidra
+glitch-editor
+GNS
+Header Dictionary Triples
+helena
+hello
+Hilltop
+joker
+kate-editor
+kima
+l
+min
+neovim-editor
+neralie-format
+none
+Ordered graph data language
+onex
+OpenSpice
+par
+pisc
+plink-bim-format
+plink-fam-format
+potential
+prodel
+sdf-format
+statebox
+syndicate
+Tea
+Typst
+urn
+C∀
+chartio-app
+chocolatey-pm
+Clausal Language
+ctr
+Dimensional Script
+Fawlty
+goby
+Hex
+kayia
+ki
+libsvm-format
+luarocks-pm
+mathematica-packagedata-pm
+merd
+morfa
+nectar
+np
+NU-Prolog
+panther-lang
+paxScript
+pliant
+plink-map-format
+shakti
+skew
+T3X
+tiddler
+Alma
+AlpHard
+BABEL
+COPE
+cT
+EDUCE
+Friendly Enough Expression Language
+gnu-rtl
+INQUIRE
+Lighttpd configuration file
+MADCAP VI
+McLeyvier Command Language
+Modified Integration Digital Analog Simulator
+O++
+order
+Perfectscript
+PO
+PROSPER
+SBA
+School
+SNQL: A Social Network Query and Transformation Language
+Spill
+UnQL
+WebGPU Shading Language
+XE
+XQL
+Cish
+SIMAN
+Zeta
+SNOBOL3
+Vienna Definition Language
+CDL
+FORTRAN 77
+ACCENT
+Argos
+BridgeTalk
+DDF
+DEMETER
+Dribble
+ETC
+Fable
+Generic Expression Language
+GLOSS
+Herbrand
+JACL
+KB
+LESK
+Lisp Object-Oriented Programming System
+MENDEL
+nML
+Patchwork
+PLAN2D
+Pluk
+Prolog Pack
+RLISP
+SCROLL
+sh
+Tick C
+Tiki Wiki Markup
+topaz
+torchscript
+Tutorial D
+AMTRAN
+ANNA
+APL-GPSS
+aQasm
+Arc Assembly
+bawk
+Binary Equation
+BIRD
+CDL++
+CMIX
+COMMEN
+cooC
+TypeScript Type Declarations
+EXPLAN
+EXPLOR
+FORTRAN assembly program
+FAR
+flowlog
+Giotto
+Hadoop Distributed File System
+Heron
+hoot-smalltalk
+IBEX
+IFO
+Knowledge Acquisition and Representation Language
+L6
+LISP 1.5
+Lorel
+MADCAP
+MAPS
+MOOSE
+MSL
+NAKL
+NODAL
+o2
+OOPS+
+PACTOLUS
+Pascal-XSC
+Petr
+PopAsm
+PUFFT
+quexal
+RATSNO
+Rapid Development and Maintenance Language
+rds-format
+Real-Time Concurrent C
+Real-Time Mentat
+Regina
+REGULUS
+RPL
+RPT
+SHADOW
+SHEEP
+SLANG
+SPADE
+SquidConf
+TAO
+Verse
+Water
+xs
+3D Logo
+ABLE
+ADAM
+ALPAK
+APACHE
+APL/HP
+Arctic
+ARTSPEAK
+ASHMEDAI
+ASPOL
+Atomos
+Aurora
+AUTOLOFT
+Automator
+AUTOmatic PROgramming of Machine Tools
+B-LINE
+BACK
+BaLinda Lisp
+baltazar
+Barrel
+BASEBALL
+BASEL
+BEEF
+Berkeley DB
+BETA Project
+Biferno
+BIGMAC
+bigWig format
+BIGWIG
+Birkbeck Assembly
+BLAZE 2
+BrouHaHa
+C flat
+CafeObj
+CAJOLE
+CCal
+CIRCAL
+CLANGER
+ClassiC
+CLEAR
+Coherent Parallel C
+COL
+Combined Log Format
+COMFY
+COMPUTEST
+COMSKEE
+Concurrent C++
+Concurrent Prolog
+CONLAN
+Connection Machine LISP
+CONSIM
+CONSTRAINTS
+Consul
+CST
+CUBE
+CUPID
+DAMN
+DEBL
+DECLARE
+DEL
+Delirium
+Delta Prolog
+DIALOG
+DICE
+DIET
+Dipe-R
+DISC
+DISPEL
+DNA
+$
+DOPL
+DUAL
+Durra
+Elegant
+ELLPACK
+EMMA
+Eva
+EXEL
+Extended Pascal
+FLIC
+FlowNet
+FORK
+FORTRANSIT
+FRANK
+Frenetic
+Fresco
+Galileo
+GCLA II
+GEM
+GCC GENERIC
+Gerald
+GERMINAL
+Glish
+Golog
+GOQL
+GOSPEL
+GPS
+GPSS/85
+Grapheasy
+Green
+GROOVE
+Hancock
+HARVEY
+HELPER
+henk
+Hi-Visual
+Holo
+Hybrid
+HyCom
+Ibuki CL
+ICML
+ILU
+ILX
+IMAGE
+imf
+Ina Jo
+INC
+INFOLOG
+INSIGHT
+INTERACTIVE
+ISAC
+JavaML
+JOSIE
+Joyce
+JOYCE+
+JPL
+JR
+KATE
+Keep It Short and Simple
+KL1
+Klaim
+KRIS
+LAMINA
+Language for Class Description
+LAP
+LARIS
+LASS
+LDL
+Lemick
+LG
+Lisptalk
+LNF
+LO
+LOGAL
+LOGLISP
+LOGOL
+LogoWriter
+LOL
+LOOPN++
+LORE
+Lucid representations
+Lygon
+MIT Algebraic Compiler
+MADS
+Magic Paper
+MAPQUERY
+MARSYAS
+MAVIS
+MELD
+META/PLUS
+MetaH
+Microsoft Equation Editor
+Modula-2+
+Modula-3*
+Morphe
+MPSX
+MUSYS
+N-Prolog
+Nail
+NetBasic
+Netscript
+NIL
+npy
+NSL
+NUA-Prolog
+NUT
+O
+OFL
+OLDAS
+OLIVER
+olog
+OMAR
+One-man-language
+OOLP
+OOPS
+OpenAda
+Orient84/K
+Object-oriented Structured Query Language
+P/CL
+PACT IA
+Paragon
+Pascal-FC
+PASCAL-I
+Pascal-S
+PHOCUS
+PICASSO
+PIE
+PIN
+PIT
+PIXIN
+PL/I-FORMAC
+PL/LL
+PL4
+PLACA
+POSE
+PRIZ
+ProFIT
+Progol
+PROPHET
+proto-GNOSIS
+ProVerif
+Proxy
+Py
+python-cl-compiler
+QAS
+QUADRIL
+Quanta
+Quick Macros
+QUILT
+RACK
+RC++
+rdata-format
+Real-Time Euclid
+Rebus
+Refined C
+REL English
+REL
+Relix
+Reuse Description Language
+RoboTalk
+ROS Message
+Statemate
+Unicode
+Virt
+appcode-editor
+brackets-editor
+clion-editor
+code-blocks-editor
+codelite-editor
+Schrödinger's Equation
+sourcelair-editor
+Siri
+Socrata Query Language
+synergist
+uscript
+uscript2
+2lisp
+arbortext-command-language
+Argon
+chappe-code
+concordance
+CSV++
+gedit-editor
+Imaginary Number Equation
+intellijidea-editor
+komodo-editor
+LinkText
+pycharm-editor
+runescript
+shiv
+Simple Stackless Lisp
+sqlite-storage-format
+sugarj
+TeaSharp
+ACSI-Matic
+adam-standard
+ALEPH
+ALGOL 68-RT
+ALJABR
+Altibase
+amalthea
+DynamoDB
+Amazon DynamoDB
+DocumentDB
+Amazon DocumentDB 
+Azure Cosmos DB 
+Amazon RDS
+AMTRAN 70
+Apache Derby
+Apache Phoenix
+APLO
+ArangoDB
+ARTA
+AUTOCODER II
+BEAM Bytecode
+BeeBasic
+BER
+BullFrog
+Celsius WebScript
+Cigale
+COGO
+concept-script
+ConCurr
+Couchbase Mobile
+Couchbase
+Cymbal
+Decision Model & Notation
+DinnerBell
+EqL
+EXAPT
+Firebase Realtime Database
+Google Cloud SQL
+Greenplum
+IBM DB2
+InfluxDB
+InterBase
+InterSystems Caché
+ji
+kernel-e
+MariaDB ColumnStore
+MarkLogic
+Memcached
+Microsoft Access
+Microsoft Azure Cosmos DB
+Microsoft SQL Server
+MODEL-K
+Mushroom
+NEBULA
+Neo4j
+oniguruma
+Oracle
+OrientDB
+PCLOS
+Pearson correlation coefficient equation
+PGen
+IBM Programming Language/Advanced Systems
+ROSCOE
+Rosetta SMALLTALK
+Rosette
+RPG III
+RT-ASLAN
+RT-CDL
+RT-Z
+Ruri
+SAAL
+SAC-1
+SAC-2
+Sampletalk
+SAP HANA
+SARTEX
+Sassy
+SAUSTALL
+SB-ONE
+SCALPEL
+SCAT
+SCHEMAL
+SCIL-VP
+Sclipting
+Scratchpad II
+SCREAMER
+Scrimshaw
+ScriptX
+SDMS
+SEGRAS
+SEMANOL
+Seque
+SEQUEL 2
+Sequential Pascal
+SESPATH
+SESPOOL
+SetLog
+SEVAL
+Seymour
+ShapeUp
+Shared Prolog
+SheerPower 4GL
+SI Library
+SIDOPS+
+SIGMA 76
+SIMAN IV
+SIMCAL
+SIMDIS
+SIMFACTORY
+SIML/I
+SIMNET
+SIMPAS
+SimpleScript
+SIMUL
+SIMULA 67
+Sketchpad III
+SL5
+SLAM II
+SLEUTH
+SLPL
+SMALGOL
+Small Euclid
+SMALL-X
+Smalltalk-76
+Smalltalk-80
+SmallVDM
+SMoLCS
+SNOBAT
+Soar Markup Language
+SOLMAR
+SORCA
+SPECL
+SPECOL
+SPIL
+spir-v
+SPLAW
+Symbolic Programming System
+sqlar-format
+SQURL
+STAGE2
+Standard Lisp
+STAPLE
+*Prolog
+status-quo-script
+StoneCutter
+STRCMACS
+STREMA
+STRESS
+STRUDL
+SW2
+SYNGLISH
+SYNPROC
+SYNTOL
+TABLOG
+TABSOL
+TABTRAN
+TAC
+Tarmac
+Taxis
+tcc
+TCOZ
+TCSP
+TDFL
+TDMS
+telefile-assembly
+TELSIM
+Templar
+Temporal Prolog
+Teradata Aster
+Teradata
+TFL
+The Message System
+THREADED LISTS
+TICS
+TiDB
+Timed CSP
+Tinkertoy
+TOOLBUS
+TPDL*
+Trafola-H
+Traits
+TRAMP
+TRANQUIL
+Transforma
+TREET
+triroff
+TSL
+TSQL2
+Turing Plus
+turnstile-plus
+Tyco
+TyRuBa
+U-Datalog
+UAN
+Ubik
+UFL
+UFO
+UMTA
+UNICORN
+UNISIM
+UNRAVEL
+USSA
+Utopia 84
+V-Promela
+VAL II
+VARLIST
+Vector PASCAL
+VENUS
+Vienna Fortran
+VIPTRAN
+Viron
+VisaVis
+Visual Eiffel
+Visual Occam
+VIVA
+viz
+VPL
+VSPL
+VULCAN
+WCL
+WebL
+Whirlwind
+WRITEACOURSE
+WYLBUR
+X-KLAIM
+X11-Basic
+xADL
+XCY
+XML-GL
+The Algebra
+XPOP
+XSIM
+XTRAN
+YugabyteDB
+ZCCS
+ZGRASS
+1.pak
+2OBJ
+3-LISP
+3DComposer
+3RIP
+ABAL
+ABCL/c+
+ABCL/f
+ABC++
+Abstracto
+AC Toolbox
+ACL
+Acore
+ACORN
+ACOS
+ACSL
+ACT ONE
+Actalk
+Active Language I
+Active-U-Datalog
+Actus
+Ada 95
+Ada 9X
+Ada/TL
+ADABTPL
+Adagio
+Adaplex
+Aditi
+AED
+AEPL
+AESOP
+Agent-K
+AGL
+AIDA
+AKL
+ALADIN
+Alambik
+ALBA
+Aldat
+Aldwych
+ALEC
+Algebraic Compiler
+ALGEM
+ALGERNON
+ALGOL-E
+ALGY
+Alma-O
+ALMIR
+Alonzo
+AlphaPop
+ALTAC
+Amanda
+AMBIT/G
+AMBIT/L
+AMPPL-II
+Andorra
+arezzo-notation
+AUTOCODER III
+axcess
+Bison++
+Blade
+Bolin
+brooks-programming-language
+Candy Codes
+Cedar
+checkout
+Chicon
+CONA
+Cosmos
+CVL
+dalvik-bytecode
+Data Package
+Distributed Smalltalk
+DM-1
+dsym
+ebg
+Elasticsearch Query DSL
+english-programming-language
+ESP
+EXTRAN
+filetab-d
+floorplan
+forest-database
+FORTRAN III
+FORTRAN IV
+GAEA
+Gaiman
+hackppl
+HAYSTAQ
+ibm-system-38-language
+iota
+Just
+kaukatcr
+Konna
+lambda-obliv
+Low Level Lisp
+local
+metalex
+microPLANNER
+modl
+N
+Noms GraphQL
+NJCL
+Navigational User's Language
+OMNITAB II
+OMNITAB
+Oxide
+Parse Tree Notation
+Pegasus AUTOCODE
+Peridot
+PL/S-II
+PL/S
+PL-X
+Pλ⍵NK
+Protosynthex
+Pygmalion
+QUIKTRAN
+RAND-ABEL
+RAPIDWRITE
+RPG II
+RUNCIBLE
+RUSSELL
+RUTH
+SA
+SALE
+SALEM
+Sapphire
+Sather-K
+Scenic
+SCOOP
+SEARCH
+SIMODULA
+Sim++
+Siprol
+SKIL
+SKY
+SL
+SLIPS
+SLOG
+Smalltalk/V
+SMART
+SMDL
+SMOKE
+SMSL
+Snostorm
+Symbolic Optimal Assembly Program
+SoQL
+Spec
+SPRINT
+SQLMP
+SQUARE
+SR
+STOICAL
+StreamIt
+Sue
+SUMMER
+SuperForth
+SUPERMAC
+SVL
+SYMBAL
+SymbMath
+SYNTEX
+TACTICS
+TALE
+TALL
+TeLa
+TEMPO
+TOMAL
+TRACE
+TRANSCODE
+TRANSLANG
+TRIO
+TRIPLE
+TS
+TWO-D
+twoducks
+UC
+VEX
+Visual
+WIZOR
+Xmind Format
+ycp
+yoga
+Zed
+zish
+A51 Assembly
+Aardappel
+ABC ALGOL
+Actors
+ADES II
+ADES
+ADLIB
+AIDS
+ALDES
+ALLO
+ALPS
+Amber
+AMBUSH
+AMPPL-I
+Amulet
+And/Or
+Andante
+Andorra-I
+ANS MUMPS
+ANSI BASIC
+APAR
+APAREL
+APL/Z80
+APLGOL-2
+APLGOL
+APOSTLE
+APPL/A
+APPLOG
+APROL
+AQL
+Aquarius Prolog
+ARABLAN
+ARCHI
+Arjuna
+ARK
+Armani
+ASF+SDF
+ASPEN
+associons
+Asspegique
+ASTLOG
+ATOL
+AUTASIM
+AUTODRAFT
+AUTOGRP
+AUTOMAST
+Avalon/Common LISP
+B4Tran
+BALG
+BALM
+BALSA
+Baltík
+Bartok
+Basic PDP-1 Lisp
+BASIL
+BC NELIAC
+BDL
+BEDSOCS
+BESYS
+Beta-Prolog
+BGRAF2
+BHSL
+Bigloo
+BIOMOD
+BIOSSIM
+BLAZE
+BLOOMS
+BMD
+Bob
+BOIL
+Booster
+Borneo
+Bounce
+Boxer
+BPL
+Basic Petri Net Programming Notation
+Brisk
+BSML
+BSP
+BUGSYS
+Butterfly Common LISP
+ByteLisp
+C Header Files
+CABAL
+Cactus
+cado-systems-technical-information
+CAGES
+CAISYS
+CAMAC
+CAMIL
+Cantor
+Common Authentication Protocol Specification Language
+Capsule
+CASSANDRE
+Catalysis
+CAYLEY
+CCEL
+Cedar Fortran
+CELIP
+CELLSIM
+Ceprol
+CHAMP
+CHARM++
+Charrette Ada
+CHARYBDIS
+ChemTrains
+Chronolog
+ChronologMC
+ChronologZ
+cimfast
+CIMS PL/I
+CL-I
+Clascal
+Classic-Ada
+Clear Language for Expressing Orders
+CLeogo
+CLEOPATRA
+CLOVER
+CLP*
+CMN
+COBLOC
+CODIL
+CogMap
+COLASL
+COLD-K
+Complex-Prolog
+Computer Compiler
+COMSL
+ConC
+Concert/C
+CONCUR
+Concurrent Pascal
+conGolog
+ConMan
+CONNIVER
+ConstraintLisp
+CONTRANS
+COPAS
+CORAL 64
+Coral++
+CORC
+CosmicOS
+COSMO
+CQLF
+CQL++
+CSMP
+CSP-OZ-DC
+CSP-OZ
+CSSA
+Culler-Fried System
+CuPit-2
+cuscus
+CypherText
+D4
+DAG
+DAP-Algol
+DartCVL
+DATA-TEXT
+DATAN
+DEACON
+DeBuMa
+DEM
+DESCRIPTRAN
+DETAB/65
+DETAB-X
+DETAP
+Deva
+DFL
+DIAMAG
+DIGRAF
+Diplans
+Distributed Processes
+DITRAN
+DITROFF/FFORTID
+DITROFF
+DMAP
+DOE Macsyma
+DOLPHIN
+DOWL
+DPRL
+DRL
+DROL
+DSL/90
+DYSTAL
+EAS-E
+EASL
+EASY ENGLISH
+Eclectic CSP
+ECT
+Edinburgh LCF
+EDSAC Initial Orders
+EDSIM
+EDUCE*
+EGS4
+EL1
+Ellie
+ELMOL
+Emily
+EPILOG
+EQLog
+EQUATE
+ERROL
+Ethereum Virtual Machine
+Etude
+FAC
+FAD
+FCPU
+Fickle
+FLENG++
+flexbuffers
+Flora
+foogol
+FORAL LP
+FORAL
+FORALL
+Fork95
+FORMS/3
+Fortran 8x
+FORTRAN CEP
+Fortran D
+FORTRAN II
+Fortran M
+FP2
+FRAN
+g-2
+Gargoyle
+GASP II
+GAT
+GaussFit
+GCP
+GDPL
+Gedanken
+Generic Haskell
+GENTRAN 90
+GENTRAN
+GCC GIMPLE
+gitignore
+GKS
+GLIDE
+GLU
+Glue-Nail
+GPDS
+GPGS
+GPSS/360
+GPSS FORTRAN
+GQL
+GRAD Assistant
+GraphLog
+GRAPHOS
+Graqula
+GROUPLOG
+GSBL
+GVL
+GXL
+Gypsy
+Hank
+Haskell#
+HASL
+HERAKLIT
+Hermes
+HiQ
+HMSL
+HOL
+HOLCF
+honu
+HP-PASCAL
+HPRL
+HSL
+HSML
+HTEL
+HYPAC
+Hyperflow
+Hyperlisp
+Hyperlog
+HYTRAN
+IAM
+IB-Templog
+IBM Logo
+Integrated Civil Engineering System
+ICETRAN
+ICOT
+IMP72
+Industrial Modeling and Programming Language
+INMAGIC
+Inscan
+INTERCELLAS
+InterCONS
+Interlisp-VAX
+IPL-V
+IQF
+Isabelle-91
+Isabelle/HOL
+ISIS
+ISPL
+IVTRAN
+JACAL
+jBC
+JFugue
+JMSL
+JOSS II
+JSyn
+Juno
+KAIL
+Kaleidoquery
+Kaleidoscope'90
+Kaleidoscope'91
+KEE
+KEK-NODAL
+kew
+KeyKit
+Kiev
+King Kong
+KL-ONE
+KLIPA
+KRL-0
+KRS
+KRYPTON
+Kvikkalkul
+Kylix
+LABTRAN
+Larch
+LAURE
+LCF
+LCL
+LDL1
+LEGOL
+Leogo
+Leopard
+LGDF
+Libra
+Lincoln Reckoner
+Lingua Graphica
+LiSEB
+LISP A
+LOCS
+Logicon
+LOGIST
+Logres
+LogScheme
+Lola-2
+LOTIS
+LOTOS
+LPL
+LRLTRAN
+Lucinda
+M-LISP
+MacAims
+MACE
+Machiavelli
+Macro SPITBOL
+Magma2
+magritte
+MALUS
+ManuScript
+MAP
+Marlais
+Mary/2
+MASIM
+Mathsy
+MATRIX PASCAL
+MCOBOL
+MDBS-QRS
+MEDIC
+Megalog
+Mercury Programming System
+Meroon
+Meta-Assembler
+META/LISP
+MetaML
+METAPI
+METASIM
+METATEM
+Micro-flowcharts
+MICRODARE
+microTAL
+MiKe
+Mini-ML
+MINION
+MINIVITAL
+MINOPT
+MIRAGER
+Miranim
+MIRFAC
+Mizar
+MLISP2
+mmsearch
+MOBL
+MODCAP
+MODLISP
+MODSIM III
+Modula-P
+Modula/R
+Modular Prolog
+Molog
+MORPHISM
+MOUSE4
+Moxie
+MPGS
+MRDB
+MS2
+MSG.84
+muFP
+Mul-T
+Multigame
+MUMS
+MUNIN
+MuSimp
+MVL
+NAPSS
+NARPL
+Nassi-Shneiderman charts
+NSS
+NDL
+NEATER 2
+Ness
+Netform
+Network Control Language
+NeuronC
+NFQL
+NIKL
+NOAH
+Noodle
+NOP-2
+NPL
+Numerica
+Oaklisp
+oasis-operating-system
+OBJ2
+Objectcharts
+ObjectWorld
+ObjVProlog
+OBSCURE
+Occam 2
+Octopus
+O'Haskell
+OLGA
+OLI
+OMNIMARK
+OMNITAB 80
+OOPAL
+OpenMusic
+OPS-3
+OPS
+OREGANO
+Orlog
+OSIRIS
+OSL/2
+Ottawa Euclid
+Otter
+OWL DL
+P-Prolog
+P-TAC
+P3L
+PACOL
+PADL-1
+PaiLisp
+Palingol
+PANCODE
+PANON-1
+PANON-1B
+Parallel ELLPACK
+Parallel Pascal
+ParaLog_e
+ParMod
+Pascal Plus
+Pascal-SC
+PASION
+PASRO
+Path Pascal
+PCN
+PCOL
+pC++
+Partial Differential Equation Language
+PDL/Ada
+PDL
+Pebble
+PEI
+PEP
+PFORT
+Pfortran
+pGOLOG
+PHYSICTRAN
+Pi Calculus
+PICTOL
+PICTUREBALM
+PiLib
+PL/EXUS
+PLANIT
+PLANNER-73
+Playground
+Pocket Smalltalk
+POGOL
+POLAC
+Polylith
+PolyP
+PolyTOIL
+POPSY
+PORT-ALG
+PRAXIS
+PRESTO
+Principle of sufficient reason
+PRISM
+Prisma Schema Language
+PROCOL
+PROGRES
+Prolog-D-Linda
+Prolog-ELF
+Prolog III
+Prolog/KR
+Prolog-Linda
+PROPLAN
+PROTOS-L
+PROW
+pSather
+PSG
+PSL
+PT
+PUMPKIN
+Q-GERT
+QA4
+QLISP
+Qunity
+Quty
+rbasic
+REC/SM
+RECOL
+REF-ARF
+RefLisp
+REGENT
+Relationlog
+RELFUN
+RF-Maple
+RHET
+RIGAL
+ROL
+ROL2
+S-Snobol
+SHOE
+SIL
+sina
+SSL
+Static Typescript
+SURGE
+taktentus
+VoxML
+Very Tiny Language
+wizml
+Wolontis-Bell Interpreter
+xl
+XQL
+CockroachDB
+VoltDB
+Supabase
+Timescale
+TimescaleDB
+PlanetScale
+Dgraph
+Neo4j
+ArangoDB
+Memgraph
+PineconeDB
+Milvus
+Weaviate
+DolphinDB
+Elasticsearch
+Elastic Search
+Algolia
+Meilisearch
+Valkey
+KeyDB
+DragonflyDB
+ScyllaDB
+pycharm
+V
+xcode
+Qt Creator
+Zend Studio
+RubyMine    
+Anjuta
+KDevelop
+Android Studio
+Dr Java
+MonoDevelop
+Golang
+JDeveloper
+JCreator
+Komodo Edit
+SharpDevelop
+Adobe Dreamweaver
+PHPEdit
+Goland
+Apache Kafka
+Apache Airflow
+Apache Flink
+Flink
+Apache JMeter
+JMeter
+Lucene
+Apache Mesos
+Apache Parquet
+Apache Pulsar
+Selenium
+Appium
+Cypress
+LambdaTest
+Postman
+Ranorex
+Zapier
+Playwright
+TestComplete
+AccelQ
+Terraform
+Ansible
+Amazon CloudFormation
+AWS CloudFormation
+CloudFormation
+Pulumi
+Vagrant
+OpenTofu
+Terrascan
+TFlint
+AWS Cloud Development Kit
+Terragrunt
+Spacelift
+Datadog
+Dynatrace
+Zabbix
+Nagios
+Grafana
+Paessler PRTG
+Sematext
+Checkmk
+Kibana
+Splunk
+UptimeRobot
+Helm
+Helm chart
+Helm charts
+Kubecost
+Kubectl
+Kubespray
+Istio
+Minikube
+Calico
+Cillium
+Flannel
+Weave Net
+Kube-router
+Antrea
+Multus CNI
+NSX-T
+kustomize
+ArgoCD
+Argo CD
+Kube-hunter
+Rancher
+Cloudflare
+Cloudflare Tunnel
+Cert Manager
+CertManager
+Cert-Manager
+ExternalDNS
+External-DNS
+External DNS
+Caddy
+Traefik
+Zoraxy
+NGINX
+Ingress-nginx
+HAProxy
+NGINX-Proxy-Manager
+ScikitLearn
+Scikit
+Plotly
+NLTK
+spaCy
+OpenCV
+CatBoost
+LightGBM
+TensorFlow Serving
+TorchServe
+NVIDIA Triton
+BentoML
+ChatGPT
+Claude
+Llama
+DeepSeek
+Mistral
+Grok
+Amazon API Gateway
+AWS API Gateway
+API Gateway
+AWS Athena
+AWS Bedrock
+AWS Chime
+AWS Braket
+AWS Cloudfront
+AWS CloudSearch
+AWS Cloudwatch
+AWS Cognito
+Amazon Athena
+Amazon Bedrock
+Amazon Chime
+Amazon Braket
+Amazon CloudSearch
+Amazon Cloudfront
+Cloudfront
+Amazon Cloudwatch
+Amazon Cognito
+Cognito
+AWS EC2
+Amazon EC2
+EC2
+AWS EKS
+Amazon Elastic Kubernetes Service
+Amazon EKS
+EKS
+AWS EBS
+Amazon Elastic Block Storage
+Amazon EBS
+EBS
+AWS ECR
+Amazon Elastic Container Registry
+Amazon ECR
+AWS ECS
+Amazon ECS
+AWS EFS
+Amazon Elastic File System
+Amazon EFS
+AWS ElastiCache
+Amazon ElastiCache
+AWS EventBridge
+Amazon EventBridge
+AWS Kinesis
+Amazon Kinesis
+AWS Lightsail
+Amazon Lightsail
+Lightsail
+AWS MSK
+Amazon MSK
+AWS MQ
+Amazon MQ
+AWS quicksight
+Amazon quicksight
+AWS RDS
+RDS
+AWS Redshift
+Redshift
+Route 53
+AWS Route 53
+Amazon Route 53
+AWS S3
+AWS Simple Storage Service
+AWS S3 Glacier
+S3 Glacier
+Amazon S3
+Amazon Simple Storage Service
+Amazon S3 Glacier
+AWS Sagemaker
+Sagemaker
+Amazon Sagemaker
+AWS SES
+AWS Simple Email Service
+SES
+Amazon SES
+Amazon Simple Email Service
+AWS SNS
+AWS Simple Notification Service
+Amazon SNS
+Amazon Simple Notification Service
+AWS SQS
+AWS Simple Queue Service
+SQS
+Amazon SQS
+Amazon Simple Queue Service
+AWS Timestream
+Amazon Timestream
+AWS VPC
+Amazon VPC
+AWS Amplify
+Amazon Amplify
+AWS Batch
+Amazon Batch
+AWS Budgets
+Amazon Budgets
+AWS Certificate Manager
+Amazon Certificate Manager
+AWS Chatbot
+Amazon Chatbot
+AWS Cloud Development Kit
+AWS CDK
+CDK
+Amazon Cloud Development Kit
+Amazon CDK
+AWS Cloud Map
+Amazon Cloud Map
+AWS CloudShell
+Amazon CloudShell
+AWS CodeArtifact
+Amazon CodeArtifact
+AWS Beanstalk
+Amazon Beanstalk
+AWS Fargate
+Amazon Fargate
+AWS Glue
+Amazon Glue
+AWS Lake Formation
+Amazon Lake Formation
+AWS Lambda
+Amazon Lambda
+AWS Proton
+Amazon Proton
+AWS RoboMaker
+Amazon RoboMaker
+AWS Step Functions
+Amazon Step Functions
+AWS WAF
+Amazon WAF
+WAF
+AWS CodeWhisperer
+Amazon CodeWhisperer
+CodeWhisperer
+AWS Elastic Load Balancing
+AWS ELB
+Amazon Elastic Load Balancing
+Amazon ELB
+ELB
+Angular
+Svelte
+AngularJS
+Next.js
+Nextjs
+JQuery
+Express.js
+NestJS
+electron
+React router
+Pygame
+Flask
+FastApi
+Quarkus
+Spring boot
+htmx
+TailwindCSS
+Tailwind CSS
+Grails
+Fibre
+Negroni
+Symfony
+CodeIgniter
+CakePHP
+Laminas
+Phalcon
+Yii
+FuelPHP
+PHPixie
+Boost
+Drogon
+CppCMS
+Wt
+Gamemaker
+GDevelop
+Defold
+Material UI
+Ant Design
+React bootstrap
+Chakra UI
+Kendo UI
+Shadcn
+Framer
+MERN
+MERN Stack
+Github
+Github.com

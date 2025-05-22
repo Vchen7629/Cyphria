@@ -35,4 +35,10 @@ class removeNoise:
             return True
         else:
             return False
+        
+    def removeCommas(self, rawdata):
+        comma_pattern = re.compile(r',')
+        result = comma_pattern.sub("", rawdata)
+        
+        return result
     

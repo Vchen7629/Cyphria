@@ -1,6 +1,7 @@
 import os, praw
 from dotenv import load_dotenv
 
+
 class Auth:
     def __init__(self):
         load_dotenv()

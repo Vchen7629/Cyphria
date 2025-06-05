@@ -1,0 +1,93 @@
+#basketball
+Jamal Murray
+Steph Curry
+Steph
+Rudy Gobert
+Cooper Flagg
+Tre Johnson
+Lonzo Ball
+Lamelo Ball
+Keldon Johnson
+Kawhi Leonard
+Draymond Green
+Mike Dunleavy
+Mike Dunleavy Jr
+Taran Armstrong
+Kevin Durant
+Giannis Antetokounmpo
+Zion Williamson
+Devin Booker
+Kristaps Porzingis
+Jonathon Kuminga
+Lebron James
+Lebron
+Kyle Kuzma
+Draymond Memphis
+Steven Adams
+Dillon Brooks
+Tyus Jones
+Ace Bailey
+Clayton Jr.
+Tahaad Pettiford
+James Harden
+Paul Pierce
+Jalen Williams
+Moses Malone
+Reggie King
+Larry Bird
+Julius Erving
+Kareem Abdul-Jabbar
+Magic Johnson
+Oscar Robertson
+Chris Paul
+Luka Doncic
+Tyrese Haliburton
+Hakeem Olajuwon
+Christian Braun
+Julian Strawther
+Bruce Brown
+Myles Turner
+Nicola Jokic
+Anthony Davis
+
+Paige Bueckers
+
+#baseball
+Wilyer Abreu
+Ceddane Rafaela
+Javy Baez
+Ceddanne Rafaela
+
+#football
+Dak Prescott
+Brad Johnson
+Adam Treu
+Harold Fannin Jr.
+Trey Hendrickson
+Greg Joseph
+Brock Purdy
+Quinton Jefferson
+Kam Curl
+Ronald Darby
+George Pickens
+Greg Zuerlein
+JK Scott
+Caleb Williams
+
+#Soccer
+Kieran Chandler
+Lionel Messi
+Mostafa Mohamed
+
+#Golf
+Rory McIlory
+Keegan Bradley
+
+#Boxing
+Tyson Fury
+
+#hockey
+Mikael Granlund
+
+#race car
+Kyle Larson

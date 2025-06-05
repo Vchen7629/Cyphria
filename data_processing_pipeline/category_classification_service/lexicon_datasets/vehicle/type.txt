@@ -1,0 +1,27 @@
+Car
+Cars
+Convertible
+Convertibles
+Coupe
+Coupes
+Hatchback
+Hatchbacks
+Minivan
+Minivans
+Motorcycle
+Motorcycles
+Pickup
+Pickups
+Sedan
+Sedans
+SUV
+SUVs
+Tractor
+Tractors
+Truck
+Trucks
+Truck SUV
+Truck SUVs
+Tow truck
+Van
+Wagon

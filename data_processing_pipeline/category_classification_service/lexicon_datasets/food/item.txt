@@ -1,0 +1,839 @@
+veggies
+vegetable
+vegetables
+Artichoke
+Artichokes
+Asparagus
+Aubergene
+Eggplant
+Rhubarb
+Eggplants
+Avocado
+Avocados
+Basil
+celery
+Basils
+Beet
+Kale
+Beets
+Bok Choy
+broccoli
+Broccolini
+Broccoli Raab
+Brussel Sprouts
+Brussels Sprouts
+Chinese Cabbage
+Green Cabbage
+Purple Cabbage
+Savoy Cabbage
+Cabbage
+Carrot
+Carrots
+Cauliflower
+Celeriac
+Celery
+Chard
+Chicory
+Corn
+Cress
+pickle
+pickles
+Cucumber
+Cucumbers
+Daikon
+Garlic
+garlic clove
+Green Bean
+Green Beans
+Greens
+Collard Greens
+Mustard Greens
+Gourds
+Jicama
+Kale
+Kohirabi
+Leeks
+Arugula Lettuce
+Butter Lettuce
+Endive Lettuce
+Green leaf Lettuce
+Red leaf lettuce
+red leat lettuce
+Romaine Lettuce
+Lettuce
+Lima Beans
+Mushrooms
+Mushroom
+Okra
+Onion
+Onions
+scallion
+scallions
+Green Onion
+Green Onions
+Parsnips
+Parsnip
+Pea
+Peas
+Snap Sugar Pea
+Snap Sugar Peas
+Snow Pea
+Snow Peas
+Anaheim Peppers
+Anaheim Pepper
+Sweet Pepper
+Sweet Peppers
+potato
+potatoe
+potatoes
+Pumpkin
+Pumpkins
+Radicchio
+Radish
+Rhubarb
+Rutabaga
+Shallot
+Shallots
+Spinach
+Squash
+Acorn Squash
+Butternut Squash
+Patti Pan Squash
+Spaghetti Squash
+Swede
+Sweet Potato
+Tomatillo
+Tomato
+Tomatoes
+Turnip
+Turnips
+Water Chestnut
+Water Chestnuts
+Yam
+Zucchini
+lentil
+beans
+alfafa
+cilantro
+
+Almond
+Almonds
+Brazil nut
+Brazil nuts
+cashew
+cashews
+Chestnut
+Chestnuts
+Hazelnut
+Hazelnuts
+Macadamia nut
+Macadamia nuts
+Peanut
+Peanuts
+Pecan
+Pecans
+Pine nut
+Pine nuts
+pistachio
+pistachios
+walnut
+walnuts
+Coconut
+Coconuts
+Soybean
+Soybeans
+
+salad
+Salads
+afghan salad
+african salad
+arab salad
+bean salad
+beet salad
+caesar salad
+Coleslaw
+Cheese slaw
+Chef salad
+Chicken salad
+Chilean salad
+Chinese chicken salad
+Cobb salad
+Cookie salad
+Crab Louie salad
+egg salad
+Fruit salad
+garden salad
+Glasswort salad
+greek salad
+Green papaya salad
+ham salad
+Herring salad
+Israeli salad
+jello salad
+Kani salad
+Macaroni salad
+Macedonia salad
+Michigan salad
+Mimosa salad
+Mushroom salad
+Niçoise salad
+Olivier salad
+Pasta salad
+Pittsburgh salad
+Potato salad
+Ramen salad
+Seven-layer salad
+Sabich salad
+Serbian salad
+
+fruit
+Abiu
+Acai
+Acerola
+Akebi
+Ackee
+African Cherry Orange
+American Mayapple
+apple
+apples
+apricot
+apricots
+Araza
+banana
+bananas
+blackberry
+blackberries
+blackcurrant
+blackcurrants
+blueberry
+blueberries
+boysenberry
+boysenberries
+breadfruit
+breadfruits
+cactus pear
+cactus pears
+Canistel
+Egg fruit
+Cherimoya
+Custard apple
+Cherry
+cherries
+Chico fruit
+Chico fruits
+Citron
+Citrons
+Cloudberry
+Cloudberries
+Cranberry
+Cranberries
+Damson
+Damsons
+date palm
+Dragonfruit
+Pitaya
+Durian
+Durians
+Elderberry
+Elderberries
+Feijoa
+Fig
+Figs
+Finger lime
+Caviar lime
+Goji Berry
+Goji Berries
+Gooseberry
+Gooseberries
+Grape
+raisin
+raisins
+Guava
+Guavas
+Hala fruit
+Hawthorn
+Honeyberry
+Honeyberries
+Huckleberry
+Huckleberries
+Jackfruit
+Jackfruits
+Japanese plum
+Chinese plum
+Jostaberry
+Jostaberries
+Juniper Berry
+Juniper Berries
+Kaffir lime
+Kiwano
+Horned melon
+Kiwifruit
+Kumquat
+Lanzone
+Lanzones
+lemon
+lemons
+lime
+limes
+Loganberry
+Loganberries
+Longan
+Loquat
+Lychee
+Lychees
+Wax Apple
+Mango
+Mangoes
+Mangosteen
+melon
+Cantaloupe
+Galia melon
+Honeydew
+Mouse melon
+Muskmelon
+Watermelon
+Miracle fruit
+Monkfruit
+Mulberry
+Mulberries
+Nectarine
+orange
+oranges
+blood orange
+Clementine
+Mandarine
+Tangerine
+papaya
+Passionfruit
+Pawpaw
+Pear
+Peach
+Peaches
+Persimmon
+pineapple
+pineapples
+pineberry
+pineberries
+plum
+Prune
+Pomegranate
+Pomelo
+Raspberry
+Raspberries
+Salmonberry
+Salmonberries
+Rambutan
+Redcurrant
+Salak
+Santol
+cotton fruit
+Sapota
+Sapodilla
+Sapote
+Satsuma
+Soursop
+zuurzak
+Star Apple
+Carambola
+Star fruit
+Strawberry
+Strawberries
+Suriname Cherry
+Suriname Cherries
+Tamarillo
+Tangelo
+Tangeloes
+Tayberry
+Tayberries
+Yuzu
+
+pumpkin
+pumpkins
+Pepper
+Peppers
+jalapeño
+jalapeños
+
+egg
+eggy
+scrambled egg
+scrambled eggs
+boiled egg
+boiled eggs
+steamed egg
+steamed eggs
+fried egg
+fried eggs
+sunny side up
+tofu
+yogurt
+butter
+cheese
+American cheese
+Asiago
+Asiago cheese
+Blue Cheese
+Bocconcini
+Bocconcini Cheese
+Brie
+Brie Cheese
+Burrata
+Burrata Cheese
+Camembert
+Camembert Cheese
+Cheddar Cheese
+Cheese Curds
+Colby
+Colby-Jack
+Colby Cheese
+Colby-Jack Cheese 
+Cotija Cheese
+cottage cheese
+Cream Cheese 
+shredded cheese
+Emmental
+Emmental Cheese
+Farmer’s Cheese
+Feta
+Feta Cheese
+Mozzarella
+Mozzarella Cheese
+Gorgonzola
+Gorgonzola Cheese 
+Gouda
+Gouda Cheese
+Gruyere Cheese
+Halloumi
+Halloumi Cheese
+Havarti
+Havarti Cheese
+Jarlsberg
+Jarlsberg Cheese
+Limburger
+Limburger Cheese
+Mascarpone
+Mascarpone Cheese
+Monterey Jack
+Monterey Jack Cheese
+Muenster
+Muenster Cheese
+Neufchatel
+Neufchatel Cheese
+Paneer Cheese
+Parmesan
+Parmesan Cheese
+Pepper Jack
+Pepper Jack Cheese
+Provolone
+Provolone Cheese
+Ricotta Cheese
+Romano Cheese
+String Cheese
+goat cheese
+ice cream
+ice-cream
+whipped cream
+Pizza
+Neapolitan Pizza
+Al taglio pizza
+Altoona pizza
+Beach pizza
+Brier Hill pizza
+California pizza
+Chicago pizza
+Colorado pizza
+Columbus pizza
+Dayton pizza
+Detroit pizza
+Focaccia al rosmarino pizza
+Fugazza pizza
+Grandma pizza
+Greek pizza
+Iranian pizza
+Lazio pizza
+Matzah pizza
+Mexican pizza
+Minnesota pizza
+New Haven pizza
+New York pizza
+Ohio Valley pizza
+Pan pizza
+Pictou County pizza
+Pizzetta pizza
+Quad City pizza
+Roman pizza
+Sardenara pizza
+Sicilian pizza
+Stuffed crust pizza
+Sushi pizza
+St. Louis pizza
+Sheet pizza
+Tavern pizza
+pasta
+Barbine
+Bavette
+Bigoli
+Bucatini
+Busiate
+Capellini
+Ferrazzuoli
+Fettuccine
+Fileja
+Lagane
+lasagna
+Lasagnette
+Lasagnotte
+Linguine
+Maccheroni alla molinara
+Mafalde
+Matriciani
+Pappardelle
+Perciatelli
+Picagge
+Pici
+Pillus
+Rustiche
+Sagne 'ncannulate
+Scialatelli
+spaghetti
+spaghettini
+spaghettoni
+Stringozzi
+Tagliatelle
+Tagliolini
+Trenette
+Tripoline
+Vermicelli
+Ziti
+Anelli
+Boccoli
+Calamarata
+Campanelle
+Cappelli da chef
+Casarecce
+Cascatelli
+Castellane
+Cavatappi
+Cavatelli
+Chifferi
+Cicioneddos
+Conchiglie
+Creste di gallo
+Fagioloni
+Farfalle
+Fazzoletti
+Festoni
+Fiorentine
+Fiori
+Fusilli
+Fusilli bucati
+Garganelli
+Gemelli
+Gnocchi
+Gomiti
+Lanterne
+Macaroni
+Maccheroncelli
+Mafaldine
+Maltagliati
+Malloreddus
+Marille
+Mezzani
+Mezze maniche
+Mezze penne
+Mezzi bombardoni
+Nuvole
+Paccheri
+Passatelli
+Pasta al ceppo
+Penne
+Penne ricce
+Picchiarelli
+Pipe rigate
+Pizzoccheri
+Quadrefiore
+Radiatori
+Riccioli
+Ricciolini
+Ricciutelle
+Rigatoncini
+Rigatoni
+Rombi
+Rotelle
+Sagnette
+Sagnarelli
+Sedani
+Spirali
+Spiralini
+Strapponi
+Strozzapreti
+Testaroli
+Lorighittas
+Tortiglioni
+Treccioni
+Trenne
+Trofie
+Trottole
+Vesuvio
+Cencioni
+Farfalline
+Agnolini
+Caccavelle
+Cannelloni
+Ravioli
+Tortelli
+Tortellini
+Tortelloni
+mac cheese
+mac and cheese
+ham & cheese
+noodles
+Ramen
+
+pastry
+flour
+bread
+loaf
+dough
+breads
+Anpan
+Apple bread
+Bagel
+Baguette
+banana bread
+Bannock
+flatbread
+Barbari bread
+Biscuit
+Biscuits
+Black Bread
+Boule
+Bread roll
+Breadstick
+brioche
+Carrot Bread
+Chickpea bread
+Ciabatta
+Cornbread
+Cracker
+Crepe
+Cuban bread
+English muffin
+Graham bread
+Green onion pancake
+Hoagie Roll
+Maltese bread
+Milk roll
+Naan
+Pan dulce
+Portuguese sweet bread
+sweet bread
+Potato bread
+pretzel
+pretzels
+Pumpkin bread
+Rye bread
+Sandwich roll
+Scallion bread
+Shaobing
+Soda bread
+sourdough
+sourdough bread
+Texas toast
+Tiger bread
+Tortilla
+Vienna bread
+White bread
+french bread
+Croissant
+strudel
+Cinnamon roll
+pie
+cake
+cakes
+cheesecake
+scones
+scone
+muffin
+cookies
+chocolate chip
+chocolate chip cookie
+peanut butter cookie
+Oatmeal Raisin cookie
+Shortbread cookie
+Gingerbread cookie
+Sugar cookie
+Butter cookie
+Snickerdoodle cookie
+White Chocolate Macadamia Nut cookie
+Biscotti
+Gingersnap
+Macaron
+Macaroon
+Butter Pecan cookie
+Crinkle cookie
+Whoopie Pie
+Molasses cookie
+Fortune cookie
+Hamantaschen
+Icebox cookie
+Lofthouse cookie
+Meringue cookie
+Rugelach
+Snowball cookie
+Spritz cookie
+Thumbprint cookie
+Cornflake cookie
+Benne wafer
+
+soup
+broth
+stew
+minestrone soup
+Apple soup
+Avocado soup
+Bacon soup
+Beef noodle soup
+Beer soup
+Clam chowder
+Bird's nest soup
+Borscht
+Borschch
+Bread soup
+Cabbage soup
+Carrot soup
+Chicken noodle soup
+Chicken soup
+Coconut soup
+Corn chowder
+Cream of apple soup
+Cream of asparagus
+Cream of broccoli
+Cream of celery
+Cream of chicken
+Cream of potato
+Cream of tomato
+Cream of crab
+Cream of mushroom
+Cucumber soup
+Egg drop soup
+Fisherman's Soup
+French onion soup
+Ground nut soup
+Leek soup
+Lettuce soup
+Lentil soup
+Lobster stew
+Mami soup
+Melon soup
+Miso soup
+Mulligan stew
+Nettle soup
+Nsala soup
+Okra soup
+Oxtail soup
+Palm nut soup
+Pea soup
+Peanut soup
+Pickle soup
+Pork blood soup
+Pozole
+Prawn soup
+Shark fin soup
+Sishen soup
+Sour cherry soup
+Sour rye soup
+fish soup
+Split pea
+Stone soup
+Taco soup
+Tom Yum
+Tomato soup
+Tortilla soup
+Turkey soup
+Vegetable soup
+salsa
+protein bar
+Pancakes
+Ramp Pancakes
+Scallion Pancake
+rice
+fried rice
+white rice
+brown rice
+meat
+meats
+Beef
+Steak
+pot roast
+oxtail
+sirloin
+top sirloin
+bottom sirloin
+brisket
+tenderloin
+short loin
+Pork
+pork chop
+pork chops
+pork Belly
+bacon
+chicken
+chicken stock
+chicken thighs
+Chicken nuggets
+chicken breast
+chicken leg
+Chicken gizzard
+Chicken drumstick
+roast chicken
+fried chicken
+sausage
+meatball
+meatballs
+Mutton
+Venison
+mustard
+mayo
+mayonnaise
+sandwich
+sandwiches
+cheesesteak
+burrito
+burritos
+taco
+American Sub
+Breakfast roll
+Grilled Cheese
+Hamburger
+Hot dog
+Panini
+Peanut butter and jelly
+PB & j
+Roast beef
+Sloppy joe
+Steak burger
+Veggie burger
+fries
+French fries
+chocolate
+
+seafood
+fish
+shrimp
+trout
+
+food
+foods
+recipe
+recipes
+cook
+cooking
+cookbook
+bake
+baking
+barbecue
+lunch
+dinner
+breakfast
+chef

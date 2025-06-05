@@ -1,0 +1,216 @@
+Abstraction
+Abstractions
+App
+Apps
+Application
+Applications
+Architecture
+Association
+Automation
+Administrator
+Administrators
+Algorithm
+Algorithms
+Array
+Arrays
+Backend
+Bug
+Bugged
+Bugs
+Build
+Building
+Camel Case
+CD
+Cloudnative
+CI
+CI-CD
+Classifier
+Code
+Codebase
+Coder
+Coders
+Coding
+Commit
+Commits
+Compile
+Compiler
+Compilers
+Computer Vision
+Concurrency
+Concurrent
+Container
+Containers
+Controller
+Controllers
+CRUD
+Cybersecurity
+Data
+Database
+Databases
+Dataframe
+Dataframes
+Dataset
+Datasets
+Data Modeling
+Data Structure
+Debug
+Debugging
+Declarative
+Decorator
+Decorators
+Dependency
+Dependencies
+Dev
+Devs
+Develop
+Developer
+Developers
+Developed
+DevOp
+DevOps
+Distributed
+Documentation
+DSA
+Encapsulation
+Enum
+Enumeration
+Enums
+Environment
+Egress
+E2E test
+E2E tests
+End-to-end test
+End-to-end tests
+End-to-end testing
+Event driven
+Event-driven
+Framework
+Frameworks
+Frontend
+Full Stack
+Full-Stack
+Function
+Functions
+Functional Programming
+FOSS
+Garbage Collection
+Garbage-Collection
+GitOps
+GC
+Hackathon
+Hackathons
+Hashmap
+Hashmaps
+Heap
+Heaps
+Hyperparameter
+Hyperparameters
+IDE
+Ingress
+Inheritance
+Integration
+Integration test
+Integration tests
+IoT
+Iterate
+Language
+Languages
+Lambda
+Lambdas
+Library
+Libraries
+List
+Lists
+Loop
+ML
+Machine Learning
+Method
+Methods
+Microservice
+Microservices
+Modular
+Monolith
+Multiprocessing
+Multithread
+Multithreaded
+Multithreading
+MVC
+Natural Language Processing
+Natural Language Understanding
+NLP
+NLU
+Object
+Objects
+Object Oriented Programming
+Observability
+Open source
+Open-source
+Optimization
+Optimizations
+Optimize
+Optimized
+OOP
+OSS
+Parallelism
+Pattern
+Patterns
+Pipeline
+Pipelines
+Polymorphism
+Production
+Program
+Programs
+Programmer
+Programmers
+Programming
+Project
+Projects
+PR
+PRs
+Pull Request
+Pull-Request
+Pull Requests
+Pull-Requests
+Regression
+Server
+Servers
+Service-oriented
+Set
+Sets
+Software
+Software dev
+Software Engineer
+Software-Engineer
+Software Engineers
+Software-Engineers
+Stack
+Staging
+SWE
+Syntax
+System
+Systems
+Ternary
+Thread
+Threads
+Time Complexity
+Time Series
+Time-Series
+Unit test
+Unit tests
+User Experience
+User-Experience
+User Interface
+User-Interface
+UX
+UI
+Website
+Websites
+Webdev
+Web Dev
+Web Developer
+Web Developers
+Write
+Virtual Machine
+Virtual Machines
+VM
+Vms

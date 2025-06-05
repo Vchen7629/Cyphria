@@ -1,0 +1,139 @@
+Liquor
+Gin
+tequila
+vodka
+Whisky
+Beer
+root beer
+Cider
+Cocktail
+wine
+white wine
+smoothie
+banana smoothie
+strawberry smoothie
+mango smoothie
+Avacado smoothie
+berry smoothie
+Pineapple smoothie
+blueberry smoothie
+green smoothie
+yogurt smoothie
+cherry smoothie
+Raspberry smoothie
+milk
+whole milk
+Reduced fat milk
+low fat milk
+skimmed milk
+Almond Milk
+Cashew Milk
+Hazelnut milk
+Macademia nut milk
+Walnut milk
+Peanut milk
+Pistachio milk
+coconut milk
+oat milk
+Hemp milk
+Sesame milk
+Banana milk
+Flaxseed milk
+Soy milk
+Rice milk
+Pea milk
+Quinoa milk
+Buttermilk
+milkshake
+
+juice
+aloe vera juice
+apple juice
+apple cider
+Apricot juice
+Asparagus juice
+Avacado juice
+beet juice
+blackberry juice
+Canataloupe juice
+carrot juice
+cashew apple juice
+celery juice
+cherry juice
+Cherimoya juice
+Cranberry juice
+Cucumber juice
+Dragonfruit juice
+Elderberry juice
+Garlic juice
+Ginger juice
+Goji berry juice
+Golden berry juice
+Gooseberry juice
+Grape juice
+Grapefruit juice
+Guava juice
+Hawthorn juice
+Hemp juice
+Honeydew juice
+Kale juice
+Kiwifruit juice
+lemon juice
+lemonade
+lime juice
+limenade
+lychee juice
+mango juice
+melon juice
+Mulberry juice
+orange juice
+Palm fruit juice
+Papaya juice
+Parsley juice
+Passionfruit juice
+Peach juice
+Pear juice
+Pickle juice
+Pineapple juice
+Plum juice
+Pomegranate juice
+Prune juice
+Raspberry juice
+Rhubarb juice
+Spinach juice
+starfruit juice
+strawberry juice
+sugarcane juice
+Tomato juice
+Turmeric juice
+Turnip juice
+Watermelon juice
+Winter melon juice
+green tea
+white tea
+oolong tea
+black tea
+matcha
+Chamomile tea
+Herbal tea
+Rooibos tea
+hibiscus tea
+Ginger tea
+mint tea
+earl gray
+chai tea
+bubble tea
+ceylon tea
+purple tea
+yellow tea
+assam tea
+Coca cola
+Fanta
+Sprite
+Powerade
+Gatorade
+Mountain Dew
+Pepsi
+Sierra Mist
+Dr Pepper
+

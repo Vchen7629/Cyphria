@@ -1,0 +1,115 @@
+Doctor
+Acupuncturist
+Physiatrist
+Chiropractor
+Pain Management Specialist
+Allergist
+Derm
+Dermatologist
+Pediatric
+Pediatric Physician Assistant
+Family Family Physician
+Internist
+Pediatric Surgeon
+Ear, Nose & Throat Doctor
+Pulmonologist
+Adult Facial Plastic & Reconstructive Surgeon
+Rhinologist
+Primary Care Doctor
+Addiction Specialist
+Surgeon
+Pediatric Audiologist
+Audiologist
+otolaryngologist
+Pediatric Otolaryngologist
+Infectious Disease Specialist
+Nurse Practitioner
+Urgent Care Specialist
+Head & Neck Surgeon
+Pediatrician
+Pediatric Cardiologist
+Nephrologist
+Cardiologist
+Dentist
+Dietitian
+Psychiatrist
+Nutritionist
+Endocrinologist
+Bariatric Surgeon
+Adolescent Nutritionist
+GI Stomach Doctor
+GI Doctor
+GI Specialist
+Gastroenterologist
+OB-GYN
+Gyno
+Psychosomatic Medicine Specialist
+Neurotologist
+Physician
+Emergency Medicine Physician
+Pediatric Emergency Medicine Specialist
+Nuclear Medicine Specialist
+Endodontist
+Periodontist
+Prosthodontist
+Pediatric Ophthalmologist
+Refractive Surgeon
+Oculoplastic Surgeon
+Pediatric / Strabismus Eye Doctor
+Retina Specialist (Medical)
+Neuro-Hand Surgeon
+Orthopedic Surgeon
+Spine Specialist
+Therapist
+Occupational Therapist
+Physical Therapist
+Behavioral Therapist
+Sports Medicine Specialist
+Hematologist
+Oncologist
+Diagnostic Radiologist
+Pediatric Psychologist
+Reproductive Gynecologist
+Women's Health Urological Surgeon
+Gynecologist
+Urologist
+Urological Surgeon
+Reproductive Urologist
+Reproductive Urological Surgeon
+Neurologist
+Neurosurgeon
+Family Psychiatric & Mental Health Family Psychiatric & Mental Health Nutritionist
+Child and Adolescent Nutritionist
+Child and Adolescent Psychosomatic Medicine Specialist
+Forensic Nutritionist
+Women's Health Gynecologist
+Midwife
+Cornea & External Diseases Specialist
+Glaucoma Specialist
+Pediatric Orthodontist
+Orthodontist
+Geriatrician
+Optometrist
+Plastic Surgeon
+Foot & Ankle Specialist
+Pulmonary Diseases and Critical Care Medicine Specialist
+Hand & Microsurgery Specialist
+Hip and Knee Surgeon
+Rheumatologist
+Pediatric Podiatrist
+Radiologist
+Oral Surgeon
+Shoulder & Elbow Surgeon
+Podiatrist
+Anesthesiologist
+Sleep Medicine Specialist
+Family Psychiatric & Mental Health Psychologist
+Clinical Neurophysiologist
+Psychologist
+Colorectal Surgeon
+Vascular Surgeon
+Adult Psychiatric & Mental Health Psychologist
+Psychologist
+Travel Medicine Specialist
+Interventional Cardiologist
+Dermatology

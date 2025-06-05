@@ -1,0 +1,79 @@
+#bowling
+GoBowling Dallas Strikers
+Bowlero LA X
+Las Vegas High Rollers
+Motown Muscle
+New Jersey Kingpins
+Portland Lumberjacks
+Akron Atom Splitters
+Snickers Waco Wonders
+
+#basketball
+Boston Celtics
+Boston Celtic
+Celtics
+Brooklyn Nets
+New York Knicks
+Knicks
+Philadephia 76ers
+76ers
+Toronto Raptors
+Chicago Bulls
+Cleaveland Cavaliers
+Detroit Pistons
+Pistons
+Indiana Pacers
+Pacers
+Milwaukee Buck
+Milwaukee Bucks
+Bucks
+Atlanta Hawks
+Charlotte Hornets
+Miama Heat
+Orlando Magic
+Washington Wizards
+Denver Nuggets
+Nuggets
+Minnesota Timberwolves
+Timberwolves
+Oklahoma City Thunder
+Portland Trail Blazers
+Utah Jazz
+Golden State Warriors
+LA Clippers
+Los Angeles Clippers
+Los Angeles Lakers
+Lakers
+Pheonix Suns
+Sacramento Kings
+Dallas Mavericks
+Mavericks
+Houston Rockets
+Memphis Grizzlies
+New Orleans Pelicans
+San Antonio Spurs
+Kansas City Kings
+
+Atlanta Dream
+Chicago Sky
+Connecticut Sun
+Indiana Fever
+New York Liberty
+Washington Mystics
+Dallas Wings
+Golden State Valkyries
+Las Vegas Aces
+Los Angeles Sparks
+Minnesota Lynx
+Pheonix Mercury
+Seattle Storm
+
+#football
+Tampa Bay Buccaneers
+
+#Baseball
+Red Sox
+
+#Soccer
+Minnesota United
+Minnesota United FC

@@ -1,0 +1,17 @@
+Blender
+Coffee Maker
+Crock pot
+Freezer
+Fridge
+Frother
+Grill
+Kitchen Hood
+Meat grinder
+Microwave
+Mixer
+Oven
+Pressure Cooker
+Refridgerator
+Rice cooker
+Stove
+Toaster

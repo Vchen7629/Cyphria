@@ -1,0 +1,86 @@
+Album
+Albums
+Aperature
+Aspect Ratio
+Autofocus
+Backdrop
+Backdrops
+Backlight
+Backlighting
+Blooming
+Camera
+Cameras
+Capture
+Captured
+CMYK
+Calibration
+Contrast
+Crop
+Cropped
+Diffraction
+Distorted
+Distortion
+DLSR
+Edit
+Editing
+Exposure
+Film
+Filter
+Filters
+Focal
+Focus
+Flash
+HDR
+ISO
+Image
+Lens
+Lenses
+Lightroom
+Luminosity
+Monochrome
+Narrow Angle
+Overexposure
+Parallax
+Photo
+photobook
+photobooks
+Photograph
+Photographer
+Photographers
+Photography
+Photos
+Photoshoot
+Photoshop
+photobook
+photo book
+photo books
+
+Photojournalism
+Pic
+Pics
+Picture
+Pictures
+Pixel
+Pixels
+Polaroid
+Polaroids
+Resolution
+Saturation
+Shutter
+Shoot
+Shooting
+SLR
+Snap
+Snapped
+Strobe light
+TimeLapse
+Time Lapse
+Tone
+Tripod
+Underexposure
+Undistorted
+Vibrance
+Viewfinder
+Watermark
+Wide angle
+Zoom

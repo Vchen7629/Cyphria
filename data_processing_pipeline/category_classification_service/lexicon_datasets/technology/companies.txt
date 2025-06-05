@@ -1,0 +1,76 @@
+Acer
+ADATA
+Alienware
+AMD
+Antec
+Apple
+ARM
+Articmaster
+Asrock
+Astec
+ASUS
+Bestbuy
+Be Quiet
+Biostar
+Broadcom
+Cisco
+Coolermaster 
+Cooler Master
+Corsair
+Crucial
+Dell
+Deepcool
+Evga
+Fractal
+Gigabyte
+G.Skill
+HP
+HTC
+Huawei
+HyperX
+IBM
+Intel
+Kensington
+Keycron
+Kingston
+Kioxia
+Lenovo
+LG
+Lian Li
+li Lian
+Logitech
+Micro center
+Micron
+Microsoft
+Montech
+MSI
+Mushkin
+Nintendo
+Noctua
+Nvidia
+NZXT
+Panasonic
+Patriot
+Phantek
+PNY
+Qualcomm
+Razer
+Roccat
+Roku
+Samsara
+Samsung
+Sandisk
+Seagate
+SeaSonic
+Silicon Power
+Sony
+Steelseries
+Supermicro
+SK Hynix
+Thermaltake
+TeamGroup
+Toshiba
+Western Digital
+XFX
+Zotac
+Zowie

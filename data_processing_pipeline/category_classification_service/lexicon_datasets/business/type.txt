@@ -1,2 +1,6 @@
-Company
+B2B
+DBA
 LLC
+Saas
+Startup
+Paas

@@ -6,9 +6,12 @@ Computer Science Engineering
 Computer Science Degree
 General Engineering
 
+Engineering
 Mech
 Mechanical engineering
 Mechanical engineering Degree
+Civil Eng
+Civil Engineering
 
 Physics
 Applied Physics
@@ -16,8 +19,6 @@ Physics Degree
 
 creative studies
 
-degree
-Double majoring
 associates
 bachelors
 B.S

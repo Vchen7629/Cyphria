@@ -1,14 +1,25 @@
+Academic
+Academics
 AP exams
 BAR
 Assignment
 Assignments
 Bar exam
+Calculus
 Class
 Classes
-college
-colleges
-community college
+College
+Colleges
+Community college
+Course
+Courses
 Degree
+Degrees
+Double majoring
+Elective
+Electives
+Enroll
+Enrolled
 Essay
 Essays
 Exam
@@ -18,13 +29,20 @@ Final exams
 First year
 Fourth year
 Freshman
+FRQ
+FRQs
 Grad
 grade
 grades
 Graduate
 Graduation
 High school
+Instructor
 Junior
+Lecture
+Major
+Majored
+Majoring
 Middle school
 Midterm
 Midterms
@@ -36,25 +54,40 @@ Paper
 Papers
 Popquiz
 Popquizes
+Procrastinate
+Procrastinating
+Prof
+Professor
+Professors
 project
 projects
 Report
+Revision
+Revisions
+Seminar
+Seminars
 School
 Schools
 Second Year
 Semester
+Senioritis
 Senior
+Senior Year
 Sophmore
 Student
 Students
 Study
 Studies
+Studied
 Studying
-teacher
-teachers
+Suspended
+Suspension
+Teacher
+Teachers
 Test
 Tests
 Third Year
+Uni
 University
 Universities
 Quarter

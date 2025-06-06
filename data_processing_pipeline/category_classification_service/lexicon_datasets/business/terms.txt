@@ -1,2 +1,103 @@
+ARR
 Business
 Businesses
+Cash flow
+Cash-flow
+CAO
+CAOs
+CBO
+CBOs
+CCO
+CCOs
+CDO
+CDOs
+CEO
+CEOs
+CFO
+CFOs
+CGO
+CGOs
+CHRO
+CHROs
+CINO
+CINOs
+CIO
+CIOs
+CISO
+CISOs
+CKO
+CKOs
+CLO
+CLOs
+CMO
+CMOs
+COO
+COOs
+CPO
+CPOs
+CRO
+CROs
+CSCO
+CSCOs
+CSO
+CSOs
+CTO
+CTOs
+CTSO
+CTSOs
+CVO
+CVOs
+CWO
+CWOs
+CXOs
+CXOs
+Chairmen
+Client
+Clients
+Co Founder
+Co-Founder
+Company
+Companies
+Competitor
+Competitors
+Employees
+Entrepreneur
+Entrepreneurs
+Entrepreneurship
+Executive
+Executives
+Firm
+Firms
+Founder
+Founders
+Franchise
+Franchising
+Franchisee
+Franchisor
+Funding
+Industry
+Investor
+Investors
+Net Earning
+Net Earnings
+Net Profit
+Net Profits
+Officer
+Officers
+Partnership
+President
+Presidents
+Prices
+Profit
+Profitability
+Profits
+Revenue
+Seed Round
+Solo-preneur
+Solo-preneurs
+SVPs
+VC
+Venture Capital
+Venture Capitalist
+VP
+VPs

@@ -3,7 +3,7 @@ import os, sys
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../../'))
 sys.path.insert(0, project_root)
 
-from data_processing_pipeline.category_classification_service.preprocessing.build_vocab import single_file_source
+from data_processing_pipeline.category_classification_service.preprocessing.file_loader import single_file_source
 
 class TestFunction:
     def setup_method(self):

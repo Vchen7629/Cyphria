@@ -11,30 +11,30 @@ class TestBracketFilter:
 
     def test_filter_brace(self):
         test_text = "This is a{} test sentence{, please check} if this works."
-        result = self.instance.removeBrackets(test_text)
+        result = self.instance.brackets(test_text)
 
         assert result == "This is a test sentence, please check if this works."
 
     def test_filter_square_bracket(self):
         test_text = "This is a[] test sentence[, please check] if this works."
-        result = self.instance.removeBrackets(test_text)
+        result = self.instance.brackets(test_text)
 
         assert result == "This is a test sentence, please check if this works."
 
     def test_filter_parenthesis(self):
         test_text = "This is a() test sentence(, please check) if this works."
-        result = self.instance.removeBrackets(test_text)
+        result = self.instance.brackets(test_text)
 
         assert result == "This is a test sentence, please check if this works."
     
     def test_filter_all(self):
         test_text = "This is a() test[] sentence(, please check) if{} this works."
-        result = self.instance.removeBrackets(test_text)
+        result = self.instance.brackets(test_text)
 
         assert result == "This is a test sentence, please check if this works."
 
     def test_filter_recursive(self):
         test_text = "This is a test[({})] sentence, please check) if this works."
-        result = self.instance.removeBrackets(test_text)
+        result = self.instance.brackets(test_text)
 
         assert result == "This is a test sentence, please check if this works."

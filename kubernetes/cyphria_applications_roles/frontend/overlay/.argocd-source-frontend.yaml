@@ -1,3 +1,3 @@
 kustomize:
   images:
-  - ghcr.io/vchen7629/cyphria-frontend:latest@sha256:d9fa41fb0d5709685a2c458671b8a77a4677ba0642c2fafcd693bb46997a2069
+  - ghcr.io/vchen7629/cyphria-frontend:latest@sha256:7faf0c45df97bb62d10b94932bb7654bcca39e4010c9064b49499a637fbc467e

@@ -1,8 +1,8 @@
 from langdetect import detect
 
-def isEnglish(text):
-    try:
-        return detect(text) == 'en'
-    except:
+def isEnglish(text: str) -> bool:
+    if detect(text) == 'en':
+        return True
+    else:
         return False
     

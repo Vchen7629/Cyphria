@@ -11,13 +11,13 @@ class TestStopwordRemover:
 
     def test_stopwords_removed(self):
         test_text = "The quick brown fox jumps over the lazy dog."
-        stopword_func = self.stopword_instance.removeStopWords(test_text)
+        stopword_func = self.stopword_instance.stopWords(test_text)
 
         assert stopword_func == "quick brown fox jumps lazy dog."
 
     def test_works_if_emoji_present(self):
         test_text = "Which one is your favorite?😈"
-        stopword_func = self.stopword_instance.removeStopWords(test_text)
+        stopword_func = self.stopword_instance.stopWords(test_text)
 
         assert stopword_func == "one favorite?😈"
     

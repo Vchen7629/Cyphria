@@ -1,6 +1,7 @@
 #baseball
 American Legion Baseball
 Babe Ruth League
+Euroleague
 Little League Baseball
 Pony Baseball
 New Brunswick Senior Baseball League
@@ -93,19 +94,22 @@ national bowling league
 #Running
 
 #basketball
-NBA
-National Basketball Association
-WNBA
-Women's National Basketball Association
-Women National Basketball Association
-WABA
-Women American Basketball Association
 College Basketball
-NCAA
 National Collegiate Athletic Association
+National Basketball Association
+NBA
+NBA's
+NCAA
+WABA
+WNBA
+Women National Basketball Association
+Women American Basketball Association
+Women's National Basketball Association
+
 
 #football
 NFL
+UFL
 
 #Soccer
 

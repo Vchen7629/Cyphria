@@ -1,0 +1,11 @@
+Android
+Arch
+ChromeOS
+Fedora
+IOS
+Linux
+MacOS
+Nix
+Ubuntu
+Unix
+Windows

@@ -1,77 +1,198 @@
 AC
 Adapter
 Adapters
+AGI
 AI
 AIO
+A I
+AI Model
 Air conditioner
 Air Conditioning
+Air Filter
+Alloy
+Am5
 Android
 Antenna
 Antennas
 Appliance
 Appliances
+Architecture
 Artificial intelligence
 ATX
+Autofocus
+Autonomous
+Backdoor
 Bandwidth
+Barebone
+Barebones
 Battery
 Batteries
+Benchmark
+Benchmarks
+Bifocals
+Bioplastic
+Bioprinting
 BIOS
 Blender
 Bluetooth
-Computer
-Computers
+Boot
+Bot
+Bottleneck
+Bottlenecked
+Bottlenecking
+Breaker box
+Breakthrough
+Breakthroughs
+Brushcutter
+Build
+Builds
+Cable
+Cables
+Carbon capture
+CB
+CFM
+Charge
 Charger
 Chargers
 Charging
+Chip
+Chipset
 Circuit
+Circuit board
+Circuit boards
+Circuitry
+Circuits
 CMOS
+Code
+Codes
 Coffee maker
 Coffeemaker
+Component
+Components
+Composite
+Composites
+Computer
+Computers
+Computing
+Conductive
+Control circuit
+Cooler
+Cooling
+GPS
 CPU
+CPUs
+Crash
+Crashed
+Crashing
 CRT
 CRTS
+Crypto
+Cyberattack
+Cyber assault
+Cyborg
+Dark web
+Dark web’s
 Dashcam
+Data Center
+DDoS
+DDoS attack
+DDR4
+DDR5
+Deepfake
+Deepfakes
 Dehumidifier
+Develop
+Developed
 Device
 Devices
+Disconnect
+Disconnected
 Dishwasher
 Digital
 DRAM
 Driver
+Driverless
 Drivers
+Drone
+Drones
 Dryer
 Ethernet
 Electric
 Electrical
+Electricity
+Electrolysis
+Electromagnetic
 Electronic
 Electronics
+Energy
+Energy-efficient
+EUV
+Extender
+Extension Cord
+Extreme ultraviolet lithography
+E waste
+E-waste
+Fab
 Fan
 Fans
 Fiber
+Freeze
+Freezes
+Freezing
 Fridge
+Fried
 FHD
+Fully seat
+Fully seated
+Fuse
+Fuses
+Fusion
+Fusion reactor
+Gadget
+Gadgets
+GB
 Generator
 Generators
+Genetically engineer
+GHz
+Glasses
 GPU
+GPUs
 Graphic Card
 Graphics Card
+Grid
+Grounded
+Hacker
+Hackers
 Hardware
+Hard drive
+Hard drives
 Headphone
 Headphones
 Headset
 Headsets
+Heating element
 Heatsink
 HDMI
 HVAC
+Incompatible
+Infrared
+Innovation
+Installation
 Internet
+Invention
 Inverter
+Ion
 IP
 IPS
+IP Address
+ITX
 Keyboard
 Keyboards
 Keycap
 Keycaps
 Humidifier
+Lanes
 Laptop
 Laptops
 Laser
@@ -79,73 +200,233 @@ Lasers
 LCD
 LED
 LEDs
+Liquid metal
+Lithium
+Lithium-ion
+LLM
+LLMs
+Location Tracking
+Logic gate
+Login
+Logout
 Mac
+MacBook
+Machine
+Machines
+Macropad
+Malware
+Material
 mATX
+Megajoules
+Membranes
+Metamaterials
 Mic
 MicroATX
 Microphone
 Microphones
 Microwave
+Midrange
+Mineral buildup
+Mini-ITX
 MiniATX
+Missile
+Missiles
 Mobo
+Modular
 Monitor
 Monitors
 Motherboard
 Mouse
 Mower
+M 2
+NAND
+Nanomaterial
+Nanoparticle
+Nanoparticles
+Nanowatts
+Next-gen
+Novel
+Nuclear
+Numpad
 Nvme
+Obsolescence
+Obsolete
+OC
+OCR
+Oc'ing
 OEM
 OLED
 OS
 Outlet
 Overclock
 Overclocked
+Overclocking
 Overheat
 Overheats
 Overheating
+Parts
 PC
+PC's
+PCE-I
 PCI
 PCIe
+Performance
+Petawatt
+Petawatts
 Phone
 Plug
+Plugged
+Plugs
 Port
 Ports
 Power
+Power cycle
+Powering
+Powerwall
+Practical
 Printer
+Prebuilt
+Pre-built
 Processor
+Processors
 PSU
+PSUs
+Pump
+Quantum
+Quantum Chips
 Radiator
 Radiators
 Radio
+Radio waves
+Railgun
 RAM
+Reactor
+Reconnect
 Refridgerator
+Renewable
+Repair
+Researcher
+Researchers
+Resin
 Resolution
+Reseating
+Restart
+Restarted
+Restarting
+Revolutionize
 RGB
+Rig
+Robot
+Robotic
+Robotics  
+Robots
+Rocket
+Rockets
 Router
 Routers
 Sata
+Satellite
+Satellites
 Screen
 Semiconductor
+Setup
 SFF
+SFX
+Shutdown
 Smartphone
 Smartphones
 Socket
 Sockets
+Solar
+Solar Energy
+Solenoid
+Solenoids
 Solid state drive
+SOHO
+Spacecraft
+Spec
+Specs
 SSD
+SSDs
+Static
 Stereo
+Substation
+Superintelligence
+Surveillance
+Switch
+Switches
+SWR
+SWR meter
+TB
 Tech
 Technology
 Technologies
+Thermals
+Thermal Paste
+Thermal vision
 Thermostat
+Thermostats
+Throttle
 Toaster
+Transmission lines
 TV
+UDIMM
+Ultrasonic
+Unclock
+Unclocked
 Underclock
 Underclocked
+Unmanned
+Unplug
+Unplugged
+Update
+Updates
+Valve
+Version
+Video card
+Virus
+Viruses
+Virtual ID
 VGA
+VGAs
+VPN
+Washer
+Water Dispenser
+Watt
 Wifi
+Wi-Fi
+Wire
 Wireless
+Wirelessly
+Wires
 1080p
 1440p
+3D Print
+3D Printed
+3D printing
+3D-Print
+3D-Printed
+3D-printing
 2k
 4k
+4 Core
+4 Cores
+4-Core
+4-Cores
+6 Core
+6 Cores
+6-Core
+6-Cores
+8 Core
+8 Cores
+8-Core
+8-Cores
+8 pin
+10 Core
+10 Cores
+10-Core
+10-Cores
+12 Core
+12 Cores
+12-Core
+12-Cores

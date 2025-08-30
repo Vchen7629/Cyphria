@@ -1,3 +1,4 @@
+Tonic
 Liquor
 Gin
 tequila
@@ -9,7 +10,8 @@ Cider
 Cocktail
 wine
 white wine
-smoothie
+Smoothie
+Smoothies
 banana smoothie
 strawberry smoothie
 mango smoothie

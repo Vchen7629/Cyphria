@@ -1,24 +1,42 @@
 Ace
+Advances
 Albatross
 Alley
+All-NBA
+All-Pro
+All-Team
+Amateur
 Approach shot
 Assist
+Assists
 Athlete
 Athletes
+Athletic
+Athletics
+Autograph
+Autographs
+Backcheck
+Backchecking
 Backcourt
 Backhand
 Backspin
 Backswing
-Backcheck
-Backchecking
-Bat
+Backup center
 Badminton
+Bat
+Batter
 Ball
 Baize
 Baseball
 Baseman
+Basket
+Basketball
 Baulk
+Beat
+Beating
 Belt
+Bench
+Benched
 Blindside flanker
 Blocker
 Bicycling
@@ -27,17 +45,29 @@ Billards
 Birdie
 Board
 Bogey
+Bounce
+Bounces
 Boundary Liner
 Bowl
 Bowling
 Boxing
+Bracket
 Brawl
 Brawler
+Break
+Breaking
+Broadcast
+Broke
 Caddy
+Carried
 Catch
 Catcher
 Catches
+Center
 Chalk
+Champ
+Champion
+Champions
 Championship
 Championships
 Checkmate
@@ -47,10 +77,16 @@ Centre back
 Centre-back
 Clamping
 Closer
+Clubs
+Clutch
 Counterpunch
 Coach
 Coaches
 Coaching
+Comeback
+Compete
+Competitor
+Contract
 Cornerback
 Cornerman
 Court
@@ -60,74 +96,142 @@ Crease
 Cricket
 Crosscourt
 Cue
+Curveball
 Cutman
+DB
+DBs
+Deal
+Debut
+Defeating
 Defence
 Defender
 Defense
+Defensive back
+Defensive backs
+Defensive snaps
+Defensively
 Defenseman
+Defensive foul
 Defensive zone
+Deflects
+Demote
+Demotes
+Demoting
 Deuce
 Dive
+Division
 Doubles
+Double play
+Double plays
+DP
 Draft
 Drafting
 Dribble
 Driver
 Eight Man
+Eliminated
+Elimination
 Enforcer
+Equipment
+ESPN
+Expiring
 Faceoff
 Face-off
+Fastball
 Fairway
+Fairways
+Fan
+Fans
+Fan’s
+FBS
+FCS
 Feint
 Field
 Fielder
+Final
+Finals
 Fine leg
 Fly-half
 Fly half
 Four-Ball
 Foul
 Football
+Football bowl Subdivision
+Football Championship Subdivision
 Footwork
 Foot Work
 Forehand
+Form
 Forward
 Forward Short Leg
+Fox Sports
+Franchise
 Freestyle
+Free agent
 Fullback
 Gambit
 Game
 Games
 Glove
 Golf
+Golfer
 Golfers
 Golfing
 Goal
 Goalie
 Goalkeeper
 Goals
+Grandprix
 Grandslam
+Grand Prix
+Grand Slam
 Guard
 Gully
 Gutter
 Half back
+Hall Fame
 Handicap
+Hangtime 
+Hang time
 Hattrick
+Hat trick
+Head
 Heavyweight
 Highlight
 Highlights
+Hits
 Hitter
 Hockey
+Hole
+Home
+Homer
 Homerun
+Homeruns
 Home run
+Home runs
 Hook
 Hooker
+HR
+HR's
+Indy
+IndyCar
+Indy 500
 Infielder
+Injuries
+Injury
+Inning
+Irons
 Jersey
+Knockout
 Knock Out
 KO
 Lacrosse
 Lane
+Lanes
 Layup
+Lead
+League
+League’s
 Left field
 Left wing
 Libero
@@ -138,6 +242,9 @@ Liver Shot
 Lob
 Loose-head prop
 Loose head prop
+Lose
+Loss
+Lost
 Jab
 Jump
 Kick
@@ -147,59 +254,123 @@ Kicker
 Long On
 Mallet
 Maiden Over
+Marathon
+March Madness
 Match
+Matches
+Matchs
+Matchup
+Medalist
 Midfield
 Midfielder
 Midwicket
 Mid-Wicket 
 Mid On
+MLB Network
+Mound
 Mulligan
 MVP
+NBC Sports
 Nearside
 Net
+NIL deal
+NIL deals
+No-hitter
+Number
+Offense
+Offensive
+Offensive Foul
+Offensive Fouls
 Off-season
 Off season
+O-line
+O-Zone
+Open final
 Open side flanker
 Outfielder
+Outplayed
 Overhand
 Overthrow
+Overtime
 Over The Wicket
+Paint touches
 Par
 Pass
 Passed
 Passing
+Performance
+Performing
+PGA
+Physical
+Picks
 Pitch
 Pitched
+Pitching
 Pitcher
+Play
+Played
+Playing
+Plays
 Player
+Players
 Playoff
 Playoffs
 Polo
 Point
 Points
+Point guard
 Position
 Positions
+Power-play
+Practice
+Prospect
 Puck
 Punch
 Punt
 Punter
+Punting
 Putt
+Putter
+Pole vault
 Pool
+Race
+Raceway
+Racing
+Ratings
 QB
+Qualifies
 Quarterback
 Race
 Races
 Racing
 Rack
 Racket
+Rb
 Rebound
 Rebounds
 Reciever
+Record
+Records
+Recruit
+Recruits
+Ref
+Referee
+Referees
+Refs
 Regional
 Regionals
+Regulation
 Reliever
 Relievers
+Reinstate 
+Reinstates
+Replay
+Replayed
+Replays
+Re-sign
 Right wing
+Rival
+Rivals
 Rookie
 Rookies
 Roster
@@ -209,8 +380,10 @@ Rugby
 Run
 Runner
 Running
+Rusher
 Safety
 Score
+Scored
 Scores
 Scoring
 Scrum
@@ -221,52 +394,125 @@ Season
 Seasons
 Second-row
 Second row
+Seed
+Seeded
+Semifinal
+Semifinals
+Series
 Serve
 Server
 Set
 Setter
+Shafts
+Sign
+SF
+Shoot
 Shortstop
+Shot
+Shots
 Showjumping
 Silly Point
+Sign
+Signed
+Signs
+Single-season
 Sixer
 Slice
 Slip
+Small Forward
 Smash
 Soccer
+Softball
 Spar
 Split
 Spin
+Sponsor
 Sport
 Sports
+Sportschannel
+Sportswoman
+Sports club
 Sprint
 Sprints
 Shuttlecock
+Stadium
+Stars
+Starting
 Strike
 Striker
 Stroke
+Superstar
+Superstars
+Suspension
 Sweeper
 Swing
+Swinging
+Swings
 Square Leg
 Tackle
+Tackled
+TE
 Team
+Team's
+Teammate
+Teammates
 Teams
+Tees
 Tennis
+Tied
+Tight End
+Three-pointer
+Three-pointers
 Throw
+Throws
 Ticket
 Tickets
+Ticketmaster
+Ticket master
+Tie
 Tight end
 Tight-head prop
 Tight head prop
 Topspin
+Top-seeded
+Torn Achilles
+Touchdown
+Tournament
+Tournaments
 Track
+Trade
+Traded
+Trades
+Trading
+Traveled
+Triple-double
+True Shooting Percentage
+TS
+Tying
 Umpire
 Umpires
+Undefeated
 Underhand
+Uniform
 Uniforms
+USGA
+U S Open
+Outclass
+Outclassed
+Vaults
+Victories
 Volley
 Volleyball
+Vs
+Walk-off
+Watching
 Wide Ball
 Win
+Winner
+Winning
 Wins
+World Cup
+WR
 Wrestling
 Yorker
+3-run

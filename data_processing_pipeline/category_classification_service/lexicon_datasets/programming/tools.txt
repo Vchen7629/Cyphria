@@ -3,35 +3,46 @@ Js
 JavaScript
 C
 Python
+Pythonic
+Pylance
 SQL
 C++
 HTML
-Linux
-Ubuntu
 XML
 PHP
 Perl
 MATLAB
 Ruby
 C#
-Android
+Csharp
 MySQL
 Fortran
 SSH
+Sshsync
+Ssh-agent
 CSS
 R
 JSON
-iOS
 Go
 Scala
 Swift
 SwiftUI
+LLM
+LLMs
+Nmap
+Burp Suite
+Wireshark
+Qt
 Ada
 COBOL
 Rust
+Wingdi
+Semantic Search
 PostgreSQL
 Kotlin
 Arduino Programming Language
+Asyncssh
+Shell
 PowerShell
 Pascal
 Haskell
@@ -43,14 +54,21 @@ Lua
 Julia
 Prolog
 Node.js
+ML5
 HTTP
 Objective-C
 Clojure
 Scheme
 API
 Stackoverflow
+Stack overflow
+pivot table
 APIs
 WebGPU
+Cantera
+CoolProp
+CircuitPython
+MicroPython
 OpenVINO
 CircuitPython
 MicroPython
@@ -88,8 +106,13 @@ ASP
 Eiffel
 Crystal
 Smalltalk
+Bloom filter
+Bloom filters
 Yacc
+DBMS
+Log Search
 Git
+Gitlab
 Modula-3
 Elm
 Racket
@@ -140,7 +163,7 @@ LFE
 Smali
 LaTeX
 Markdown
-Visual Basic .NET
+Visual Basic NET
 Liquid
 Forth
 SMTP
@@ -155,11 +178,14 @@ Chapel
 Oberon
 PDF
 GRPC
+GRPC-based
+Polars
 LabVIEW G
 Applescript
 Oz
 Lasso
 fish
+LLVM
 LLVM IR
 ECMAScript
 Red
@@ -177,6 +203,7 @@ Visual Studio Code
 intellijidea
 IntelliJ IDEA
 IntelliJ
+Intellisense
 Drupal
 FreeBSD
 Tex
@@ -202,6 +229,8 @@ SVG
 Monaco Editor
 FAT
 DOT
+Dotnet
+csharp
 FLUX
 Fantom
 Squirrel
@@ -269,6 +298,7 @@ Arc
 Zephir
 SPARQL
 Ceylon
+etcd
 Redis
 LOLCODE
 Opa
@@ -326,6 +356,9 @@ Click
 New Technology File System
 ATS
 AutoLISP
+SDK
+Vercel
+MCP-Agent
 S-algol
 YANG
 IA-32
@@ -402,6 +435,9 @@ SPARK
 halide
 TLA
 Befunge
+IMGUI
+Testcontainers
+Cursor
 GDB
 Puppet
 Miranda
@@ -451,6 +487,7 @@ Dc
 LiveCode
 COMTRAN
 Pandas
+OpenAI
 ASN.1
 HHVM
 wisp
@@ -519,6 +556,7 @@ IBM System z
 tornado
 JFlex
 DTrace
+RAG
 Ragel
 AspectJ
 Caml
@@ -845,6 +883,12 @@ PCRE
 Creole
 Semantic Versioning
 UPC
+DB
+Dashboard
+Dashboards
+Crudrepository
+Database
+Databases
 noms-db
 COLLADA
 SHA-2
@@ -898,6 +942,7 @@ Zuo
 Thymeleaf
 bosque
 Spyder
+STK
 contracts.coffee
 ICD-10-CM diagnosis
 OpenSCAD
@@ -940,6 +985,9 @@ Google File System
 Euclidean geometry
 Lily
 Streem
+UV
+Pydantic
+Mypy
 Nit
 m3db
 Blender
@@ -1039,6 +1087,7 @@ zz
 checked-c
 WebIDL
 Compiler-Compiler
+AI
 A-0 system
 Logtalk
 Mech
@@ -1111,6 +1160,8 @@ Hackett
 Kodu Game Lab
 XHTML
 Gopher
+VSCode
+ExpressJS
 EXPRESS
 Arden syntax
 Stutter
@@ -1420,6 +1471,7 @@ holyc
 Babylonian numerals
 hashlink
 Redcode
+JavaFX
 JavaFX Script
 Etoys
 Caramel
@@ -1495,6 +1547,96 @@ Adventure Game Studio Script
 C shell
 Charity
 MIMIC
+Flutterflow
+GCC
+PTC
+GNAT
+MCP
+ALGOL
+FASM
+Assembler
+A86
+GNU
+AppGameKit
+B4X
+FreeBasic
+FutureBasic
+GFA
+Mercury
+AOCC
+BDS C
+C++Builder
+Clang
+CompCert
+CProc
+Open64
+CINT
+Clang++
+G++
+openCC
+ArmCC
+ArmCLang
+TPP
+Visual C++
+XLC++
+Visual C#
+IL2CPP
+IL2CPU
+Bartok
+CoreRT
+GnuCOBOL
+gCobol
+CLisp
+GDC
+LDC
+DIBOL
+VFX
+ifort
+ifx
+Flang
+gccgo
+GHC
+YHC
+OpenLisp
+GCJ
+Javac
+ECJ
+Phalanger
+PeachPie
+pl1gcc
+Cython
+IronPython
+Jython
+Nuitka
+Numba
+Psyco
+Pyjs
+PyPy
+Shed Skin
+Yarv
+IronRuby
+JRuby
+MRuby
+TruffleRuby
+Rustc
+GCC Rust
+Bigloo
+Gnu guile
+JScheme
+Kawa
+SCM
+SISC
+Pharo
+DCL
+TACL
+Visual Studio
+Mono
+Delphi Prism
+MDN
+W3School
+W3Schools
+freeCodeCamp
+CodeCademy
 Pawn
 dlvm
 epsilon
@@ -2196,6 +2338,7 @@ QOIR
 Formula language
 NilScript
 OBJ
+CMS
 CMS Pipelines
 DEVIL
 SQRL
@@ -2427,6 +2570,9 @@ alan
 avro
 beautiful-report-language
 Copilot
+RouteSage
+Pyqt
+Pyqt6
 MathLingua
 Nasal
 plantuml
@@ -3236,6 +3382,7 @@ unicon-adl
 Vortex
 aubit-4gl
 AUR
+Interpreter
 bscript-interpreter
 BScript
 chicken-lang
@@ -3306,9 +3453,11 @@ Wolfram Data Framework
 atomo
 B3 IR
 blank
-jpa
+Jpa
+Jparepository
 JDBC
 JDBC Spring
+Scenebuilder
 Spring boot
 springboot
 Blueprints
@@ -4871,6 +5020,8 @@ ScyllaDB
 pycharm
 V
 xcode
+AI Agent
+AI Agents
 Qt Creator
 Zend Studio
 RubyMine    
@@ -4979,6 +5130,7 @@ TensorFlow Serving
 TorchServe
 NVIDIA Triton
 BentoML
+GPT
 ChatGPT
 Claude
 Llama
@@ -5135,11 +5287,18 @@ NestJS
 electron
 React router
 Pygame
+three.js
+3js
 Flask
 FastApi
+Oauth
+Oauth2
+IDE
+JWT
 Quarkus
 Spring boot
 htmx
+Tailwind
 TailwindCSS
 Tailwind CSS
 Grails
@@ -5171,3 +5330,4 @@ MERN
 MERN Stack
 Github
 Github.com
+Replit

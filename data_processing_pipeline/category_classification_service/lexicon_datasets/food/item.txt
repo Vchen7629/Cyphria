@@ -1,6 +1,7 @@
-veggies
-vegetable
-vegetables
+Veg
+Veggies
+Vegetable
+Vegetables
 Artichoke
 Artichokes
 Asparagus
@@ -186,7 +187,8 @@ Seven-layer salad
 Sabich salad
 Serbian salad
 
-fruit
+Fruit
+Fruits
 Abiu
 Acai
 Acerola
@@ -353,17 +355,11 @@ Pepper
 Peppers
 jalapeño
 jalapeños
+Brine
 
 egg
+eggs
 eggy
-scrambled egg
-scrambled eggs
-boiled egg
-boiled eggs
-steamed egg
-steamed eggs
-fried egg
-fried eggs
 sunny side up
 tofu
 yogurt
@@ -371,61 +367,34 @@ butter
 cheese
 American cheese
 Asiago
-Asiago cheese
 Blue Cheese
 Bocconcini
-Bocconcini Cheese
 Brie
-Brie Cheese
 Burrata
-Burrata Cheese
 Camembert
-Camembert Cheese
-Cheddar Cheese
+Cheddar
 Cheese Curds
 Colby
 Colby-Jack
-Colby Cheese
-Colby-Jack Cheese 
-Cotija Cheese
-cottage cheese
-Cream Cheese 
-shredded cheese
+Cotija
 Emmental
-Emmental Cheese
-Farmer’s Cheese
 Feta
-Feta Cheese
 Mozzarella
-Mozzarella Cheese
 Gorgonzola
-Gorgonzola Cheese 
 Gouda
-Gouda Cheese
 Gruyere Cheese
 Halloumi
-Halloumi Cheese
 Havarti
-Havarti Cheese
 Jarlsberg
-Jarlsberg Cheese
 Limburger
-Limburger Cheese
 Mascarpone
-Mascarpone Cheese
 Monterey Jack
-Monterey Jack Cheese
 Muenster
-Muenster Cheese
 Neufchatel
-Neufchatel Cheese
 Paneer Cheese
 Parmesan
-Parmesan Cheese
 Pepper Jack
-Pepper Jack Cheese
 Provolone
-Provolone Cheese
 Ricotta Cheese
 Romano Cheese
 String Cheese
@@ -434,6 +403,7 @@ ice cream
 ice-cream
 whipped cream
 Pizza
+Pizzas
 Neapolitan Pizza
 Al taglio pizza
 Altoona pizza
@@ -516,7 +486,10 @@ Castellane
 Cavatappi
 Cavatelli
 Chifferi
+Crust
 Cicioneddos
+Cutlet
+Cutlets
 Conchiglie
 Creste di gallo
 Fagioloni
@@ -525,6 +498,7 @@ Fazzoletti
 Festoni
 Fiorentine
 Fiori
+Flan
 Fusilli
 Fusilli bucati
 Garganelli
@@ -588,8 +562,10 @@ mac cheese
 mac and cheese
 ham & cheese
 noodles
+Hot Sauce
 Ramen
 
+soffrito
 pastry
 flour
 bread
@@ -621,6 +597,7 @@ Cuban bread
 English muffin
 Graham bread
 Green onion pancake
+Frosting
 Hoagie Roll
 Maltese bread
 Milk roll
@@ -642,6 +619,7 @@ sourdough bread
 Texas toast
 Tiger bread
 Tortilla
+Tortillas
 Vienna bread
 White bread
 french bread
@@ -650,6 +628,8 @@ strudel
 Cinnamon roll
 pie
 cake
+Swiss roll
+Swiss rolls
 cakes
 cheesecake
 scones
@@ -685,10 +665,17 @@ Spritz cookie
 Thumbprint cookie
 Cornflake cookie
 Benne wafer
+Protein bar
+Purée
+Puree
+Dumpling
+Dumplings
 
+Gelatin
 soup
 broth
 stew
+stews
 minestrone soup
 Apple soup
 Avocado soup
@@ -706,15 +693,9 @@ Chicken noodle soup
 Chicken soup
 Coconut soup
 Corn chowder
-Cream of apple soup
-Cream of asparagus
-Cream of broccoli
-Cream of celery
-Cream of chicken
-Cream of potato
-Cream of tomato
-Cream of crab
-Cream of mushroom
+Cream
+Nacho
+Nachos
 Cucumber soup
 Egg drop soup
 Fisherman's Soup
@@ -755,12 +736,17 @@ Vegetable soup
 salsa
 protein bar
 Pancakes
+Patties
 Ramp Pancakes
+Pancake
+Pancakes
 Scallion Pancake
 rice
 fried rice
 white rice
 brown rice
+Carnitas
+Marinade
 meat
 meats
 Beef
@@ -812,28 +798,16 @@ Peanut butter and jelly
 PB & j
 Roast beef
 Sloppy joe
-Steak burger
-Veggie burger
+Burger
 fries
 French fries
 chocolate
+Jam
+chimichurri
+Kebab
+Kebabs
 
 seafood
 fish
 shrimp
 trout
-
-food
-foods
-recipe
-recipes
-cook
-cooking
-cookbook
-bake
-baking
-barbecue
-lunch
-dinner
-breakfast
-chef

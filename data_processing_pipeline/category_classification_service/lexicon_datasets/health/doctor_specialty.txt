@@ -1,6 +1,12 @@
+Doc
 Doctor
+Doctors
+Specialist
+Specialists
 Acupuncturist
 Physiatrist
+Clinician
+Clinicians
 Chiropractor
 Pain Management Specialist
 Allergist
@@ -8,6 +14,8 @@ Derm
 Dermatologist
 Pediatric
 Pediatric Physician Assistant
+Physios
+Physiotherapists
 Family Family Physician
 Internist
 Pediatric Surgeon
@@ -41,6 +49,7 @@ GI Stomach Doctor
 GI Doctor
 GI Specialist
 Gastroenterologist
+Gastroenterologists
 OB-GYN
 Gyno
 Psychosomatic Medicine Specialist
@@ -50,9 +59,9 @@ Emergency Medicine Physician
 Pediatric Emergency Medicine Specialist
 Nuclear Medicine Specialist
 Endodontist
+Ophthalmologist
 Periodontist
 Prosthodontist
-Pediatric Ophthalmologist
 Refractive Surgeon
 Oculoplastic Surgeon
 Pediatric / Strabismus Eye Doctor
@@ -61,6 +70,9 @@ Neuro-Hand Surgeon
 Orthopedic Surgeon
 Spine Specialist
 Therapist
+Hygienist
+PCP
+Pharmacist
 Occupational Therapist
 Physical Therapist
 Behavioral Therapist
@@ -90,6 +102,7 @@ Pediatric Orthodontist
 Orthodontist
 Geriatrician
 Optometrist
+Optician
 Plastic Surgeon
 Foot & Ankle Specialist
 Pulmonary Diseases and Critical Care Medicine Specialist
@@ -101,6 +114,7 @@ Radiologist
 Oral Surgeon
 Shoulder & Elbow Surgeon
 Podiatrist
+Podiatrists
 Anesthesiologist
 Sleep Medicine Specialist
 Family Psychiatric & Mental Health Psychologist

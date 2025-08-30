@@ -1,0 +1,77 @@
+Acdsee
+Affinity
+Algorithmia
+Akvis
+Aurora HDR
+Avatan
+Befunky
+BlowUp
+Canva
+Capture One
+Darktable
+Digicam
+DxO PhotoLab
+EasyHDR
+FastStone
+Flickr
+FotoFlexer
+Fotor
+Fotostars
+Gimp
+gThumb
+G’MIC
+HDRExpress
+HDRMerge
+HDR Darkroom
+Hydra
+Imagemagick
+Krita
+Lightroom
+LightZone
+Light Compressor 
+LuminanceHDR
+Lunarpic
+Mpix
+Noiseware
+nomacs
+Oloneo
+On1 Effects 
+Paint.net
+Photivo
+PhotoEQ
+PhotoFlow
+Photolemur
+Photoline
+Photomatix
+Photomechanic
+Photomizer
+Photoninja
+Photopea
+PhotoRec
+Photoscape
+Photosense
+Photoshop
+photo mechanic
+Photo-kako
+Pho.to
+Pics.io
+Picture2life
+PicMonkey
+Pictorial
+Pinta
+Pixelmator
+Pixieset
+Pixlr
+Pizap
+Polarr
+PortraitPro
+Radlab
+RawDigger 
+Ribbet 
+Rollip
+Silkypix
+Sumopaint
+Topazlabs
+UFRaw
+Vintager
+Zoner 

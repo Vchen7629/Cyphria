@@ -1,10 +1,12 @@
 Blender
 Coffee Maker
+Crockpot
 Crock pot
 Freezer
 Fridge
 Frother
 Grill
+Instant pot
 Kitchen Hood
 Meat grinder
 Microwave
@@ -13,5 +15,6 @@ Oven
 Pressure Cooker
 Refridgerator
 Rice cooker
+Slow-Cooker
 Stove
 Toaster

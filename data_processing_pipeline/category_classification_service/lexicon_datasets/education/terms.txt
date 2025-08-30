@@ -1,94 +1,370 @@
+Acadamic
 Academic
+Academically
 Academics
+Acceptance
+Active recall
+Admission
+Admissions
+Admit
+Admittance
+Admitted
+Advisor
+Advisors
+Alumni
+Anki
+Answer
+Answers
+APA
+Applied
+Apply
+Applying
 AP exams
+Attend
+Attendance
+Attending
+Average
+A+
+A-
 BAR
+BS
 Assignment
 Assignments
 Bar exam
+B+
+B-
+Bluebook
+Boards
 Calculus
+Canvas
+Catalog
+CC
+Chapter
+Chapters
+Cheat
+Cheated
+Cheating
 Class
 Classes
+Classmate
+Classmates
+Classroom
+Classrooms
 College
+College Resume
 Colleges
+College Board
+Cover
+Covering
+Common app
 Community college
+Concepts
+Counselor
 Course
+Courseload
 Courses
+Cram
+Cramming
+Credit
+Credits
+Curriculum
+C+
+C-
 Degree
 Degrees
+Diploma
+Dissertation
+District
+Double major
 Double majoring
+Dropped
+Dropping
+Ed
+Edu
+Education
 Elective
 Electives
+Enlisted
 Enroll
 Enrolled
 Essay
 Essays
 Exam
+Examination
+Examinee
+Examinees
 Exams
+Fail
+Failed
+Failing
+Fall
+Fellowship
+Feynman
+Fin Aid
+Financial Aid
+Final
+Finals
 Final exam
 Final exams
+First-year
 First year
+Flashcard
+Flashcards
+Flash Card
+Flash Cards
+Flunk
+Flunked
 Fourth year
+Free Response
 Freshman
 FRQ
 FRQs
+Gap Year
+GPA
 Grad
-grade
-grades
+Grade
+Grades
 Graduate
+Graduated
+Graduating
 Graduation
+Grant
+Grants
+Greenbook
+Highschool
+Highschooler
+High-school
 High school
+Homeschooled
+Homework
+Honors
+Honours
+HS
+IEEE
+Institution
 Instructor
 Junior
+Khan Academy
+Learn
+Learned
+Learner
+Learning
+Learnt
 Lecture
+Lectures
+Lesson
+Lessons
+Letter reccomendation
 Major
 Majored
 Majoring
+Mark
+Marks
+Material
+MCQ
+MCQs
+Med School
+Memorization
+Memorize
+Memorized
+Memorizing
+Middleschool
+Middle-school
 Middle school
+Midsemester
 Midterm
 Midterms
 Midterm exam
 Midterm exams
+Mini-lesson
+Mini-lessons
+Minor
+Minored
+Minoring
+MLA
+Mock Exam
+Mock Exams
+Mock Test
+Mock Tests
+Multiple-choice
+Multiple Choice
+MQ
+MQs
+Non-passers
 Note taking
 Notes
+Notetaking
+On-paper
+On paper
 Paper
 Papers
+Pass
+Passing
+Passed
+Pay attention
+Paying attention
+PD
+Peer
+Peerreview
+Peers
+Plagiarism
+Plagiarize
+Plagiarized
+Points
+Pomodoro
 Popquiz
 Popquizes
+Postdoctoral
+Postgraduate
+Prep
+Prepping
+Prerequisite
+Prerequisites
 Procrastinate
 Procrastinating
+Proctor
+Proctors
 Prof
 Professor
 Professors
-project
-projects
+Program
+Project
+Projects
+Pursue
+Pursuing
+Question
+Questions
+Quarter
+Quiz
+Quizzed
+Quizzes
+Reapplied
+Reapply
+Reapplying
+Register
+Registered
+Remake
+Remakes
 Report
+Requirement
+Requirements
+Rescind
+Rescinded
+Result
+Results
+Retaining
+Review
+Revise
+Revising
 Revision
 Revisions
+Rigor
+Rigorous
+SAT
+Schedule
+School
+Schooling
+Schools
+Scholarship
+Scholarships
+Score
+Scored
+Scoring
+Scratch paper
+Section
+Sections
+Self Study
+Self-Study
+Self-Studied
+Self Taught
 Seminar
 Seminars
-School
-Schools
-Second Year
-Semester
-Senioritis
 Senior
 Senior Year
+Second Year
+Sem
+Semester
+Seminar
+Senioritis
 Sophmore
+Spaced Repetition
+Spring
 Student
 Students
 Study
+Study Group
 Studies
 Studied
 Studying
+Subject
+Subjects
 Suspended
 Suspension
+Syllabi
+Syllabus
+TA
+Taken
+Taking
+Taught
+Teach
 Teacher
 Teachers
+Teaching
+Term
 Test
+Tester
+Testers
+Testing
 Tests
+Textbook
+Textbooks
+Texts
+Text book
+Thesis
 Third Year
+Topic
+Topics
+Transfer
+Transferring
+Tuition
+Turabian
+Turnitin
+Tutor
+Tutoring
 Uni
+Units
 University
 Universities
-Quarter
-Quiz
+Waitlist
+Waitlists
+Weighted
+Withdraw
+Withdrew
+WL
+Workload
+Work load
+Yearbook
+1st Grade
+2nd Grade
+3rd Grade
+4th Grade
+5th Grade
+6th Grade
+7th Grade
+8th Grade
+9th Grade
+10th Grade
+11th Grade
+12th Grader
+1st Grader
+2nd Grader
+3rd Grader
+4th Grader
+5th Grader
+6th Grader
+7th Grader
+8th Grader
+9th Grader
+10th Grader
+11th Grader
+12th Grader

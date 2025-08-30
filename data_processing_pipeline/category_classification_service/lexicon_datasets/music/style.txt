@@ -1,11 +1,16 @@
+Alt-pop
+Alt-rock
 Blues
 Bossa nova
 Classical
+Classically
 Contemporary
 Country
 Chiptune
 C-pop
 Disco
+DnB
+Drum & bass
 Dubstep
 EDM
 Electronic
@@ -17,27 +22,40 @@ Folk
 Funk
 Funk
 Hip hop
+Hip-Hop
 House
 Hyperpop
 Hymm
 Instrumental
 Jazz
 J-pop
+J-Rock
 K-pop
 Lo-fi
 Lofi
 L-pop
 Metal
+Metalcore
 Neoclassical
 Pop
+Psytrance
 Punk
+Rap
+Rapping
+Reggae
+Reggaeton
 Rock
+Rnb
 R&B
+Rock & Roll
 Rythmn and Blues
 Soul
 Synth
 Swing
 Techno
 Trance
+Trap
+Trip Hop
+Trip-hop
 V-pop
 8-bit

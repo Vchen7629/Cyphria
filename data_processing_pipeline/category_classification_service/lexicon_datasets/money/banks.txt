@@ -1,7 +1,12 @@
+Chase
 JPMorgan Chase
+BOFA
 Bank of America
+Chime
 Citigroup
 Citi
+WF
+Visa
 Wells Fargo
 Goldman Sachs
 Morgan Stanley
@@ -9,6 +14,8 @@ US. Bancorp
 PNC Financial Services
 TD Bank
 Truist Financial
+Transunion
+CapitalOne
 Capital One
 Charles Schwab Corporation
 Charles Schwab

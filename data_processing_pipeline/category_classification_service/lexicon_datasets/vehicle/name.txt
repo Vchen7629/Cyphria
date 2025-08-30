@@ -5,6 +5,7 @@ Acura Integra
 Acura Legend
 Acura MDX
 Acura MDX Sport Hybrid
+NSX
 Acura NSX
 Acura RDX
 Acura RL
@@ -266,10 +267,19 @@ Chevrolet Colorado Crew Cab Pickup
 Chevrolet Colorado Extended Cab Pickup
 Chevrolet Colorado Regular Cab Pickup
 Chevrolet Corsica
+Stingray
+Z06
+Z06s
+C5
+C7 z51
+C8 ZO6
+vette
 Corvette
-Chevrolet Corvette
-Chevrolet Cruze
-Chevrolet Cruze Limited
+Corvette C5
+Corvette C7 z51
+Corvette C8
+Corvette C8 Z06
+Cruze
 Chevrolet Equinox
 Express 1500 Cargo Van
 Express 1500 Cargo Minivan
@@ -1257,6 +1267,7 @@ Hummer H3T Pickup
 Hyundai
 Hyundai Accent
 Hyundai Azera
+Atos prime
 Elantra
 Elantra GT
 Hyundai Elantra
@@ -1278,12 +1289,15 @@ Hyundai Palisade
 Hyundai Santa Fe
 Hyundai Santa Fe Sport
 Hyundai Santa Fe XL
+Sonata
 Hyundai Sonata
 Hyundai Sonata Hybrid
 Hyundai Sonata Plug-in Hybrid
+Tiburon
 Hyundai Tiburon
-Hyundai Tuscon
+Tuscon
 Tuscon Sport
+Hyundai Tuscon
 Hyundai Tuscon Sport
 Hyundai Tuscon Fuel Cell
 Hyundai Veloster
@@ -1799,6 +1813,10 @@ Nissan Frontier Regular Cab Pickup
 Nissan GT-R
 Nissan JUKE
 Nissan Kicks
+Pulsar
+Pulsar Q
+Nissan Pulsar
+Nissan Pulsar Q
 King Cab Pickup
 Nissan King Cab
 Nissan King Cab Pickup
@@ -1842,6 +1860,7 @@ Nissan Quest Minivan
 Nissan Rogue
 Nissan Rogue Select
 Nissan Rogue Sport
+Sentra
 Nissan Sentra
 Nissan Stanza
 Titan Single Cab Pickup
@@ -1959,6 +1978,8 @@ Porsche
 Porsche 718 Boxster
 Porsche 718 Cayman
 Porsche 718 Spyder
+911
+911s
 Porsche 911
 Porsche 928
 Porsche Boxster
@@ -2049,9 +2070,6 @@ Rivian R1S
 Rivian R2
 Rivian R3
 Rivian R1T Pickup
-Rolls_Royce
-Rolls-Royce
-Rolls Royce
 Rolls-Royce Dawn
 Rolls-Royce Ghost
 Rolls-Royce Phantom
@@ -2078,70 +2096,49 @@ Saturn Relay Van
 Saturn Relay Minivan
 Saturn SKY
 Saturn VUE
-Smart
-Smart fortwo
-Smart fortwo cabrio
-Smart fortwo electric drive
-SEAT ibiza
-SEAT ibiza II
-SEAT Leon
-SEAT Arona
-SEAT Ateca
-SEAT Cupra Formentor
-SEAT Cupra Born
-SEAT Cupra Tavascan
-Skoda
-Škoda
-Škoda Enyaq
-Škoda Elroq
-Škoda Kodiaq
-Škoda Karoq
-Škoda Kamiq
-Škoda Kushaq
-Škoda Kylaq
-Škoda Superb
-Škoda Octavia
-Škoda Octavia Vrs
-Škoda Slavia
-Škoda Scala
+fortwo
+fortwo cabrio
+fortwo electric drive
+ibiza
+ibiza II
+Leon
+Arona
+Ateca
+Cupra Formentor
+Cupra Born
+Cupra Tavascan
+Enyaq
+Elroq
+Kodiaq
+Karoq
+Kamiq
+Kushaq
+Kylaq
+Superb
+Octavia
+Octavia Vrs
+Slavia
+Scala
 Subaru
 Subaru Ascent
 Subaru B9 Tribeca
 Subaru BRZ
 Subaru Baja
+CrossTrek
 Subaru Crosstrek
 Touring Hatch
-2021 Forester
-2020 Forester
-2019 Forester
-2018 Forester
-2017 Forester
-2016 Forester
-2015 Forester
-2014 Forester
-2013 Forester
-2012 Forester
-2011 Forester
-2010 Forester
-2009 Forester
-2008 Forester
-2007 Forester
-2006 Forester
-2005 Forester
-2004 Forester
-2003 Forester
-2002 Forester
-2001 Forester
-2000 Forester
-1999 Forester
-1998 Forester
+Forester
 Subaru Forester
+Impreza
 Subaru Impreza
 Subaru Justy
 Subaru Legacy
 Subaru Outback
+SVX
 Subaru SVX
+Tribeca
 Subaru Tribeca
+WRX
 Subaru WRX
 Suzuki
 Suzuki Aerio
@@ -2165,118 +2162,67 @@ Suzuki Verona
 Suzuki X-90
 Suzuki XL7
 Suzuki XL-7
-Tesla
-Tesla Roadster
+Roadster
 Model S
-Tesla Model S
 Model X
-Tesla Model X
 Model 3
-Tesla Model 3
 Model Y
-Tesla Model Y
-Tesla Semi
-Cybertruck Pickup
-Tesla Cybertruck
-Tesla Cybertruck Pickup
-Toyota
-Toyota Landcruiser
-Toyota Landcuriser
-Toyota Stout
-Toyota 4Runner
-Toyota 86
-Toyota Avalon
-Toyota Avalon Hybrid
-Toyota C-HR
+Cybertruck
+Landcruiser
+Landcuriser
+Stout
+4Runner
+86
+Avalon
+Avalon Hybrid
+C-HR
 Camry
 Camry Hybrid
-Toyota Camry
-Toyota Camry Hybrid
-Toyota Celica
+Celica
 Corolla
 Corolla iM
 Corolla Hybrid
-Toyota Corolla
-Toyota Corolla iM
-Toyota Corolla Hybrid
-Toyota Echo
-Toyota Fj Cruiser
-Toyota Supra
-Toyota GR Supra
-Toyota Highlander
-Toyota Highlander Hybrid
+Echo
+Fj Cruiser
+Supra
+GR Supra
+Highlander
+Highlander Hybrid
 Land Cruiser
-Toyota Land Cruiser
-Toyota MR2
-Toyota Matrix
-Toyota Mirai
-Toyota Paseo
+MR2
+Matrix
+Mirai
+Paseo
 Previa Van
 Previa Minivan
-Toyota Previa
-Toyota Previa Van
-Toyota Previa Minivan
+Previa
 Prius
 Prius c
 Prius v
 Prius Prime
 Prius Plug-in Hybrid
-Toyota Prius
-Toyota Prius c
-Toyota Prius v
-Toyota Prius Prime
-Toyota Prius Plug-in Hybrid
 RAV4
 RAV4 Hybrid
 RAV4 Prime
-Toyota RAV4
-Toyota RAV4 Hybrid
-Toyota RAV4 Prime
-Regular Cab Pickup
-Toyota Regular Cab
-Toyota Regular Cab Pickup
-Toyota Sequoia
+Regular Cab
+Sequoia
 Sienna Van
-Sienna Minivan
-Toyota Sienna
-Toyota Sienna Van
-Toyota Sienna Minivan
-Toyota Solara
-T100 Regular Cab Pickup
-T100 XtraCab Pickup
-Toyota T100 Regular Cab
-Toyota T100 XtraCab
-Toyota T100 Regular Cab Pickup
-Toyota T100 XtraCab Pickup
-Tacoma Access Cab Pickup
-Tacoma Double Cab Pickup
-Tacoma Regular Cab Pickup
-Tacoma XtraCab Pickup
-Toyota Tacoma Access Cab
-Toyota Tacoma Double Cab
-Toyota Tacoma Regular Cab
-Toyota Tacoma XtraCab
-Toyota Tacoma Access Cab Pickup
-Toyota Tacoma Double Cab Pickup
-Toyota Tacoma Regular Cab Pickup
-Toyota Tacoma XtraCab Pickup
-Toyota Tercel
-Tundra Access Cab Pickup
-Tundra CrewMax Pickup
-Tundra Double Cab Pickup
-Tundra Regular Cab Pickup
-Toyota Tundra Access Cab
-Toyota Tundra CrewMax
-Toyota Tundra Double Cab
-Toyota Tundra Regular Cab
-Toyota Tundra Access Cab Pickup
-Toyota Tundra CrewMax Pickup
-Toyota Tundra Double Cab Pickup
-Toyota Tundra Regular Cab Pickup
-Toyota Venza
-Toyota Yaris
-Toyota Yaris IA
-Volkswagen
+Solara
+T100 Regular Cab
+T100 XtraCab
+Tacoma
+Tacoma Access Cab
+Tacoma Double Cab
+Tacoma Regular Cab
+Tacoma XtraCab
+Tercel
+Tundra Access Cab
+Tundra CrewMax
+Tundra Double Cab
+Tundra Regular Cab
+Venza
+Yaris
+Yaris IA
 Volkswagen Arteon
 Volkswagen Atlas
 Volkswagen Atlas Cross Sport
@@ -2310,6 +2256,7 @@ Volkswagen Jetta III
 Volkswagen Jetta SportWagen
 Volkswagen New Beetle
 Passat
+Passat 1.8t
 rline Passat
 Volkswagen Passat
 Volkswagen Phaeton
@@ -2320,10 +2267,11 @@ Routan Minivan
 Volkswagen Routan
 Volkswagen Routan Van
 Volkswagen Routan Minivan
-Toyota Tiguan
-Toyota Tiguan Limited
-Toyota Touareg
-Toyota Touareg 2
+Tiguan
+Tiguan Limited
+Touareg
+Touareg 2
+Polo
 Polo GTI
 Polo GTI 6r
 Volvo
@@ -2347,6 +2295,7 @@ Volvo XC40
 Volvo XC60
 Volvo XC70
 Volvo XC90
+Haval H6 GT
 XPeng
 Harley Davidson
 Kawasaki Motors

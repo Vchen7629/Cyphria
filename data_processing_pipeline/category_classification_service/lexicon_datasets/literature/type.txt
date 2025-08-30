@@ -1,5 +1,8 @@
-Audiobook
 Anthology
+Audiobook
+Audiobooks
+Audio book
+Audio books
 Bibliography
 Book
 Books
@@ -7,10 +10,21 @@ Diary
 Diaries
 Ebook
 Ebooks
+E-book
+E-books
 Manuscript
 Novel
+Novelettes
 Novels
+Novel’s
+Parable
 Pocket edition
 Pocket editions
+Poem
+Serial novel
+Short stories
+Short story
+Tale
+Tales
 Volume
 Volumes

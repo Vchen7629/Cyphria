@@ -1,3 +1,5 @@
+Animism
+Apatheism
 Christianity
 Daoism
 Taoism
@@ -30,14 +32,6 @@ Jains
 Guru Granth Sahib
 Waheguru
 Sikhism
-Ten Commandment
-Ten Commandments
-New Commandment
-New Commandments
-Old Testament
-New Testament
-Bible
-Holy Spirit
 Christ
 Antichrist
 Jesus
@@ -59,8 +53,6 @@ Restorationism
 Catholicism
 Catholic
 Catholics
-Quran
-Qur'an
 Allah
 Islam
 Islamic
@@ -93,8 +85,10 @@ Zoroastrianism
 Atheism
 Atheist
 Atheistic
+Atheists
 Paganism
 Satanism
 Satanist
 Satanists
 Creationism
+monasticism

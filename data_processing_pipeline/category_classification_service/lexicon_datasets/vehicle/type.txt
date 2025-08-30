@@ -10,10 +10,12 @@ Minivan
 Minivans
 Motorcycle
 Motorcycles
+NGK
 Pickup
 Pickups
 Sedan
 Sedans
+Semi
 SUV
 SUVs
 Tractor

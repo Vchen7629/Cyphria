@@ -1,5 +1,6 @@
 Baster
 Biscuit press
+Blender
 Bottle opener
 Bowl
 Cheese slicer
@@ -16,6 +17,7 @@ Glove
 Knife
 Ladle
 Masher
+Measuring cup
 Opener
 Pan
 Peeler

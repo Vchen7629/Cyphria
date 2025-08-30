@@ -9,71 +9,133 @@ Akron Atom Splitters
 Snickers Waco Wonders
 
 #basketball
+Aces
+Atlanta Dream
+Atlanta Hawks
 Boston Celtics
 Boston Celtic
-Celtics
 Brooklyn Nets
-New York Knicks
-Knicks
-Philadephia 76ers
-76ers
-Toronto Raptors
-Chicago Bulls
-Cleaveland Cavaliers
-Detroit Pistons
-Pistons
-Indiana Pacers
-Pacers
-Milwaukee Buck
-Milwaukee Bucks
 Bucks
-Atlanta Hawks
+Bulls
+Cavaliers
+Celtics
 Charlotte Hornets
-Miama Heat
-Orlando Magic
-Washington Wizards
+Chicago Bulls
+Chicago Sky
+Cleaveland Cavaliers
+Clippers
+Connecticut Sun
+Dallas Maverick
+Dallas Mavericks
+Dallas Wings
 Denver Nuggets
-Nuggets
-Minnesota Timberwolves
-Timberwolves
-Oklahoma City Thunder
-Portland Trail Blazers
-Utah Jazz
+Detroit Pistons
+Fever
+Golden State Valkyries
 Golden State Warriors
+Grizzlies
+Hawks
+Heat
+Hornets
+Houston Rockets
+Indiana Fever
+Indiana Pacers
+Jazz
+Kansas City Kings
+Kings
+Knicks
+Lakers
 LA Clippers
+Las Vegas Aces
 Los Angeles Clippers
 Los Angeles Lakers
-Lakers
-Pheonix Suns
-Sacramento Kings
-Dallas Mavericks
-Mavericks
-Houston Rockets
-Memphis Grizzlies
-New Orleans Pelicans
-San Antonio Spurs
-Kansas City Kings
-
-Atlanta Dream
-Chicago Sky
-Connecticut Sun
-Indiana Fever
-New York Liberty
-Washington Mystics
-Dallas Wings
-Golden State Valkyries
-Las Vegas Aces
 Los Angeles Sparks
+Lynx
+Magic
+Mavericks
+Mavs
+Memphis Grizzlies
+Miama Heat
+Milwaukee Buck
+Milwaukee Bucks
 Minnesota Lynx
+Minnesota Timberwolves
+Mystics
+New York Knicks
+New York Liberty
+New Orleans Pelicans
+Nuggets
+Oklahoma City Thunder
+Orlando Magic
+Pacers
+Pelicans
 Pheonix Mercury
+Pheonix Suns
+Philadephia 76ers
+Pistons
+Portland Trail Blazers
+Raptors
+Rockets
+Sacramento Kings
+San Antonio Spurs
 Seattle Storm
+Sparks
+Spurs
+Suns
+Thunder
+Timberwolves
+Toronto Raptors
+Trail Blazers
+Utah Jazz
+Valkyries
+Warriors
+Washington Mystics
+Washington Wizards
+Wings
+Wizards
+Wolves
+76ers
 
 #football
+Bears
+Chargers
+Chicago Bears
+Detroit Lions
+Jacksonville Jaguars
+Jaguars
+Jets
+Las Vegas Raiders
+Lions
+Los Angeles Rams
+Los Angeles Chargers
+Michigan Panthers
+New York Jets
+Panthers
+Raiders
+Rams
+Seahawks
+Seattle Seahawks
 Tampa Bay Buccaneers
 
 #Baseball
+Angels
+Cardinals
+Los Angeles Angels
 Red Sox
+Royals
 
 #Soccer
 Minnesota United
 Minnesota United FC
+
+#Hockey
+Edmonton Oilers
+Florida Panthers
+Oilers
+Panthers
+Toronto Maple Leafs
+
+#Cricket
+LA Knight Riders
+Los Angeles Knight Riders
+Washington Freedom

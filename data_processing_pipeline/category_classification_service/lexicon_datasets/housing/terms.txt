@@ -1,0 +1,357 @@
+AC
+A C
+Address
+Accommodation
+Agent
+Agents
+Alleyway
+Alleyways
+Amenity
+Amenities
+Applicant
+Applicants
+Application
+Area
+Asking price
+Attic
+Background check
+Background checks
+Backyard
+Back yard
+Basement
+Bathroom
+Bathrooms
+Bed
+Bedroom
+Bedrooms
+Breaker
+Brick
+Builder
+Builders
+Building
+Buildings
+Building code
+Building regulation
+Building site
+Built
+Buyer
+Buyers
+Carpet
+Carpeted
+Carpeting
+Cavity Wall
+Cavity Walls
+Ceiling
+Ceilings
+Charging rent
+Chimney
+Closing cost
+Closing costs
+Communal
+Construction
+Contract
+Contractor
+Contractors
+Conveyancer
+Conveyancers
+Countertop
+Countertops
+Crawlspace
+Crawl space
+Deadbolt
+Deck
+Deed
+Deeds
+Deposit
+Desirable
+Detached
+Double
+Down payment
+Downstair
+Downstairs
+Driveway
+Drywall
+Dwelling
+Dwellings
+Electrical installation
+Electrical outlet
+Electrical works
+End-of-terrace
+EPC
+EPC-B
+EPC-E
+Estate
+Estates
+Evict
+Evicted
+Evictee
+Evicting
+Eviction
+Ex-tenant
+Fence
+Fenced
+Fitting
+Fittings
+Fixture
+Fixtures
+Floor
+Floorboard
+Flooring
+Floors
+Floor board
+First-home
+Frontyard
+Front door
+Front doors
+Front yard
+foreclosed
+Foreclosure
+Foundation
+FTB
+Furnish
+Furnished
+Furniture
+Garage
+Guest
+Guests
+Gutter
+Hallway
+Hardwood
+Heat pump
+Heating
+Heating system
+Hoa
+Holding fee
+Home
+Homebuyer
+Homebuyers
+Home-buyer
+Home-buyers
+Homeless
+Homelessness
+Homeowner
+Homeowners
+Homeowners Insurance
+Home owners association
+Home values
+House
+Houses
+House hunting
+House insurance
+House warming
+Housing
+Housing crisis
+Indemnity policy
+Infestation
+Inspection
+Insulation
+Insurance
+Interior
+Keys
+Land
+Landlady
+Landlady's
+Landladies
+Landlord
+Landlords
+Landlord's
+Landlord Insurance
+Late Payment
+Lease
+Lease agreement
+Lease Termination
+Lintel
+Lintels
+Listing
+Listings
+Live
+Living
+Living room
+Living space
+Location
+Locks
+Loft
+Lofted
+Long-term tenant
+Lounge
+Mail box
+Maintained
+Maintenance
+Market
+Market rate
+Market value
+Mortage
+Mortgage
+Move
+Move-in
+Move-out
+Moved
+Moving
+Neighbor
+Neighborhood
+Neighbors
+Neighbour
+Neighbourhood
+Neighbours
+Neighbour's
+Notice
+Occupancy
+Occupant
+Offer
+Offers
+One-bedroom
+Owner
+Ownership
+Owners
+Owning
+Paint
+Painted
+PEX
+Plaster
+Plasterboard
+Plumber
+Plumbing
+Pool
+Porch
+Price range
+Primary Residence
+Property
+Property Management
+Property manager
+Property values
+Properties
+Rate
+Real-estate
+Real estate
+Realtor
+Regulations
+Remodeled
+Rent
+Rental
+Rentals
+Rented
+Rentee
+Renter
+Renters
+Renters insurance
+Renter's insurance
+Renting
+Rent adjustment
+Rent increase
+Rent reduction
+Remodel
+Renew
+Renewal
+Renewing
+Renews
+Renovate
+Renovated
+Renovating
+Renovation
+Renovations
+Repaint
+Repainted
+Repainting
+Repairs
+Resale value
+Residence
+Residency
+Resident
+Residents
+Roof
+Roofers
+Roofing
+Room
+Roommate
+Roommates
+Rooms
+Roomy
+Screen
+Screening
+Section 8
+Sec depo
+Security deposit
+Security deposits
+Seller
+Sellers
+Seller's
+Shoebox
+Show ready
+Single
+Skirting board
+Skirting boards
+Slumlords
+Solicitors fee
+Solicitors fees
+Spacious
+Sqft
+Sq ft
+Stamp duty
+Staying
+Structural issues
+Structural survey
+Structure
+Stud Wall
+Stud Walls
+Sublet
+Subletting
+Sublease
+Subleasing
+Subsidence
+Suburb
+Suburbs
+Survey
+Surveyor
+Surveys
+Suspended floor
+Single family home
+SDLT deadline
+Tenancy
+Tenant
+Tenanted
+Tenants
+Tenant's
+Terraced
+Thermostat
+Tiles
+Tour
+Tours
+Turnover
+Uninhabitable
+Unit
+Units
+Upstair
+Upstairs
+Utility
+utilities
+Vacancy
+Vacant
+Vacate
+Vacated
+Valuation
+View
+Viewing
+Viewings
+Wall
+Walls
+Wall Cavity
+Wall cavities
+Walkthrough
+Wear tear
+Wet room
+Zillow
+Zip code
+1b
+1BA
+1bd
+1BR
+2b
+2BA
+2BD
+2BR
+3BA
+3bd
+3BR
+2-bed
+3-bed
+4-bed

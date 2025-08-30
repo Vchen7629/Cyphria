@@ -1,4 +1,7 @@
 AP
+APCSA
+APPC E&M
+APs
 AP course
 AP courses
 AP Research
@@ -8,7 +11,6 @@ AP 3-D Art and Design
 AP Drawing
 AP Art History
 AP Music Theory
-Langcomp
 AP English Language and Composition
 AP English Literature and Composition
 AP English Language & Composition
@@ -31,17 +33,12 @@ AP World History
 AP Calculus
 AP Calculus AB
 AP Calc AB
-Calc AB
 AP Calculus BC
 AP Calc BC
-Calc BC
-APCSA
-CSA
 AP CSA
 AP Computer Science
 AP Computer Science A
 AP Comp Sci
-CSP
 AP CSP
 AP Computer Science Principle
 AP Precalc
@@ -54,21 +51,19 @@ AP Bio
 AP Chemistry
 AP Chem
 AP Environmental Science
-Physics 1
 AP Phys
 AP Physics
 AP Phys 1
+AP Phys. 1
 AP Physics 1
 AP Physics 1: Algebra-based
 AP Physics 1 Algebra-based
-Physics 2
 AP Phys 2
+AP Phys. 2
 AP Physics 2
 AP Physics 2: Algebra-based
 AP Physics 2 Algebra-based
-Physics C
 AP Physics C
-APPC E&M
 AP Physics C: Electricity and Magnetism
 AP Physics C: Electricity & Magnetism
 AP Physics C Electricity and Magnetism
@@ -98,3 +93,23 @@ AP Spanish Language & Culture
 AP Spanish Lit
 AP Spanish Literature and Culture
 AP Spanish Literature & Culture
+Business
+Calc
+Calculus
+Calc AB
+Calc BC
+Chem
+Chemistry
+CSA
+CSP
+CS2A
+ELA
+English
+Gen ed
+General Education
+Langcomp
+Math
+Mathematics
+Maths
+Physics
+Precalc

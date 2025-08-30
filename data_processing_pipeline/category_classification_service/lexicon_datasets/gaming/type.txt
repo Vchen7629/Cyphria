@@ -1,15 +1,51 @@
+AAA
+Action
+Adventure
+ARPG
+ARPGs
+Base building
 Casual
+City builder
+City builders
+CRPG
+Crpgs
 Fighting
 First person shooter
 Fps
+Gacha
+Gachas
+Horror
+Isometric
+JRPG
+Live service
+MMO
 MMORPG
+MMOs
 Moba
+Multiplayer
+Multi-player
+Multi player
+Platform
 Racing
 Role Playing
 Role-Playing
+Roguelike
+Rougelike
 RPG
 RTS
+Rythmn
 Sandbox
 Shooter
 Sim
 Simulator
+Singleplayer
+Single-player
+Single player
+Soulslike
+Space
+Strategy
+Survival
+Tower Defense
+Turnbased
+Turn based
+Turn-based

@@ -1,0 +1,86 @@
+Admiral
+Admirals
+Ally Financial
+Alpari
+Angel One
+Auburn
+Auburn Bank
+Avanza
+Bank of America
+Bitpanda
+BUX
+BOA
+Change Group
+Charles Schwab
+Chase
+CIBC
+Citibank
+CMC
+CommSec
+Credible Labs
+Degiro
+Doorstep
+Dukascopy
+E-Trade
+EasyMarket
+Equiti Group
+EToro
+FIBO
+Fidelity
+Fifth Third
+Finam Holdings
+FinecoBank
+Firstrade Securities
+Flatexdegiro
+Freedom Holding
+Freetrade
+Futu
+FxPro
+Halifax Share Dealing
+Hargreaves Lansdown
+HSBC InvestDirect
+IG Group
+Interactive Brokers
+Interactive Investor
+IQ Option
+KeyBank
+Kiwoom Securities
+Lightspeed
+Matchbook FX
+Maybank
+Merrill
+Monex Group
+Moomoo
+Nordnet
+OCBC
+Plus500
+PNC
+Qtrade
+Questrade
+Robinhood
+Saxo Bank
+Scottrade
+Schwab
+Sfox
+Sharesies
+SoFi
+Stake
+Standard Chartered
+Takarékbank
+TD Ameritrade
+Thinkorswim
+Trade Republic
+TradeStation
+Trading 212
+U.S. Bancorp
+UOB-Kay Hian
+USAA
+Vanguard
+VT Markets
+Wachovia
+Wealth Lab
+Wealthsimple
+Webull
+Wells Fargo
+XTB S.A.
+Zerodha

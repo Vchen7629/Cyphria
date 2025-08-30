@@ -1,23 +1,16 @@
 14900KF
 i9-14900KF
-Intel Core i9-14900KF
 i9-10900K
-Intel Core i9-10900K
 
 i7-12700K
-Intel Core i7-12700K
 i7-11700F
-intel i7-11700F
 
 i5-13450HX
-Intel Core i5-13450HX
 i5 10400f
-intel i5 10400f
 i5-4670
-Intel i5-4670
 
-
-AMD 9950X
+Ryzen
+9950X
 Ryzen 9 9950X
 Ryzen 9 9950X3D
 AMD Ryzen 9 9950X

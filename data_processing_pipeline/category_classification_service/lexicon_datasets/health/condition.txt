@@ -1,18 +1,49 @@
+Abcess
+Abdominal aortic aneurysm
+Abnormally excessive sweating
+Ache
+Aches
+Aching
+Alcoholism
+Anaphylactic
+Anxious thoughts
+Atrial fibrillation
+A fib
+Bloating
+Blurred vision
+Breakout
+Breakouts
+Bumps
+Burning skin
+Cancer
+Costochondritis
+DDD
+Degenerative Disc Disease
 Disease
-cancer
+Dizziness
+Dry scalp
+Whiteheads
+Oedema
+Gyno
+Farsighted
+Nausea
+Nearsighted
+HLHS
+Ulcer
+Ulcers
 hallucination
 hallucinations
 Health
 Healthy
-infection
-infected
-dizziness
-A fib
-Atrial fibrillation
-Abdominal aortic aneurysm
-Abnormally excessive sweating
+Hypoglycemic
+Scary dreams
+Infection
+Infected
+Ingrown Toenail
+Ingrown Toenails
+Onychocryptosis
+Nystagmus
 Hyperhidrosis
-Abscess, Bartholin's
 Bartholin's cyst
 Absence seizure
 Acanthosis nigricans
@@ -101,8 +132,12 @@ Churg-Strauss syndrome
 Allergic granulomatosis and angiitis
 Allergic rhinitis
 Hay fever
+Allergy
 Allergies
+Allergy-related
 Dust mite allergy
+Muscle Twitches
+Ringing Ears
 Egg allergy
 Food allergy
 Latex allergy
@@ -112,10 +147,16 @@ Nickel allergy
 Peanut allergy
 Penicillin allergy
 Pet allergy
+PEM
+Post-Exertional Malaise
+Malnutrition
 Shellfish allergy
 Wheat allergy
 Alopecia
 Hair loss
+Hair thinning
+Bald
+Balding
 Alpha-gal syndrome
 ALS
 Amyotrophic lateral sclerosis
@@ -144,7 +185,10 @@ Anal itching
 Anaphylaxis
 Anemia
 hypermobile ehlers danlos
-hypermobile ehlers danlos Syndrome
+hypermobile ehlers-danlos
+Nauseous
+Pots
+Postural Orthostatic Tachycardia
 Aplastic anemia
 Thalassemia
 Iron deficiency anemia
@@ -201,6 +245,7 @@ Auditory processing disorder
 Aphasia
 Aphthous stomatitis
 Canker sore
+Cold sweats
 Aphthous ulcer
 Apical ballooning syndrome
 Broken heart syndrome
@@ -208,11 +253,11 @@ Aplastic anemia
 Appendicitis
 APS
 Antiphospholipid syndrome
+apnea
+petechiae
 ARDS
 Arenaviruses
-Viral hemorrhagic fevers
 Argentine hemorrhagic fever
-Viral hemorrhagic fevers
 Arm fracture
 Broken arm
 Arnold-Chiari malformation
@@ -233,11 +278,15 @@ Avascular necrosis
 osteonecrosis
 Aspergillosis
 Asthma
+Canker sore
 hypochondriac
 Astigmatism
 Astrocytoma
+macular edema
+cataract
+cataracts
+conjonctivite
 AT
-Atrial tachycardia
 Ataxia
 Atelectasis
 Atherosclerosis
@@ -268,9 +317,12 @@ Autoimmune pancreatitis
 Autonomic neuropathy
 Avascular necrosis
 osteonecrosis
-
+FLU
 Bird flu
 AVN
+Itch
+Cavity
+IBS-C
 Baby acne
 Back pain
 Bacterial vaginosis
@@ -335,6 +387,7 @@ Bladder infection
 Cystitis
 Bladder inflammation
 Interstitial cystitis
+Prolapse
 Bladder prolapse
 Anterior vaginal prolapse
 cystocele
@@ -346,6 +399,7 @@ Blocked tear duct
 Blocked ureter
 Ureteral obstruction
 Blood in urine
+Lupus SLE
 hematuria
 BMS
 Burning mouth syndrome
@@ -410,7 +464,6 @@ Bullous pemphigoid
 Bundle branch block
 Bunions
 Bunyaviruses
-Viral hemorrhagic fevers
 Meralgia paresthetica
 Bursitis
 Knee bursitis
@@ -426,9 +479,11 @@ Bone cancer
 Breast cancer
 Carcinoid tumors
 Cervical cancer
+Chronic infection
 Chronic lymphocytic leukemia
 Chronic myelogenous leukemia
 Colon cancer
+Toothache
 Endometrial cancer
 Esophageal cancer
 Eye melanoma
@@ -463,6 +518,7 @@ Skin cancer
 Soft tissue sarcoma
 Squamous cell carcinoma of the skin
 Stomach cancer
+inflammation
 Foreskin inflammation
 Balanitis
 Balonoposthitis
@@ -471,6 +527,12 @@ Thyroid cancer
 Endometrial cancer
 Vaginal cancer
 Vulvar cancer
+tumor
+tumors
+Disabled
+Bleed
+Bleeding
+Bleeds
 Wilms tumor
 Oral thrush
 Yeast infection
@@ -506,7 +568,7 @@ Cataracts
 Cavernous malformations
 emetophobia
 Cavities
-Cavities and tooth decay
+Tooth decay
 CDH
 Congenital diaphragmatic hernia
 Celiac artery compression
@@ -530,17 +592,21 @@ Swimmer's itch
 Cerebral aneurysm
 Brain aneurysm
 Cerebral palsy
+Dysregulation
 Cerebrospinal fluid leak
 CSF leak
-mental disorder
-mental disorders
+Mental disorder
+Mental disorders
 Migraine
 Migraines
+hormonal acne
 cystic acne
 dental Phobia
 leaking urine
+Urinary incontinence
 Cerebrovascular accident
 Stroke
+Strokes
 Cerumen impaction
 Earwax blockage
 Cervical cancer
@@ -589,10 +655,10 @@ Huntington's disease
 Choroid plexus carcinoma
 Chronic adrenal insufficiency 
 Addison's disease
+Cough
+Coughs
+Coughing
 Chronic compartment syndrome
-Chronic exertional compartment syndrome
-Chronic cough
-Chronic daily headaches
 Chronic exertional compartment syndrome
 Chronic fatigue
 Myalgic encephalomyelitis
@@ -631,8 +697,12 @@ Chronic lymphocytic leukemia
 Clostridioides difficile infection
 Clostridium difficile infection
 C. difficile infection
-
+Fever
 Clubfoot
+Headache
+Headaches
+Factor 5 Leiden
+Factor V Leiden
 Cluster headache
 Coarctation of the aorta
 Coccidioidomycosis
@@ -696,7 +766,6 @@ Heart failure
 Conjoined twins
 Conjunctivitis
 Pink eye
-conjunctivitis
 colonic dysmotility
 Constipation
 Contact dermatitis
@@ -759,6 +828,7 @@ Cyclic vomiting syndrome
 Cyclothymia
 cyclothymic disorder
 Bartholin's cyst
+Digestive issues
 Ganglion cyst
 Kidney cysts
 Ovarian cysts
@@ -778,6 +848,7 @@ Narcolepsy
 DCIS
 Ductal carcinoma in situ
 DDH
+Depressed
 De Quervain tenosynovitis
 Dry eyes
 Deep vein thrombosis
@@ -820,13 +891,15 @@ Devic's disease
 Neuromyelitis optica
 DFSP
 Dermatofibrosarcoma protuberans
+Blister
+Pre-Diabetes
 Diabetes
 Diabetes insipidus
 Gestational diabetes
+Type 1
+Type 2
 Type 1 diabetes
-Type 1 diabetes in children
 Type 2 diabetes
-Type 2 diabetes in children
 Diabetic coma
 Diabetic hypoglycemia
 Diabetic ketoacidosis
@@ -836,6 +909,7 @@ Diabetic neuropathy
 Diabetic retinopathy
 Diaper rash
 Diarrhea
+Shivers
 Antibiotic-associated diarrhea
 Traveler's diarrhea
 Voice disorders
@@ -898,6 +972,8 @@ Ectopic pregnancy
 Ectropion
 Erectile dysfunction
 Edema
+Pitting ankles
+Shortness of breath
 Pulmonary edema
 Egg allergy
 Ehlers-Danlos syndrome
@@ -975,6 +1051,7 @@ Premature ventricular contractions
 Eye floaters
 Eye melanoma
 Eyelid inflammation
+Burning sensation
 Blepharitis
 Eyestrain
 Facial palsy
@@ -985,6 +1062,8 @@ Fallen arches
 Flatfeet
 Fallot, tetralogy of
 Tetralogy of Fallot
+Upper Back Pain
+Esotropia
 Familial adenomatous polyposis
 Familial hypercholesterolemia
 Familial Mediterranean fever
@@ -1000,31 +1079,31 @@ Female sexual dysfunction
 Fetal alcohol syndrome
 Fetal macrosomia
 Fever
+Fevers
+Friction burn
 Fever blister
 Cold sore
 Valley fever
-Viral hemorrhagic fevers
 Familial hypercholesterolemia
 Fibroadenoma
 Fibrocystic breasts
 Uterine fibroids
 Fibromuscular dysplasia
 Fibromyalgia
+Suicidal
 Cystic fibrosis
 Interstitial lung disease
 Pulmonary fibrosis
 Parvovirus infection
-Viral hemorrhagic fevers
 Arteriovenous fistula
 Flaviviruses
-Viral hemorrhagic fevers
 Floor of the mouth cancer
 Floppy valve syndrome
 Mitral valve prolapse
+Burn
 Flu
 Influenza
 Bird flu
-
 H1N1 flu
 swine flu
 Fluid around the heart
@@ -1114,6 +1193,8 @@ Burning mouth syndrome
 Glucocerebrosidase deficiency
 Gaucher disease
 Gluten-sensitive enteropathy
+Sensitive
+Emotional dysregulation
 Celiac disease
 Goiter
 Golfer's elbow
@@ -1132,7 +1213,6 @@ Gingivitis
 Periodontitis
 H. pylori infection
 Helicobacter pylori infection
-Hair loss
 Hair-pulling disorder
 Trichotillomania
 Hairy cell leukemia
@@ -1186,6 +1266,10 @@ Heart palpitations
 Heart valve disease
 Heartburn
 Heat exhaustion
+Lesion
+Lesions
+Rash
+Red patches
 Heat rash
 Heatstroke
 Heavy menstrual bleeding
@@ -1200,6 +1284,8 @@ Hemochromatosis
 Hemolytic uremic syndrome
 HUS
 Hemophilia
+Internal Hemorrhoids
+External Hemorrhoids
 Hemorrhoids
 Henoch-Schonlein purpura
 Hep A
@@ -1215,6 +1301,7 @@ Enlarged liver
 Hepatopulmonary syndrome
 Hereditary hemochromatosis
 Hemochromatosis
+Hemorrhagic
 Hereditary hemorrhagic telangiectasia
 Hereditary motor and sensory neuropathy
 Charcot-Marie-Tooth disease
@@ -1222,6 +1309,7 @@ Hereditary nonpolyposis colorectal cancer syndrome
 Lynch syndrome
 Hernia, hiatal
 Hiatal hernia
+heart murmur
 Inguinal hernia
 Umbilical hernia
 Herniated disk
@@ -1230,7 +1318,6 @@ Shingles
 Herpes zoster oticus
 Ramsay Hunt syndrome
 Genital herpes
-Hiatal hernia
 Hiccups
 Hidradenitis suppurativa
 hypertension
@@ -1239,6 +1326,8 @@ High blood pressure
 Secondary hypertension
 High cholesterol
 Neutropenia
+entrapped nerve
+Shoulder pain
 High-flow priapism
 Priapism
 Hilar cholangiocarcinoma
@@ -1258,6 +1347,8 @@ Hodgkin lymphoma
 Hodgkin's lymphoma
 Hordeolum
 Stye
+Wart
+Warts
 Horner syndrome
 Horner-Bernard syndrome
 Horner syndrome
@@ -1311,7 +1402,8 @@ Dehydration
 Hyponatremia
 Hypoparathyroidism
 Hypopituitarism
-Hypoplastic left heart syndrome
+Hypoplastic
+Left heart syndrome
 Hypospadias
 Hypothermia
 Hypothyroidism
@@ -1359,11 +1451,8 @@ Infectious diseases
 Infertility
 Female infertility
 Male infertility
-Inflamed gallbladder
 Cholecystitis
-Inflamed pancreas
 Pancreatitis
-Inflamed pericardium
 Pericarditis
 Inflammatory breast cancer
 Ingrown hair
@@ -1404,7 +1493,7 @@ Ischemic priapism
 Priapism
 Islet cell cancer
 Pancreatic neuroendocrine tumors
-Itchy skin
+Itchy
 pruritus
 ITP
 Immune thrombocytopenia
@@ -1435,7 +1524,10 @@ Acute kidney injury
 Chronic kidney disease
 Kidney infection
 Kidney stone
+Vomit
+Vomitting
 Kissing disease
+Mono
 Mononucleosis
 Skin tumor
 Skin Tumors
@@ -1455,7 +1547,6 @@ Mastitis
 Lactose intolerance
 Laryngitis
 Lassa fever
-Viral hemorrhagic fevers
 Lateral elbow tendinopathy
 Tennis elbow
 Lateral epicondylitis
@@ -1570,7 +1661,7 @@ Bipolar 2
 Bipolar disorder
 Marfan syndrome
 MASLD
-Nonalcoholic fatty liver disease
+Nonalcoholic fatty liver
 Mastalgia
 Breast pain
 Mastitis
@@ -1586,6 +1677,7 @@ Medial tibial stress syndrome
 Shin splints
 Median arcuate ligament syndrome
 Medication overuse headaches
+anemia
 Mediterranean anemia
 Thalassemia
 Medulloblastoma
@@ -1607,6 +1699,7 @@ Menorrhagia
 Heavy menstrual bleeding
 Menstrual cramps
 Mental illness
+tendencies
 sadomasochistic tendencies
 Meralgia paresthetica
 Merkel cell carcinoma
@@ -1629,7 +1722,6 @@ Migraine
 Migraine with aura
 Mild cognitive impairment 
 Miliaria
-Heat rash
 Milk allergy
 Miscarriage
 Mitral valve disease
@@ -1763,7 +1855,6 @@ OCD
 Obstetric cholestasis
 Cholestasis of pregnancy
 Obstructive sleep apnea
-Obstructive sleep apnea in children
 Pediatric obstructive sleep apnea
 Occupational asthma
 Ocular albinism
@@ -1866,7 +1957,7 @@ Pelvic organ prolapse
 Chronic pelvic pain
 Uterine prolapse
 Pemphigus
-Penicillin allergy
+Penicillin
 Peptic ulcer
 Perforated eardrum
 Ruptured eardrum
@@ -1911,11 +2002,12 @@ Pheochromocytoma
 Phlebitis
 Thrombophlebitis
 Social anxiety disorder
+phobia
 social phobia
 Pick's disease 
 Frontotemporal dementia
 Pelvic inflammatory disease
-Hemorrhoids
+Hemorrhoid
 Pilonidal cyst
 Pilonidal dimple
 Sacral dimple
@@ -2016,7 +2108,7 @@ Presbycusis
 Hearing loss
 Presbyopia
 Prescription drug abuse
-Pressure sore 
+Sore 
 Bedsores
 pressure ulcers
 Pressure ulcer
@@ -2061,6 +2153,7 @@ Pseudocholinesterase deficiency
 Pseudogout
 Pseudomembranous colitis
 Pseudotumor cerebri
+Blackouts
 idiopathic intracranial hypertension
 Psoriasis
 Psoriatic arthritis
@@ -2109,6 +2202,8 @@ Solitary rectal ulcer syndrome
 Rectovaginal fistula
 Recurrent breast cancer
 Recurrent oral ulcers
+Sore
+Soreness
 Canker sore
 Red eye
 Subconjunctival hemorrhage
@@ -2132,7 +2227,7 @@ Restless legs syndrome
 Retinal detachment
 Retinal diseases
 Retinoblastoma
-Diabetic retinopathy
+Retinopathy
 Retractile testicle
 Retrograde ejaculation
 Rett syndrome
@@ -2142,11 +2237,11 @@ Rheumatic fever
 Rheumatoid arthritis
 Hay fever
 Nonallergic rhinitis
+fractured
 Rib fracture
 Broken ribs
 Rickets
 Rift Valley fever
-Viral hemorrhagic fevers
 Ringing in the ear
 Tinnitus
 Ringworm 
@@ -2162,7 +2257,6 @@ Kyphosis
 Respiratory syncytial virus
 Rubella
 Rubeola
-Measles
 Rumination syndrome
 Runner's knee
 Patellofemoral pain syndrome
@@ -2241,18 +2335,21 @@ Compulsive sexual behavior
 Sexually transmitted diseases
 STDs
 STD
+SBS
+Short bowel syndrome
 Shaken baby syndrome
 Shellfish allergy
 Shigella infection
 Shin splints
 Shingles
-Short bowel syndrome
+Short bowel
 Shoulder dislocation
 Dislocated shoulder
 Shy-Drager syndrome
 Multiple system atrophy
 Small intestinal bacterial overgrowth
 Sick sinus syndrome
+Stuffy nose
 Sickle cell anemia
 Sudden infant death syndrome
 Sin Nombre virus infection
@@ -2268,7 +2365,7 @@ Dermatographia
 Dermatographism
 pruritus
 Skipped heartbeats
-Heart palpitations
+Palpitations
 Slapped cheek disease
 Parvovirus infection
 Sleep apnea
@@ -2294,6 +2391,12 @@ Small vessel disease
 Smallpox
 Snoring
 Social anxiety
+SFN
+Small fiber neuropathy
+CIDP
+Chronic inflammatory demyelinating polyradiculoneuropathy
+PN
+Prurigo Nodularis
 social phobia
 Soft palate cancer
 Soft tissue sarcoma
@@ -2304,8 +2407,8 @@ Solitary fibrous tumor
 Solitary rectal ulcer syndrome
 Somatic symptom disorder
 Somnambulism
-Sore throat
 Spasmodic torticollis
+Tingling
 Cervical dystonia
 Specific phobias
 Specific reading disability
@@ -2384,6 +2487,12 @@ orthostatic intolerance
 Progressive supranuclear palsy
 Supraventricular tachycardia
 Suspicious breast lumps
+Lightheadedness
+Shortness breath
+Trembling
+Blurry vision
+Tunnel vision
+Chest tightness
 SVT
 Supraventricular tachycardia
 Sweating and body odor
@@ -2401,10 +2510,13 @@ Synostosis
 Alcoholism
 Craniosynostosis
 Synovial sarcoma
+Syph
 Syphilis
 Syringomyelia
 Systemic exertional intolerance disease
 Myalgic encephalomyelitis
+Fatigue
+Passing out
 chronic fatigue syndrome
 Systemic lupus erythematosus
 Systemic mastocytosis
@@ -2417,6 +2529,7 @@ Tapeworm infection
 TAPVR
 Total anomalous pulmonary venous return
 Tay-Sachs disease
+TB
 Tuberculosis
 Traumatic brain injury
 Teen depression
@@ -2458,7 +2571,7 @@ Thyroid gland enlargement
 Goiter
 Thyroid nodules
 Hyperthyroidism
-Bite Blister
+Bite
 Thyroiditis, chronic lymphocytic
 Transient ischemic attack
 Tic douloureux
@@ -2616,7 +2729,6 @@ Acoustic neuroma
 VEXAS Syndrome
 Ventricular fibrillation
 Viral gastroenteritis
-Viral hemorrhagic fevers
 Vitamin deficiency anemia
 Vitiligo
 Vocal cord paralysis

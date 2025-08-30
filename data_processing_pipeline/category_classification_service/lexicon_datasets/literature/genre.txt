@@ -1,36 +1,58 @@
-fiction
+Autobiography
+Auto-biography
+Comedy
 Coming-of-age
+Detective Novel
 epic
 Fabulation
-Folklore
 Fairy tale
 Fairytale
+Fiction
+Fictional
+Folklore
 Isekai
 Horror
 Legend
+Love story
 Myth
 Parable
 Urban legend
-Historical
+Historical fiction
 Adventure
 Autobiography
 Bibliography
 Biography
 Comedy
 Crime and mystery
+Dystopian literature
 Fantasy
 Horrow
-mystery
+Mystery
+Mythology
 Narrative
 Nonfiction
 Non fiction
 Non-fiction
+Non Romance
+Non-Romance
 Philosophical
+Philosophy
+Plays
+Political fiction
+Political thriller
+Political thrillers
 Poetry
-romance
+Pulp
+Romance
 Satire
+Scifi
 Sci-fi
 Science fiction
+Short stories
+Short story
 Thriller
 Thrillers
 Tall tale
+YA
+YAs
+Young Adult

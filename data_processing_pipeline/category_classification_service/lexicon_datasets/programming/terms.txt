@@ -1,49 +1,123 @@
 Abstraction
 Abstractions
+Agent
+Agents
+API
+APIs
 App
 Apps
 Application
 Applications
 Architecture
+Architectures
 Association
+Async
+Asynchronously
 Automation
+Auto-complete
+Auto-completion
 Administrator
 Administrators
 Algorithm
 Algorithms
+Arr
 Array
 Arrays
+Auth
+Authentication
+Authorization
+Autosave
+Autosaving
 Backend
+Backend-heavy
+Backup
+Backups
+Back-end
+Back end
+Base8
+Base10
+Base16
+Base32
+Base64
+Batteries-included
+Bit
+Bits
+Bool
+Boolean
+Booleans
+Browser
+Brute force
 Bug
 Bugged
 Bugs
 Build
 Building
+Byte
+Bytes
+B-tree
+Cache
+Cached
+Caching
+Callstack
 Camel Case
 CD
 Cloudnative
 CI
 CI-CD
+Class
+Classes
 Classifier
+Closures
 Code
 Codebase
+Coded
 Coder
 Coders
+Code-ownable
 Coding
+Command
+Commands
 Commit
 Commits
 Compile
+Compiled
 Compiler
 Compilers
+Component
+Components
+Computer Science
 Computer Vision
 Concurrency
 Concurrent
+Concurrently
+Config
+Configs
+Configuration
+Configurations
+Conflict
+Conflicts
 Container
 Containers
+Contributor
+Contributors
 Controller
 Controllers
+Cookie
+Cookies
+Coupled
+Decouple
+Coupling
+Crash
+Crashed
+Crashing
 CRUD
+Crudrepository
+CS
 Cybersecurity
+Daemon
+Daemonization
+Daemons
+Dashboard
 Data
 Database
 Databases
@@ -54,24 +128,64 @@ Datasets
 Data Modeling
 Data Structure
 Debug
+Debugger
 Debugging
 Declarative
+Decompiler
 Decorator
 Decorators
+Def
+Define
+Defined
+Delete
+Deleting
+Demo
+Denormalization
+Denormalize
+Denormalized
 Dependency
 Dependencies
+Deploy
+Deploying
+Deployment
+Deployments
+Design Pattern
+Design Patterns
 Dev
 Devs
 Develop
 Developer
 Developers
 Developed
+Development
 DevOp
 DevOps
+Dev-first
+Dict
+Dictionary
+Disconnect
 Distributed
+Div
+Divs
+Docs
+Document
+Documentating
 Documentation
+Domain
+Don't repeat yourself
+Downgrade
+Downtime
+Drives
+DRY
 DSA
+Dynamic
+Else
+Embedded
+Embedding
+Embeddings
 Encapsulation
+Endpoint
+Endpoints
 Enum
 Enumeration
 Enums
@@ -82,17 +196,40 @@ E2E tests
 End-to-end test
 End-to-end tests
 End-to-end testing
+Error
+Errors
 Event driven
 Event-driven
+Event loop
+Executable
+Feature Flag
+Feature Flags
+File
+Files
+Filter
+Filters
+Fine-tune
+Floating-point
+Folder
 Framework
 Frameworks
 Frontend
+Frontenders
+Frontend-heavy
+Front-end
+Front end
 Full Stack
 Full-Stack
 Function
 Functions
 Functional Programming
+Footer
+Footers
+Fork
+Forkable
 FOSS
+GameEngine
+Game Engine
 Garbage Collection
 Garbage-Collection
 GitOps
@@ -101,115 +238,383 @@ Hackathon
 Hackathons
 Hashmap
 Hashmaps
+Hash Table
+Header
+Headers
 Heap
 Heaps
+Hook
+Hooks
+Hot reload
+HTTP
+HTTPS
 Hyperparameter
 Hyperparameters
+h1
+h2
+h3
+h4
 IDE
+Idiomatic
+If
+Implement
+Implementation
+Implementing
+Import
+Importing
+Indentation
+Infra
+Infrastructure
 Ingress
 Inheritance
+Input
+Instance
+Int
+Integer
+Integers
+Integrate
+integrated
+Integrating
 Integration
 Integration test
 Integration tests
+Interface
+Internals
+Internet
 IoT
+I O
 Iterate
+Iteration
+Iterating
+Jparepository
+Kernel
 Language
 Languages
 Lambda
 Lambdas
+Large-Scale
+Latency
+Lemma
+Lemmatization
+Li
 Library
 Libraries
+Linked List
+Lint
+Linter
+Linting
 List
 Lists
+Log
+Logged
+Logging
+Login
+Logs
+Log-in
+Log-out
+Long
 Loop
+Looping
+Loops
+LSP
 ML
 Machine Learning
+Markdown
+Memory
+Memory addresses
+Memory addresses
+Metadata
 Method
 Methods
 Microservice
 Microservices
+Middleware
+Migrate
+Migrated
+Migrating
 Modular
+Module
+Modules
+Monitoring
 Monolith
 Multiprocessing
 Multithread
 Multithreaded
 Multithreading
 MVC
+Namespace
+Namespaces
 Natural Language Processing
 Natural Language Understanding
+Networking
+Networks
+Neural Network
+Neural Networks
 NLP
 NLU
+Node
+Nodes
+Non-opinionated
+Normalization
+Normalize
+Normalized
 Object
 Objects
 Object Oriented Programming
 Observability
+OpenSource
 Open source
 Open-source
+Operating system
+Operating systems
+Operators
+Opinionated
+ops
 Optimization
 Optimizations
 Optimize
 Optimized
 OOP
+OS
 OSS
+Outage
+Outages
+Output
+Outputting
+Outputs
+Overflow
+Package
+Packages
+Paradigm
+Paradigms
 Parallelism
+Parse
+Partition
+Partitioning
+Partitions
+Pathfinding
 Pattern
 Patterns
+Performance
 Pipeline
 Pipelines
+Pivot table
+Plugin
+Plugins
 Polymorphism
+Pointer
+Pointers
+Port
+Portfolio
+Ports
+PR
+Pre-compile
+Pre-Compiled
+Protocol
+PRs
+Primitives
+Print
+Printing
+Prints
+Private Class
 Production
+Production-ready
 Program
+Programatically
 Programs
 Programmer
 Programmers
 Programming
 Project
 Projects
-PR
-PRs
+Prompt
+Prompting
+Public class
 Pull Request
 Pull-Request
 Pull Requests
 Pull-Requests
+Refactor
+Refactored
+Refactoring
+Rewrite
+Runtime
+Queue
+Query Eval
+Query Evaluation
+Readability
+Recursion
+Redeploy
+Redeployed
 Regression
+Repo
+Repositories
+Repository
+Restarted
+Restarting
+Return
+Rollout
+Rollouts
+Route
+Routes
+Routing
+RPC
+Scalable
+Scalability
+Schema
+Scraping
+Script
+Scriptable
+Scripts
+Scripting
+Search
+Self-host
+Self-hostable
+Self-hosted
+Self host
+Self hostable
+Self hosted
+Serialization
 Server
 Servers
+Service
 Service-oriented
+Session
 Set
 Sets
+Shard
+Sharding
+Signed
+Single-Responsibility
+Single Responsibility
+Snippet
+Snippets
+Socket
+Sockets
 Software
 Software dev
 Software Engineer
 Software-Engineer
 Software Engineers
 Software-Engineers
+Software engineering
+Software-engineering
+SOLID
+SRP
 Stack
+Stack frame
 Staging
+Stateless
+Static
+Static Class
+Status
+Str
+String
+Styling
+Style Guide
+Subroutine
+Subroutines
 SWE
+Switch
+Syntactically
 Syntax
 System
 Systems
+Tail Call
+Tail Calls
+TCP
+Tech Stack
+Tech Stacks
 Ternary
+Test
+Tested
+Testing
+Tests
 Thread
+Threading
 Threads
+Thread-safe
+Ticket
+Tickets
+Timeout
 Time Complexity
 Time Series
 Time-Series
+Tooling
+Tradeoff
+Tradeoffs
+Train
+Tree
+Trees
+Trie
+Tries
+Tutorial hell
+Type
+Types
+UDP
+UL
+Universal Resource Locator
 Unit test
 Unit tests
+Unordered lists
+Unsigned
+Upload
+Uploaded
+Uploading
+URL
+U16
+U32
+U64
+Supabase
+Technologies
+UI
+Update
+Updates
 User Experience
 User-Experience
 User Interface
 User-Interface
 UX
-UI
+Vibecode
+Vibecoded
+Vibecoding
+Vibe-code
+Vibe-coded
+Vibe-coding
+Virtual thread
+Virtual threads
 Website
 Websites
 Webdev
+Webapp
+Webapps
+Webhook
+Webhooks
+Webscraping
+WebSocket
+WebSockets
+Web app
+Web apps
 Web Dev
 Web Developer
 Web Developers
+Web Development
+Wrapper
 Write
+Written
+Var
+Variable
+Variables
+Vector search
+Verbose
+Versioning
+Version
+Version Control
+Vibe Code
+Vibe Coder
+Vibe Coding
+Virtual-thread
+Virtual-threads
 Virtual Machine
 Virtual Machines
 VM

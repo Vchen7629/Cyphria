@@ -1,4 +1,6 @@
 #basketball
+ECF
+Eastern Conference Finals
 conference finals
 
 #football
@@ -13,3 +15,15 @@ Global T20 Canada
 Caribbean Premier League
 International League T20
 SA20
+
+#Golf
+Ryder Cup
+
+#Tennis
+Wimbledon
+
+#Hockey
+Stanley Cup
+
+Olympics
+Grand Prix

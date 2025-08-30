@@ -1,81 +1,163 @@
-RTX 5090
-RTX 5080
-RTX 5070
-5070 Ti
-RTX 5070 Ti
-RTX 5070Ti
-RTX 5060
-5060 Ti
-RTX 5060 Ti
-RTX 5060Ti
-RTX5090
-RTX5080
+GeForce
+GT
+GT1030
+GTX
+GTX960
+GTX970
+GTX970Ti
+GTX980
+GTX980Ti
+GTX1050
+GTX1050Ti
+GTX1060
+GTX1060Ti
+GTX1070
+GTX1080
+GTX1080Ti
+Radeon
+RTX
+RTX2060
+RTX2070
+RTX2070Ti
+RTX2080
+RTX2080Ti
+RTX3050
+RTX3050Ti
+RTX3060
+RTX3060Ti
+RTX3070
+RTX3070Ti
+RTX3080
+RTX3080Ti
+RTX3090
+RTX3090Ti
+RTX4050
+RTX4060
+RTX4060Ti
+RTX4070
+RTX4070TI
+RTX4080
+RTX4080Ti
+RTX5060
+RTX5060Ti
+RTX5060 Ti
 RTX5070
-5070 Ti
 RTX5070 Ti
 RTX5070Ti
-RTX5060
-RTX5060 Ti
-RTX5060Ti
-GeForce RTX 5090
-GeForce RTX 5080
-GeForce RTX 5070
-GeForce RTX 5070 Ti
-GeForce RTX 5070Ti
-GeForce RTX 5060 Mobile
-GeForce RTX 5060
-GeForce RTX 5060 Ti
-GeForce RTX 5060Ti
-GeForce RTX 5050
+RTX5080
+RTX5090
+RX 7800
+950
+960
+970
+970 Ti
+980
+980 Mobile
+980 Ti
+1030
+1050
+1050 Max-Q
+1050 Mobile
+1050 Ti
+1050 Ti Max-Q
+1050 Ti Mobile
+1060 
+1060 Max-Q
+1060 Mobile
+1060 Ti
+1070
+1070 Max-Q
+1070 Mobile
+1070 Ti
+1080
+1080 Max-Q
+1080 Mobile
+1080 Ti
+2050 Mobile
+2060
+2060 Max-Q
+2060 Mobile
+2060 Super
+2070
+2070 Max-Q
+2070 Mobile
+2070 Super Mobile
+2070 Super Max-Q
+2070 Ti
+2080
+2080 Mobile
+2080 Max-Q
+2080 Super
+2080 Super Mobile
+2080 SUPER Max-Q
+2080 Ti
+3050
+3050 Max-Q
+3050 Mobile
+3050 Ti
+3050 Ti Mobile
+3050 Ti Mobile
+3060
+3060 Ti
+3060 Mobile
+3060 Max-Q
+3070
+3070 Ti
+3070 Ti Mobile
+3070 Ti Max-Q
+3070 TiM
+3080
+3080 Ti
+3080 Ti Max-Q
+3080 Ti Mobile
+3090
+3090 Ti
+4050 Max-Q
+4050 Mobile
+4060
+4060 Max-Q
+4060 Mobile
+4060 Ti
+4070
+4070 Max-Q
+4070 Mobile
+4070 SUPER
+4070 Ti
+4070 Ti Super
+4080
+4080 Max-Q
+4080 Mobile
+4080 Super
+4080 Ti
+4080 Ti Super
+4090
+4090 Max-Q
+4090 Mobile
+5060Ti
+5060 Ti
+5070Ti
+5070 Ti
+5080
+5090
 RTX 1000 Mobile Ada Generation
-GeForce RTX 3050 6 GB
 Radeon Instinct MI325X
 RTX A400
 RTX 500 Mobile Ada Generation
 B200 SXM 192 GB
-RTX 5880 Ada Generation
-RTX 4090
-RTX 4080 SUPER
-4080 SUPER 
-RTX 4080 Ti SUPER
-4080 Ti SUPER
-RTX 4070 SUPER 
-4070 SUPER
-RTX 4070 GDDR6
-RTX 4070 AD103
-RTX 4070
-4060 Ti
-RTX 4060 Ti AD104
-RTX 4060 AD106
 RTX4090
-4080 SUPER
 RTX4080 SUPER 
-4080 Ti SUPER
 RTX4080 Ti SUPER
-4070 SUPER 
 RTX4070 SUPER 
 RTX4070 GDDR6
 RTX4070 AD103
 RTX4070
 RTX4060 Ti AD104
 RTX4060 AD106
-4080 SUPER
-GeForce RTX 4080 SUPER
-GeForce RTX 4070 Ti SUPER AD102
-GeForce RTX 4070 Ti SUPER
-GeForce RTX 4070 SUPER
-GeForce RTX 4070 GDDR6
-GeForce RTX 4070 AD103
 RTX A1000
 RTX 2000 Ada Generation
 Radeon RX 7600 XT
-GeForce RTX 4060 Ti AD104
-GeForce RTX 4060 AD106
-GeForce RTX 3050 A Mobile
 Radeon 890M
 Radeon 880M
-GeForce RTX 4050 Mobile
-GeForce RTX 4050 Max-Q
 Arc A380M
 Radeon Instinct MI300X
 Radeon Instinct MI300
@@ -98,7 +180,6 @@ H100 PCIe 80 GB
 H100 CNX
 Radeon PRO W7900
 L20
-GeForce RTX 4090 D
 H100 SXM5 64 GB
 RTX 5000 Mobile Ada Generation
 RTX 5000 Max-Q Ada Generation
@@ -106,13 +187,10 @@ RTX 5000 Embedded Ada Generation
 RTX 5000 Ada Generation
 Radeon RX 7900M
 Radeon RX 7900 GRE
-Radeon RX 7800 XT
 Radeon PRO W7800
 Radeon PRO W7700
 Jetson AGX Orin 64 GB
 Jetson AGX Orin 32 GB
-GeForce RTX 4090 Mobile
-GeForce RTX 4090 Max-Q
 Arc A580
 RTX 4500 Ada Generation
 RTX 4000 Mobile Ada Generation
@@ -121,13 +199,6 @@ RTX 3500 Embedded Ada Generation
 Radeon RX 7700 XT
 Radeon RX 6750 GRE 12 GB
 L4
-4080 Mobile
-4080 Max-Q
-4070 Ti
-GeForce RTX 4080 Mobile
-GeForce RTX 4080 Max-Q
-GeForce RTX 4070 Ti
-GeForce RTX 4070
 Arc Pro A60
 RTX 4000 SFF Ada Generation
 RTX 4000 Ada Generation
@@ -139,6 +210,13 @@ RTX 2000 Max-Q Ada Generation
 RTX 2000 Embedded Ada Generation
 Xfx Swift AMD Radeon RX 9070
 Xfx 9070
+RX 7700S
+RX 7600S
+RX 7600M XT
+RX 7600
+RX 6600 LE
+PRO W7600
+PRO W7500
 Radeon RX 7700S
 Radeon RX 7600S
 Radeon RX 7600M XT
@@ -150,13 +228,6 @@ Radeon PRO W7500
 Jetson Orin NX 8 GB
 Jetson Orin NX 16 GB
 Jetson Orin Nano 8 GB
-GeForce RTX 4070 Mobile
-GeForce RTX 4070 Max-Q
-GeForce RTX 4060 Ti 8 GB
-GeForce RTX 4060 Ti 16 GB
-GeForce RTX 4060 Mobile
-GeForce RTX 4060 Max-Q
-GeForce RTX 4060
 Arc Pro A60M
 Arc A570M
 Arc A530M
@@ -180,8 +251,6 @@ Arc Graphics 48EU Mobile
 Arc Graphics 128EU Mobile
 Arc Graphics 112EU Mobile
 RTX A1000 Mobile 6 GB
-GeForce RTX 3050 Mobile Refresh 6 GB
-GeForce RTX 3050 Max-Q Refresh 6 GB
 Data Center GPU Flex 140
 Arc Pro A50
 Arc Pro A40
@@ -216,13 +285,9 @@ L40S
 L40G
 L40 CNX
 L40
-GeForce RTX 4090
-GeForce RTX 3090 Ti
-GeForce RTX 3080 12 GB
 A10M
 RX 7900 XT
 Radeon RX 7900 XT
-GeForce RTX 3080 Ti 20 GB
 Radeon Pro W6300M
 Radeon PRO W6300
 RTX A5500 Mobile
@@ -232,18 +297,6 @@ RTX A4500 Max-Q
 RTX A4500 Embedded
 Radeon RX 6950 XT
 Playstation 5 GPU
-GeForce RTX 4080
-RTX 3080 Ti Mobile
-RTX 3080 Ti Max-Q
-RTX 3070 TiM
-RTX 3070 Ti Mobile
-RTX 3070 Ti Max-Q
-RTX 3070
-RTX 3070 Ti 8 GB GA102
-3060 Ti
-RTX 3060 Ti GDDR6X
-RTX 3060 Ti GA103
-RTX 3060
 RTX3080 Ti Mobile
 RTX3080 Ti Max-Q
 RTX3070 TiM
@@ -254,14 +307,6 @@ RTX3070 Ti 8 GB GA102
 RTX3060 Ti GDDR6X
 RTX3060 Ti GA103
 RTX3060
-GeForce RTX 3080 Ti Mobile
-GeForce RTX 3080 Ti Max-Q
-GeForce RTX 3070 TiM
-GeForce RTX 3070 Ti Mobile
-GeForce RTX 3070 Ti Max-Q
-GeForce RTX 3070 Ti 8 GB GA102
-GeForce RTX 3060 Ti GDDR6X
-GeForce RTX 3060 Ti GA103
 Data Center GPU Flex 170
 Arc A770M
 Arc A770
@@ -280,14 +325,6 @@ Radeon RX 6650M XT
 Radeon RX 6650M
 Radeon RX 6650 XT
 Radeon RX 6600S
-GeForce RTX 3060 8 GB GA104
-GeForce RTX 3060 8 GB
-GeForce RTX 3050 OEM
-GeForce RTX 3050 Mobile Refresh 4 GB
-GeForce RTX 3050 Max-Q Refresh 4 GB
-GeForce RTX 3050 8 GB GA107
-GeForce RTX 3050 8 GB
-GeForce RTX 3050 4 GB
 Arc A550M
 UHD Graphics 770 Mobile
 UHD Graphics 770
@@ -316,7 +353,6 @@ PG506-242
 PG506-232
 A30 PCIe
 RTX A5000
-GeForce RTX 3080 Ti
 A10G
 A10 PCIe
 RTX A4500
@@ -331,11 +367,6 @@ Radeon Pro W6800X Duo
 Radeon Pro W6800X
 Radeon Pro W6800
 Radeon Pro V620
-GeForce RTX 3080 Mobile
-GeForce RTX 3080 Max-Q
-GeForce RTX 3070 Ti
-GeForce RTX 3070 Mobile
-GeForce RTX 3070 Max-Q
 CMP 70HX
 CMP 40HX
 RTX A4500 Mobile
@@ -347,12 +378,6 @@ RTX A2000
 Radeon RX 6800M
 Radeon RX 6700 XT
 Radeon RX 6700
-GeForce RTX 3060 Mobile
-GeForce RTX 3060 Max-Q
-GeForce RTX 3060 GA104
-GeForce RTX 3060
-
-GeForce RTX 2060 12 GB
 CMP 30HX
 Radeon RX 6700M
 T600 Mobile
@@ -369,17 +394,12 @@ Radeon RX 6600
 Radeon Pro W6600M
 Radeon Pro W6600
 Quadro T1200 Mobile
-GeForce RTX 3050 Ti Mobile
-GeForce RTX 3050 Ti Mobile
-GeForce RTX 3050 Mobile
 A2
 A16 PCIe
 T400 4 GB
 T400
 RTX A500 Embedded
-RTX 2050 Mobile
 RTX2050 Mobile
-GeForce RTX 2050 Mobile
 GeForce GT 1010 DDR4
 GeForce GT 1010
 UHD Graphics P750
@@ -411,10 +431,8 @@ GRID RTX T10-8
 GRID RTX T10-4
 GRID RTX T10-2
 GRID RTX T10-16
-GeForce RTX 3090
 A40 PCIe
 Xbox Series X GPU
-GeForce RTX 3080
 Radeon RX 6900 XT
 Radeon RX 6800 XT
 Radeon RX 6800
@@ -424,20 +442,8 @@ Radeon Pro 5700 XT
 Radeon Pro 5700
 Quadro RTX 5000 Mobile Refresh
 Playstation 5 GPU
-GeForce RTX 3070
-GeForce RTX 3060 Ti
-RTX 2080 SUPER Mobile
-RTX 2080 SUPER Max-Q
-RTX 2080 Ti
 RTX 2080Ti
-RTX 2080
-RTX 2070 SUPER Mobile
-RTX 2070 SUPER Max-Q
-RTX 2070 Mobile Refresh
-RTX 2070 Max-Q Refresh
-RTX 2070 Ti
 RTX 2070Ti
-RTX 2070
 RTX2080 SUPER Mobile
 RTX2080 SUPER Max-Q
 RTX2080 Ti
@@ -450,21 +456,10 @@ RTX2070 Max-Q Refresh
 RTX2070 Ti
 RTX2070Ti
 RTX2070
-GeForce RTX 2080 SUPER Mobile
-GeForce RTX 2080 SUPER Max-Q
-GeForce RTX 2070 SUPER Mobile
-GeForce RTX 2070 SUPER Max-Q
-GeForce RTX 2070 Mobile Refresh
-GeForce RTX 2070 Max-Q Refresh
 AeroBox GPU
 Radeon RX 5600M
 Radeon RX 5600 XT
 Radeon RX 5600 OEM
-RTX 2060 TU104
-RTX 2060 Max-Q
-RTX 2060
-GeForce RTX 2060 TU104
-GeForce RTX 2060 Max-Q
 Xbox Series S GPU
 Radeon Pro W5500M
 Radeon Pro W5500
@@ -551,20 +546,9 @@ Quadro RTX 5000 Mobile
 Quadro RTX 5000 Max-Q
 Quadro RTX 4000 Mobile
 Quadro RTX 4000 Max-Q
-GeForce RTX 2080 SUPER
-GeForce RTX 2080 Mobile
-GeForce RTX 2080 Max-Q
-GeForce RTX 2070 SUPER
-GeForce RTX 2070 Mobile
-GeForce RTX 2070 Max-Q
-GeForce RTX 2060 SUPER
 Quadro RTX 3000 Mobile Refresh
 Quadro RTX 3000 Mobile
 Quadro RTX 3000 Max-Q
-GeForce RTX 2060 Mobile Refresh
-GeForce RTX 2060 Mobile
-GeForce RTX 2060 Max-Q Refresh
-GeForce RTX 2060
 GTX 1660 Ti Mobile
 GTX 1660 Ti Max-Q
 GTX 1660 Ti
@@ -616,9 +600,7 @@ GeForce GTX 1650 Mobile
 GeForce GTX 1650 Max-Q
 GeForce GTX 1650
 Radeon RX 5300M
-GTX 1050 Mobile 3 GB
 GTX1050 Mobile 3 GB
-GeForce GTX 1050 Mobile 3 GB
 Switch GPU 16nm
 Radeon RX 640 Mobile
 Radeon 625 Mobile
@@ -678,7 +660,6 @@ Quadro RTX 8000 Passive
 Quadro RTX 8000
 Quadro RTX 6000 Passive
 Quadro RTX 6000
-GeForce RTX 2080 Ti
 P102-101
 P102-100
 Zhongshan Subor Z+ GPU
@@ -695,21 +676,11 @@ Quadro P5200 Mobile
 Quadro P5200 Max-Q
 Quadro P4200 Mobile
 P104-101
-GeForce RTX 2080
-GeForce RTX 2070
-GTX 1070 GDDR5X
-GeForce GTX 1070 GDDR5X
 Quadro P3200 Mobile
 Quadro P3200 Max-Q
-GTX 1060 6 GB Rev. 2
-GTX 1060 6 GB GP104
-GTX 1060 6 GB GDDR5X
 GTX1060 6 GB Rev. 2
 GTX1060 6 GB GP104
 GTX1060 6 GB GDDR5X
-GeForce GTX 1060 6 GB Rev. 2
-GeForce GTX 1060 6 GB GP104
-GeForce GTX 1060 6 GB GDDR5X
 Radeon RX 560X Mobile
 Radeon RX 560X Mobile
 Radeon RX 560X Mobile
@@ -722,24 +693,14 @@ Radeon Pro 560X
 Radeon Pro 555X
 Quadro P620 Mobile
 Quadro P620
-GTX 1050 Ti Max-Q
-GTX 1050 Max-Q
 GTX1050 Ti Max-Q
 GTX1050 Max-Q
-GeForce GTX 1050 Ti Max-Q
-GeForce GTX 1050 Max-Q
-GT 1030 GK107
-GeForce GT 1030 GK107
-GTX 1050 3 GB
 GTX1050 3 GB
-GeForce GTX 1050 3 GB
 Radeon RX 550X Mobile
 Radeon 550X Mobile
 Radeon 550X 640SP
 Radeon 540X Mobile
 Quadro P500 Mobile
-GT 1030 DDR4
-GeForce GT 1030 DDR4
 UHD Graphics P630
 UHD Graphics P630
 UHD Graphics 630
@@ -781,13 +742,10 @@ Radeon Pro SSG
 Radeon Instinct MI25
 Xbox One X GPU
 TITAN Xp
-GTX 1080 Ti
 GTX 1080Ti
-GTX 1080
 GTX1080 Ti
 GTX1080Ti
 GTX1080
-GeForce GTX 1080 Ti
 GeForce GTX 1080Ti
 Tesla P6
 Radeon RX 580 Mobile
@@ -806,34 +764,19 @@ Quadro P4000 Mobile
 Quadro P4000 Max-Q
 Quadro P4000
 P104-100
-GTX 1080 Max-Q
-GTX 1080 11Gbps
 GTX1080 Max-Q
 GTX1080 11Gbps
-GeForce GTX 1080 Max-Q
-GeForce GTX 1080 11Gbps
-GTX 1070 Ti
 GTX 1070Ti
-GTX 1070 Max-Q
 GTX1070 Ti
 GTX1070Ti
 GTX1070 Max-Q
-GeForce GTX 1070 Ti
 GeForce GTX 1070Ti
-GeForce GTX 1070 Max-Q
 Quadro P3000 Mobile
 P106-100
 P106-090
-GTX 1060 Max-Q
-GTX 1060 6 GB 9Gbps
 GTX1060 Max-Q
 GTX1060 6 GB 9Gbps
-GeForce GTX 1060 Max-Q
-GeForce GTX 1060 6 GB 9Gbps
 Quadro P2000
-GTX 1060 5 GB
-GTX1060 5 GB
-GeForce GTX 1060 5 GB
 Radeon RX 560D
 Radeon RX 560 Mobile
 Radeon RX 560 Mobile
@@ -864,18 +807,10 @@ Quadro P1000
 Quadro M620 Mobile
 Quadro M2200 Mobile
 Quadro M1200 Mobile
-GTX 1050 Ti Mobile
-GTX 1050 Ti Mobile
-GTX 1050 Mobile
-GTX 1050 Mobile
 GTX1050 Ti Mobile
 GTX1050 Ti Mobile
 GTX1050 Mobile
 GTX1050 Mobile
-GeForce GTX 1050 Ti Mobile
-GeForce GTX 1050 Ti Mobile
-GeForce GTX 1050 Mobile
-GeForce GTX 1050 Mobile
 GeForce GT 720 OEM
 Switch GPU 20nm
 Radeon Pro WX 2100
@@ -893,8 +828,6 @@ GeForce MX150
 GeForce MX150
 GeForce MX130
 GeForce MX110
-GeForce 1030
-GeForce GT 1030
 UHD Graphics 630
 UHD Graphics 630
 UHD Graphics 620
@@ -939,33 +872,13 @@ Playstation 4 Slim GPU
 Playstation 4 Pro GPU
 GeForce GTX 980MX
 GeForce GTX 760 OEM
-GTX 1080 Mobile
-GTX 1080
-GTX1080 Mobile
-GTX1080
-GeForce GTX 1080 Mobile
-GeForce GTX 1080
-GTX 1070 Mobile
-GTX 1070
-GTX1070 Mobile
-GTX1070
-GeForce GTX 1070 Mobile
-GeForce GTX 1070
 FirePro S7150 x2
 FirePro S7150
 FirePro S7100X
-GTX 1060 Mobile
-GTX 1060 6 GB
-GTX 1060 3 GB GP104
-GTX 1060 3 GB
 GTX1060 Mobile
 GTX1060 6 GB
 GTX1060 3 GB GP104
 GTX1060 3 GB
-GeForce GTX 1060 Mobile
-GeForce GTX 1060 6 GB
-GeForce GTX 1060 3 GB GP104
-GeForce GTX 1060 3 GB
 Tesla M10
 Radeon RX 460 Mobile
 Radeon RX 460
@@ -988,17 +901,11 @@ GRID M40
 GRID M3-3020
 GRID M10-8Q
 GeForce GTX 965M
-GeForce GTX 950 OEM
-GeForce GTX 950 Low Power
-GTX 1050 Ti
 GTX 1050Ti
-GTX 1050
 GTX1050 Ti
 GTX1050Ti
 GTX1050
-GeForce GTX 1050 Ti
 GeForce GTX 1050Ti
-GeForce GTX 1050
 Radeon R7 M465
 Radeon R7 M460
 Radeon R7 M445
@@ -1049,9 +956,7 @@ Tesla M40 24 GB
 Tesla M40
 Quadro M6000
 GeForce GTX TITAN X
-GTX 980 Ti
 GTX 980Ti
-GeForce GTX 980 Ti
 GeForce GTX 980Ti
 Tesla M60
 Tesla M6
@@ -1079,11 +984,7 @@ GRID M60-8Q
 GRID M60-4A
 GRID M60-2Q
 GRID M60-1Q
-GTX 980 Mobile
-GeForce GTX 980 Mobile
 FirePro W7170M
-GTX 960 OEM
-GeForce GTX 960 OEM
 Tesla M4
 Radeon R9 M385X
 Radeon R9 M385
@@ -1122,15 +1023,9 @@ GeForce GTX 965M
 GeForce GTX 965M
 GeForce GTX 960M
 GeForce GTX 960A
-GTX 960 OEM
-GTX 960
-GeForce GTX 960 OEM
-GeForce GTX 960
 GeForce GTX 950M Mac Edition
 GeForce GTX 950M
 GeForce GTX 950A
-GTX 950
-GeForce GTX 950
 GeForce GTX 860M OEM
 GeForce GTX 750 GM206
 GeForce GT 740 OEM
@@ -1242,10 +1137,6 @@ GRID K500
 GRID K220Q
 GeForce GTX 980M
 GeForce GTX 980M
-GTX 980
-GeForce GTX 980
-GTX 970
-GeForce GTX 970
 GeForce GTX 880M
 GeForce GTX 750 Ti OEM
 FirePro W7100
@@ -3008,7 +2899,6 @@ Radeon 9000 LE
 Radeon 9000
 Radeon 8500 LE
 Radeon 7500 Mac Edition
-Quadro4 980 XGL
 Quadro4 900 XGL
 Quadro4 750 XGL
 Quadro4 700 XGL
@@ -3252,7 +3142,6 @@ GeForce GTX 780 Ti 6 GB
 GeForce GTX 490
 GeForce GTX 480 Core 512
 GeForce GTX 470 PhysX Edition
-GeForce GTX 1080 Ti 10 GB
 Radeon RX 6900 XTX
 Radeon Pro V7350X2
 Radeon Pro V7300X
@@ -3262,11 +3151,7 @@ Radeon HD 3870 AGP
 Radeon HD 3850 X3
 Radeon HD 2950 XTX
 Radeon HD 2950 PRO
-GeForce RTX 3070 Ti 16 GB
 GeForce GTX 470 X2
-GTX 1060
-GTX 1060 8 GB GDDR5X
-GeForce GTX 1060 8 GB GDDR5X
 FirePro V8700 Duo
 Xe DG1-SDV
 Xe DG1

@@ -1,86 +1,262 @@
+Adapter
+Adapters
 Album
 Albums
+Angle
 Aperature
+Aperture
 Aspect Ratio
 Autofocus
+Automatic
+Autofocus
+Auto-focus
 Backdrop
 Backdrops
+Background
 Backlight
 Backlighting
+Battery
+Batteries
+Belt system
+Belt systems
+Black white
+Blur
+Blurry
 Blooming
+Bracketing
+Cam
 Camera
 Cameras
 Capture
 Captured
+Capturing
 CMYK
 Calibration
+Candid
+Candids
+CMOS
+Color
+Color correction
+Colour grading
+Composition
+Corrector
+Colors
+Colour
+Colours
 Contrast
 Crop
 Cropped
+Cropping
+Cross-Polarisation
+Cross-Polarization
+DAM
+Depth field
+Developed
+Developing
 Diffraction
+Diffuser
+Digital
 Distorted
 Distortion
+Dispo-style
 DLSR
+DSLR
 Edit
+Edited
 Editing
+Editor
+EXIF
 Exposure
+Eyepiece
 Film
 Filter
 Filters
-Focal
-Focus
 Flash
+Flashes
+Flashing
+Focal
+Focal Point
+Focus
+Focus-stack
+Footage
+Frame
+Frames
+Framing
+Fringing
+Fuzzy
+Gallery
+Gear
+Ghosting
+Gimbal
+Gimball
+Gimble
+Golden hour
+Grain
+Grainy
+Harness
+Harnesses
 HDR
+Hue
 ISO
 Image
+Images
+JPG
+Jpeg
+Landscape
 Lens
 Lenses
+Light
+Lighting
 Lightroom
+Luminance
 Luminosity
+Manual
+Memory card
+Memory cards
+Metering
+Mirrorless
 Monochrome
+Monolight
+Monolights
+Mount
+Motion blur
 Narrow Angle
+Neutral density filter
+ND Filter
+Overexposed
 Overexposure
+Overlay
 Parallax
 Photo
-photobook
-photobooks
+Photobook
+Photobooks
+Photoediting
 Photograph
+Photographed
 Photographer
 Photographers
+Photographing
+Photographs
 Photography
+Photojournalism
 Photos
 Photoshoot
+Photoshoots
 Photoshop
 photobook
+Photo-editing
 photo book
 photo books
-
-Photojournalism
 Pic
 Pics
 Picture
 Pictures
 Pixel
+Pixelated
 Pixels
 Polaroid
 Polaroids
+Polarise
+Polarised
+Polarize
+Polarized
+Polarizer
+Polarizing
+Point-and-shoot
+Point&shoot
+Point & Shoot
+Portrait
+Portraits
+Preflash
+Print
+Printed
+Printing
+Prints
+Proportionally
+Pose
+Poses
+Postprocessing
+Post processing
+Post production
+Post-processing
+Post-production
+Rangefinder
+Range finder
+RAW
+Rectilinear
+Reflector
+Reflectors
+Repoint
+Rerender
+Rerendered
+Retouch
+Retouched
+Retouching
+Re-render
+Re-rendered
+RF extender
+Res
 Resolution
+Saturated
 Saturation
+Scan
+Scanning
+SD
+Selfie
+Selfies
+Sensor
+Sharp
+Sharpness
 Shutter
 Shoot
 Shooting
+Shot
+Shots
 SLR
 Snap
 Snapped
+Snapping
+Snapshot
+Softbox
+Soft box
+Soft-focus
+Spectrometer
+Spectroscopy
+Speedlight
+Stacking
 Strobe light
+Style
+Subject
+Subjects
+Taken
+Telephoto
 TimeLapse
 Time Lapse
 Tone
+Took
+Transceiver
+Transpose
+Transposing
 Tripod
+Tripods
+TTL
+Underexposed
 Underexposure
+Undistort
 Undistorted
+Unposed
+Ultra-wide
+UV-filter
 Vibrance
+Videography
 Viewfinder
+View finder
+View-finder
 Watermark
+Weatherproof
+Weatherproofing
+White balance
 Wide angle
 Zoom
+Zoomed
+Zooming

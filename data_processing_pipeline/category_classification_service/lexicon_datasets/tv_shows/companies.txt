@@ -1,7 +1,10 @@
+Amazon prime
 AppleTV
 BBC
+CBS
 CNN
 Disney
+Disney+
 Discovery
 HBO
 Hulu
@@ -11,6 +14,8 @@ MGM
 NBC
 Netflix
 Paramount
+Peacock
+Prime Video
 Sony
 Starz
 TBS

@@ -73,9 +73,11 @@ Canaan Dog
 Cane Corso
 Cardigan Welsh Corgi
 Carolina Dog
+Catahoula Leopard
 Catahoula Leopard Dog
 Caucasian Shepherd Dog
 Caucasian Shepherd
+Cavalier King Charles
 Cavalier King Charles Spaniel
 Central Asian Shepherd Dog
 Cesky Terrier
@@ -90,9 +92,11 @@ Cirneco dell’Etna
 Clumber Spaniel
 Cocker Spaniel
 Collie
+Corsican
 Coton de Tulear
 Croatian Sheepdog
 Curly-Coated Retriever
+Cursinu
 Czechoslovakian Vlcak
 Dachshund
 Dalmatian
@@ -105,6 +109,7 @@ Dogo Argentino
 Dogue de Bordeaux
 Drentsche Patrijshond
 Drever
+Shepherd
 Dutch Shepherd
 English Cocker Spaniel
 English Foxhound
@@ -120,6 +125,7 @@ Finnish Spitz
 Flat-Coated Retriever
 French Bulldog
 French Spaniel
+Gerberian Shepsky
 German Longhaired Pointer
 German Pinscher
 German Shepherd
@@ -141,6 +147,8 @@ Hanoverian Scenthound
 Harrier
 Havanese
 Husky
+malamute husky
+Huskies
 Hokkaido
 Hovawart
 Ibizan Hound
@@ -151,6 +159,7 @@ Irish Terrier
 Irish Water Spaniel
 Irish Wolfhound
 Italian Greyhound
+Jack Russell
 Jagdterrier
 Japanese Chin
 Japanese Spitz
@@ -163,6 +172,7 @@ Kishu Ken
 Komondor
 Kromfohrlander
 Kuvasz
+Lab
 Labrador
 Labrador Retriever
 Lagotto Romagnolo
@@ -209,6 +219,7 @@ Plott Hound
 English Pointer
 Polish Lowland Sheepdog
 Pomeranian
+Pomeranians
 Pomsky
 Poodle
 Poodle (Miniature)
@@ -227,6 +238,8 @@ Pumi
 Pyrenean Mastiff
 Pyrenean Shepherd
 Rafeiro do Alentejo
+Rat
+Rats
 Rat Terrier
 Redbone Coonhound
 Rhodesian Ridgeback
@@ -244,6 +257,7 @@ Scottish Deerhound
 Scottish Terrier
 Sealyham Terrier
 Segugio Italiano
+Shepsky
 Yorkie Chihuahua
 Shar Pei
 Shetland Sheepdog
@@ -272,6 +286,7 @@ Swedish Lapphund
 Swedish Vallhund
 Taiwan Dog
 Teddy Roosevelt Terrier
+Terrier
 Thai Ridgeback
 Tibetan Mastiff
 Tibetan Spaniel
@@ -412,6 +427,7 @@ Turkish Vankedisi
 Ukrainian Levkoy
 York Chocolate
 horse
+horses
 Abaga horse
 Adaev
 Aegidienberger
@@ -641,6 +657,7 @@ Mountain Pleasure Horse
 Moyle horse
 Međimurje horse
 Murgese
+Mustang
 Mustang horse
 Namib Desert Horse
 Nangchen horse
@@ -796,6 +813,7 @@ North American Lion
 Panthera Leo atrox
 Panthera tigris tigris
 Tiger
+Tigers
 Bengal Tiger
 Caspian Tiger
 Siberian Tiger
@@ -968,6 +986,7 @@ Egg-eater
 Indian egg-eater
 Eyelash viper
 Eastern coral snake
+Coral-Snake
 Fierce snake
 Fishing snake
 Flying snake
@@ -1416,6 +1435,7 @@ honey ant
 Sahara desert ant
 weaver ant
 bee
+bees
 cuckoo bee
 leaf-cutter bee
 mason bee
@@ -1432,6 +1452,7 @@ Africanized honeybee
 western honeybee
 stingless bee
 wasp
+wasps
 braconid wasp
 chalcid wasp
 fig wasp
@@ -1451,6 +1472,8 @@ cicada-killer wasp
 velvet ant
 yellow jacket
 wood wasp
+Beetle
+beetles
 antlike flower beetle
 bark-gnawing beetle
 bess beetle
@@ -1538,6 +1561,7 @@ white butterfly
 swallowtail butterfly
 parnassian butterfly
 moth
+moths
 bagworm moth
 carpenter moth
 leopard moth
@@ -1590,6 +1614,7 @@ white butterflies
 swallowtail butterflies
 parnassian butterflies
 cockroach
+Cockroaches
 Madagascar hissing cockroach
 termite
 grasshopper
@@ -1633,6 +1658,7 @@ louse fly
 March fly
 marsh fly
 mosquitoe
+mosquitoes
 anthomyiid flies
 balloon flies
 bat flies
@@ -1730,6 +1756,8 @@ water strider
 water treader
 webspinner
 
+Wolf
+Wolves
 silverfish
 Grey Wolf
 Abyssinian Wolf
@@ -1757,6 +1785,8 @@ Greenland wolf
 Alaskan Interior wolf	
 Red wolf
 Alaskan Tundra wolf
+Coyote
+Coyotes
 Plains coyote
 Mexican coyote
 San Pedro Martir coyote
@@ -1777,6 +1807,10 @@ Texas plains coyote
 Northeastern coyote
 Northwest Coast coyote
 Colima coyote
+Fox
+Fox's
+Kits
+Foxes
 Arctic Fox
 Red Fox
 Swift Fox
@@ -1799,7 +1833,11 @@ Hoary Fox
 Bat-eared Fox
 Gray Fox
 Island Fox
+Panda
+Pandas
 Giant panda
+Bear
+Bears
 Spectacled bear
 Sun bear
 Sloth bear
@@ -1812,8 +1850,14 @@ Silverback Grizzly
 Silverback Grizzly Bear
 Oso Grizzly
 Grizzly Bear
+Grizzly Bears
 Brown Bear
+Brown Bears
 Polar Bear
+Polar Bears
+Chicken
+Chickens
+Rooster
 Holland Chicken
 Cubalaya Chicken
 Java Chicken
@@ -1863,6 +1907,9 @@ Old English Game Chicken
 Phoenix Chicken
 Spitzhauben Chicken
 Sussex Chicken
+Cattle
+Cow
+Cows
 American Yak Cattle
 Milking Devon Cattle
 Randall or Randall Lineback Cattle
@@ -1883,10 +1930,16 @@ Lincoln Red Cattle
 Ancient White Park Cattle
 Belted Galloway Cattle
 Ankole-Watusi Cattle
+Donkey
+Donkies
 American Mammoth Donkey
 Jackstock Donkey
 Poitou Donkey
 Miniature Donkey
+Duck
+Duckling
+Ducklings
+Ducks
 Australian Spotted Duck
 Ancona Duck
 Cayuga Duck
@@ -1902,6 +1955,8 @@ Swedish Duck
 Welsh Harlequin Duck
 Runner Duck
 Indian Runner Duck
+Geese
+Geeses
 Cotton Patch Geese
 Pilgrim Geese
 Canadian Geese
@@ -1915,6 +1970,7 @@ Roman Geese
 Shetland Geese
 Steinbacher Geese
 Goat
+Goats
 San Clemente Island Goat
 Myotonic Goat
 Tennessee Goat
@@ -1922,15 +1978,26 @@ Fainting Goat
 Spanish Goat
 Arapawa Goat
 Oberhasli Goat
+Hog
+Hogs
+Ground hog
 Choctaw Hog
 Mulefoot Pig
 Ossabaw Island Hog
 Guinea Hog
 Red Wattle Hog
+Pig
+Pigs
 Tamworth Pig
 Large Black Pig
 Gloucestershire Old Spots Pig
 Meishan Pig
+Rabbit
+Rabbits
+Bunny
+Bunnies
+Chinchilla
+Chinchillas
 American Rabbit
 Giant Chinchilla Rabbit
 American Chinchilla Rabbit
@@ -1947,6 +2014,8 @@ Checkered Giant  Rabbit
 Crème d’Argent Rabbit
 Lilac Rabbit
 Rhinelander Rabbit
+Sheep
+Sheeps
 Florida Cracker Sheep
 Gulf Coast Sheep
 Gulf Coast Native Sheep
@@ -1971,6 +2040,8 @@ Leicester Longwool Sheep
 Soay Sheep
 Wiltshire Horn Sheep
 Shetland Sheep
+Turkey
+Turkeys
 Beltsville Small White Turkey
 White Holland Turkey
 Black Turkey
@@ -1983,9 +2054,15 @@ Chocolate Turkey
 Jersey Buff Turkey
 Lavender Turkey
 Midget White Turkey
+Polecat
+Polecats
 European polecat
 Siberian polecat
+Ferret
+Ferrets
 black-footed ferret
+Turtle
+Turtles
 Pond Turtle
 Box Turtle
 Water Turtle
@@ -2024,6 +2101,7 @@ Afro-American Sideneck Turtle
 Madagascan Big-headed Turtle
 American Sideneck River Turtle
 Tortoise
+Tortoises
 Desert Tortoise
 Gopher Tortoise
 African Spurred Tortoise
@@ -2034,12 +2112,25 @@ Greek Tortoise
 Hermann's Tortoise
 Leopard Tortoise
 
+raccoon
+raccoons
+
 fish
+fishes
 Arapaima
 Baby Sturgeon
+Bass
+Betta
+Cardinal Tetra
 Clownfish
+Gouramis
+Jellyfish
 Sea horse
+Shark
 Stingray
+Swordtail
+Sword tail
+Tetra
 Pipefish
 
 shrimp 
@@ -2057,9 +2148,14 @@ Emporer Penguin
 
 Deer
 Deers
-Doe 
+Doe
+Buck
+
+
 Elk
 
+gecko
+geckos
 western banded gecko
 bent-toed gecko
 leopard gecko
@@ -2079,6 +2175,8 @@ New Caledonian giant gecko
 dwarf gecko
 crocodile gecko
 Moorish gecko
+Skink
+Skinks
 Five-Lined Skink
 Woodbush Legless Skink	
 Dwarf Skink
@@ -2100,6 +2198,12 @@ Keeled Water Skink
 Solomon Islands Skink
 Monkey-Tailed Skink
 
+mammoth
+mammoths
+
+bison
+bisons
+
 Hippo
 Hippos
 hippopotamus
@@ -2107,10 +2211,16 @@ pygmy hippo
 pygmy Hippos
 pygmy hippopotamus
 
+Chipmunk
+Chipmunks
 Squirrel
 Squirrels
 Tree Squirrel
 Tree Squirrels
+
+Skunk
+
+Mouse
 
 Cougar
 Cougars
@@ -2120,7 +2230,57 @@ Wallabies
 Rock Wallaby
 Rock Wallabies
 
+Bird
+Birds
+Flamingo
+Flamingoe
+Flamingos
+Ibis
+Magpie
+Magpies
+Robin
+Robins
+Stork
+Storks
+
 Bat
+Bats
 
 Elephant
 Elephants
+
+Penguin
+Penguins
+Emperor Penguin
+Emperor Penguins
+
+Octopus
+Octopuses
+
+mosquito
+mosquito
+
+sloth
+Aliigator
+Alligators
+Alpaca
+Alpacas
+Beaver
+Beavers
+Cheetah
+Cheetahs
+Crow
+Frog
+Frogs
+Gorilla
+Gorillas
+Honey badger
+Honey badgers
+Kangaroo
+Kangaroos
+Leopard
+Leopards
+llama
+Earthworms
+Scorpion
+Seriema

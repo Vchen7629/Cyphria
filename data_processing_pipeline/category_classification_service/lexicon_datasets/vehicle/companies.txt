@@ -1,30 +1,56 @@
+AAA
 Acura
+Abbotsford Motorcycles
+Absolom Motorcycles
 Alfa-Romeo
+ARCH
+ARCH Motorcycle
 Aston Martin
 Audi
-BMW
-BYD
+Autozone
+BAMA
 Bentley
+BFGoodRich
+BMW
+BMW Motorrad
+Borla
+Bridgestone
+Buell
+Buell Motorcycles
 Bugatti
 Buick
+BYD
 Cadilac
 Canoo
+Carfax
 Chevrolet
 Chevy
 Chrysler
+Continental
+Corsa
 Daewoo
 Daihatsu
+Dmann
 Dodge
+DSX
+Dunlop
 Eagle
+Eventuri
 Ferrari
 Fiat
+Firestone
 Fisker
 Ford
 Freighliner
-GMC
 General Motors Company
+General Tire
 Genesis
 Geo
+GMC
+Goodyear
+GWM
+Hankook
+Harley Davidson
 Honda
 Hummer
 Hyundai
@@ -32,8 +58,12 @@ Infinity
 Isuzu
 Jaguar
 Jeep
+Kawasaki Motors
+Kawasaki
 Kla
 Kia
+Kook
+Kumho
 Lamborghini
 Land Rover
 Lexus
@@ -48,11 +78,16 @@ Mercedez-Benz
 Mercedez Benz
 Mercedez
 Mercury
+Michelin
+Michelins
 Mini
 Mitsubishi
+MSD
 Nissan
 Oldsmobile
+Orbea
 Panoz
+Pirelli
 Plymouth
 Polestar
 Pontiac
@@ -65,32 +100,30 @@ Rolls Royce
 Saab
 Saturn
 SEAT
+SCT
+Shimano
 Skoda
+Škoda
 Smart
 Subaru
 Susuki
+Suzuki
 Tesla
+Toyo
 Toyota
+Triumph Motorcycles
+Uniroyal
 Volkswagen
 Volvo
+VW
+Vredestein
 XPeng
-Harley Davidson
-Kawasaki Motors
-Kawasaki
-Triumph Motorcycles
-Suzuki
 Yamaha
+Yokohama
 Ducati
 Indian Motorcycles
 KTM
 Aprilia 
-BMW Motorrad
-ARCH
-ARCH Motorcycle
-Abbotsford Motorcycles
-Buell
-Buell Motorcycles
-Absolom Motorcycles
 Mack Trucks
 Western Star Trucks
 Autocar Company

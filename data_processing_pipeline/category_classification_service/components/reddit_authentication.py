@@ -3,14 +3,14 @@ from dotenv import load_dotenv
 
 
 class Auth:
-    def __init__(self):
+    def __init__(self, client_id: str, client_secret: str, username: str, password: str):
         load_dotenv()
-        self.client_id = os.getenv("Reddit-Api-Client-ID")
-        self.client_secret = os.getenv("Reddit-Api-Client-Secret")
-        self.account_username = os.getenv("Reddit-Account-Username")
-        self.account_password = os.getenv("Reddit-Account-Password")
+        self.client_id = os.getenv(client_id)
+        self.client_secret = os.getenv(client_secret)
+        self.account_username = os.getenv(username)
+        self.account_password = os.getenv(password)
 
-    def createRedditClient(self):
+    def createRedditClient(self) -> praw.Reddit:
         reddit = praw.Reddit(
             client_id=self.client_id,
             client_secret=self.client_secret,
@@ -21,5 +21,3 @@ class Auth:
 
         return reddit
         
-
-Oauth_token = Auth()

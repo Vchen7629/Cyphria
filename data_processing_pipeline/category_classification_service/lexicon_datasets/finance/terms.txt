@@ -1,3 +1,194 @@
+Account Mix
+ACH
+Afford
+Allowance
+APR
+Balance
+Bank
+banking
+Banks
+Bank Account
+Bank Accounts
+Borrow
+Borrowed
+Broke
+Broker
+Budget
+Budgets
+Budgeting
+Budgetting
+Buck
+Bucks
+Buy
+Buying
+Bill
+Billed
+Billing
+Bills
+Bought
+Capital
+CAD
+Capitalism
+Capitalist
+Capitalists
+Card
+Cash
+Cashback
+Cashed
+Cash Back
+CC
+CCs
+Charge
+Chargeback
+Charged
+Charging
+Charges
+Cheap
+Cheapest
+Check
+Checking
+Checking Account
+Checking Accounts
+Coin
+Coins
+Credit
+Currency
+Currencies
+DD
+Debt
+Debts
+Debit
+Debit Card
+Debit Cards
+Default
+Defaulted
+Defaults
+Deferment
+Delinquency
+Deposit
+Dollar
+Dollars
+Economic
+Economy
+Economist
+Economists
+Emergency fund
+EMI
+Euro
+Euros
+Exchange
+Exchange Rate
+Exchange Rates
+Expenditure
+Expenditures
+Expense
+Expenses
+Expensive
+Fee
+Fees
+Foreign Relation
+Foreign Relations
+Fund
+Funds
+Funding
+Finance
+Finances
+Financial
+Financially
+Frugal
+Frugally
+Groceries
+Hire Purchase
+Invoice
+Invoices
+Income
+Interest
+Inflation
+ISA
+JPY
+Laissez-faire
+Lease
+Lender
+Lenders
+Living below mean
+Living below means
+Living beyond mean
+Living beyond means
+Loan
+Loaned
+Loans
+Lump sum
+Monetary policy
+Money
+MR points
+Nestegg
+Nest egg
+Net worth
+Networth
+Overdraft
+Overdrafts
+Overpay
+Overprice
+Overpriced
+Owe
+Owed
+Pay
+Paid
+Paying
+Payment
+Payments
+Petrostate
+Poor
+Pre-approved
+Price
+Priced
+Prices
+Pricing
+Purchase
+Purchases
+Quid
+Recoupment
+Refinance
+Refinanced
+Repay
+Repayment
+Rich
+Save
+Saved
+Saver account
+Saving
+Savings
+Sign-up bonus
+Sinking fund
+Sinking funds
+Social security
+Spend
+Spends
+Spending
+Spendings
+Splurge
+Splurging
+SS
+Statement
+Subscription
+Subscriptions
+Surcharge
+Surcharges
+Tariff
+Tariffs
+Tax
+taxed
+taxes
+Transaction
+Transactions
+Trickle-down
+Turbotax
+USD
+Valuation
+Wallet
+Wealth
+Wealthy
+Worth
 Account
 Accounts
 Advisor-Managed

@@ -1,12 +1,25 @@
-from kafka_components.consumer import Data_Ingestion
-from kafka_components.producer import elasticsearch_producer
-from kafka_components.transformdata import TransformData
-from kafka_components.publish_message import PublishMessage
-from model.deberta import deberta
-import traceback, time
+from kafka_components.consumer import (
+    Data_Ingestion,
+)
+from kafka_components.producer import (
+    elasticsearch_producer,
+)
+from kafka_components.transformdata import (
+    TransformData,
+)
+from kafka_components.publish_message import (
+    PublishMessage,
+)
+from model.deberta import (
+    deberta,
+)
+import traceback
+
 
 class Sentiment_Analysis:
-    def __init__(self):
+    def __init__(
+        self,
+    ):
         consumer_instance = None
         producer_instance = None
         running = True
@@ -16,12 +29,16 @@ class Sentiment_Analysis:
 
             if elasticsearch_producer == None:
                 raise ValueError("Kafka producer instance is not initialized!")
-            
+
             consumer_instance = Data_Ingestion()
             producer_instance = elasticsearch_producer()
             token = deberta.tokenizer
             model = deberta.model
-            transformer = TransformData(consumer_instance=consumer_instance, tokenizer=token, model=model)
+            transformer = TransformData(
+                consumer_instance=consumer_instance,
+                tokenizer=token,
+                model=model,
+            )
             publisher = PublishMessage(producer_instance=producer_instance)
             while running:
                 try:
@@ -42,14 +59,13 @@ class Sentiment_Analysis:
                     except Exception as e:
                         raise ValueError(f"Error sending message: {e}")
 
-
         except Exception as e:
             raise ValueError(f"Error in main.py: {e}")
         finally:
             print("INFO: Cleaning up resources...")
             if producer_instance and producer_instance.producer_config:
                 try:
-                    producer_instance.producer_config.close(timeout=5) # Add timeout
+                    producer_instance.producer_config.close(timeout=5)  # Add timeout
                 except Exception as e_close_prod:
                     raise ValueError(f"WARN: Error closing Kafka Producer: {e_close_prod}")
             else:
@@ -67,6 +83,6 @@ class Sentiment_Analysis:
 
             print("INFO: Shutdown complete.")
 
+
 if __name__ == "__main__":
     Sentiment_Analysis()
-

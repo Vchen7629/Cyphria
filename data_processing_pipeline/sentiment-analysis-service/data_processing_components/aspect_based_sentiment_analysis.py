@@ -1,26 +1,44 @@
 import torch.nn.functional as F
-import torch, traceback, time, math
+import torch, traceback, time
+
 
 class Aspect_Based_Sentiment_Analysis:
-    def __init__(self, tokenizer, model, device='cuda' if torch.cuda.is_available() else 'cpu', model_batch_size=32):
+    def __init__(
+        self,
+        tokenizer,
+        model,
+        device="cuda" if torch.cuda.is_available() else "cpu",
+        model_batch_size=32,
+    ):
         self.tokenizer = tokenizer
         self.model = model.to(device)
         self.model.eval()
         self.device = device
         self.model_batch_size = model_batch_size
 
-        self.id2label = {0: "negative", 1: "neutral", 2: "positive"}
-    
-    def SentimentAnalysis(self, pair):
+        self.id2label = {
+            0: "negative",
+            1: "neutral",
+            2: "positive",
+        }
+
+    def SentimentAnalysis(
+        self,
+        pair,
+    ):
         if not pair:
             return []
         all_results = []
         num_batches = len(pair)
         try:
-            for i in range(0, num_batches, self.model_batch_size):
+            for i in range(
+                0,
+                num_batches,
+                self.model_batch_size,
+            ):
                 current_batch_pairs = pair[i : i + self.model_batch_size]
 
-                if not current_batch_pairs: 
+                if not current_batch_pairs:
                     continue
 
                 batch = []
@@ -38,21 +56,45 @@ class Aspect_Based_Sentiment_Analysis:
 
                     start = time.time()
 
-                tokens = self.tokenizer(batch, return_tensors="pt", padding=True, truncation=True, max_length=512).to(self.device)
+                tokens = self.tokenizer(
+                    batch,
+                    return_tensors="pt",
+                    padding=True,
+                    truncation=True,
+                    max_length=512,
+                ).to(self.device)
 
                 with torch.no_grad():
                     outputs = self.model(**tokens)
                 print(f"time to tokenize: {time.time() - start}")
-                    
-                prob_batch = F.softmax(outputs.logits, dim=1)
 
-                predicted_indices = torch.argmax(prob_batch, dim=1)
+                prob_batch = F.softmax(
+                    outputs.logits,
+                    dim=1,
+                )
+
+                predicted_indices = torch.argmax(
+                    prob_batch,
+                    dim=1,
+                )
 
                 predicted_indices_np = predicted_indices.cpu().numpy()
 
-                predicted_labels = [self.id2label.get(idx, "unknown") for idx in predicted_indices_np]
+                predicted_labels = [
+                    self.id2label.get(
+                        idx,
+                        "unknown",
+                    )
+                    for idx in predicted_indices_np
+                ]
 
-                results = list(zip(original_indices, keywords, predicted_labels))
+                results = list(
+                    zip(
+                        original_indices,
+                        keywords,
+                        predicted_labels,
+                    )
+                )
                 all_results.extend(results)
 
                 del tokens
@@ -61,7 +103,7 @@ class Aspect_Based_Sentiment_Analysis:
                 del predicted_indices
                 if torch.cuda.is_available():
                     torch.cuda.empty_cache()
-                    
+
                 print(f"time for sentiment analysis: {time.time() - start}")
             return all_results
         except Exception as e:

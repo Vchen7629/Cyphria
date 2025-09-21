@@ -1,9 +1,12 @@
 import sys, os
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../'))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
 sys.path.insert(0, project_root)
 
-from data_processing_pipeline.category_classification_service.preprocessing import remove_noise
+from data_processing_pipeline.category_classification_service.preprocessing_files import (
+    remove_noise,
+)
+
 
 class TestStopwordRemover:
     def setup_method(self):
@@ -20,6 +23,3 @@ class TestStopwordRemover:
         stopword_func = self.stopword_instance.stopWords(test_text)
 
         assert stopword_func == "one favorite?😈"
-    
-
-

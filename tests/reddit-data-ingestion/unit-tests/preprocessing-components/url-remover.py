@@ -1,9 +1,12 @@
 import sys, os
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../'))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
 sys.path.insert(0, project_root)
 
-from data_processing_pipeline.category_classification_service.preprocessing import remove_noise
+from data_processing_pipeline.category_classification_service.preprocessing_files import (
+    remove_noise,
+)
+
 
 class TestUrlRemover:
     def setup_method(self):
@@ -40,7 +43,9 @@ class TestUrlRemover:
         assert result == "This is a test string at  come watch"
 
     def test_url_with_subpage_filtered(self):
-        test_string = "This is a test string at http://www.google.com/a@23wdi come watch"
+        test_string = (
+            "This is a test string at http://www.google.com/a@23wdi come watch"
+        )
         result = self.instance.url(test_string)
 
         assert result == "This is a test string at  come watch"

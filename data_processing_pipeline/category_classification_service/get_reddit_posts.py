@@ -1,7 +1,7 @@
 import time
 from multiprocessing.dummy import Pool as ThreadPool
 from prawcore.exceptions import Forbidden
-from preprocessing import export_csv
+from preprocessing_files import export_csv
 from components import reddit_authentication, process_data
 
 def batch(batch):
@@ -36,7 +36,7 @@ def GetPosts() -> list[tuple[str, str, str]]:
         "Reddit-Account-Password"
     ).createRedditClient()
     try:
-        history = list(reddit_instance.subreddit("Toyota").new(limit=300))
+        history = list(reddit_instance.subreddit("Rivian").new(limit=150))
         
         return history
             #for submission in history5:

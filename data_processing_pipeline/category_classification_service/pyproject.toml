@@ -1,0 +1,17 @@
+[project]
+name = "category-classification-service"
+version = "0.1.0"
+description = "Python Service to Classify text into categories"
+readme = "README.md"
+requires-python = ">=3.13"
+
+dependencies = [
+    "langdetect>=1.0.9",
+    "numpy>=2.3.3",
+    "pandas>=2.3.2",
+    "praw>=7.8.1",
+    "prawcore>=2.4.0",
+    "preprocessing>=0.1.13",
+    "scikit-learn>=1.7.2",
+    "xgboost>=3.0.5",
+]

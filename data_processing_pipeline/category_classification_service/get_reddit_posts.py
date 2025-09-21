@@ -1,8 +1,7 @@
 import time
 from multiprocessing.dummy import Pool as ThreadPool
 from prawcore.exceptions import Forbidden
-from preprocessing_files import export_csv
-from components import reddit_authentication, process_data
+from components import reddit_authentication, process_data, export_csv
 
 def batch(batch):
     #process_instance = process_data.RedditPosts()

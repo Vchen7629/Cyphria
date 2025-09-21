@@ -1,7 +1,4 @@
-from preprocessing_files import (
-    remove_noise,
-)
-
+import remove_noise
 
 class RedditPosts:
     def __init__(self):

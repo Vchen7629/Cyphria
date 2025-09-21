@@ -5,9 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 from xgboost import XGBClassifier
 import pandas as pd
 import numpy as np
-import os, sys, time, csv
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import os, time, csv
 
 class XgBoostModel:
     def __init__(self) -> None:
@@ -87,15 +85,6 @@ class XgBoostModel:
                             self.xgboost_y_pred_labels[i],
                             self.y_test_labels[i]
                         ])
-
-                    
-        #print("\n❌ Misclassified Reddit posts:")
-
-        #test_posts = [self.corpus[i] for i in self.test_id]
-        #for i in range(len(self.xgboost_y_pred_labels)):
-        #    if self.xgboost_y_pred_labels[i] != self.y_test_labels[i]:
-        #        print(f"\nPost: {test_posts[i]}")
-        #        print(f"Predicted: {self.xgboost_y_pred_labels[i]} | Actual: {self.y_test_labels[i]}")
 
 if __name__ == "__main__":
     start = time.time()

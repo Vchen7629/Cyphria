@@ -9,7 +9,7 @@ import os, sys, time
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from preprocessing.vocabCountFeature import feature_column, loader
+from preprocessing_files.vocabCountFeature import feature_column, loader
 
 class XgBoostModel:
     def __init__(self) -> None:

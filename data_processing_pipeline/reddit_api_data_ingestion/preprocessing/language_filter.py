@@ -1,9 +1,17 @@
-from langdetect import detect
+from langdetect import (
+    detect,
+)
 
-def isEnglish(text):
+
+def isEnglish(
+    text,
+):
     try:
-        combined_text = text.get('body', '')
-        return detect(combined_text) == 'en'
-    except:
+        combined_text = text.get(
+            "body",
+            "",
+        )
+        return detect(combined_text) == "en"
+    except Exception as e:
+        print(e)
         return False
-    

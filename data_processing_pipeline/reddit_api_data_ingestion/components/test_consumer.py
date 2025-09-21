@@ -1,14 +1,19 @@
-from kafka import KafkaConsumer
+from kafka import (
+    KafkaConsumer,
+)
 
-def test_consumer(timeout=10000000000):
+
+def test_consumer(
+    timeout=10000000000,
+):
     print("Reading message")
     try:
         consumer = KafkaConsumer(
-            'test-dlq',
-            bootstrap_servers=['localhost:9092'],
-            auto_offset_reset='latest',
-            value_deserializer=lambda m: m.decode('utf-8'),
-            consumer_timeout_ms=timeout * 1000
+            "test-dlq",
+            bootstrap_servers=["localhost:9092"],
+            auto_offset_reset="latest",
+            value_deserializer=lambda m: m.decode("utf-8"),
+            consumer_timeout_ms=timeout * 1000,
         )
 
         print("Waiting for messages...")
@@ -17,6 +22,7 @@ def test_consumer(timeout=10000000000):
         consumer.close()
     except Exception as e:
         print(f"Error consuming messages: {e}")
+
 
 if __name__ == "__main__":
     test_consumer()

@@ -13,5 +13,6 @@ dependencies = [
     "prawcore>=2.4.0",
     "preprocessing>=0.1.13",
     "scikit-learn>=1.7.2",
+    "sentence-transformers>=5.1.0",
     "xgboost>=3.0.5",
 ]

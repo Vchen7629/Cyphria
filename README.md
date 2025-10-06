@@ -122,10 +122,6 @@ Cyphria/
 |       └── pages/                     # various pages used by this feature
 |       └── components/                # UI components used for this feature
 |       └── utils/                     # functions and logic used by this feature
-│   ├── src/features/user              # Folder containing all the files for the user feature
-|       └── pages/                     # various pages used by this feature
-|       └── components/                # UI components used for this feature
-|       └── utils/                     # functions and logic used by this feature
 │   ├── shared/assets/                 # assets (svg, png, etc) used by more than one feature
 |   ├── shared/components/             # Reusable components used by more than one feature
 |   ├── shared/styles/                 # CSS styling used by more than one feature

@@ -22,5 +22,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "src/dashboardpages/categorytrendspage.tsx"]
+  "include": ["src", "src/features/category/pages/categorytrendspage.tsx"]
 }

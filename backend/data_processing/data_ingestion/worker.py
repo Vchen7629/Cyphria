@@ -7,7 +7,7 @@ from worker.middleware.kafka_producer import KafkaClient
 from langdetect import (
     detect,
 )
-import praw
+import praw, json
 
 
 class Worker:
@@ -37,6 +37,14 @@ class Worker:
                 continue
 
             try:
-                self.kafka_producer.Send_Message(topic="test", message_body=processed_post)
+                self.kafka_producer.Send_Message(
+                    topic="test", 
+                    message_body=json.loads(processed_post.model_dump_json()),
+                    postID=processed_post.id,
+                )
             except Exception as e:
                 raise e
+            
+if __name__ == "__main__":
+    for i in range(1, 100):
+        Worker().post_message()

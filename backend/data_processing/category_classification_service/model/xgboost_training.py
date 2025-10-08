@@ -3,6 +3,7 @@ from sentence_transformers import (
 )
 from sklearn.model_selection import (
     train_test_split,
+    RandomizedSearchCV
 )
 from sklearn.metrics import (
     classification_report,
@@ -25,15 +26,21 @@ class XgBoostModel:
     ) -> None:
         self.label_encoder = LabelEncoder()
         self.XGBoost = XGBClassifier(
-            n_estimators=100,
-            max_depth=3,
-            learning_rate=0.2,
+            n_estimators=300,
+            max_depth=5,
+            learning_rate=0.1,
             objective="multi:softmax",
         )
         self.model = SentenceTransformer(
             "all-MiniLM-L6-v2",
             device="cpu",
         )
+
+        #self.params = {
+        #    "n_estimators": [100, 200, 300],
+        #    "max_depth": [1, 3, 5, 7],
+        #    "learning_rate": [0.01, 0.1, 0.2, 0.3],
+        #}
 
     def loadData(
         self,
@@ -72,10 +79,26 @@ class XgBoostModel:
             stratify=self.labels,
         )
 
+        #self.rs = RandomizedSearchCV(
+        #    estimator=self.XGBoost,
+        #    param_distributions=self.params,
+        #    n_iter=20, # number of times the randomized search runs to find best hyperparams
+       #     cv=5, # 5 fold cross valid
+        #    scoring="accuracy",
+        #    random_state=42,
+        #    n_jobs=-1, # number of cpu cores used, -1 means all
+        #) 
+
+        #self.rs.fit(
+        #    train_x,
+        #    train_y,
+        #)
+
         self.XGBoost.fit(
             train_x,
             train_y,
         )
+
         self.X_test = test_x
         self.Y_test = test_y
         self.test_id = test_id
@@ -83,6 +106,7 @@ class XgBoostModel:
     def evaluate(
         self,
     ) -> None:
+        #best_model = self.rs.best_estimator_
         xgboost_y_pred = self.XGBoost.predict(self.X_test)
         xgboost_y_score = self.XGBoost.predict_proba(self.X_test)
         self.xgboost_y_pred_labels = self.label_encoder.inverse_transform(xgboost_y_pred)
@@ -114,10 +138,15 @@ class XgBoostModel:
         print("AUC ROC Score for XGBoost OVO: %.2f%%" % roc_auc_ovo)
 
         print(
-            "Accuracy of XGBOOST machine model: %.2f%%"
+            "Accuracy of XGBOOST machine model with simple train test split: %.2f%%"
             % (xgboost_correct / float(len(xgboost_y_pred)) * 100)
         )
+        
+        #print("Best params:", self.rs.best_params_)
+        #print("Best CV score:", self.rs.best_score_)
 
+        # using the best model found by RandomizedSearchCV on test data set
+        #print("Test accuracy:", best_model.score(self.X_test, self.Y_test))
     def misclassified(
         self,
     ) -> None:

@@ -143,7 +143,7 @@ class MultimodalNaiveBayesModel:
 if __name__ == "__main__":
     model = MultimodalNaiveBayesModel()
 
-    model.loadData("../datasets/reddit_posts.csv")
+    model.loadData("../datasets/featureEng.csv")
     model.preprocess()
     model.train()
     model.evaluate()

@@ -35,7 +35,7 @@ def get_posts() -> list[
         "Reddit-Account-Password",
     ).createRedditClient()
     try:
-        history = list(reddit_instance.subreddit("Rivian").new(limit=5))
+        history = list(reddit_instance.subreddit("mechanic").new(limit=150))
 
         return history
     except Forbidden as e:

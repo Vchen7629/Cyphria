@@ -12,4 +12,5 @@ __pycache__/
 node_modules
 credentials/
 .python-version
-uv.lock
+.ruff_cache
+datasets/

@@ -1,4 +1,0 @@
-dotenv
-oauth
-langdetect
-kafka

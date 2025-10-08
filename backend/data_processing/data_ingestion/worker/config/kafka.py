@@ -21,4 +21,5 @@ KAFKA_SETTINGS = {
     # Monitoring
     "statistics.interval.ms": 60000,   # emit stats every 60s (via producer.stats callback)
     "log.connection.close": False,     # for cleaner logs
+    #"debug": "msg",       # enabling logging to pick up on these categories 
 }

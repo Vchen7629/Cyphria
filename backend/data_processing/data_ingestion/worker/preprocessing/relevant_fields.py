@@ -1,7 +1,7 @@
 import praw
 from datetime import datetime
-
 from pydantic import BaseModel
+from ..middleware.logger import StructuredLogger
 
 
 # This pydantic class implements a type interface
@@ -12,14 +12,23 @@ class RedditPost(BaseModel):
     timestamp: datetime
     id: str
 
-
 # Python Function to extract relevant data from reddit
 # posts before sending to the kafka producer
-def process_post(apiRes: praw.models.Submission) -> RedditPost:
+def process_post(
+    apiRes: praw.models.Submission,
+    logger: StructuredLogger
+) -> RedditPost:
     title = apiRes.title or ""
     selftext = apiRes.selftext or ""
-    fullBody = (title + " " + selftext).strip()
+    fullBody = title + " " + selftext
 
+    if fullBody == " ":
+        logger.error(
+            event_type="Missing fields",
+            message="Post Missing Body Text",
+            post_id=apiRes.id,
+        )
+    
     return RedditPost(
         body=fullBody,
         subreddit=apiRes.subreddit.display_name,

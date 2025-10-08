@@ -4,10 +4,12 @@ from worker.preprocessing.stop_words import stop_words
 from worker.preprocessing.url_remover import remove_url
 from worker.config.reddit_client import createRedditClient
 from worker.middleware.kafka_producer import KafkaClient
+from worker.preprocessing.check_english import detect_english
+from worker.middleware.logger import StructuredLogger
 from langdetect import (
     detect,
 )
-import praw, json
+import praw, json, prawcore
 
 
 class Worker:
@@ -15,14 +17,26 @@ class Worker:
         self,
         kafka_client=None,  # Dependency Injection Kafka Client for Testing
     ):
-        self.kafka_producer = kafka_client or KafkaClient()
+        self.logger = StructuredLogger(pod="idk")
+        self.kafka_producer = kafka_client or KafkaClient(self.logger)
         self.reddit_client = createRedditClient()
 
     def post_message(self):
-        posts: list[praw.models.Submission] = get_posts(self.reddit_client, "gaming")
+        try:
+            posts: list[praw.models.Submission] = list(get_posts(self.reddit_client, "gamin"))
+        except prawcore.exceptions.ServerError: # Wrong Subreddit Name error handling
+            self.logger.error(
+                event_type="Reddit Api",
+                message="Server Error",
+            )
+        except Exception as e:
+            self.logger.error(
+                event_type="Reddit Api",
+                message=f"Post Fetch Error: {e}",
+            )
 
         for post in posts:
-            extracted = process_post(post)  # extracting only relevant parts of the api response
+            extracted = process_post(post, self.logger)  # extracting only relevant parts of the api response
             no_stop_words = stop_words(extracted.body)  # removing stop words from the body
             url_removed = remove_url(no_stop_words)
 
@@ -32,8 +46,10 @@ class Worker:
                 timestamp=extracted.timestamp,
                 id=extracted.id,
             )
+            
+            lang = detect_english(url_removed)
+            if lang != "en":  # If the post is non-english skip it
 
-            if detect(no_stop_words) != "en":  # If the post is non-english skip it
                 continue
 
             try:
@@ -46,5 +62,4 @@ class Worker:
                 raise e
             
 if __name__ == "__main__":
-    for i in range(1, 100):
-        Worker().post_message()
+    Worker().post_message()

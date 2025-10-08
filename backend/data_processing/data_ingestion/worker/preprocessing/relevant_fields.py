@@ -24,7 +24,7 @@ def process_post(
 
     if fullBody == " ":
         logger.error(
-            event_type="Missing fields",
+            event_type="data_ingestion",
             message="Post Missing Body Text",
             post_id=apiRes.id,
         )

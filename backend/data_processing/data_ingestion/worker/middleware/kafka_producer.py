@@ -21,22 +21,22 @@ class KafkaClient:
 
         except Exception as e:
             self.structured_logger.error(
-                event_type="Error creating Kafka Producer",
+                event_type="Kafka",
                 message=f"Create Producer error: {e}",
             )
             exit()
     
     # Handler to convert kafka logs to structure handler
-    def Kafka_Message_Log_Handler(self, err, msg):
+    def kafka_message_log_handler(self, err, msg):
         if err is not None:
             self.structured_logger.error(
-                event_type="Kafka Produce Error",
+                event_type="Kafka",
                 message=f"Failed to deliver Msg because: {msg}",
                 post_id=msg.key().decode() if msg.key() else None,
             )
         else: 
             self.structured_logger.info(
-                event_type="Kafka Produce Success",
+                event_type="Kafka",
                 message="Message Delivered Successfully",
                 post_id=msg.key().decode() if msg.key() else None,
                 partition=msg.partition(),
@@ -45,7 +45,7 @@ class KafkaClient:
             )
     
     # This sends a single message to kafka topic
-    def Send_Message(
+    def send_message(
         self,
         topic: str,  # kafka topic
         message_body: Mapping[str, Any],  # reddit post body
@@ -57,7 +57,7 @@ class KafkaClient:
                 topic, 
                 key=postID.encode("utf-8"),
                 value=json_str.encode("utf-8"),
-                callback=self.Kafka_Message_Log_Handler,
+                callback=self.kafka_message_log_handler,
             )
 
             self.producer.flush()  # Block until all buffered messages are sent and acknowledged

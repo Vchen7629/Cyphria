@@ -65,6 +65,5 @@ volumes:
 
 networks:
   kafka_net:
-    external: true
     name: kafka_default
       

@@ -11,3 +11,6 @@ __pycache__/
 .mypy_cache
 node_modules
 credentials/
+.python-version
+.ruff_cache
+datasets/

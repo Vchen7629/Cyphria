@@ -1,0 +1,12 @@
+[project]
+name = "topic-classification"
+version = "0.1.0"
+description = "Worker for reddit post topic classification"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "confluent-kafka>=2.11.1",
+    "keybert>=0.9.0",
+    "pandas>=2.3.3",
+    "sentence-transformers>=5.1.1",
+]

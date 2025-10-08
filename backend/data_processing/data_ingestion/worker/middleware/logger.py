@@ -6,7 +6,7 @@ from datetime import datetime
 
 # Central Logging for this worker service
 class StructuredLogger:
-    def __init__(self, pod: None):
+    def __init__(self, pod: str) -> None:
         self.pod_name = pod
 
         self.logger = logging.getLogger()
@@ -16,10 +16,10 @@ class StructuredLogger:
         handler.setFormatter(logging.Formatter("%(message)s"))  # just output JSON
         self.logger.addHandler(handler)
 
-    def _log(self, level: str, event_type: str, message: str, **kwargs):
+    def _log(self, level: str, event_type: str, message: str, **kwargs) -> str:
         return json.dumps(
             {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now().isoformat(),
                 "level": level,
                 "service": "Api-Ingestion-Worker",
                 "pod": self.pod_name,
@@ -30,11 +30,11 @@ class StructuredLogger:
         )
 
     # log levels
-    def info(self, event_type: str, message: str, **kwargs):
+    def info(self, event_type: str, message: str, **kwargs) -> None:
         self.logger.info(self._log("INFO", event_type, message, **kwargs))
 
-    def error(self, event_type: str, message: str, **kwargs):
+    def error(self, event_type: str, message: str, **kwargs) -> None:
         self.logger.error(self._log("ERROR", event_type, message, **kwargs))
 
-    def debug(self, event_type: str, message: str, **kwargs):
+    def debug(self, event_type: str, message: str, **kwargs) -> None:
         self.logger.debug(self._log("DEBUG", event_type, message, **kwargs))

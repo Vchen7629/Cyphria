@@ -1,6 +1,6 @@
-from sentence_transformers import (
+from sentence_transformers import ( # type: ignore[import-not-found]
     SentenceTransformer,
-)
+) 
 import time
 import os
 import threading

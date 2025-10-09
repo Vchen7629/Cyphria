@@ -37,7 +37,7 @@ class Worker:
                     body=url_removed,
                     subreddit=extracted.subreddit,
                     timestamp=extracted.timestamp,
-                    id=extracted.id,
+                    post_id=extracted.post_id,
                 )
 
                 lang = detect_english(url_removed)
@@ -46,9 +46,9 @@ class Worker:
 
                 try:
                     self.kafka_producer.send_message(
-                        topic="test",
+                        topic="raw-data",
                         message_body=json.loads(processed_post.model_dump_json()),
-                        postID=processed_post.id,
+                        postID=processed_post.post_id,
                     )
                 except Exception as e:
                     raise e

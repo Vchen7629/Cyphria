@@ -47,7 +47,7 @@ class KafkaClient:
         topic: str,  # kafka topic
         message_body: Mapping[str, Any],  # reddit post body
         postID: str,  # reddit post id to be used as key
-    ):
+    ) -> None:
         try:
             json_str = json.dumps(message_body)
             self.producer.produce(

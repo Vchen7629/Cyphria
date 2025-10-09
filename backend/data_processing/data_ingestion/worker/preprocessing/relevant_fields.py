@@ -10,7 +10,7 @@ class RedditPost(BaseModel):
     body: str  # full body (title + selftext)
     subreddit: str
     timestamp: datetime
-    id: str
+    post_id: str
 
 
 # Python Function to extract relevant data from reddit
@@ -31,5 +31,5 @@ def process_post(apiRes: praw.models.Submission, logger: StructuredLogger) -> Re
         body=fullBody,
         subreddit=apiRes.subreddit.display_name,
         timestamp=apiRes.created_utc,
-        id=apiRes.id,
+        post_id=apiRes.id,
     )

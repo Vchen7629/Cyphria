@@ -14,3 +14,6 @@ credentials/
 .python-version
 .ruff_cache
 datasets/
+
+# Kafka Streams Java files/folders
+target

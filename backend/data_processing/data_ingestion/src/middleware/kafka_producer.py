@@ -7,13 +7,18 @@ from typing import Mapping, Any
 
 
 class KafkaClient:
-    def __init__(self, logger: StructuredLogger) -> None:
+    def __init__(
+            self, 
+            logger: StructuredLogger,
+            bootstrap_server: str
+        ) -> None:
         self.structured_logger = logger  # logger instance
         try:
-            self.producer = Producer(
+            self.producer = Producer({
                 **KAFKA_SETTINGS,  # adding kafka settings
+                "bootstrap.servers": bootstrap_server
                 # logger=kafka_logger # logging setup messages
-            )
+            })
             print("Producer connected...")
 
         except Exception as e:

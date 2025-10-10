@@ -1,4 +1,3 @@
-# Todo: code for handling error/info logging
 import logging
 import json
 from datetime import datetime

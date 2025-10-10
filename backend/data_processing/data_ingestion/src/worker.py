@@ -1,11 +1,11 @@
-from worker.components.fetch_post import get_posts
-from worker.preprocessing.relevant_fields import process_post, RedditPost
-from worker.preprocessing.stop_words import stop_words
-from worker.preprocessing.url_remover import remove_url
-from worker.config.reddit_client import createRedditClient
-from worker.middleware.kafka_producer import KafkaClient
-from worker.preprocessing.check_english import detect_english
-from worker.middleware.logger import StructuredLogger
+from src.components.fetch_post import get_posts
+from src.preprocessing.relevant_fields import process_post, RedditPost
+from src.preprocessing.stop_words import stop_words
+from src.preprocessing.url_remover import remove_url
+from src.config.reddit_client import createRedditClient
+from src.middleware.kafka_producer import KafkaClient
+from src.preprocessing.check_english import detect_english
+from src.middleware.logger import StructuredLogger
 import praw
 import json
 import prawcore
@@ -17,7 +17,7 @@ class Worker:
         kafka_client=None,  # Dependency Injection Kafka Client for Testing
     ):
         self.logger = StructuredLogger(pod="idk")
-        self.kafka_producer = kafka_client or KafkaClient(self.logger)
+        self.kafka_producer = kafka_client or KafkaClient(self.logger, bootstrap_server="localhost:9092")
         self.reddit_client = createRedditClient()
 
     def post_message(self):

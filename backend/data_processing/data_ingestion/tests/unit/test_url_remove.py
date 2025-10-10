@@ -1,4 +1,4 @@
-from worker.preprocessing.url_remover import remove_url
+from src.preprocessing.url_remover import remove_url
 from pathlib import Path
 import sys
 

@@ -1,4 +1,4 @@
-from worker.preprocessing.stop_words import stop_words
+from src.preprocessing.stop_words import stop_words
 from pathlib import Path
 import sys
 

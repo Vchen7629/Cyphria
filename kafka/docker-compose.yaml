@@ -1,30 +1,34 @@
 services:
   kafka:
-    container_name: kafka-kraft-bitnami
+    container_name: kafka-kraft-apache
     user: root
-    image: bitnami/kafka:latest
+    image: apache/kafka:latest
     ports:
       - "9092:9092"
       - "9094:9094"
       - "29092:29092"
     environment:
-      - KAFKA_CFG_NODE_ID=0
-      - KAFKA_CFG_PROCESS_ROLES=controller,broker
-      - KAFKA_CFG_LISTENERS=HOST://0.0.0.0:9092,CONTAINER://0.0.0.0:9094,CONTROLLER://0.0.0.0:9093,INTERNAL://0.0.0.0:29092
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,HOST:PLAINTEXT,CONTAINER:PLAINTEXT,INTERNAL:PLAINTEXT
-      - KAFKA_CFG_ADVERTISED_LISTENERS=HOST://localhost:9092,CONTAINER://host.docker.internal:9094,CONTROLLER://kafka:9093,INTERNAL://kafka:29092
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=HOST
-      - KAFKA_CFG_LOG_DIRS=/bitnami/kafka/data
-      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
+      - KAFKA_NODE_ID=0
+      - KAFKA_PROCESS_ROLES=controller,broker
+      - KAFKA_CLUSTER_ID=5NymC103-TfL1-4iV0-AfF3-Ld5Fp1bA4rSg 
+      - KAFKA_LISTENERS=HOST://0.0.0.0:9092,CONTAINER://0.0.0.0:9094,CONTROLLER://0.0.0.0:9093,INTERNAL://0.0.0.0:29092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,HOST:PLAINTEXT,CONTAINER:PLAINTEXT,INTERNAL:PLAINTEXT
+      - KAFKA_ADVERTISED_LISTENERS=HOST://localhost:9092,CONTAINER://host.docker.internal:9094,CONTROLLER://kafka:9093,INTERNAL://kafka:29092
+      - KAFKA_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_INTER_BROKER_LISTENER_NAME=HOST
+      - KAFKA_LOG_DIRS=/opt/kafka/data
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=false
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
 
     volumes:
-      - ./kafka-data:/bitnami/kafka
+      - ./kafka-data:/opt/kafka/data
     networks:
       - kafka_net
   kafka-init:
-    image: bitnami/kafka:latest
+    image: apache/kafka:latest
     depends_on:
       - kafka
     entrypoint: >
@@ -44,10 +48,13 @@ services:
           "sentiment-analysis:8:1:delete" \
           "test:4:1:delete" \
           "test-dlq:4:1:delete" \
+          "aggregator:4:1:delete" \
+          "sentiment-kafka-stream-__assignor-__leader:1:1:compact" \
+          "sentiment-kafka-stream-replyto:1:1:delete" \
 
         do
           IFS=":" read topic parts rf policy <<< "$$spec"
-          kafka-topics.sh \
+          /opt/kafka/bin/kafka-topics.sh \
             --bootstrap-server kafka:29092 \
             --create \
             --if-not-exists \

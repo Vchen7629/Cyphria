@@ -13,6 +13,7 @@ dependencies = [
     "pydantic>=2.11.10",
     "pytest>=8.4.2",
     "ruff>=0.13.3",
+    "testcontainers[kafka]>=4.13.2",
 ]
 
 [tool.mypy]

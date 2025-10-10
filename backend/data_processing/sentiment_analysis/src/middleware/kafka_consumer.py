@@ -1,13 +1,14 @@
 from ..config.kafka import KAFKA_SETTINGS_CONSUMER
 from ..middleware.logger import StructuredLogger
-from confluent_kafka import Consumer # type: ignore
+from ..preprocessing.extract_pairs import extract_pairs
+from confluent_kafka import Consumer  # type: ignore
 import time
-from typing import Optional
+from typing import List
 
 
 # This class implements the Kafka Consumer
 class KafkaConsumer:
-    def __init__(self, topic: str, logger: StructuredLogger):
+    def __init__(self, topic: str, logger: StructuredLogger) -> None:
         self.structured_logger = logger
         try:
             self.consumer = Consumer(**KAFKA_SETTINGS_CONSUMER)
@@ -17,12 +18,23 @@ class KafkaConsumer:
             logger.error(event_type="Kafka", message=f"Create Consumer Error: {e}")
             raise
 
-    def poll_for_new_messages(self, timeout_ms: int = 1000) -> list[dict[str, Optional[str]]]:
-        batch: list[dict[str, Optional[str]]] = []  # batch of msgs to be processed
+    # Commit Offsets after successful processing
+    def commit(self, asynchronous: bool = False) -> None:
+        try:
+            self.consumer.commit(asynchronous=asynchronous)
+        except Exception as e:
+            self.structured_logger.error(
+                event_type="Kafka",
+                message=f"Offset commit failed: {e}",
+            )
+
+    def poll_for_new_messages(self, timeout_ms: int = 1000) -> List[tuple[str, str, str]]:
+        batch: list[tuple[str, str, str]] = []  # batch of msgs to be processed
         start = time.time()  # timer for the duration to wait before batch processing
 
-        while len(batch) < 10 and time.time() - start < 1.0:
+        while len(batch) < 65 and time.time() - start < 1.0:
             try:
+                print("polling")
                 msg = self.consumer.poll(timeout=timeout_ms)
 
                 if msg is None:
@@ -33,12 +45,10 @@ class KafkaConsumer:
                     )
                     continue
 
-                batch.append(
-                    {
-                        "postID": msg.key().decode() if msg.key() else None,
-                        "postBody": msg.value().decode("utf-8"),
-                    }
-                )
+                if msg.key():
+                    batch = extract_pairs(msg)
+                else:
+                    continue
 
                 self.structured_logger.info(
                     event_type="Kafka",

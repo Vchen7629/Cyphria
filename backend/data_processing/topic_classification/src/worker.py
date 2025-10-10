@@ -1,8 +1,8 @@
-from worker.middleware.kafka_consumer import KafkaConsumer
-from worker.middleware.kafka_producer import KafkaProducer
-from worker.components.sbert_model import get_model
-from worker.preprocessing.keywordextraction import KeywordExtraction
-from worker.middleware.logger import StructuredLogger
+from src.middleware.kafka_consumer import KafkaConsumer
+from src.middleware.kafka_producer import KafkaProducer
+from src.components.sbert_model import get_model
+from src.preprocessing.keywordextraction import KeywordExtraction
+from src.middleware.logger import StructuredLogger
 
 from keybert import (
     KeyBERT,
@@ -23,7 +23,7 @@ class Start_Service:
     def __init__(self) -> None:
         self.structured_logger = StructuredLogger(pod="idk")
 
-        self.consumer = KafkaConsumer(topic="test", logger=self.structured_logger)
+        self.consumer = KafkaConsumer(topic="raw-data", logger=self.structured_logger)
         self.producer = KafkaProducer(logger=self.structured_logger)
         self.model = get_model()
         kw_model = KeyBERT(model=self.model)
@@ -44,12 +44,19 @@ class Start_Service:
 
             for item in processed_data:
                 try:
+                    print("sending messages")
                     self.producer.send_message(
-                        topic="sentiment-analysis", message=item["keywords"], postID=item["post_id"]
+                        topic="test", message=item["keywords"], postID=item["post_id"]
                     )
                 except Exception as e:
                     raise e
-
+            
+            # After processing is done and sent to the next topic
+            self.consumer.commit(asynchronous=False)
+            self.structured_logger.info(
+                event_type="Kafka",
+                message="Offsets committed successfully after processing batch",
+            )
 
 if __name__ == "__main__":
     Start_Service().run()

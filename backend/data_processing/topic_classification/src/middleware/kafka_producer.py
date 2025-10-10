@@ -1,4 +1,4 @@
-from confluent_kafka import Producer # type: ignore
+from confluent_kafka import Producer  # type: ignore
 from ..config.kafka import KAFKA_SETTINGS_PRODUCER
 from ..middleware.logger import StructuredLogger
 import json
@@ -18,7 +18,7 @@ class KafkaProducer:
             exit()
 
     # Handler to convert kafka logs to structure handler
-    def kafka_message_log_handler(self, err, msg):
+    def kafka_message_log_handler(self, err, msg) -> None:
         if err is not None:
             self.structured_logger.error(
                 event_type="Kafka",
@@ -40,7 +40,7 @@ class KafkaProducer:
         topic: str,
         message: dict[str, str],
         postID: str,
-    ):
+    ) -> None:
         try:
             json_str = json.dumps(message)
             self.producer.produce(

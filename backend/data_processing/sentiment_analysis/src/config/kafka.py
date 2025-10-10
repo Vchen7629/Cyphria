@@ -24,7 +24,7 @@ KAFKA_SETTINGS_CONSUMER = {
     # cluster
     "bootstrap.servers": "localhost:9092",
     # consumer group (Identifier for this service so horizontal scaling works properly)
-    "group.id": "keyword-extraction-service",
+    "group.id": "sentiment-analysis-service",
     # Start position if no committed offset exists
     "auto.offset.reset": "earliest",
     # Reliability / Fault tolerance

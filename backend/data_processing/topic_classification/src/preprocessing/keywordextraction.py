@@ -1,6 +1,7 @@
 from ..middleware.logger import StructuredLogger
 from typing import Sequence
 
+
 class KeywordExtraction:
     def __init__(self, model, logging: StructuredLogger) -> None:
         self.model = model

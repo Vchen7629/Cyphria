@@ -1,15 +1,17 @@
 from ..preprocessing.extract_sentence import extract_post_body
 from ..config.my_types import QueueMessage
-from queue import Queue
-from typing import Generator, Tuple, List
+from typing import Generator, Tuple, List, Any
 import time
+from queue import Queue
 
 
 def batch(
-    queue: Queue, batch_size: int, max_wait: float = 2.0
+    queue: Queue, 
+    batch_size: int, 
+    max_wait: float = 2.0
 ) -> Generator[Tuple[List[str], List[str], List[QueueMessage]], None, None]:
     batch: list[QueueMessage] = []
-    batch_start = None  # track when the batch started
+    batch_start: Any = None  # track when the batch started
 
     while True:
         try:

@@ -41,9 +41,6 @@ class KafkaClient:
                 event_type="Kafka",
                 message="Message Delivered Successfully",
                 post_id=msg.key().decode() if msg.key() else None,
-                partition=msg.partition(),
-                offset=msg.offset(),
-                topic=msg.topic(),
             )
 
     # This sends a single message to kafka topic
@@ -59,10 +56,12 @@ class KafkaClient:
                 topic,
                 key=postID.encode("utf-8"),
                 value=json_str.encode("utf-8"),
-                callback=self.kafka_message_log_handler,
+                #callback=self.kafka_message_log_handler,
             )
-
-            self.producer.flush()  # Block until all buffered messages are sent and acknowledged
-
         except Exception as e:
             raise RuntimeError(f"Error sending message: {e}")
+    
+    # This sends all the queries messages to broker
+    def flush(self, timeout: float = 30.0):
+        """Wait for all messages to be delivered."""
+        self.producer.flush(timeout)

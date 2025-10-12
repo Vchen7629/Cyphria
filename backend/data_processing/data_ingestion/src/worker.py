@@ -23,7 +23,7 @@ class Worker:
     def post_message(self):
         try:
             posts: list[praw.models.Submission] = list(
-                get_posts(self.reddit_client, "gaming", self.logger)
+                get_posts(self.reddit_client, "all", self.logger)
             )
 
             for post in posts:
@@ -52,6 +52,9 @@ class Worker:
                     )
                 except Exception as e:
                     raise e
+
+            print("flushing")
+            self.kafka_producer.flush()
         except prawcore.exceptions.ServerError:  # Wrong Subreddit Name error handling
             self.logger.error(
                 event_type="Reddit Api",
@@ -65,4 +68,5 @@ class Worker:
 
 
 if __name__ == "__main__":
-    Worker().post_message()
+    for i in range(1):
+        Worker().post_message()

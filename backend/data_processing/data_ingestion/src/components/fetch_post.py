@@ -8,7 +8,7 @@ def get_posts(
     reddit_client: praw.Reddit, subreddit: str, logger: StructuredLogger
 ) -> list[praw.models.Submission] | None:
     try:
-        return list(reddit_client.subreddit(subreddit).new(limit=20))
+        return list(reddit_client.subreddit(subreddit).new(limit=100))
     except Forbidden as e:
         logger.error(event_type="RedditApi", message=f"Error fetching posts from reddit: {e}")
 

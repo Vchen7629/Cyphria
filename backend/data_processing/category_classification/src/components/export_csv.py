@@ -1,4 +1,5 @@
-import csv, os
+import csv
+import os
 
 
 def ExportCSV(
@@ -36,10 +37,7 @@ def ExportCSV(
             exist_ok=True,
         )
     except Exception as e:
-        print(
-            f"error with dir",
-            e,
-        )
+        print(f"error with dir: {e}")
     else:
         with open(
             file_path,

@@ -1,4 +1,5 @@
-import os, praw
+import os
+import praw
 from dotenv import (
     load_dotenv,
 )

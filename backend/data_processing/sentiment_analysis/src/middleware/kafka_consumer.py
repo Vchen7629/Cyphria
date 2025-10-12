@@ -1,9 +1,7 @@
 from ..config.kafka import KAFKA_SETTINGS_CONSUMER
 from ..middleware.logger import StructuredLogger
-from ..preprocessing.extract_pairs import extract_pairs
 from confluent_kafka import Consumer  # type: ignore
-import time
-from typing import List
+from typing import Any, Union, Tuple, Optional
 
 
 # This class implements the Kafka Consumer
@@ -19,49 +17,44 @@ class KafkaConsumer:
             raise
 
     # Commit Offsets after successful processing
-    def commit(self, asynchronous: bool = False) -> None:
+    def commit(self, offsets: Any = None, asynchronous: bool = False) -> None:
         try:
-            self.consumer.commit(asynchronous=asynchronous)
+            if offsets is not None:
+                self.consumer.commit(offsets=offsets, asynchronous=asynchronous)
+            else:
+                self.consumer.commit(asynchronous=asynchronous)
         except Exception as e:
             self.structured_logger.error(
                 event_type="Kafka",
                 message=f"Offset commit failed: {e}",
             )
 
-    def poll_for_new_messages(self, timeout_ms: int = 1000) -> List[tuple[str, str, str]]:
-        batch: list[tuple[str, str, str]] = []  # batch of msgs to be processed
-        start = time.time()  # timer for the duration to wait before batch processing
+    # pause method: used if queue is overloaded
+    def pause(self) -> None:
+        self.consumer.pause(self.consumer.assignment())
 
-        while len(batch) < 65 and time.time() - start < 1.0:
-            try:
-                print("polling")
-                msg = self.consumer.poll(timeout=timeout_ms)
+    # resume method: used if queue is stabilized again
+    def resume(self) -> None:
+        self.consumer.resume(self.consumer.assignment())
 
-                if msg is None:
-                    continue
-                if msg.error():
-                    self.structured_logger.error(
-                        event_type="Kafka", message=f"Kafka error: {msg.error()}"
-                    )
-                    continue
+    # poll method: fetch new messages from kafka topic
+    def poll(self, timeout_ms: int = 1000) ->  Union[Tuple[Optional[str], str, int, str, int], None]:
+        try:
+            msg = self.consumer.poll(timeout=timeout_ms)
 
-                if msg.key():
-                    batch = extract_pairs(msg)
-                else:
-                    continue
+            postID = msg.key().decode() if msg.key() else None
+            postBody = msg.value().decode("utf-8")
+            partition = msg.partition()
+            topic = msg.topic()
+            offset = msg.offset()
 
-                self.structured_logger.info(
-                    event_type="Kafka",
-                    message="Message recieved from kafka",
-                    key=msg.key().decode() if msg.key() else None,
-                    topic=msg.topic(),
-                    partition=msg.partition(),
-                    offset=msg.offset(),
-                )
-            except Exception as e:
-                self.structured_logger.error(
-                    event_type="Kafka", message=f"Error consumer polling messages: {e}"
-                )
-                return []
+            # Todo: Handle no postID, postBody, etc errors
 
-        return batch
+            return postID, postBody, partition, topic, offset
+
+        except Exception as e:
+            self.structured_logger.error(
+                event_type="Kafka", message=f"Error consumer polling messages: {e}"
+            )
+
+            return None

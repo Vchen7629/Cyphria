@@ -1,7 +1,7 @@
 from sentence_transformers import (
     SentenceTransformer,
 )
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.model_selection import train_test_split  # , RandomizedSearchCV
 from sklearn.metrics import (
     classification_report,
     roc_auc_score,
@@ -9,12 +9,12 @@ from sklearn.metrics import (
 from sklearn.preprocessing import (
     LabelEncoder,
 )
-from xgboost import (
-    XGBClassifier,
-)
+from xgboost import XGBClassifier
 import pandas as pd
 import numpy as np
-import os, time, csv
+import os
+import time
+import csv
 
 
 class XgBoostModel:

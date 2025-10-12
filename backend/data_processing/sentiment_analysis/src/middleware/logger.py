@@ -20,7 +20,7 @@ class StructuredLogger:
             {
                 "timestamp": datetime.now().isoformat(),
                 "level": level,
-                "service": "Api-Ingestion-Worker",
+                "service": "Sentiment-Analysis-Worker",
                 "pod": self.pod_name,
                 "event_type": event_type,
                 "message": message,

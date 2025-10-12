@@ -1,17 +1,22 @@
 from src.middleware.kafka_consumer import KafkaConsumer
 from src.middleware.kafka_producer import KafkaProducer
-from src.components.sbert_model import get_model
+from src.config.sbert_model import get_model
 from src.preprocessing.keywordextraction import KeywordExtraction
 from src.middleware.logger import StructuredLogger
-
-from keybert import (
-    KeyBERT,
-)
+from src.components.queue import bounded_internal_queue
+from queue import Queue
+from threading import Thread
+from concurrent.futures import ThreadPoolExecutor
+from src.components.batch import batch
+from src.config.types import ProcessedItem
+from src.components.offsets import offset_helper
+from src.components.pub_handler import pub_handler
+from keybert import KeyBERT  # type: ignore
 
 keyword_model_instance = None
 
 
-def getModel():
+def getModel():  # type: ignore
     global keyword_model_instance
     if not keyword_model_instance:
         keyword_model_instance = Start_Service()
@@ -22,41 +27,54 @@ def getModel():
 class Start_Service:
     def __init__(self) -> None:
         self.structured_logger = StructuredLogger(pod="idk")
-
+        self.queue: Queue = Queue(maxsize=1000)  # processing queue
         self.consumer = KafkaConsumer(topic="raw-data", logger=self.structured_logger)
         self.producer = KafkaProducer(logger=self.structured_logger)
         self.model = get_model()
-        kw_model = KeyBERT(model=self.model)
-        self.topic_extraction = KeywordExtraction(kw_model, self.structured_logger)
+        self.kw_model = KeyBERT(model=self.model)
+        self.executor = ThreadPoolExecutor(max_workers=1)
 
     def run(self) -> None:
-        while True:
-            message_batch = self.consumer.poll_for_new_messages()
+        t = Thread(
+            target=bounded_internal_queue,
+            kwargs={
+                "consumer": self.consumer,
+                "high_wm": 800,
+                "low_wm": 400,
+                "structured_logger": self.structured_logger,
+                "internal_queue": self.queue,
+                "running": True,
+            },
+            daemon=True,  # this makes this thread stop with main thread
+        )
+        t.start()
 
-            if not message_batch:
-                continue
+        for postMsgs, postIDs, currBatch in batch(batch_size=65, queue=self.queue):
+            try:
+                processed_data: list[ProcessedItem] = KeywordExtraction(
+                    postMsgs=postMsgs, postIDs=postIDs, executor=self.executor, model=self.kw_model
+                )
 
-            postMsgs = [msg["postBody"] for msg in message_batch]  # extract message bodies
-            postIDs = [msg["postID"] for msg in message_batch]  # extract post IDs
-
-            # This returns the processed data as a pandas dataframe
-            processed_data = self.topic_extraction.KeywordExtraction(postMsgs, postIDs)
-
-            for item in processed_data:
-                try:
-                    print("sending messages")
-                    self.producer.send_message(
-                        topic="test", message=item["keywords"], postID=item["post_id"]
+                for item in processed_data:
+                    pub_handler(
+                        topic="test",
+                        error_topic="test-dlq",
+                        producer=self.producer,
+                        message=item["keywords"],
+                        postID=item["post_id"],
+                        logger=self.structured_logger,
                     )
-                except Exception as e:
-                    raise e
-            
-            # After processing is done and sent to the next topic
-            self.consumer.commit(asynchronous=False)
-            self.structured_logger.info(
-                event_type="Kafka",
-                message="Offsets committed successfully after processing batch",
-            )
+
+                self.producer.flush()
+
+                offset_helper(
+                    batch=currBatch, consumer=self.consumer, logger=self.structured_logger
+                )
+
+            except Exception as e:
+                print(f"error: {e}")
+                return
+
 
 if __name__ == "__main__":
     Start_Service().run()

@@ -1,6 +1,8 @@
 import time
+from backend.data_processing.category_classification.src.preprocessing import preprocessing
 from prawcore.exceptions import Forbidden
-from components import reddit_authentication, export_csv, preprocessing
+from components import reddit_authentication, export_csv
+
 
 def extract_data(
     apiRes,
@@ -12,8 +14,8 @@ def extract_data(
     selftext = apiRes.selftext
     body = title + " " + selftext
     subreddit = apiRes.subreddit.display_name
-    created_utc = apiRes.created_utc
-    id = apiRes.id
+    # created_utc = apiRes.created_utc
+    # id = apiRes.id
 
     return (
         body,
@@ -39,10 +41,7 @@ def get_posts() -> list[
 
         return history
     except Forbidden as e:
-        print(
-            f"Error fetching",
-            e,
-        )
+        print(f"Error fetching: {e}")
 
 
 def get_posts2() -> list[
@@ -63,10 +62,7 @@ def get_posts2() -> list[
 
         return history
     except Forbidden as e:
-        print(
-            f"Error fetching",
-            e,
-        )
+        print(f"Error fetching: {e}")
 
 
 def get_posts3() -> list[
@@ -87,10 +83,7 @@ def get_posts3() -> list[
 
         return history
     except Forbidden as e:
-        print(
-            f"Error fetching",
-            e,
-        )
+        print(f"Error fetching: {e}")
 
 
 if __name__ == "__main__":

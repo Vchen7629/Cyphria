@@ -1,7 +1,6 @@
-from confluent_kafka import Producer  # type: ignore
+from confluent_kafka import Producer, KafkaError, Message  # type: ignore
 from ..config.kafka import KAFKA_SETTINGS_PRODUCER
 from ..middleware.logger import StructuredLogger
-import json
 
 
 # This class sends configures the producer for the processed data topic
@@ -10,6 +9,7 @@ class KafkaProducer:
         self.structured_logger = logger
         try:
             self.producer = Producer(**KAFKA_SETTINGS_PRODUCER)
+
         except Exception as e:
             self.structured_logger.error(
                 event_type="Kafka",
@@ -17,8 +17,8 @@ class KafkaProducer:
             )
             exit()
 
-    # Handler to convert kafka logs to structure handler
-    def kafka_message_log_handler(self, err, msg) -> None:
+    # Handler to convert kafka logs to structured handler
+    def kafka_message_log_handler(self, err: KafkaError | None, msg: Message) -> None:
         if err is not None:
             self.structured_logger.error(
                 event_type="Kafka",
@@ -30,27 +30,18 @@ class KafkaProducer:
                 event_type="Kafka",
                 message="Message Delivered Successfully",
                 post_id=msg.key().decode() if msg.key() else None,
-                partition=msg.partition(),
-                offset=msg.offset(),
-                topic=msg.topic(),
             )
 
-    def send_message(
-        self,
-        topic: str,
-        message: dict[str, str],
-        postID: str,
-    ) -> None:
-        try:
-            json_str = json.dumps(message)
-            self.producer.produce(
-                topic,
-                key=postID.encode("utf-8"),
-                value=json_str.encode("utf-8"),
-                callback=self.kafka_message_log_handler,
-            )
+    # Publish the message locally
+    def produce(self, topic: str, key: bytes, value: bytes) -> None:
+        self.producer.produce(
+            topic=topic, key=key, value=value, callback=self.kafka_message_log_handler
+        )
 
-            self.producer.flush()
+    # Call this method after produce to actually process
+    def poll(self, time: str) -> None:
+        self.producer.poll(time)
 
-        except Exception as e:
-            print(f"Error publishing message to topic {topic}: {e}")
+    # sends data to broker for ack
+    def flush(self) -> None:
+        self.producer.flush()

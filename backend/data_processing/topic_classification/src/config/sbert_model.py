@@ -1,6 +1,4 @@
-from sentence_transformers import (  # type: ignore[import-not-found]
-    SentenceTransformer,
-)
+from sentence_transformers import SentenceTransformer
 import time
 import os
 import threading
@@ -9,7 +7,7 @@ _model_instance = None
 _model_lock = threading.Lock()  # Use a lock for thread safety
 
 
-def get_model():
+def get_model():  # type: ignore
     global _model_instance
     worker_pid = os.getpid()  # Get current Process ID
 

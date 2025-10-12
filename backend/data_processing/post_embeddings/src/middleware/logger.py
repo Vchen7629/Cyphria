@@ -2,11 +2,12 @@
 import logging
 import json
 from datetime import datetime
+from typing import Any
 
 
 # Central Logging for this worker service
 class StructuredLogger:
-    def __init__(self, pod: None):
+    def __init__(self, pod: str):
         self.pod_name = pod
 
         self.logger = logging.getLogger()
@@ -16,7 +17,7 @@ class StructuredLogger:
         handler.setFormatter(logging.Formatter("%(message)s"))  # just output JSON
         self.logger.addHandler(handler)
 
-    def _log(self, level: str, event_type: str, message: str, **kwargs):
+    def _log(self, level: str, event_type: str, message: str, **kwargs: Any) -> str:
         return json.dumps(
             {
                 "timestamp": datetime.utcnow().isoformat(),
@@ -30,11 +31,11 @@ class StructuredLogger:
         )
 
     # log levels
-    def info(self, event_type: str, message: str, **kwargs):
+    def info(self, event_type: str, message: str, **kwargs: Any) -> None:
         self.logger.info(self._log("INFO", event_type, message, **kwargs))
 
-    def error(self, event_type: str, message: str, **kwargs):
+    def error(self, event_type: str, message: str, **kwargs: Any) -> None:
         self.logger.error(self._log("ERROR", event_type, message, **kwargs))
 
-    def debug(self, event_type: str, message: str, **kwargs):
+    def debug(self, event_type: str, message: str, **kwargs: Any) -> None:
         self.logger.info(self._log("DEBUG", event_type, message, **kwargs))

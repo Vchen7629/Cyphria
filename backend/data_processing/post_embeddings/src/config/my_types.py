@@ -1,5 +1,6 @@
 from typing import TypedDict
 
+
 class QueueMessage(TypedDict):
     topic: str
     partition: int

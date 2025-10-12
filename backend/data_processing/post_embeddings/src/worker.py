@@ -11,6 +11,7 @@ from threading import Thread
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from queue import Queue
 
+
 class SentenceEmbeddings:
     def __init__(self) -> None:
         self.structured_logger = StructuredLogger(pod="idk")
@@ -19,8 +20,8 @@ class SentenceEmbeddings:
         self.producer = KafkaProducer(logger=self.structured_logger)
         self.queue: Queue = Queue(maxsize=1000)  # processing queue
         self.executor = ThreadPoolExecutor(max_workers=1)
-        
-    def run(self):
+
+    def run(self) -> None:
         t = Thread(
             target=bounded_internal_queue,
             kwargs={
@@ -40,11 +41,11 @@ class SentenceEmbeddings:
             # Feed lists to embedding model to do inference and returns a dict with id, embedding kv pair
             try:
                 embeddings = inference_handler(
-                    post_id_list=post_ids, 
+                    post_id_list=post_ids,
                     post_body_list=post_bodies,
                     model=self.model,
-                    timeout=3, 
-                    executor=self.executor
+                    timeout=3,
+                    executor=self.executor,
                 )
             except TimeoutError:
                 # Todo: Convert this logic to send it to a dlq instead of just printing
@@ -54,9 +55,9 @@ class SentenceEmbeddings:
 
             # pushing the processed messages to kafka topic
             for pid, emb in embeddings.items():
-                # convert numpy array to list for kafka, need to convert back to numpy array in other 
+                # convert numpy array to list for kafka, need to convert back to numpy array in other
                 # services to use. if i want more compact i should use base64 but thats more complicated
-                emb_list = emb.tolist() 
+                emb_list = emb.tolist()
 
                 pub_handler(
                     producer=self.producer,
@@ -65,12 +66,12 @@ class SentenceEmbeddings:
                     postID=pid,
                     error_topic="sentence-embeddings-dlq",
                     logger=self.structured_logger,
-                    max_retries=3
+                    max_retries=3,
                 )
 
             # Commiting offsets to broker to confirm processing is done and sent
             offset_helper(batch=curr_batch, consumer=self.consumer, logger=self.structured_logger)
-        
+
 
 if __name__ == "__main__":
     SentenceEmbeddings().run()

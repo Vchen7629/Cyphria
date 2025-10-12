@@ -5,6 +5,7 @@ from ..middleware.logger import StructuredLogger
 import time
 from queue import Queue
 
+
 # Internal Queue to buffer messages polled from kafka and set a hard limit
 # for memory management and preventing OOM
 def bounded_internal_queue(

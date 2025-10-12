@@ -2,6 +2,7 @@ from confluent_kafka import Producer, KafkaError, Message  # type: ignore
 from ..config.kafka import KAFKA_SETTINGS_PRODUCER
 from ..middleware.logger import StructuredLogger
 
+
 # This class sends configures the producer for the processed data topic
 class KafkaProducer:
     def __init__(self, logger: StructuredLogger) -> None:
@@ -33,17 +34,13 @@ class KafkaProducer:
     # Publish the message locally
     def produce(self, topic: str, key: bytes, value: bytes) -> None:
         self.producer.produce(
-            topic=topic, 
-            key=key, 
-            value=value, 
-            callback=self.kafka_message_log_handler
+            topic=topic, key=key, value=value, callback=self.kafka_message_log_handler
         )
 
     # Call this method after produce to actually process
     def poll(self, time: str) -> None:
         self.producer.poll(time)
 
-    # sends data to broker for ack 
-    def flush(self) -> int:
+    # sends data to broker for ack
+    def flush(self) -> None:
         self.producer.flush()
-

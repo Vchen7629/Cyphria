@@ -28,7 +28,7 @@ KAFKA_SETTINGS_CONSUMER = {
     # Start position if no committed offset exists
     "auto.offset.reset": "earliest",
     # Reliability / Fault tolerance
-    "enable.auto.commit": False, # Control when i commit
+    "enable.auto.commit": False,  # Control when i commit
     "enable.partition.eof": False,
     # Timeouts (Heartbeat)
     "session.timeout.ms": 10000,  # how long broker waits before kicking consumer out

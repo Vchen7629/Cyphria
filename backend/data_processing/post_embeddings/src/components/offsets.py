@@ -1,16 +1,14 @@
 from confluent_kafka import TopicPartition  # type: ignore
 from ..middleware.kafka_consumer import KafkaConsumer
 from ..middleware.logger import StructuredLogger
-from ..config.types import QueueMessage
+from ..config.my_types import QueueMessage
 from typing import Dict, Tuple
 
 
 # Helper function for commiting offsets from data sources with
 # partition safer
 def offset_helper(
-    batch: list[QueueMessage], 
-    consumer: KafkaConsumer, 
-    logger: StructuredLogger
+    batch: list[QueueMessage], consumer: KafkaConsumer, logger: StructuredLogger
 ) -> None:
     partition_offsets: Dict[Tuple[str, int], int] = {}
 

@@ -18,12 +18,13 @@ def ExportCSV(
         "",  # empty field for category that needs to be labeled
     ]
 
-    file_name = "vehicle1.csv"  # file name to export to
+    file_name = "vehicles1.csv"  # file name to export to
     script_dir = os.path.dirname(os.path.abspath(__file__))
     target_dir = os.path.join(
         script_dir,
         "..",
-        "datasets",
+        "training",
+        "datasets"
     )
     file_path = os.path.join(
         target_dir,

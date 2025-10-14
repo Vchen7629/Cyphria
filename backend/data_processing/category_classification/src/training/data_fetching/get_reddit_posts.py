@@ -1,8 +1,10 @@
 import time
-from backend.data_processing.category_classification.src.preprocessing import preprocessing
 from prawcore.exceptions import Forbidden
-from components import reddit_authentication, export_csv
 
+from ..data_fetching.export_csv import export_csv
+from ..data_fetching.reddit_authentication import reddit_authentication
+from ...preprocessing.remove_stopwords import stop_words
+from ...preprocessing.remove_url import remove_url
 
 def extract_data(
     apiRes,
@@ -58,7 +60,7 @@ def get_posts2() -> list[
         "Reddit-Account-Password",
     ).createRedditClient()
     try:
-        history = list(reddit_instance.subreddit("History").new(limit=300))
+        history = list(reddit_instance.subreddit("candy").new(limit=300))
 
         return history
     except Forbidden as e:
@@ -95,9 +97,10 @@ if __name__ == "__main__":
             body,
             subreddit,
         ) = extract_data(post)
-        filter = preprocessing.RedditPosts().removeNoise(body)
+        no_url = remove_url(body)
+        no_stopwords = stop_words(no_url)
         export_csv.ExportCSV(
-            filter,
+            no_stopwords,
             subreddit,
         )
 

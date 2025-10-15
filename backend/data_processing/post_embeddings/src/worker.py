@@ -10,6 +10,7 @@ from src.components.pub_handler import pub_handler
 from threading import Thread
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from queue import Queue
+from datetime import datetime
 
 
 class SentenceEmbeddings:
@@ -39,14 +40,22 @@ class SentenceEmbeddings:
         # Generator loop that flushes batch once iterator is done
         for post_ids, post_bodies, curr_batch in batch(self.queue, batch_size=65):
             # Feed lists to embedding model to do inference and returns a dict with id, embedding kv pair
+
+            posts_for_emb = [post[0] for post in post_bodies]
+            timestamps = [post[1] for post in post_bodies]
+            subreddits = [post[2] for post in post_bodies]
+
             try:
                 embeddings = inference_handler(
                     post_id_list=post_ids,
-                    post_body_list=post_bodies,
+                    post_body_list=posts_for_emb,
+                    timestamp_list=timestamps,
+                    subreddit_list=subreddits,
                     model=self.model,
                     timeout=3,
                     executor=self.executor,
                 )
+
             except TimeoutError:
                 # Todo: Convert this logic to send it to a dlq instead of just printing
                 # and continuing to reprocess later.
@@ -54,15 +63,21 @@ class SentenceEmbeddings:
                 continue
 
             # pushing the processed messages to kafka topic
-            for pid, emb in embeddings.items():
+            for pid, emb, timestamp, subreddit in embeddings:
                 # convert numpy array to list for kafka, need to convert back to numpy array in other
                 # services to use. if i want more compact i should use base64 but thats more complicated
                 emb_list = emb.tolist()
 
+                combined_msg = {
+                    "embedding": emb_list,
+                    "timestamp": timestamp.isoformat() if isinstance(timestamp, datetime) else timestamp,
+                    "subreddit": subreddit
+                }
+
                 pub_handler(
                     producer=self.producer,
                     topic="sentence-embeddings",
-                    message=emb_list,
+                    message=combined_msg,
                     postID=pid,
                     error_topic="sentence-embeddings-dlq",
                     logger=self.structured_logger,

@@ -47,6 +47,8 @@ class KafkaConsumer:
             topic = msg.topic()
             offset = msg.offset()
 
+            print("got message from kafka!")
+
             # Todo: Handle no postID, postBody, etc errors
 
             return postID, postBody, partition, topic, offset

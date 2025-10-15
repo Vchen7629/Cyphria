@@ -1,14 +1,15 @@
-from typing import Union, Sequence
+from typing import Union
 from ..middleware.logger import StructuredLogger
 import json
 from time import sleep
+from datetime import datetime
 
 
 # Error handling for bad requests for publishing to kafka topic
 def pub_handler(  # type: ignore[no-untyped-def]
     producer,
     topic: str,  # successful messages topic
-    message: Union[str, str | Sequence[str]],
+    message: dict[str, Union[str, datetime]],
     postID: str,
     error_topic: str,
     logger: StructuredLogger,
@@ -24,9 +25,7 @@ def pub_handler(  # type: ignore[no-untyped-def]
                 value=json_str.encode("utf-8"),
             )
 
-            producer.poll(
-                0
-            )  # poll to actually process the produce message and free the internal queue
+            producer.flush()
 
             break
         except BufferError:

@@ -1,8 +1,7 @@
 from ..configs.kafka import KAFKA_SETTINGS_CONSUMER
 from ..middleware.logger import StructuredLogger
 from confluent_kafka import Consumer  # type: ignore
-from typing import Union, Tuple, Optional, Any
-import numpy as np
+from typing import Union, Any
 
 
 # This class implements the Kafka Consumer
@@ -38,25 +37,19 @@ class KafkaConsumer:
     def resume(self) -> None:
         self.consumer.resume(self.consumer.assignment())
 
-    def poll_for_new_messages(
-        self, timeout_ms: int = 1000
-    ) -> Union[Tuple[Optional[str], np.ndarray, int, str, int], None]:
+    def poll(self, timeout_ms: int = 1000) -> Union[dict, None]:
         try:
             msg = self.consumer.poll(timeout=timeout_ms)
+            if msg is None:
+                return None
 
-            postID = msg.key().decode() if msg.key() else None
-            postBody = msg.value().decode("utf-8")
-            partition = msg.partition()
-            topic = msg.topic()
-            offset = msg.offset()
-
-            # Since we converted post embeddings to a json list in the embeddings service, we need to convert it back to
-            # numpy array to be usable by xgboost
-            embedding_array = np.array(postBody, dtype=np.float32)
-
-            # Todo: Handle no postID, postBody, etc errors
-
-            return postID, embedding_array, partition, topic, offset
+            return {
+                "postID": msg.key().decode() if msg.key() else None,
+                "postBody": msg.value().decode("utf-8"),
+                "partition": msg.partition(),
+                "topic": msg.topic(),
+                "offset": msg.offset(),
+            }
 
         except Exception as e:
             self.structured_logger.error(
@@ -67,4 +60,4 @@ class KafkaConsumer:
 
         except Exception as e:
             print(f"error: {e}")
-            return
+            return None

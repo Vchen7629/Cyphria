@@ -3,13 +3,14 @@ from ..config.my_types import QueueMessage
 from typing import Generator, Tuple, List, Any
 import time
 from queue import Queue
+from datetime import datetime
 
 
 def batch(
     queue: Queue, 
     batch_size: int, 
     max_wait: float = 2.0
-) -> Generator[Tuple[List[str], List[str], List[QueueMessage]], None, None]:
+) -> Generator[Tuple[List[str], List[tuple[str, datetime, str]], List[QueueMessage]], None, None]:
     batch: list[QueueMessage] = []
     batch_start: Any = None  # track when the batch started
 
@@ -29,8 +30,9 @@ def batch(
 
                 post_ids: list[str] = [msg["postID"] for msg in batch]  # extract post IDs
                 # extract sentences only from Raw post
-                post_bodies: list[str] = [
-                    extract_post_body(msg_body) or "" for msg_body in postMsgs
+                post_bodies: list[Tuple[str, datetime, str]] = [
+                    body for msg_body in postMsgs
+                    if (body := extract_post_body(msg_body)) is not None
                 ]
 
                 yield post_ids, post_bodies, batch  # Generator

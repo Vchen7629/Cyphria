@@ -1,18 +1,21 @@
 # Handler for computing sentence embeddings using BERT
-from typing import Dict
+from typing import Tuple
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
-
+from datetime import datetime
 
 def inference_handler(  # type: ignore
     post_id_list: list[str],
     post_body_list: list[str],
+    subreddit_list: list[str],
+    timestamp_list: list[datetime],
     model,
     timeout: int,
     executor: ThreadPoolExecutor,
-) -> Dict[str, np.ndarray]:
+) -> list[Tuple[str, np.ndarray, datetime, str]]:
     if not post_body_list:
-        return {}
+        return []
+    
     # compute the embeddings for the post in a batch
     future = executor.submit(model.encode, post_body_list, convert_to_numpy=True)
 
@@ -22,7 +25,7 @@ def inference_handler(  # type: ignore
     except TimeoutError:
         raise TimeoutError("Embedding Computation timed out")
 
-    # match post id with its embedding
-    match_id_embedding = {post_id: emb for post_id, emb in zip(post_id_list, post_embeddings)}
+    # combine all of them back into one list
+    full_embedding = list(zip(post_id_list, post_embeddings, timestamp_list, subreddit_list))
 
-    return match_id_embedding
+    return full_embedding

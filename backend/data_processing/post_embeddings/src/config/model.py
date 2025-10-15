@@ -5,7 +5,7 @@ from ..middleware.logger import StructuredLogger
 def get_model(device: str, logger: StructuredLogger):  # type: ignore
     try:
         model_instance = SentenceTransformer(
-            "sentence-transformers/all-MiniLM-L6-v2",
+            "sentence-transformers/all-MiniLM-L12-v2",
             device=device,
         )
 

@@ -1,4 +1,3 @@
-from typing import Union, Sequence
 from ..middleware.logger import StructuredLogger
 import json
 from time import sleep
@@ -8,7 +7,7 @@ from time import sleep
 def pub_handler(  # type: ignore[no-untyped-def]
     producer,
     topic: str,  # successful messages topic
-    message: Union[str, str | Sequence[str]],
+    message: dict[str, object],
     postID: str,
     error_topic: str,
     logger: StructuredLogger,
@@ -24,9 +23,7 @@ def pub_handler(  # type: ignore[no-untyped-def]
                 value=json_str.encode("utf-8"),
             )
 
-            producer.poll(
-                0
-            )  # poll to actually process the produce message and free the internal queue
+            producer.flush()
 
             break
         except BufferError:

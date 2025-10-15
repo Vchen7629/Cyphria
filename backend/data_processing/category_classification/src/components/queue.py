@@ -11,7 +11,7 @@ def bounded_internal_queue(
     low_wm: int,
     structured_logger: StructuredLogger,
     running: bool,
-):
+) -> None:
     paused = False
 
     while running:
@@ -39,15 +39,6 @@ def bounded_internal_queue(
         if not msg:
             continue
 
-        postID, embeddings, partition, topic, offset = msg
-        internal_queue.put(
-            {
-                "topic": topic,
-                "partition": partition,
-                "offset": offset,
-                "postID": postID,
-                "embeddings": embeddings,
-            }
-        )
+        internal_queue.put(msg)
 
         time.sleep(0.01)

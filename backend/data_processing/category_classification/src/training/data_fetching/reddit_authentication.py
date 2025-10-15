@@ -1,5 +1,5 @@
 import os
-import praw
+import praw  # type: ignore
 from dotenv import (
     load_dotenv,
 )

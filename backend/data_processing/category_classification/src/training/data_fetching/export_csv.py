@@ -20,12 +20,7 @@ def ExportCSV(
 
     file_name = "vehicles1.csv"  # file name to export to
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    target_dir = os.path.join(
-        script_dir,
-        "..",
-        "training",
-        "datasets"
-    )
+    target_dir = os.path.join(script_dir, "..", "training", "datasets")
     file_path = os.path.join(
         target_dir,
         file_name,

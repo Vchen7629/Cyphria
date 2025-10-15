@@ -1,17 +1,13 @@
 import time
-from prawcore.exceptions import Forbidden
-
-from ..data_fetching.export_csv import export_csv
-from ..data_fetching.reddit_authentication import reddit_authentication
+from prawcore.exceptions import Forbidden  # type: ignore
+import praw  # type: ignore
+from ..data_fetching.export_csv import ExportCSV
+from ..data_fetching.reddit_authentication import Auth
 from ...preprocessing.remove_stopwords import stop_words
 from ...preprocessing.remove_url import remove_url
 
-def extract_data(
-    apiRes,
-) -> tuple[
-    str,
-    str,
-]:
+
+def extract_data(apiRes: praw.models.Submission) -> tuple[str, str]:
     title = apiRes.title
     selftext = apiRes.selftext
     body = title + " " + selftext
@@ -25,14 +21,8 @@ def extract_data(
     )
 
 
-def get_posts() -> list[
-    tuple[
-        str,
-        str,
-        str,
-    ]
-]:
-    reddit_instance = reddit_authentication.Auth(
+def get_posts() -> list[praw.models.Submission] | None:
+    reddit_instance = Auth(
         "Reddit-Api-Client-ID",
         "Reddit-Api-Client-Secret",
         "Reddit-Account-Username",
@@ -44,65 +34,21 @@ def get_posts() -> list[
         return history
     except Forbidden as e:
         print(f"Error fetching: {e}")
-
-
-def get_posts2() -> list[
-    tuple[
-        str,
-        str,
-        str,
-    ]
-]:
-    reddit_instance = reddit_authentication.Auth(
-        "Reddit-Api-Client-ID",
-        "Reddit-Api-Client-Secret",
-        "Reddit-Account-Username",
-        "Reddit-Account-Password",
-    ).createRedditClient()
-    try:
-        history = list(reddit_instance.subreddit("candy").new(limit=300))
-
-        return history
-    except Forbidden as e:
-        print(f"Error fetching: {e}")
-
-
-def get_posts3() -> list[
-    tuple[
-        str,
-        str,
-        str,
-    ]
-]:
-    reddit_instance = reddit_authentication.Auth(
-        "Reddit-Api-Client-ID",
-        "Reddit-Api-Client-Secret",
-        "Reddit-Account-Username",
-        "Reddit-Account-Password",
-    ).createRedditClient()
-    try:
-        history = list(reddit_instance.subreddit("CarHelp").new(limit=20))
-
-        return history
-    except Forbidden as e:
-        print(f"Error fetching: {e}")
+        return None
 
 
 if __name__ == "__main__":
     s_time = time.perf_counter()
     posts_arr: list[str] = []
     rawpost = get_posts()
-    for post in rawpost:
-        (
-            body,
-            subreddit,
-        ) = extract_data(post)
-        no_url = remove_url(body)
-        no_stopwords = stop_words(no_url)
-        export_csv.ExportCSV(
-            no_stopwords,
-            subreddit,
-        )
+    if rawpost is not None:
+        for post in rawpost:
+            body, subreddit = extract_data(post)
+            no_url = remove_url(body)
+            no_stopwords = stop_words(no_url)
+            ExportCSV(no_stopwords, subreddit)
+    else:
+        print("No posts fetched")
 
     e_time = time.perf_counter()
     exec = e_time - s_time

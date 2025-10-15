@@ -1,7 +1,11 @@
 import numpy as np
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split  # type: ignore
+from typing import Tuple
 
-def split_dataset(encoded_corpus, encoded_labels, labels):
+
+def split_dataset(
+    encoded_corpus: np.ndarray, encoded_labels: np.ndarray, labels: list[str]
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     indicies = np.arange(len(encoded_corpus))
 
     (

@@ -1,33 +1,21 @@
-from sklearn.feature_extraction.text import (
-    TfidfVectorizer,
-)
-from sklearn.naive_bayes import (
-    MultinomialNB,
-)
-from sklearn.svm import (
-    SVC,
-)
-from sklearn.feature_selection import (
+from sklearn.feature_extraction.text import TfidfVectorizer  # type: ignore
+from sklearn.naive_bayes import MultinomialNB  # type: ignore
+from sklearn.svm import SVC  # type: ignore
+from sklearn.feature_selection import (  # type: ignore
     SelectKBest,
     chi2,
 )
-from sklearn.model_selection import (
-    train_test_split,
-)
-from sklearn.metrics import (
+from sklearn.model_selection import train_test_split  # type: ignore
+from sklearn.metrics import (  # type: ignore
     classification_report,
     roc_auc_score,
 )
-from sklearn.preprocessing import (
-    LabelEncoder,
-)
-import pandas as pd
+from sklearn.preprocessing import LabelEncoder  # type: ignore
+import pandas as pd  # type: ignore
 
 
 class MultimodalNaiveBayesModel:
-    def __init__(
-        self,
-    ):
+    def __init__(self) -> None:
         token_pattern = r"(?u)\[?\b\w[\w\’\'\-]*\b\]?"
         self.label_encoder = LabelEncoder()
         self.NBmodel = MultinomialNB()
@@ -41,18 +29,13 @@ class MultimodalNaiveBayesModel:
             min_df=3,
         )
 
-    def loadData(
-        self,
-        filepath: str,
-    ):
+    def loadData(self, filepath: str) -> None:
         df = pd.read_csv(filepath)
 
         self.corpus = df["post"].tolist()
         self.labels = [label.strip().strip('"') for label in df["category"].tolist()]
 
-    def preprocess(
-        self,
-    ):
+    def preprocess(self) -> None:
         X = self.vectorizer.fit_transform(self.corpus)
         y = self.labels
 
@@ -66,9 +49,7 @@ class MultimodalNaiveBayesModel:
             y,
         )
 
-    def train(
-        self,
-    ):
+    def train(self) -> None:
         (
             train_x,
             test_x,
@@ -82,20 +63,12 @@ class MultimodalNaiveBayesModel:
             stratify=self.labels,
         )
 
-        self.NBmodel.fit(
-            train_x,
-            train_y,
-        )
-        self.SVMmodel.fit(
-            train_x,
-            train_y,
-        )
+        self.NBmodel.fit(train_x, train_y)
+        self.SVMmodel.fit(train_x, train_y)
         self.X_test = test_x
         self.Y_test = test_y
 
-    def evaluate(
-        self,
-    ):
+    def evaluate(self) -> None:
         nb_y_pred = self.NBmodel.predict(self.X_test)
         nb_y_score = self.NBmodel.predict_proba(self.X_test)
         svm_y_pred = self.SVMmodel.predict(self.X_test)

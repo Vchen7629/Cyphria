@@ -192,6 +192,14 @@ uv run worker.py
 - **Features**: Text Embeddings generated using [all-MiniLM-L12-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2)
 - **Labels**: Category of the post
 
+###  Hyperparams
+Hyper-parameters were selected using RandomizedSearchCV and uses 5-fold cross validation
+and iterates through a list of paramaters to find best paramters
+
+* estimators: 300
+* max-depth: 3
+* learning-rate: 0.1
+
 ###  Performance Metrics
 
 | Metric | XGBoost | 

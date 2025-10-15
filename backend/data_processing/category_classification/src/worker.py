@@ -6,7 +6,7 @@ from src.components.batch import batch
 from src.components.offsets import offset_helper
 from src.components.pub_handler import pub_handler
 from src.configs.model import load_model
-from src.preprocessing.text_classification import text_classification
+from src.components.text_classification import text_classification
 from threading import Thread
 from queue import Queue
 

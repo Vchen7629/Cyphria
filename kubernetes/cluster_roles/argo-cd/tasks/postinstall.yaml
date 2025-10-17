@@ -1,0 +1,46 @@
+- name: Post Install configuration
+  run_once: true
+  block:
+    - name: Restart Pods for tls certs to take effect
+      ansible.builtin.command:
+        cmd: kubectl -n argocd rollout restart deployment {{ deployment }}
+      loop:
+        - argo-cd-argocd-repo-server
+        - argo-cd-argocd-dex-server
+      loop_control:
+        loop_var: deployment
+    
+    - name: Set Docker Credential Facts
+      vars:
+        env: "{{ lookup('ansible.builtin.template', 'env.yaml' ) | from_yaml }}"
+      ansible.builtin.set_fact:
+        github_username: "{{ env['github-username'] }}"
+        github_password: "{{ env['github-password'] }}"
+    
+    - name: Create Github Login Secret
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Secret
+          type: Opaque
+          metadata: 
+            name: git-creds
+            namespace: argocd
+          stringData: 
+            username: "{{ github_username }}"
+            password: "{{ github_password }}"
+    
+    - name: Deploy ArgoCD Image Updater for automated Deployment of GHCR
+      kubernetes.core.k8s:
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+        definition: "{{ lookup('ansible.builtin.template', 'argocd-image-updater.yaml') | from_yaml }}"
+        state: present
+    
+
+
+    - name: Add User Account
+      kubernetes.core.k8s:
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+        definition: "{{ lookup('ansible.builtin.template', 'credentials.j2') | from_yaml }}"
+        wait: true

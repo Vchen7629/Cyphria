@@ -1,0 +1,22 @@
+
+- name: Uninstall prometheus operator in argocd
+  kubernetes.core.k8s:
+    api_version: argoproj.io/v1alpha1
+    state: absent
+    kind: Application
+    name: cloudflared
+    namespace: argocd
+
+- name: Include tunnel facts variables
+  ansible.builtin.include_vars:
+    file: "{{ playbook_dir }}/cyphria_applications_roles/cloudflare-tunnel/credentials/temp.yaml"
+
+- name: Delete existing Cloudflare tunnel if there are any
+  ansible.builtin.uri:
+    url: "https://api.cloudflare.com/client/v4/accounts/{{ account_id }}/cfd_tunnel/{{ tunnel_id }}"
+    method: DELETE
+    headers:
+      Authorization: "Bearer {{ api_key }}"
+      Content-Type: "application/json"
+  delegate_to: localhost
+  become: false

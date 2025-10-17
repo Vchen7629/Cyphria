@@ -22,12 +22,12 @@ A Social Media Sentiment and Trend Analysis Web Application. This project utiliz
 | Model | Type | Accuracy | Parameters | Use Case |
 |-------|------|----------|------------|----------|
 | **SBert** | Transformer | ... | ... | Sentiment Analysis |
-| **XGBoost** | Ensemble Gradient Boosted Trees | 92.1 | ... | Fast, reliable text classifications |
+| **XGBoost** | Ensemble Gradient Boosted Trees | 92.11 | ... | Category Classification |
 
 ### Data Pipeline
 - **Source**: Reddit Api with PRAW
 - **Processing**: Ingested Data gets sent through Kafka topics which gets processed by the text classification and sentiment analysis workers
-- **Storage**: Data is stored in a PostgreSql database to be queried later.
+- **Storage**: Data is stored in a PostgreSQL (TimescaleDB) database to be queried later.
 - **Scalability**: Lightweight Data processing workers can be easily horizontally scaled via k3s pods and nodes.
 
 
@@ -43,51 +43,53 @@ A Social Media Sentiment and Trend Analysis Web Application. This project utiliz
 Cyphria/
 ├── .github/workflows/                 # Github Actions files for running the CI/CD Pipeline
 ├── backend/data_processing/           # Data processing pipeline backend files
-|   ├── data_ingestion                 # Data ingestion Service to get reddit posts from
-|        ├── tests/integration         # integration tests
-|        ├── tests/unit                # unit tests
-|        ├── worker/config             # files for configuring database, kafka consumer connection
-|        ├── worker/middleware         # files for worker middleware logic such as logging
-|        ├── worker.py                 # entry point for worker service to start
-|        └── dockerfile                # Dockerfile for containerizing the worker service
 │   ├── category_classification        # XGBoost Text Classification
-│        ├── datasets/                 # Training Data
-|        ├── model/                    # files for running the training and scoring of the model, trained model file
+│        ├── src/components            # Service components like bounded internal queue, batching, etc
+|        ├── src/configs               # files for configuring kafka settings, loading model
+|        ├── src/middleware            # middleware like logging, kafka consumer/producer
+|        ├── src/model                 # XGBoost model files
+|        ├── src/training              # Folder containing components i used to train the model
 |        ├── tests/integration         # integration tests
 |        ├── tests/unit                # unit tests
-|        ├── worker/config             # files for configuring database, kafka consumer connection
-|        ├── worker/middleware         # files for worker middleware logic such as logging
-|        ├── worker.py                 # entry point for worker service to start
+|        └── dockerfile                # Dockerfile for containerizing the worker service
+|   ├── data_ingestion                 # Data ingestion Service to get reddit posts from
+│        ├── src/components            # Service components like fetching data
+|        ├── src/configs               # files for configuring kafka settings, reddit praw 
+|        ├── src/middleware            # middleware like logging, kafka producer
+|        ├── src/preprocessing         # functions to do preprocessing like extracting select fields, removing stop words, removing url, etc
+|        ├── tests/integration         # integration tests
+|        ├── tests/unit                # unit tests
+|        └── dockerfile                # Dockerfile for containerizing the worker service
+│   ├──  post_embeddings               # Service for embedding the posts using a bert model
+│        ├── src/components            # Service components like bounded internal queue, batching, etc
+|        ├── src/configs               # files for configuring kafka settings, model
+|        ├── src/middleware            # middleware like logging, kafka producer/consumer
+|        ├── src/preprocessing         # functions to do preprocessing like extracting sentences, doing inference processing
+|        ├── tests/integration         # integration tests
+|        ├── tests/unit                # unit tests
 |        └── dockerfile                # Dockerfile for containerizing the worker service
 │   ├──  sentiment_analysis            # SBert model for sentiment analysis service
-│        ├── datasets/                 # Training Data
-|        ├── model/                    # files for running the training and scoring of the model, trained model file
+│        ├── src/components            # Service components like bounded internal queue, batching, etc
+|        ├── src/configs               # files for configuring kafka settings, model
+|        ├── src/middleware            # middleware like logging, kafka producer/consumer
+|        ├── src/preprocessing         # functions to do preprocessing like sentence pairs, doing inference processing
 |        ├── tests/integration         # integration tests
 |        ├── tests/unit                # unit tests
-|        ├── worker/config             # files for configuring database, kafka consumer connection
-|        ├── worker/middleware         # files for worker middleware logic such as logging
-|        ├── worker.py                 # entry point for worker service to start
 |        └── dockerfile                # Dockerfile for containerizing the worker service
 │   └── topic_classification           # Topic classification
-│        ├── datasets/                 # Training Data
-|        ├── model/                    # files for running the training and scoring of the model, trained model file
+│        ├── src/components            # Service components like bounded internal queue, batching, etc
+|        ├── src/configs               # files for configuring kafka settings, model
+|        ├── src/middleware            # middleware like logging, kafka producer/consumer
+|        ├── src/preprocessing         # functions to do preprocessing like, doing inference processing
 |        ├── tests/integration         # integration tests
 |        ├── tests/unit                # unit tests
-|        ├── worker/config             # files for configuring database, kafka consumer connection
-|        ├── worker/middleware         # files for worker middleware logic such as logging
-|        ├── worker.py                 # entry point for worker service to start
 |        └── dockerfile                # Dockerfile for containerizing the worker service
-├── backend/insights-api               # Fast Api for fetching insights from the database
-|        ├── app/db/                   # configuration files for connecting to the PostgresSQL Database
-|        ├── app/middleware/           # files for api middleware logic such as logging, auth, etc
-|        ├── app/models/               # files for defining how db tables should be structured
-|        ├── app/routes/               # files for handling api route logic
-|        ├── app/schemas/              # files for defining how api requests and responses should be structured
-|        ├── tests/integration/        # integration tests 
-|        ├── tests/unit/               # unit tests
-|        └── dockerfile                # Dockerfile for containerizing the fastapi service
-|        └── main.py                   # entry point
-├── backend/real-time-api              # Fast Api that connects to kafka to do real time streaming using websockets
+├── backend/kafka_streams_aggregator   # Kafka streams aggregator to aggregate category topic and sentiment analysis topic
+|        ├── src/main/java/cyphria     # folder containing service files
+|            ├── aggregate/config      # folder for config like defining types, kafka
+|            └── aggregate/middleware  # middleware like serialization, joining messages, logging
+|        └── pom.xml                   # xml file defining dependencies
+├── backend/insights-api               # Fast Api that handles user queries
 |        ├── app/config/               # configuration files for kafka sub
 |        ├── app/middleware/           # files for api middleware logic such as logging, auth, etc
 |        ├── app/models/               # files for defining how db tables should be structured
@@ -186,19 +188,27 @@ uv run worker.py
 
 ### Training Data
 
-- **Dataset Size**: 10,840 Reddit Posts
-- **Features**: Text Embeddings generated using [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+- **Dataset Size**: 12,000 Reddit Posts
+- **Features**: Text Embeddings generated using [all-MiniLM-L12-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2)
 - **Labels**: Category of the post
+
+###  Hyperparams
+Hyper-parameters were selected using RandomizedSearchCV and uses 5-fold cross validation
+and iterates through a list of paramaters to find best paramters
+
+* estimators: 300
+* max-depth: 3
+* learning-rate: 0.1
 
 ###  Performance Metrics
 
 | Metric | XGBoost | 
 |--------|---------------|
-| **Accuracy** | 90.90% |
-| **Precision** | 0.91 |
-| **Recall** | 0.91 | 
-| **F1-Score** | 0.91 | 
-| **Inference Speed** | TBT | 
+| **Accuracy** | 92.11% |
+| **Precision** | 0.92 |
+| **Recall** | 0.92 | 
+| **F1-Score** | 0.92 | 
+| **Inference Speed** | 10 ms | 
 | **Memory Usage** | TBT | 
 
 ### Scalability Metrics

@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - chart: cloudnative-pg 
+      repoURL: https://cloudnative-pg.io/charts/
+      targetRevision: v0.23.2
+
+      helm:
+        valuesObject:
+          monitoring:
+            podMonitorEnabled: true
+          config:
+            clusterWide: false
+    
+    - repoURL: https://github.com/Vchen7629/Cyphria.git
+      targetRevision: main
+      path: kubernetes/cyphria_applications_roles/postgres/application
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: backend
+  
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=true

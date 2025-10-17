@@ -1,0 +1,26 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: argocd-redis-network-policy
+  namespace: argocd
+spec:
+  order: 80
+  selector: app.kubernetes.io/name == "argocd-redis"
+  types:
+    - Ingress # stateful so don't need duplicate egress rules
+  ingress:
+    - action: Allow # exposing redis port for pods -> redis
+      protocol: TCP
+      source:
+        selector: "app.kubernetes.io/name == 'argocd-repo-server' || 
+                  app.kubernetes.io/name == 'argocd-server' ||
+                  app.kubernetes.io/name == 'argocd-application-controller'"
+      destination:
+        ports: [6379]
+    - action: Allow # exposing ArgoCD redis metrics endpoint
+      protocol: TCP
+      source: 
+        namespaceSelector: kubernetes.io/metadata.name == "prometheus"
+        selector: all()
+      destination:
+        ports: [9121]

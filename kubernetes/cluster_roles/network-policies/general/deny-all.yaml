@@ -1,0 +1,30 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: default-deny-all
+spec: 
+  order: 100
+  namespaceSelector: "has(projectcalico.org/name) && projectcalico.org/name not in {'kube-system', 'calico-system', 'calico-apiserver'} ||
+                      kubernetes.io/metadata.name not in {'kube-system', 'calico-system', 'calico-apiserver'}"
+  types: 
+    - Ingress
+    - Egress
+  egress:
+    - action: Allow
+      protocol: UDP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
+    - action: Allow
+      protocol: TCP
+      destination:  
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
+    - action: Allow
+      protocol: TCP
+      destination:
+        services: # service match only works with kubernetes datastore driver not etcd
+          namespace: default 
+          name: kubernetes

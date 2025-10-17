@@ -1,0 +1,53 @@
+- name: Set map fact
+  ansible.builtin.set_fact:
+    argocd_map:
+      credentials:
+        admin:  
+          password: "{{ argocd_vars.kubernetes.server.credentials.admin.password | string | password_hash('blowfish') }}"
+        user: 
+          name: "{{ argocd_vars.kubernetes.server.credentials.user.name }}"
+          password: "{{ argocd_vars.kubernetes.server.credentials.user.password | string | password_hash('blowfish') }}"
+      helm:
+        chart:
+          reference: '{{ argocd_vars.kubernetes.helm.repository.org }}/{{ argocd_vars.kubernetes.helm.chart.name }}'
+          version: '{{ argocd_vars.kubernetes.helm.chart.version[1:] }}'
+        platform: 
+          key: https://github.com
+          raw: https://raw.githubusercontent.com
+        repository:
+          name: '{{ argocd_vars.kubernetes.helm.repository.org }}/{{ argocd_vars.kubernetes.helm.repository.name }}'
+          url: '{{ argocd_vars.kubernetes.helm.repository.url }}/{{ argocd_vars.kubernetes.helm.repository.name }}'
+        timeout: 20m0s
+      metrics:
+        monitor:
+          enabled: true
+          scrape:
+            interval: 30s
+            timeout: 25s
+        namespace: argocd-monitoring
+
+
+
+- name: set project fact
+  ansible.builtin.set_fact:
+    argocd_project:
+      release:
+        checksum: '{{ argocd_vars.release.version }}/{{ argocd_vars.release.checksum }}'
+        file: '{{ argocd_vars.release.version}}/{{ argocd_vars.release.file}}'
+        url: https://github.com/argoproj/argo-cd/releases/download
+      
+- name: Set variables fact
+  ansible.builtin.set_fact:
+    argocd_vars: '{{ argocd_vars }}'
+  run_once: true
+
+- name: Set Argocd Account data
+  ansible.builtin.set_fact:
+    argocd_accounts:
+      server:
+        users: 
+        - name: '{{ argocd_map.credentials.user.name }}'
+          password: '{{ argocd_map.credentials.user.password }}'
+          permissions: 'apikey, login'
+          role: admin
+          enabled: true

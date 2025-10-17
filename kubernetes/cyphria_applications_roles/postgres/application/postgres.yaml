@@ -1,0 +1,22 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres-db
+spec:
+  instances: 1
+
+  storage:
+    size: 100Gi
+
+  resources:
+    limits:
+      cpu: 1024m
+      memory: 1G
+    requests:
+      cpu: 756m
+      memory: 756m
+  
+  monitoring:
+    enablePodMonitor: true
+  
+    

@@ -42,15 +42,19 @@ services:
           "_connect-configs:1:1:compact" \
           "_connect-offsets:25:1:compact" \
           "_connect-status:5:1:compact" \
-          "raw-data:8:1:delete" \
-          "processed_data:8:1:delete" \
-          "reddit-data:8:1:delete" \
-          "sentiment-analysis:8:1:delete" \
-          "test:4:1:delete" \
-          "test-dlq:4:1:delete" \
-          "aggregator:4:1:delete" \
+          "raw-data:2:1:delete" \
+          "processed_data:2:1:delete" \
+          "reddit-data:2:1:delete" \
+          "sentiment-analysis:2:1:delete" \
+          "test:2:1:delete" \
+          "test-dlq:2:1:delete" \
+          "aggregator:2:1:delete" \
           "sentiment-kafka-stream-__assignor-__leader:1:1:compact" \
           "sentiment-kafka-stream-replyto:1:1:delete" \
+          "sentence-embeddings:2:1:delete" \
+          "sentence-embeddings-dlq:2:1:delete" \
+          "category-classified:2:1:delete" \
+          "category-classified-dlq:2:1:delete"
 
         do
           IFS=":" read topic parts rf policy <<< "$$spec"

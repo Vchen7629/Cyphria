@@ -1,7 +1,0 @@
-# this sets the ssh key to be used from cluster vars in main.yml in defaults
-
-- name: set Map fact
-  ansible.builtin.set_fact:
-    cluster_map:
-      ssh:
-        authorized_key: "~/.ssh/id_ed25519/id_ed25519.pub"

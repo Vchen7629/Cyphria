@@ -1,0 +1,19 @@
+- name: Set Map Facts 
+  ansible.builtin.set_fact:
+    calico_map:
+      helm: 
+        chart: 
+          reference: "{{ calico_vars.kubernetes.helm.repository.name }}/{{ calico_vars.kubernetes.helm.chart.name }}"
+          version: "{{ calico_vars.kubernetes.helm.chart.version }}"
+        repository:
+          name: "{{ calico_vars.kubernetes.helm.repository.name }}"
+          url: "{{ calico_vars.kubernetes.helm.repository.url }}/{{ calico_vars.kubernetes.helm.repository.org }}/charts"
+        timeout: 10m0s
+      calicoctl:
+        url: "https://github.com/projectcalico/calico/releases/download/v3.29.3/{{ calico_vars.kubernetes.calicoctl.version}}"
+        
+
+- name: Set variables fact
+  ansible.builtin.set_fact:
+    calico_vars: '{{ calico_vars }}'
+  run_once: true

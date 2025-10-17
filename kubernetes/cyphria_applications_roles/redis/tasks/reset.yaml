@@ -1,0 +1,7 @@
+- name: Delete Redis Deployment
+  kubernetes.core.k8s:
+    state: absent
+    api_version: argoproj.io/v1alpha1
+    kind: Application
+    name: redis
+    namespace: argocd

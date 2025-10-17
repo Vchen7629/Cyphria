@@ -1,0 +1,25 @@
+---
+calico_vars:
+  kubernetes:
+    helm: 
+      chart:
+        name: tigera-operator
+        version: v3.29.3
+      repository:
+        name: projectcalico
+        org: calico
+        url: https://docs.tigera.io
+      namespace: tigera-operator
+    calicoctl:
+      version: calicoctl-linux-amd64
+    felix_metrics:
+      name: felix-metrics-svc
+      ports:
+        port: 9091
+        target: 9091
+    typha_metrics:
+      name: typha-metrics-svc
+      ports:
+        port: 9093
+        target: 9093
+    

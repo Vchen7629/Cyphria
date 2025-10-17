@@ -1,0 +1,16 @@
+- name: Apply ArgoCD manifest for ingress nginx
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('ansible.builtin.template', 'argocd.yaml') | from_yaml }}"
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+- name: Wait for admission webhook endpoints
+  kubernetes.core.k8s_info:
+    kind: Endpoints
+    name: nginx-ingress-nginx-controller-admission
+    namespace: nginx
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+  register: admit_eps
+  until: admit_eps.resources and admit_eps.resources[0].subsets is defined
+  retries: 20
+  delay: 15

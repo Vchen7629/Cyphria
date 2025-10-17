@@ -1,0 +1,24 @@
+- name: Set Account ID Fact
+  vars:
+    cloudflare_env_data: "{{ lookup('ansible.builtin.template', 'env.yaml' ) | from_yaml }}"
+  ansible.builtin.set_fact:
+    api_token: "{{ cloudflare_env_data['cloudflare-token'] }}"
+    email: "{{ cloudflare_env_data['email'] }}"
+
+
+- name: Create ArgoCD namespace
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    definition: 
+      - apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: external-dns
+  
+- name: Deploy to argocd
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('ansible.builtin.template', 'argocd.j2') | from_yaml }}"
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+

@@ -1,0 +1,32 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: frontend-network-policy
+  namespace: frontend
+spec:
+  order: 80
+  selector: all()
+  types:
+    - Ingress
+    - Egress
+  ingress:
+    - action: Allow # allowing web traffic to reach frontend
+      protocol: TCP
+      source:
+        namespaceSelector: projectcalico.org/name == "nginx"
+        selector: all()
+      destination:
+        ports: [3000]
+  egress:
+    - action: Allow # Allowing frontend to talk to ArgoCD Repo Server
+      protocol: TCP
+      destination:
+        namespaceSelector: kubernetes.io/metadata.name == "argocd"
+        selector: app.kubernetes.io/name == "argocd-repo-server"
+        ports: [8081]
+    - action: Allow # frontend -> login api traffic
+      protocol: TCP
+      destination:
+        selector: "app.kubernetes.io/name == 'loginapi' || argocd.argoproj.io/instance == 'login-api'"
+        namespaceSelector: kubernetes.io/metadata.name == "backend"
+        ports: [3000]

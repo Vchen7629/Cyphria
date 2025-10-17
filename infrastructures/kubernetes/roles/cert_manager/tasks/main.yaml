@@ -1,0 +1,65 @@
+- name: Create namespaces
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    definition: 
+      - apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: cert-manager
+
+- name: Set Email Fact
+  vars:
+    env_file: "{{ lookup('ansible.builtin.template', 'env.yaml' ) | from_yaml }}"
+  ansible.builtin.set_fact:
+    email_addr: "{{ env_file['email'] }}"
+    api_token: "{{ env_file['api-token'] }}"
+
+- name: Create Cloudflare Api token Secret
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Secret
+      type: Opaque
+      metadata: 
+        name: cloudflare-api-token-secret
+        namespace: cert-manager
+      stringData: 
+        api-token: "{{ api_token }}"
+
+- name: Deploy to argocd
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('ansible.builtin.template', 'argocd-deployment.yaml') | from_yaml }}"
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+- name: Deploy Cert Issuer
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('ansible.builtin.template', 'cert-issuer.j2') | from_yaml }}"
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+  register: result
+  retries: 20
+  delay: 15
+  until: result is not failed
+
+#- name: Load all Kubernetes manifests
+#  set_fact:
+#    k8s_manifests: "{{ lookup('template', 'postgres-selfsigned-ca.yaml') | ansible.builtin.from_yaml_all | list }}"
+
+#- name: Apply each manifest
+#  k8s:
+#    definition: "{{ item }}"
+ # loop: "{{ k8s_manifests }}"
+
+- name: Create ArgoCD Certificates
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('ansible.builtin.template', item ) | from_yaml }}"
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+  with_items:
+    - ./templates/argocd-repo-server.yaml
+    - ./templates/argocd-dex-server.yaml
+    - ./templates/argocd-server.yaml
+    #- ./templates/postgres-tls.yaml

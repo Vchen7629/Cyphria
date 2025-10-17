@@ -1,0 +1,62 @@
+
+- name: Uninstall prometheus operator in argocd
+  kubernetes.core.k8s:
+    api_version: argoproj.io/v1alpha1
+    state: absent
+    kind: Application
+    name: cloudflared
+    namespace: argocd
+
+- name: Include tunnel facts variables
+  ansible.builtin.include_vars:
+    file: "{{ role_path }}/credentials/temp.yaml"
+
+- name: Get Cloudflare tunnel info
+  ansible.builtin.uri:
+    url: "https://api.cloudflare.com/client/v4/accounts/{{ account_id }}/cfd_tunnel/{{ tunnel_id }}"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ api_key }}"
+      Content-Type: "application/json"
+    return_content: true
+  register: tunnel_status
+  delegate_to: localhost
+  become: false
+
+- name: Disconnect active Cloudflare connectors
+  ansible.builtin.uri:
+    url: "https://api.cloudflare.com/client/v4/accounts/{{ account_id }}/cfd_tunnel/{{ tunnel_id }}/connections"
+    method: DELETE
+    headers:
+      Authorization: "Bearer {{ api_key }}"
+      Content-Type: "application/json"
+  when: >
+    tunnel_status.json.result.connections is defined and
+    (tunnel_status.json.result.connections | length) > 0
+  delegate_to: localhost
+  become: false
+
+- name: Wait for Cloudflare tunnel to disconnect
+  ansible.builtin.uri:
+    url: "https://api.cloudflare.com/client/v4/accounts/{{ account_id }}/cfd_tunnel/{{ tunnel_id }}"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ api_key }}"
+      Content-Type: "application/json"
+    return_content: true
+  register: wait_tunnel_status
+  until: wait_tunnel_status.json.result.connections | length == 0
+  retries: 10
+  delay: 5
+  delegate_to: localhost
+  become: false
+
+- name: Delete existing Cloudflare tunnel if there are any
+  ansible.builtin.uri:
+    url: "https://api.cloudflare.com/client/v4/accounts/{{ account_id }}/cfd_tunnel/{{ tunnel_id }}"
+    method: DELETE
+    headers:
+      Authorization: "Bearer {{ api_key }}"
+      Content-Type: "application/json"
+  delegate_to: localhost
+  become: false

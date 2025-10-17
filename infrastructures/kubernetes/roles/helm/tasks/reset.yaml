@@ -1,0 +1,11 @@
+- name: Remove packages
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: absent
+    autoremove: true
+    clean: true
+    purge: true
+  loop:
+    - apt-transport-https
+    - helm
+    - python3-kubernetes

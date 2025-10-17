@@ -1,0 +1,15 @@
+- name: Role Facts
+  ansible.builtin.include_role:
+    name: '{{ role }}'
+    tasks_from: facts
+  loop:
+    - k3s
+    - calico
+  loop_control:
+    loop_var: role
+
+- name: Wait for kube-apiserver socket
+  ansible.builtin.wait_for:
+    port: 6443
+    host: 127.0.0.1
+    timeout: 60

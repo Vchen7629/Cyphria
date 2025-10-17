@@ -1,0 +1,6 @@
+- name: Deploy Prometheus to ArgoCD
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('ansible.builtin.template', 'argocd-deployment.yaml') | from_yaml }}"
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+

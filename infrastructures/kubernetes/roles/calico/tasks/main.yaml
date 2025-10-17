@@ -1,0 +1,91 @@
+- name: Role validation
+  ansible.builtin.import_tasks:
+    file: validation.yaml
+  any_errors_fatal: true
+
+- name: Calico Installation
+  block: 
+    - name: add repo
+      kubernetes.core.helm_repository:
+        name: "{{ calico_map.helm.repository.name }}"
+        repo_url: "{{ calico_map.helm.repository.url }}"
+
+    - name: Chart Setup for tigeria operator
+      kubernetes.core.helm:
+        name: "{{ calico_vars.kubernetes.helm.repository.org }}"
+        chart_ref: "{{ calico_map.helm.chart.reference }}"
+        kubeconfig: "{{ k3s_project.cluster.kubeconfig }}"
+        chart_version: "{{ calico_vars.kubernetes.helm.chart.version }}"
+        namespace: "{{ calico_vars.kubernetes.helm.namespace }}"
+        create_namespace: true
+        timeout: "{{ calico_map.helm.timeout }}"
+        update_repo_cache: true
+        wait: true
+      register: result
+      retries: 3
+      delay: 1
+      until: result is not failed
+  
+- name: Calicoctl Installation
+  ansible.builtin.get_url:
+    url: "{{ calico_map.calicoctl.url }}"
+    dest: "{{ k3s_map.node.directory.bin}}/calicoctl"
+    owner: root
+    group: root
+    mode: '755'
+
+- name: Verify calicoctl connectivity
+  ansible.builtin.command:
+    cmd: calicoctl get nodes
+  register: calicoctl_nodes
+  retries: 10
+  delay: 15
+  until: calicoctl_nodes.rc == 0
+
+- name: Enable Service Monitoring for Calico Felix and Typha
+  block:
+    - name: Enable Felix prometheus metrics
+      kubernetes.core.k8s:
+        api_version: projectcalico.org/v3
+        kind: FelixConfiguration
+        name: default
+        definition:
+          metadata:
+            name: default
+          spec:
+            prometheusMetricsEnabled: true
+        state: present
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+      register: result
+      retries: 20
+      delay: 15
+      until: result is not failed
+    
+    - name: Enable Typha prometheus metrics
+      kubernetes.core.k8s:
+        api_version: operator.tigera.io/v1
+        kind: Installation
+        name: default
+        definition:
+          metadata:
+            name: default
+          spec:
+            typhaMetricsPort: 9093
+        state: present
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+      retries: 20
+      delay: 15
+
+    - name: Apply Services to scrape ports
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('ansible.builtin.template', item) | from_yaml }}"
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+      with_items: 
+        - felix-metrics.j2
+        - typha-metrics.j2
+
+
+
+
+    

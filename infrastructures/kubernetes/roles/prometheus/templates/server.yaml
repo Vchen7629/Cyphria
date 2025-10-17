@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus-server
+  namespace: prometheus
+spec:
+  replicas: 3
+  serviceAccountName: prometheus
+  serviceMonitorSelector: {}
+  serviceMonitorNamespaceSelector: {}
+  resources:
+    requests:
+      memory: 400Mi
+

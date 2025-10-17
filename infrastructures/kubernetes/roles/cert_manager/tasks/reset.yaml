@@ -1,0 +1,37 @@
+- name: Uninstall Cert manager in argocd
+  kubernetes.core.k8s:
+    api_version: argoproj.io/v1alpha1
+    state: absent
+    kind: Application
+    name: cert-manager
+    namespace: argocd
+
+- name: Delete ArgoCD Certificate resourcs
+  ansible.builtin.command:
+    cmd: "{{ certificate_resource }}"
+  loop:
+    - kubectl delete issuer selfsigned-issuer
+    - kubectl delete clusterissuer letsencrypt-dns
+    - kubectl delete clusterissuer selfsigned-issuer
+    - kubectl delete certificate argocd-repo-tls -n argocd
+    - kubectl delete certificate argocd-dex-tls -n argocd
+    - kubectl delete certificate argocd-server-tls -n argocd
+    - kubectl delete certificate postgres-db-tls -n postgres
+    - kubectl delete certificate postgres-ca -n postgres
+    - kubectl delete secrets argocd-repo-server-tls -n argocd
+    - kubectl delete secrets argocd-dex-server-tls -n argocd
+    - kubectl delete secrets argocd-server-tls -n argocd
+    - kubectl delete secrets postgres-tls-secret -n postgres
+    - kubectl delete secrets postgres-ca -n postgres
+    - kubectl -n cert-manager delete certificaterequests -l cert-manager.io/certificate-name=argocd-repo-tls
+    - kubectl -n cert-manager delete certificaterequests -l cert-manager.io/certificate-name=argocd-dex-tls
+    - kubectl -n cert-manager delete certificaterequests -l cert-manager.io/certificate-name=argocd-server-tls
+    - kubectl -n cert-manager delete certificaterequests -l cert-manager.io/certificate-name=postgres-db-tls
+    - kubectl -n cert-manager delete certificaterequests -l cert-manager.io/certificate-name=postgres-ca
+    - kubectl -n cert-manager delete orders -l cert-manager.io/certificate-name=argocd-repo-tls
+    - kubectl -n cert-manager delete orders -l cert-manager.io/certificate-name=argocd-dex-tls
+    - kubectl -n cert-manager delete orders -l cert-manager.io/certificate-name=argocd-server-tls
+    - kubectl -n cert-manager delete orders -l cert-manager.io/certificate-name=postgres-tls
+  loop_control:
+    loop_var: certificate_resource
+  ignore_errors: true

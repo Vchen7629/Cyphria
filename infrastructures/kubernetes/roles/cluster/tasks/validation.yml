@@ -1,0 +1,12 @@
+# This Validates various things like internet before running any configurations
+- name: Role Facts
+  ansible.builtin.import_role:
+    name: cluster
+    tasks_from: facts
+    
+- name: Check Internet Connection
+  ansible.builtin.wait_for:
+    host: github.com
+    port: 443
+    timeout: 30
+

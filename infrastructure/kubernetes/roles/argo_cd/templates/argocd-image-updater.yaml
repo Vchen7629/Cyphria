@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-cd-image-updater
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  source: 
+      chart: argocd-image-updater
+      repoURL: https://argoproj.github.io/argo-helm
+      targetRevision: v0.12.1
+
+      helm:
+        valuesObject:
+          config:
+            argocd: 
+              grpcWeb: false
+              serverAddress: "http://argo-cd-argocd-server.argocd.svc.cluster.local:80"
+              insecure: true
+              plaintext: true
+            logLevel: debug
+            gitCommitUser: argocd-image-updater
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

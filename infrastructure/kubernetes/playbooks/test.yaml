@@ -1,0 +1,16 @@
+
+- name: Testing
+  hosts: cluster
+  become: true
+  gather_facts: true
+  
+  roles: 
+    #- calico
+    #- argo-cd
+    #- network-policies
+    #- cert-manager
+    #- prometheus
+    #- nginx
+    - cloudflare_tunnel
+    - external_dns
+    - frontend

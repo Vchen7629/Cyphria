@@ -1,0 +1,45 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigned-issuer
+  namespace: postgres
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: postgres-ca
+  namespace: postgres
+spec:
+  isCA: true
+  commonName: postgres-root-ca
+  secretName: postgres-ca
+  issuerRef:
+    name: selfsigned-issuer
+    kind: Issuer
+    group: cert-manager.io
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: postgres-server-cert
+  namespace: postgres
+spec:
+  secretName: postgres-server-tls
+  usages:
+    - server auth
+  dnsNames:
+    - postgres-db-lb.internal.mydomain.net
+    - postgres-db-rw
+    - postgres-db-rw.default
+    - postgres-db-rw.default.svc
+    - postgres-db-ro
+    - postgres-db-ro.default
+    - postgres-db-ro.default.svc
+  issuerRef:
+    name: selfsigned-issuer
+    kind: Issuer
+    group: cert-manager.io

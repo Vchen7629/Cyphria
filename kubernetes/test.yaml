@@ -1,7 +1,0 @@
-
-- name: Testing
-  hosts: cluster
-  become: true
-  roles: 
-    - cilium
-  

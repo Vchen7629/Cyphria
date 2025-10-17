@@ -1,9 +1,0 @@
-- name: Set Map Facts
-  ansible.builtin.set_fact:
-    cloudflare_map:
-
-
-- name: Set variables fact
-  ansible.builtin.set_fact:
-    cloudflare_vars: '{{ clouflare_vars }}'
-  run_once: true

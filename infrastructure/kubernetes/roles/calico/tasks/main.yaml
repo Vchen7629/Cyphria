@@ -42,6 +42,49 @@
   delay: 15
   until: calicoctl_nodes.rc == 0
 
+- name: Apply Calico Installation with Wi-Fi autodetect
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: operator.tigera.io/v1
+      kind: Installation
+      metadata:
+        name: default
+        namespace: calico-system
+      spec:
+        calicoNetwork:
+          ipPools:
+            - cidr: 192.168.0.0/16
+              encapsulation: VXLANCrossSubnet
+              natOutgoing: Enabled
+              nodeSelector: all()
+          nodeAddressAutodetectionV4:
+            interface: wl.*
+
+- name: Rollout restart calico-node DaemonSet (force new pods)
+  kubernetes.core.k8s:
+    kind: DaemonSet
+    namespace: calico-system
+    name: calico-node
+    state: patched
+    merge_type: merge
+    definition:
+      spec:
+        template:
+          metadata:
+            annotations:
+              kubectl.kubernetes.io/restartedAt: "{{ lookup('pipe', 'date -u +%Y-%m-%dT%H:%M:%SZ') }}"
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+- name: Wait for Calico rollout to complete
+  kubernetes.core.k8s_info:
+    kind: Pod
+    namespace: calico-system
+    label_selectors:
+      - k8s-app=calico-node
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+  register: calico_pods
+
 - name: Enable Service Monitoring for Calico Felix and Typha
   block:
     - name: Enable Felix prometheus metrics

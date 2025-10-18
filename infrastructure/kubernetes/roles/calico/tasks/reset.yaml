@@ -5,6 +5,14 @@
       kubernetes.core.helm_repository:
         name: '{{ calico_vars.kubernetes.helm.repository.org }}'
         repo_state: absent
+
+    - name: Remove Calico Installation CR
+      kubernetes.core.k8s:
+        state: absent
+        kind: Installation
+        namespace: calico-system
+        name: default
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
     
     - name: Remove calicoctl
       ansible.builtin.file:

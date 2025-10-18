@@ -7,17 +7,12 @@
         kind: Namespace
         api_version: v1
     
-    - name: Set Account ID Fact
+    - name: Set Credentials Fact
       vars:
         cloudflare_env_data: "{{ lookup('ansible.builtin.template', 'env.yaml' ) | from_yaml }}"
       ansible.builtin.set_fact:
-        cf_account_id: "{{ cloudflare_env_data['account-id'] }}"
-
-    - name: Set Account ID Fact
-      vars:
-        cloudflare_env_data: "{{ lookup('ansible.builtin.template', 'env.yaml' ) | from_yaml }}"
-      ansible.builtin.set_fact:
-        api_token: "{{ cloudflare_env_data['cloudflare-token'] }}"
+        cf_account_id: "{{ cloudflare_env_data['account_id'] }}"
+        api_token: "{{ cloudflare_env_data['api_key'] }}"
 
     - name: Create Cloudflare tunnel via api
       ansible.builtin.uri:

@@ -14,7 +14,7 @@ spec:
   source:
     repoURL: https://github.com/Vchen7629/Cyphria.git
     targetRevision: main
-    path: kubernetes/cyphria_applications_roles/frontend/overlay
+    path: infrastructure/kubernetes/roles/frontend/overlay
     
   destination:
     server: https://kubernetes.default.svc

@@ -25,18 +25,10 @@
     - 5
   tags: kubernetes
 
-- name: Core Application Provisioning
-  hosts: cluster
+- name: ArgoCD deployed applications provisioning
+  hosts: server
   become: true
   gather_facts: true
-  roles: 
-    - calico
-    - argo_cd
-  tags: charts
-
-- name: ArgoCD deployed applications provisioning
-  hosts: cluster
-  become: true
   post_tasks:
     - name: Perform post-install tasks
       ansible.builtin.include_role:
@@ -47,6 +39,8 @@
       loop_control:
         loop_var: postinstall
   roles: 
+    - calico
+    - argo_cd
     #- network-policies
     - prometheus
     - cert_manager

@@ -40,15 +40,7 @@
       kubernetes.core.helm_repository:
         name: '{{ argocd_vars.kubernetes.helm.repository.org }}'
         repo_url: '{{ argocd_map.helm.repository.url }}'
-    
-    - name: Set Docker Credential Facts
-      vars:
-        env: "{{ lookup('ansible.builtin.template', 'env.yaml' ) | from_yaml }}"
-      ansible.builtin.set_fact:
-        docker_username: "{{ env['docker-username'] }}"
-        docker_password: "{{ env['docker-password'] }}"
 
-        
     - name: Chart Setup
       block:
         - name: Install Chart

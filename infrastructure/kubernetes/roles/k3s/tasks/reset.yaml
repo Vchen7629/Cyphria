@@ -11,6 +11,23 @@
         enabled: no
       ignore_errors: true
       become: true
+
+    - name: Stop and disable k3s-agent
+      ansible.builtin.systemd:
+        name: k3s-agent
+        state: stopped
+        enabled: no
+      ignore_errors: true
+      become: true
+    
+    - name: Clear old k3s-agent state
+      ansible.builtin.shell: |
+        set -euxo pipefail
+        rm -rf /var/lib/rancher/k3s/agent/* || true
+        rm -rf /etc/rancher/k3s/* || true
+      args:
+        executable: /bin/bash
+      become: true
     
     - name: Kill lingering K3s and container processes
       ansible.builtin.shell: |
@@ -29,6 +46,20 @@
         ip link delete flannel.1 2>/dev/null || true
         ip link delete cilium_net 2>/dev/null || true
         ip link delete cilium_host 2>/dev/null || true
+        # Remove any veth* links leftover from previous pods
+        for link in $(ip -o link show | awk -F': ' '{print $2}' | grep '^veth'); do
+          ip link delete "$link" 2>/dev/null || true
+        done
+      ignore_errors: true
+      become: true
+
+    - name: Flush iptables and destroy ipsets
+      ansible.builtin.shell: |
+        iptables -F
+        iptables -t nat -F
+        iptables -t mangle -F
+        iptables -X
+        ipset destroy || true
       ignore_errors: true
       become: true
 
@@ -103,14 +134,6 @@
           become: false
           run_once: true
 
-        - name: Delete old CNI interfaces
-          ansible.builtin.shell: |
-            ip link delete cni0 2>/dev/null || true
-            ip link delete flannel.1 2>/dev/null || true
-          args:
-            executable: /bin/bash
-          ignore_errors: true
-        
         - name: Reset systemd
           ansible.builtin.command:
             cmd: systemctl '{{ item }}'

@@ -1,11 +1,3 @@
-- name: Delete Prometheus StatefulSet
-  kubernetes.core.k8s:
-    state: absent
-    api_version: apps/v1
-    kind: StatefulSet
-    name: prometheus-prometheus
-    namespace: prometheus  
-
 - name: Delete Prometheus Operator Deployment
   kubernetes.core.k8s:
     state: absent
@@ -14,6 +6,13 @@
     name: prometheus-operator
     namespace: prometheus 
 
+- name: Delete Prometheus StatefulSet
+  kubernetes.core.k8s:
+    state: absent
+    api_version: apps/v1
+    kind: StatefulSet
+    name: prometheus-prometheus
+    namespace: prometheus  
 
 - name: Delete Prometheus Services
   kubernetes.core.k8s:

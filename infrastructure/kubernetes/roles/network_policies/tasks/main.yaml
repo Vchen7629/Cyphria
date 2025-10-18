@@ -11,12 +11,12 @@
         cmd: "calicoctl apply -f -"
         stdin: "{{ lookup('file', item) }}"
       with_items:
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/server.yaml" 
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/repo-server.yaml"
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/redis.yaml"
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/dex-server.yaml"
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/applicationset-controller.yaml"
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/application-controller.yaml"
+        - "{{ role_path }}/templates/server.yaml" 
+        - "{{ role_path }}/templates/repo-server.yaml"
+        - "{{ role_path }}/templates/redis.yaml"
+        - "{{ role_path }}/templates/dex-server.yaml"
+        - "{{ role_path }}/templates/applicationset-controller.yaml"
+        - "{{ role_path }}/templates/application-controller.yaml"
       register: result
       retries: 3
       delay: 1
@@ -27,14 +27,13 @@
         cmd: "calicoctl apply -f -"
         stdin: "{{ lookup('file', item) }}"
       with_items:
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/nginx.yaml"
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/prometheus-operator.yaml"
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/frontend.yaml" 
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/cloudflare-tunnel.yaml"
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/external-dns.yaml"
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/cert-manager.yaml"
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/postgres.yaml"
-        - "{{ playbook_dir }}/cluster_roles/network-policies/templates/login-api.yaml"
+        - "{{ role_path }}/templates/nginx.yaml"
+        - "{{ role_path }}/templates/prometheus-operator.yaml"
+        - "{{ role_path }}/templates/frontend.yaml" 
+        - "{{ role_path }}/templates/cloudflare-tunnel.yaml"
+        - "{{ role_path }}/templates/external-dns.yaml"
+        - "{{ role_path }}/templates/cert-manager.yaml"
+        - "{{ role_path }}/templates/postgres.yaml"
       register: result
       retries: 3
       delay: 1
@@ -43,7 +42,7 @@
     - name: Apply default deny all Policy
       ansible.builtin.shell: 
         cmd: "calicoctl create -f -"
-        stdin: "{{ lookup('file', playbook_dir + '/cluster_roles/network-policies/templates/deny-all.yaml') }}"
+        stdin: "{{ lookup('file', role_path + '/templates/deny-all.yaml') }}"
     
     
           

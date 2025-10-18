@@ -26,3 +26,8 @@
     kind: Application
     name: external-dns
     namespace: argocd
+
+- name: Delete secret
+  ansible.builtin.command:
+    cmd: kubectl delete secrets cloudflare-api -n external-dns
+  ignore_errors: true

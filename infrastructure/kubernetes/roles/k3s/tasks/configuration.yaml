@@ -29,7 +29,7 @@
     - name: add variable to environment file
       ansible.builtin.lineinfile:
         path: /etc/environment
-        line: KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+        line: KUBECONFIG={{ k3s_project.cluster.kubeconfig }}
         regexp: ^KUBECONFIG
 
     - name: create Symlinks # allows executing by name instead of /usr/local/bin/name
@@ -51,7 +51,7 @@
     - name: Token configuration
       when: k3s_project.cluster.token | length == 0
       no_log: true
-      #run_once: true
+      run_once: true
       block:
         - name: wait for token creation
           ansible.builtin.wait_for:
@@ -73,60 +73,59 @@
           ansible.builtin.set_fact:
             k3s_project: '{{ update.k3s_project }}'
 
-
-- name: Kubepug config
-  block:
-    - name: Checksum configuration
-      run_once: true
+    - name: Kubepug config
       block:
-        - name: get remote checksum
-          ansible.builtin.uri:
-            url: '{{ k3s_project.release.kubepug.checksum }}'
-            return_content: true
-          register: checksum
+        - name: Checksum configuration
+          run_once: true
+          block:
+            - name: get remote checksum
+              ansible.builtin.uri:
+                url: '{{ k3s_project.release.kubepug.checksum }}'
+                return_content: true
+              register: checksum
+              check_mode: false
+
+            - name: set sha256 checksum fact
+              ansible.builtin.set_fact:
+                sha256_checksum: "{{ item.split(' ')[0] }}"
+              loop: "{{ checksum.content.split('\n') }}"
+              when: item | regex_search(k3s_vars.release.kubepug.file + '$')
+
+        - name: download Kubepug archive
+          ansible.builtin.get_url:
+            url: '{{ k3s_project.release.kubepug.file }}'
+            checksum: sha256:{{ sha256_checksum }}
+            dest: /tmp/
+            owner: root
+            group: root
+            mode: '644'
+          register: result
+          delay: 1
+          retries: 1
+          until: result is not failed
           check_mode: false
 
-        - name: set sha256 checksum fact
-          ansible.builtin.set_fact:
-            sha256_checksum: "{{ item.split(' ')[0] }}"
-          loop: "{{ checksum.content.split('\n') }}"
-          when: item | regex_search(k3s_vars.release.kubepug.file + '$')
-
-    - name: download archive
-      ansible.builtin.get_url:
-        url: '{{ k3s_project.release.kubepug.file }}'
-        checksum: sha256:{{ sha256_checksum }}
-        dest: /tmp/
-        owner: root
-        group: root
-        mode: '644'
-      register: result
-      delay: 1
-      retries: 1
-      until: result is not failed
-      check_mode: false
-
-    - name: Install binary
-      ansible.builtin.unarchive:
-        src: /tmp/{{ k3s_vars.release.kubepug.file }}
-        dest: /usr/local/bin
-        owner: root
-        group: root
-        mode: '755'
-        remote_src: true
+        - name: Install kubepug binary
+          ansible.builtin.unarchive:
+            src: /tmp/{{ k3s_vars.release.kubepug.file }}
+            dest: /usr/local/bin
+            owner: root
+            group: root
+            mode: '755'
+            remote_src: true
     
-    - name: remove archive
-      ansible.builtin.file:
-        path: /tmp/kubepug_linux_amd64.tar.gz
-        state: absent
-      check_mode: false
+        - name: remove kubepug archive
+          ansible.builtin.file:
+            path: /tmp/kubepug_linux_amd64.tar.gz
+            state: absent
+          check_mode: false
 
 - name: Local config
   when: 
     - k3s_vars.cluster.kubeconfig.local is truthy
     - inventory_hostname in ['localhost', k3s_map.server.default_host]
   run_once: true
-  #no_log: true
+  no_log: true
   block:
     - name: create temp file
       ansible.builtin.tempfile:

@@ -52,6 +52,12 @@ spec:
         ports:
         - "32768:65535"
     
+    - action: Allow
+      protocol: TCP
+      destination:
+        nets: [0.0.0.0/0]
+        ports: [443]
+    
     - action: Allow # allowing cloudflare tunnel -> nginx
       protocol: TCP
       destination:

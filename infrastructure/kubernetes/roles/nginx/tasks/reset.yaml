@@ -20,6 +20,7 @@
     - nginx-ingress-nginx-controller
     - nginx-ingress-nginx-controller-metrics
     - nginx-ingress-nginx-controller-admission
+  ignore_errors: true
 
 - name: Uninstall nginx application in argocd
   kubernetes.core.k8s:
@@ -28,6 +29,17 @@
     kind: Application
     name: nginx
     namespace: argocd
+  
+
+- name: Delete Nginx Issuer resourcs
+  ansible.builtin.command:
+    cmd: "{{ certificate_resource }}"
+  loop:
+    - kubectl delete issuer nginx-ingress-nginx-root-issuer -n nginx
+    - kubectl delete issuer nginx-ingress-nginx-self-signed-issuer -n nginx
+  loop_control:
+    loop_var: certificate_resource
+  ignore_errors: true
   
 
 - name: Delete Nginx Certificate resourcs
@@ -40,3 +52,4 @@
     - kubectl delete secrets nginx-ingress-nginx-root-cert -n nginx
   loop_control:
     loop_var: certificate_resource
+  ignore_errors: true

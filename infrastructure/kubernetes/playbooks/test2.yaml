@@ -1,5 +1,5 @@
 - name: Reset Cluster
-  hosts: cluster
+  hosts: server
   become: true
   serial:
     - 3
@@ -14,11 +14,12 @@
     loop:
       #- network_policies
       #- cert_manager
-      #- prometheus
+      - argo_cd
+      - prometheus
       #- nginx
-      - cloudflare_tunnel
-      - external_dns
-      - frontend
+      #- cloudflare_tunnel
+      #- external_dns
+      #- frontend
       #- argo_cd
       #- calico
     loop_control:

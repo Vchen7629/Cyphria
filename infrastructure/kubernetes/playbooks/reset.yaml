@@ -1,44 +1,51 @@
-- name: Reset Cluster
-  hosts: cluster
+- name: Reset Cluster - Server Apps
+  hosts: server
   become: true
   gather_facts: true
-  serial:
-    - 3
-    - 5
-  post_tasks:
-    - name: remove archived journal files
-      ansible.builtin.command:
-        cmd: journalctl --rotate --vacuum-time=1m30s
-      changed_when: false
   tasks:
     - name: Get packages information
       ansible.builtin.package_facts:
-      tags: always
 
-    - name: Reset cluster
+    - name: Reset application roles
       ansible.builtin.include_role:
-        apply:
-          tags: '{{ reset }}'
-        name: '{{ reset }}'
+        name: "{{ reset }}"
         tasks_from: reset
       loop:
-        - network_policies
-        - cert_manager
+        #- network_policies
+        #- cert_manager
         - prometheus
-        - nginx
-        - cloudflare_tunnel
-        - external_dns
-        - frontend
+        #- nginx
+        #- cloudflare_tunnel
+        #- external_dns
+        #- frontend
         - argo_cd
         - calico
+      loop_control:
+        loop_var: reset
+      when: (ansible_run_tags == ['all']) or (reset in ansible_run_tags)
+
+- name: Reset Cluster - Cluster Roles
+  hosts: cluster
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Reset cluster roles
+      ansible.builtin.include_role:
+        name: "{{ reset }}"
+        tasks_from: reset
+      loop:
         - cluster
         - k3s
       loop_control:
         loop_var: reset
-      tags: always
       when: (ansible_run_tags == ['all']) or (reset in ansible_run_tags)
-  vars_prompt:
-    - name: prompt_remove_packages
-      prompt: Remove installed apt packages? [Y/n]
-      default: 'n'
-      private: false
+
+- name: Post Tasks
+  hosts: cluster
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Remove archived journal files
+      ansible.builtin.command:
+        cmd: journalctl --rotate --vacuum-time=1m30s
+      changed_when: false

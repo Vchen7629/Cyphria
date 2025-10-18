@@ -10,27 +10,6 @@
       loop_control:
         loop_var: deployment
     
-    - name: Set Docker Credential Facts
-      vars:
-        env: "{{ lookup('ansible.builtin.template', 'env.yaml' ) | from_yaml }}"
-      ansible.builtin.set_fact:
-        github_username: "{{ env['github-username'] }}"
-        github_password: "{{ env['github-password'] }}"
-    
-    - name: Create Github Login Secret
-      kubernetes.core.k8s:
-        state: present
-        definition:
-          apiVersion: v1
-          kind: Secret
-          type: Opaque
-          metadata: 
-            name: git-creds
-            namespace: argocd
-          stringData: 
-            username: "{{ github_username }}"
-            password: "{{ github_password }}"
-    
     - name: Deploy ArgoCD Image Updater for automated Deployment of GHCR
       kubernetes.core.k8s:
         kubeconfig: /etc/rancher/k3s/k3s.yaml

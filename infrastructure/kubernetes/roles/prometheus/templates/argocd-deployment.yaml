@@ -37,7 +37,7 @@ spec:
     
     - repoURL: https://github.com/Vchen7629/Cyphria.git
       targetRevision: main
-      path: kubernetes/cluster_roles/prometheus/application
+      path: infrastructure/kubernetes/roles/prometheus/templates
     
   syncPolicy:
     automated:

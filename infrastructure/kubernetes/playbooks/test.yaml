@@ -5,12 +5,11 @@
   gather_facts: true
   
   roles: 
-    #- calico
     #- argo_cd
     #- network_policies
-    #- prometheus
-    #- cert_manager
-    #- nginx
+    - prometheus
+    - cert_manager
+    - nginx
     - cloudflare_tunnel
     - external_dns
     - frontend

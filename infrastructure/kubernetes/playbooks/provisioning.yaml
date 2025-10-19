@@ -36,12 +36,14 @@
         tasks_from: postinstall
       loop:
         - argo_cd
+        - metrics_server
       loop_control:
         loop_var: postinstall
   roles: 
-    - calico
-    - argo_cd
+    #- cilium
+    #- argo_cd
     - network_policies
+    - metrics_server
     - prometheus
     - cert_manager
     - nginx

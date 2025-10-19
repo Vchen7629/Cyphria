@@ -1,13 +1,5 @@
 - name: Role Reset
   block:
-    - name: Remove ArgoCD Image Updater
-      kubernetes.core.k8s:
-        state: absent
-        api_version: apps/v1
-        kind: Deployment
-        name: argo-cd-image-updater
-        namespace: argocd
-
     - name: Remove Repo
       kubernetes.core.helm_repository:
         name: '{{ argocd_vars.kubernetes.helm.repository.org }}'

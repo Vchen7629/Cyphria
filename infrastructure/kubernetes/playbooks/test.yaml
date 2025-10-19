@@ -6,11 +6,11 @@
   
   roles: 
     #- calico
-    - argo_cd
+    #- argo_cd
     #- network_policies
-    - prometheus
+    #- prometheus
     #- cert_manager
     #- nginx
-    #- cloudflare_tunnel
-    #- external_dns
-    #- frontend
+    - cloudflare_tunnel
+    - external_dns
+    - frontend

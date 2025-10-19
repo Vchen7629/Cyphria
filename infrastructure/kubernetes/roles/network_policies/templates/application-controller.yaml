@@ -13,12 +13,30 @@ spec:
   ingress:
     - action: Allow # exposing ArgoCD application controller metrics endpoint
       protocol: TCP
-      source: 
+      source:
         namespaceSelector: projectcalico.org/name == "prometheus"
         selector: all() # fix later, find out what labels exactly
       destination:
         ports: [8082]
   egress:
+    - action: Allow # DNS lookups
+      protocol: UDP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
+    - action: Allow # DNS lookups (TCP)
+      protocol: TCP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
+    - action: Allow # Kubernetes API access
+      protocol: TCP
+      destination:
+        services:
+          namespace: default
+          name: kubernetes
     - action: Allow # allowing application controller -> repo server to pull generated manifests
       protocol: TCP
       destination:

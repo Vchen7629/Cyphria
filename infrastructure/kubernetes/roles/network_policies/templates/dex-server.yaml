@@ -18,6 +18,26 @@ spec:
         ports: [5556, 5557]   
     
   egress:
+    # === BASELINE RULES ===
+    - action: Allow # DNS lookups
+      protocol: UDP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
+    - action: Allow # DNS lookups (TCP)
+      protocol: TCP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
+    - action: Allow # Kubernetes API access
+      protocol: TCP
+      destination:
+        services:
+          namespace: default
+          name: kubernetes
+    # === SPECIFIC RULES ===
     - action: Allow # Allowing ArgoCD dex to communicate with 3rd party authentication
       protocol: TCP
       destination:

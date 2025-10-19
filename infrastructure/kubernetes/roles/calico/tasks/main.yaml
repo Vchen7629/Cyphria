@@ -54,12 +54,26 @@
       spec:
         calicoNetwork:
           ipPools:
-            - cidr: 192.168.0.0/16
+            - cidr: 10.42.0.0/16
               encapsulation: VXLANCrossSubnet
               natOutgoing: Enabled
               nodeSelector: all()
           nodeAddressAutodetectionV4:
             interface: wl.*
+
+- name: Delete existing IPPool to force recreation with new CIDR
+  ansible.builtin.command:
+    cmd: kubectl delete ippool default-ipv4-ippool --ignore-not-found=true
+  register: delete_result
+  changed_when: "'deleted' in delete_result.stdout"
+
+- name: Wait for new IPPool to be created
+  ansible.builtin.command:
+    cmd: kubectl get ippool default-ipv4-ippool -o jsonpath='{.spec.cidr}'
+  register: ippool_cidr
+  retries: 10
+  delay: 5
+  until: ippool_cidr.stdout == "10.42.0.0/16"
 
 - name: Rollout restart calico-node DaemonSet (force new pods)
   kubernetes.core.k8s:

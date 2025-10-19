@@ -30,6 +30,18 @@ spec:
       destination:
         ports: [20241]
   egress:
+    - action: Allow # DNS lookups
+      protocol: UDP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
+    - action: Allow # DNS lookups (TCP)
+      protocol: TCP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
     - action: Allow # Allow QUIC connection to global edge network
       protocol: TCP
       destination:

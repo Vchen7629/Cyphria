@@ -33,7 +33,7 @@
         - "{{ role_path }}/templates/cloudflare-tunnel.yaml"
         - "{{ role_path }}/templates/external-dns.yaml"
         - "{{ role_path }}/templates/cert-manager.yaml"
-        - "{{ role_path }}/templates/postgres.yaml"
+        #- "{{ role_path }}/templates/postgres.yaml"
       register: result
       retries: 3
       delay: 1

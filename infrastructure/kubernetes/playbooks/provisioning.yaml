@@ -41,7 +41,7 @@
   roles: 
     - calico
     - argo_cd
-    #- network-policies
+    - network_policies
     - prometheus
     - cert_manager
     - nginx

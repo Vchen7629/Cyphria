@@ -23,6 +23,24 @@ spec:
       destination:
         ports: [8083]
   egress:
+    - action: Allow # DNS lookups
+      protocol: UDP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
+    - action: Allow # DNS lookups (TCP)
+      protocol: TCP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
+    - action: Allow # Kubernetes API access
+      protocol: TCP
+      destination:
+        services:
+          namespace: default
+          name: kubernetes
     - action: Allow # allowing argocd server -> argocd repo server for application state
       protocol: TCP
       destination:

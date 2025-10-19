@@ -26,5 +26,29 @@ spec:
       protocol: TCP
       destination:
         services: # service match only works with kubernetes datastore driver not etcd
-          namespace: default 
+          namespace: default
           name: kubernetes
+    # Allow access to ClusterIP services (service CIDR 10.43.0.0/16)
+    - action: Allow
+      protocol: TCP
+      destination:
+        nets:
+          - 10.43.0.0/16
+    - action: Allow
+      protocol: UDP
+      destination:
+        nets:
+          - 10.43.0.0/16
+
+  ingress:
+    # Allow ingress from pods in the same cluster (pod CIDR 10.42.0.0/16)
+    - action: Allow
+      protocol: TCP
+      source:
+        nets:
+          - 10.42.0.0/16
+    - action: Allow
+      protocol: UDP
+      source:
+        nets:
+          - 10.42.0.0/16

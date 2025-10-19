@@ -31,6 +31,18 @@ spec:
       destination:
         ports: [8084]
   egress:
+    - action: Allow # Allow DNS lookups
+      protocol: UDP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
+    - action: Allow # Allow DNS lookups (TCP)
+      protocol: TCP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
     - action: Allow # Allowing ArgoCD repo server to communicate with Github to pull repo updates
       protocol: TCP
       destination:

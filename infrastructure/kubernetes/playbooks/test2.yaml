@@ -12,15 +12,14 @@
       name: '{{ reset }}'
       tasks_from: reset
     loop:
-      #- network_policies
-      #- cert_manager
-      - argo_cd
+      - network_policies
+      - cert_manager
       - prometheus
-      #- nginx
-      #- cloudflare_tunnel
-      #- external_dns
-      #- frontend
-      #- argo_cd
+      - nginx
+      - cloudflare_tunnel
+      - external_dns
+      - frontend
+      - argo_cd
       #- calico
     loop_control:
       loop_var: reset

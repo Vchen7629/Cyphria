@@ -9,12 +9,6 @@
         - argo-cd-argocd-dex-server
       loop_control:
         loop_var: deployment
-    
-    - name: Deploy ArgoCD Image Updater for automated Deployment of GHCR
-      kubernetes.core.k8s:
-        kubeconfig: /etc/rancher/k3s/k3s.yaml
-        definition: "{{ lookup('ansible.builtin.template', 'argocd-image-updater.yaml') | from_yaml }}"
-        state: present
 
     - name: Add User Account
       kubernetes.core.k8s:

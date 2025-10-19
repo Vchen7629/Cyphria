@@ -18,6 +18,18 @@ spec:
       destination:
         ports: [3000]
   egress:
+    - action: Allow # DNS lookups
+      protocol: UDP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
+    - action: Allow # DNS lookups (TCP)
+      protocol: TCP
+      destination:
+        selector: k8s-app == "kube-dns"
+        namespaceSelector: projectcalico.org/name == "kube-system"
+        ports: [53]
     - action: Allow # Allowing frontend to talk to ArgoCD Repo Server
       protocol: TCP
       destination:

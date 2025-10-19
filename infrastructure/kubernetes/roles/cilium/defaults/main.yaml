@@ -1,0 +1,87 @@
+---
+cilium_vars:
+  kubernetes:
+    agent:
+      resources:
+        limits:
+          cpu: null
+          memory: 256Mi
+        requests:
+          cpu: 10m
+          memory: 256Mi
+    # Conservative BPF settings to avoid SSH issues
+    bpf:
+      datapath_mode: netkit
+      monitor:
+        aggregation: low
+        interval: 15s
+      preallocate_maps: true # reduces latency but increases memory
+      masquerade: false  # Disable to prevent host network interference
+      tproxy: false  # Disable advanced features initially
+    cgroup:
+      resources:
+        limits:
+          cpu: null
+          memory: 128Mi
+        requests:
+          cpu: 10m
+          memory: 128Mi
+    cni:
+      resources:
+        limits:
+          cpu: null
+          memory: 128Mi
+        requests:
+          cpu: 10m
+          memory: 128Mi
+    envoy:
+      resources:
+        limits:
+          cpu: null
+          memory: 128Mi
+        requests:
+          cpu: 10m
+          memory: 128Mi
+    helm:
+      chart:
+        name: cilium
+        version: v1.18.2
+      repository:
+        name: cilium
+        org: cilium
+        url: https://helm.cilium.io
+    ipam:
+      operator:
+        cluster_pool: 10.42.0.0/16
+    kube_proxy:
+      bind:
+        address: 0.0.0.0
+        port: 10256
+    namespace: kube-system
+    operator:
+      resources:
+        limits:
+          cpu: null
+          memory: 128Mi
+        requests:
+          cpu: 10m
+          memory: 128Mi
+  release:
+    cli:
+      file: cilium-linux-amd64.tar.gz
+      repository:
+        name: cilium-cli
+        org: cilium
+      version: v0.18.6
+    gateway_api:
+      file: experimental-install.yaml
+      repository:
+        name: gateway-api
+        org: kubernetes-sigs
+      version: v1.4.0
+    hubble:
+      file: hubble-linux-amd64.tar.gz
+      repository:
+        name: hubble
+        org: cilium
+      version: v1.18.0

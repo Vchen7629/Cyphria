@@ -1,0 +1,53 @@
+# Cilium Helm values for K3s
+# Conservative configuration to avoid host networking issues
+
+bpf:
+  datapathMode: {{ cilium_vars.kubernetes.bpf.datapath_mode }}
+  masquerade: {{ cilium_vars.kubernetes.bpf.masquerade | lower }}
+  monitorAggregation: {{ cilium_vars.kubernetes.bpf.monitor.aggregation }}
+  monitorInterval: {{ cilium_vars.kubernetes.bpf.monitor.interval }}
+  preallocateMaps: {{ cilium_vars.kubernetes.bpf.preallocate_maps | lower }}
+  tproxy: {{ cilium_vars.kubernetes.bpf.tproxy | lower }}
+cgroup:
+  resources:
+    limits:
+{% if cilium_vars.kubernetes.cgroup.resources.limits.cpu is truthy %}
+      cpu: {{ cilium_vars.kubernetes.cgroup.resources.limits.cpu }}
+{% endif %}
+      memory: {{ cilium_vars.kubernetes.cgroup.resources.limits.memory }}
+    requests:
+      cpu: {{ cilium_vars.kubernetes.cgroup.resources.requests.cpu }}
+      memory: {{ cilium_vars.kubernetes.cgroup.resources.requests.memory }}
+ipam:
+  operator:
+    clusterPoolIPv4PodCIDRList: {{ cilium_vars.kubernetes.ipam.operator.cluster_pool }}
+k8sServiceHost: {{ k3s_vars.cluster.service.host }}
+k8sServicePort: {{ k3s_vars.cluster.service.port }}
+kubeProxyReplacement: true
+operator:
+  podDisruptionBudget:
+    enabled: true
+  resources:
+    limits:
+{% if cilium_vars.kubernetes.operator.resources.limits.cpu is truthy %}
+      cpu: {{ cilium_vars.kubernetes.operator.resources.limits.cpu }}
+{% endif %}
+      memory: {{ cilium_vars.kubernetes.operator.resources.limits.memory }}
+    requests:
+      cpu: {{ cilium_vars.kubernetes.operator.resources.requests.cpu }}
+      memory: {{ cilium_vars.kubernetes.operator.resources.requests.memory }}
+  rollOutPods: true
+resources:
+  limits:
+{% if cilium_vars.kubernetes.agent.resources.limits.cpu is truthy %}
+    cpu: {{ cilium_vars.kubernetes.agent.resources.limits.cpu }}
+{% endif %}
+    memory: {{ cilium_vars.kubernetes.agent.resources.limits.memory }}
+  requests:
+    cpu: {{ cilium_vars.kubernetes.agent.resources.requests.cpu }}
+    memory: {{ cilium_vars.kubernetes.agent.resources.requests.memory }}
+rollOutCiliumPods: true
+routingMode: native
+autoDirectNodeRoutes: true
+directRoutingSkipUnreachable: true
+ipv4NativeRoutingCIDR: {{ cilium_vars.kubernetes.ipam.operator.cluster_pool }}

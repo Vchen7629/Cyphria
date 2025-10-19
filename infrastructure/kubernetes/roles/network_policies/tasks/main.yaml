@@ -5,44 +5,24 @@
 
 
 - name: Configure Network Policies
-  block:    
-    - name: Apply ArgoCD Server Network Policy
+  block:
+    - name: Apply Namespace-Scoped Cilium Network Policies
       ansible.builtin.shell:
-        cmd: "calicoctl apply -f -"
+        cmd: "kubectl apply -f -"
         stdin: "{{ lookup('file', item) }}"
       with_items:
-        - "{{ role_path }}/templates/server.yaml" 
-        - "{{ role_path }}/templates/repo-server.yaml"
-        - "{{ role_path }}/templates/redis.yaml"
-        - "{{ role_path }}/templates/dex-server.yaml"
-        - "{{ role_path }}/templates/applicationset-controller.yaml"
-        - "{{ role_path }}/templates/application-controller.yaml"
+        - "{{ role_path }}/templates/argocd.yaml"
+        - "{{ role_path }}/templates/nginx-namespace.yaml"
+        - "{{ role_path }}/templates/prometheus-namespace.yaml"
+        - "{{ role_path }}/templates/frontend-namespace.yaml"
+        - "{{ role_path }}/templates/cloudflare-tunnel-namespace.yaml"
+        - "{{ role_path }}/templates/external-dns-namespace.yaml"
+        - "{{ role_path }}/templates/cert-manager-namespace.yaml"
+        - "{{ role_path }}/templates/backend-namespace.yaml"
       register: result
       retries: 3
       delay: 1
       until: result is not failed
-  
-    - name: Apply Applications network Policy
-      ansible.builtin.shell:
-        cmd: "calicoctl apply -f -"
-        stdin: "{{ lookup('file', item) }}"
-      with_items:
-        - "{{ role_path }}/templates/nginx.yaml"
-        - "{{ role_path }}/templates/prometheus-operator.yaml"
-        - "{{ role_path }}/templates/frontend.yaml" 
-        - "{{ role_path }}/templates/cloudflare-tunnel.yaml"
-        - "{{ role_path }}/templates/external-dns.yaml"
-        - "{{ role_path }}/templates/cert-manager.yaml"
-        #- "{{ role_path }}/templates/postgres.yaml"
-      register: result
-      retries: 3
-      delay: 1
-      until: result is not failed    
-    
-    - name: Apply default deny all Policy
-      ansible.builtin.shell: 
-        cmd: "calicoctl create -f -"
-        stdin: "{{ lookup('file', role_path + '/templates/deny-all.yaml') }}"
     
     
           

@@ -1,0 +1,61 @@
+---
+# Frontend Application
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: frontend
+  namespace: frontend
+spec:
+  endpointSelector: {}
+  ingress:
+    # From nginx ingress
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: nginx
+      toPorts:
+        - ports:
+            - port: "3000"
+              protocol: TCP
+  egress:
+    # DNS lookups (UDP)
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # DNS lookups (TCP)
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: TCP
+    # frontend -> ArgoCD Repo Server
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: argocd-repo-server
+            io.kubernetes.pod.namespace: argocd
+      toPorts:
+        - ports:
+            - port: "8081"
+              protocol: TCP
+    # frontend -> login api
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: loginapi
+            io.kubernetes.pod.namespace: backend
+        - matchLabels:
+            argocd.argoproj.io/instance: login-api
+            io.kubernetes.pod.namespace: backend
+      toPorts:
+        - ports:
+            - port: "3000"
+              protocol: TCP

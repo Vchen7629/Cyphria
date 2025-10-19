@@ -1,0 +1,118 @@
+---
+# Prometheus Operator
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: prometheus-operator
+  namespace: prometheus
+spec:
+  endpointSelector: {}
+  egress:
+    # DNS lookups (UDP)
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # DNS lookups (TCP)
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: TCP
+    # ArgoCD application controller metrics
+    - toEndpoints:
+        - matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - argocd-metrics
+                - argocd-application-controller
+          matchLabels:
+            io.kubernetes.pod.namespace: argocd
+      toPorts:
+        - ports:
+            - port: "8082"
+              protocol: TCP
+    # ArgoCD Server metrics
+    - toEndpoints:
+        - matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - argocd-server
+                - argocd-server-metrics
+          matchLabels:
+            io.kubernetes.pod.namespace: argocd
+      toPorts:
+        - ports:
+            - port: "8083"
+              protocol: TCP
+    # ArgoCD Repo Server metrics
+    - toEndpoints:
+        - matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - argocd-repo-server
+                - argocd-repo-server-metrics
+          matchLabels:
+            io.kubernetes.pod.namespace: argocd
+      toPorts:
+        - ports:
+            - port: "8084"
+              protocol: TCP
+    # Cilium metrics
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: cilium
+      toPorts:
+        - ports:
+            - port: "9962"
+              protocol: TCP
+            - port: "9963"
+              protocol: TCP
+    # ArgoCD redis metrics
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: argocd-redis
+            io.kubernetes.pod.namespace: argocd
+      toPorts:
+        - ports:
+            - port: "9121"
+              protocol: TCP
+    # cert-manager metrics
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: cert-manager
+      toPorts:
+        - ports:
+            - port: "9402"
+              protocol: TCP
+    # nginx ingress metrics
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+            io.kubernetes.pod.namespace: nginx
+      toPorts:
+        - ports:
+            - port: "10254"
+              protocol: TCP
+    # Cloudflare tunnel metrics
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: cloudflare-tunnel
+      toPorts:
+        - ports:
+            - port: "20241"
+              protocol: TCP

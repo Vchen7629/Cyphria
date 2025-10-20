@@ -8,6 +8,8 @@ spec:
   serviceAccountName: prometheus
   serviceMonitorSelector: {}
   serviceMonitorNamespaceSelector: {}
+  podMonitorSelector: {}
+  podMonitorNamespaceSelector: {}
   resources:
     requests:
       memory: 400Mi

@@ -5,11 +5,11 @@
         kubectl patch application prometheus -n argocd -p '{"metadata":{"finalizers":null}}' --type=merge
       ignore_errors: true
 
-    - name: Remove ArgoCD Application
+    - name: Remove ArgoCD Application (Operator)
       kubernetes.core.k8s:
         api_version: argoproj.io/v1alpha1
         kind: Application
-        name: prometheus
+        name: prometheus-operator
         namespace: argocd
         state: absent
         delete_options:
@@ -21,6 +21,16 @@
         kind: Prometheus
         name: prometheus
         namespace: prometheus
+        state: absent
+        delete_options:
+          propagationPolicy: Foreground
+    
+    - name: Remove ArgoCD Application (CRDS)
+      kubernetes.core.k8s:
+        api_version: argoproj.io/v1alpha1
+        kind: Application
+        name: prometheus-crds
+        namespace: argocd
         state: absent
         delete_options:
           propagationPolicy: Foreground

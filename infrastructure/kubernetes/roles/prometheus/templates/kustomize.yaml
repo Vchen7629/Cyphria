@@ -1,5 +1,0 @@
-resources:
-  - argocd-targets.yaml
-  - calico-targets.yaml
-  - server.yaml
-  - serviceAccount.yaml

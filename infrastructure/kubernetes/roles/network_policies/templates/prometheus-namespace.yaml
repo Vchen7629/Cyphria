@@ -8,6 +8,11 @@ metadata:
 spec:
   endpointSelector: {}
   egress:
+    # Kubernetes API access
+    - toEntities:
+      - kube-apiserver
+    - toEntities:
+      - host
     # DNS lookups (UDP)
     - toEndpoints:
         - matchLabels:

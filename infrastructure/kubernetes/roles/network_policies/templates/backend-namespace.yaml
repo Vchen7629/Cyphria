@@ -47,6 +47,11 @@ spec:
             - port: "5432"
               protocol: TCP
   egress:
+    # Kubernetes API access
+    - toEntities:
+      - kube-apiserver
+    - toEntities:
+      - host
     # CloudNativePG Operator
     - toEndpoints:
         - matchLabels:

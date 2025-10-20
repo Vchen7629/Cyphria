@@ -10,6 +10,11 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: external-dns
   egress:
+    # Kubernetes API access
+    - toEntities:
+      - kube-apiserver
+    - toEntities:
+      - host
     # DNS lookups (UDP)
     - toEndpoints:
         - matchLabels:

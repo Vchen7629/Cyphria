@@ -28,6 +28,11 @@ spec:
             - port: "9402"
               protocol: TCP
   egress:
+    # Kubernetes API access
+    - toEntities:
+      - kube-apiserver
+    - toEntities:
+      - host
     # DNS lookups (UDP)
     - toEndpoints:
         - matchLabels:
@@ -49,11 +54,18 @@ spec:
         - ports:
             - port: "53"
               protocol: TCP
+          rules:
+            dns:
+              - matchPattern: "*"
     # ACME challenge verification
     - toEntities:
         - world
       toPorts:
         - ports:
+            - port: "53"
+              protocol: TCP
+            - port: "53"
+              protocol: UDP
             - port: "80"
               protocol: TCP
             - port: "443"

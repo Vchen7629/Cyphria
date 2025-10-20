@@ -15,6 +15,7 @@
         #- prometheus
         #- cert_manager
         #- nginx
+        #- kafka
         #- cloudflare_tunnel
         #- external_dns
         #- frontend

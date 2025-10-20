@@ -1,0 +1,54 @@
+---
+kafka_vars:
+  kubernetes:
+    helm:
+      chart:
+        name: my-strimzi-kafka-operator
+        version: "0.48.0"
+      repository:
+        name: strimzi-kafka-operator
+        url: oci://quay.io/strimzi-helm
+    namespace: kafka
+    replicas: 1
+    node: tachyon-optiplex-3050
+    operator_resources:
+      limits:
+        cpu: null
+        memory: 512Mi
+      requests:
+        cpu: 50m
+        memory: 512Mi
+    broker_resources:
+      limits:
+        cpu: "2"
+        memory: 6Gi
+      requests:
+        cpu: "1"
+        memory: 4Gi
+    metrics:
+      limits:
+        cpu: null
+        memory: 6Gi
+      requests:
+        cpu: "1"
+        memory: 4Gi
+    auth:
+      data_ingestion:
+        dest_topic: raw-topic
+      category_classification:
+        consumer_group: category-classifier-service
+        source_topic: sentence-embeddings
+        dest_topic: aggregated
+      post_embeddings:
+        consumer_group: sentence-embeddings-service
+        source_topic: raw-data
+        dest_topic: sentence-embeddings
+      sentiment_analysis:
+        consumer_group: sentiment-analysis-service
+        source_topic: topic-classified
+        dest_topic: aggregated
+      topic_classification:
+        consumer_group: keyword-extraction-service
+        source_topic: sentence-embeddings
+        dest_topic: topic-classified
+

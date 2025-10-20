@@ -15,10 +15,10 @@
       - network_policies
       - cert_manager
       - prometheus
-      #- nginx
-      #- cloudflare_tunnel
-      #- external_dns
-      #- frontend
+      - nginx
+      - cloudflare_tunnel
+      - external_dns
+      - frontend
       #- argo_cd
       #- cilium
     loop_control:

@@ -7,9 +7,10 @@
   roles: 
     #- argo_cd
     #- network_policies
-    - prometheus
-    - cert_manager
-    - nginx
-    - cloudflare_tunnel
-    - external_dns
-    - frontend
+    #- prometheus
+    #- cert_manager
+    #- nginx
+    - kafka
+    #- cloudflare_tunnel
+    #- external_dns
+    #- frontend

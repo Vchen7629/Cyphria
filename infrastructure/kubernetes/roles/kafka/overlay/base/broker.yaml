@@ -13,11 +13,11 @@ spec:
     - controller
   resources:
     requests:
-      cpu: "{{ kafka_vars.kubernetes.broker_resources.requests.cpu }}"
-      memory: "{{ kafka_vars.kubernetes.broker_resources.requests.memory }}"
+      cpu: "1"
+      memory: 4Gi
     limits:
-      cpu: "{{ kafka_vars.kubernetes.broker_resources.limits.cpu }}"
-      memory: "{{ kafka_vars.kubernetes.broker_resources.limits.memory }}"
+      cpu: "2"
+      memory: 6Gi
   storage:
     type: jbod
     volumes:

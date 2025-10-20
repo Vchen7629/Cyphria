@@ -18,7 +18,8 @@
         #- cloudflare_tunnel
         #- external_dns
         #- frontend
-        - argo_cd
+        #- metrics_server
+        #- argo_cd
         - cilium
       loop_control:
         loop_var: reset

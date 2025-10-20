@@ -40,8 +40,8 @@
       loop_control:
         loop_var: postinstall
   roles: 
-    #- cilium
-    #- argo_cd
+    - cilium
+    - argo_cd
     - network_policies
     - metrics_server
     - prometheus

@@ -103,6 +103,28 @@
           register: cilium_secret
           no_log: true
 
+        - name: Set secret metadata
+          kubernetes.core.k8s:
+            definition:
+              metadata:
+                annotations:
+                  meta.helm.sh/release-name: '{{ cilium_vars.kubernetes.helm.chart.name }}'
+                  meta.helm.sh/release-namespace: '{{ cilium_vars.kubernetes.namespace }}'
+                labels:
+                  app.kubernetes.io/managed-by: Helm
+            kind: Secret
+            kubeconfig: '{{ k3s_project.cluster.kubeconfig }}'
+            name: '{{ item }}'
+            namespace: '{{ cilium_vars.kubernetes.namespace }}'
+            state: patched
+            wait: true
+          loop:
+            - hubble-relay-client-certs
+            - hubble-server-certs
+          when:
+            - cilium_secret.resources is iterable
+            - cilium_secret.resources | length > 0
+
         - name: Install chart
           kubernetes.core.helm:
             chart_ref: '{{ cilium_map.helm.chart.reference }}'
@@ -119,6 +141,28 @@
           delay: 1
           retries: 3
           until: cilium_result is not failed
+          
+        - name: Reset secret metadata
+          kubernetes.core.k8s:
+            definition:
+              metadata:
+                annotations:
+                  meta.helm.sh/release-name: null
+                  meta.helm.sh/release-namespace: null
+                labels:
+                  app.kubernetes.io/managed-by: null
+            kind: Secret
+            kubeconfig: '{{ k3s_project.cluster.kubeconfig }}'
+            name: '{{ item }}'
+            namespace: '{{ cilium_vars.kubernetes.namespace }}'
+            state: patched
+            wait: true
+          loop:
+            - hubble-relay-client-certs
+            - hubble-server-certs
+          when:
+            - cilium_secret.resources is iterable
+            - cilium_secret.resources | length > 0
 
     - name: Wait for Cilium pods to be ready
       kubernetes.core.k8s_info:

@@ -25,7 +25,7 @@
       metrics:
         service:
           monitor:
-            enabled: true
+            enabled: false
             scrape:
               interval: 15s
   run_once: true

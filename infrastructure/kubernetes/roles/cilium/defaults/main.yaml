@@ -26,6 +26,10 @@ cilium_vars:
         requests:
           cpu: 10m
           memory: 128Mi
+    client:
+      rate_limit:
+        burst: 100
+        qps: 50
     cni:
       resources:
         limits:
@@ -34,6 +38,9 @@ cilium_vars:
         requests:
           cpu: 10m
           memory: 128Mi
+    # creates configmap containing prebuilt grafana dashboards for hubble/cilium
+    dashboards:
+      enabled: true
     envoy:
       resources:
         limits:
@@ -50,6 +57,51 @@ cilium_vars:
         name: cilium
         org: cilium
         url: https://helm.cilium.io
+    hubble:
+      metrics:
+        - dns:query;ignoreAAAA
+        - drop
+        - flow
+        - httpV2
+        - icmp
+        - port-distribution
+        - tcp
+      # required for ui, collects flow data from agents
+      relay:
+        enabled: true
+        replicas: 1
+        resources:
+          limits:
+            cpu: null
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 128Mi
+        retry_timeout: 10s
+      # enables hubble ui for network flow/policy diagnosing
+      ui:
+        enabled: true
+        backend:
+          resources:
+            limits:
+              cpu: null
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 128Mi
+        frontend:
+          resources:
+            limits:
+              cpu: null
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 128Mi
+        # for exposing hubble ui externally, outside of cluster
+        gateway:
+          service: hubble-ui
+          subdomain: hubble
+        replicas: 1
     ipam:
       operator:
         cluster_pool: 10.42.0.0/16

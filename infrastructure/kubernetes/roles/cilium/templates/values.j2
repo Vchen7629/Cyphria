@@ -18,9 +18,22 @@ cgroup:
     requests:
       cpu: {{ cilium_vars.kubernetes.cgroup.resources.requests.cpu }}
       memory: {{ cilium_vars.kubernetes.cgroup.resources.requests.memory }}
+cni:
+  resources:
+    limits:
+{% if cilium_vars.kubernetes.cni.resources.limits.cpu is truthy %}
+      cpu: {{ cilium_vars.kubernetes.cni.resources.limits.cpu }}
+{% endif %}
+      memory: {{ cilium_vars.kubernetes.cni.resources.limits.memory }}
+    requests:
+      cpu: {{ cilium_vars.kubernetes.cni.resources.requests.cpu }}
+      memory: {{ cilium_vars.kubernetes.cni.resources.requests.memory }}
 ipam:
   operator:
     clusterPoolIPv4PodCIDRList: {{ cilium_vars.kubernetes.ipam.operator.cluster_pool }}
+k8sClientRateLimit:
+  burst: {{ cilium_vars.kubernetes.client.rate_limit.burst }}
+  qps: {{ cilium_vars.kubernetes.client.rate_limit.qps }}
 k8sServiceHost: {{ k3s_vars.cluster.service.host }}
 k8sServicePort: {{ k3s_vars.cluster.service.port }}
 kubeProxyReplacement: true
@@ -47,6 +60,73 @@ resources:
     cpu: {{ cilium_vars.kubernetes.agent.resources.requests.cpu }}
     memory: {{ cilium_vars.kubernetes.agent.resources.requests.memory }}
 rollOutCiliumPods: true
+hubble:
+  metrics:
+    dashboards:
+      enabled: {{ cilium_vars.kubernetes.dashboards.enabled | lower }}
+    enabled:
+      {{ cilium_vars.kubernetes.hubble.metrics | to_nice_yaml | trim | indent(6) }}
+{% if cilium_map.metrics.service.monitor.enabled is truthy %}
+    serviceMonitor:
+      enabled: true
+    interval: {{ cilium_map.metrics.service.monitor.scrape.interval }}
+    namespace: {{ cilium_vars.kubernetes.namespace }}
+{% endif %}
+  peerService:
+    clusterDomain: {{ k3s_vars.cluster.domain }}
+{% if cilium_vars.kubernetes.hubble.relay.enabled is truthy %}
+  relay:
+    enabled: true
+    podDisruptionBudget:
+      enabled: true
+{% if cilium_map.metrics.service.monitor.enabled is truthy %}
+    prometheus:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        interval: {{ cilium_map.metrics.service.monitor.scrape.interval }}
+        namespace: {{ cilium_vars.kubernetes.namespace }}
+{% endif %}
+    resources:
+      limits:
+{% if cilium_vars.kubernetes.hubble.relay.resources.limits.cpu is truthy %}
+        cpu: {{ cilium_vars.kubernetes.hubble.relay.resources.limits.cpu }}
+{% endif %}
+        memory: {{ cilium_vars.kubernetes.hubble.relay.resources.limits.memory }}
+      requests:
+        cpu: {{ cilium_vars.kubernetes.hubble.relay.resources.requests.cpu }}
+        memory: {{ cilium_vars.kubernetes.hubble.relay.resources.requests.memory }}
+    retryTimeout: {{ cilium_vars.kubernetes.hubble.relay.retry_timeout }}
+    rollOutPods: true
+{% endif %}
+{% if cilium_vars.kubernetes.hubble.ui.enabled is truthy %}
+  ui:
+    enabled: true
+    backend:
+      resources:
+        limits:
+{% if cilium_vars.kubernetes.hubble.ui.backend.resources.limits.cpu is truthy %}
+          cpu: {{ cilium_vars.kubernetes.hubble.ui.backend.resources.limits.cpu }}
+{% endif %}
+          memory: {{ cilium_vars.kubernetes.hubble.ui.backend.resources.limits.memory }}
+        requests:
+          cpu: {{ cilium_vars.kubernetes.hubble.ui.backend.resources.requests.cpu }}
+          memory: {{ cilium_vars.kubernetes.hubble.ui.backend.resources.requests.memory }}
+    frontend:
+      resources:
+        limits:
+{% if cilium_vars.kubernetes.hubble.ui.frontend.resources.limits.cpu is truthy %}
+          cpu: {{ cilium_vars.kubernetes.hubble.ui.frontend.resources.limits.cpu }}
+{% endif %}
+          memory: {{ cilium_vars.kubernetes.hubble.ui.frontend.resources.limits.memory }}
+        requests:
+          cpu: {{ cilium_vars.kubernetes.hubble.ui.frontend.resources.requests.cpu }}
+          memory: {{ cilium_vars.kubernetes.hubble.ui.frontend.resources.requests.memory }}
+    podDisruptionBudget:
+      enabled: true
+      replicas: {{ cilium_vars.kubernetes.hubble.ui.replicas }}
+    rollOutPods: true
+{% endif %}
 routingMode: native
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: true

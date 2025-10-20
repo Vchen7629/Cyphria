@@ -21,7 +21,7 @@ spec:
       offsets.topic.replication.factor: 2
       transaction.state.log.replication.factor: 2
       transaction.state.log.min.isr: 2
-      default.replication.factor: 3
+      default.replication.factor: 2
       min.insync.replicas: 1
       kafkaExporter: 
         topicRegex: ".*" # targets all topics

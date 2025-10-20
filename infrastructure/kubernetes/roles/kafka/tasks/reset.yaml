@@ -1,0 +1,65 @@
+- name: Delete ArgoCD applications
+  block: 
+  - name: Delete Kafka Operator Deployment
+    kubernetes.core.k8s:
+      state: absent
+      api_version: apps/v1
+      kind: Deployment
+      name: kafka-operator
+      namespace: kafka
+
+  - name: Remove ArgoCD finalizer from Application
+    ansible.builtin.shell: |
+      kubectl patch application kafka-crds -n kafka -p '{"metadata":{"finalizers":null}}' --type=merge
+    ignore_errors: true
+
+  - name: Remove Kafka CRD Deployment
+    kubernetes.core.k8s:
+      api_version: argoproj.io/v1alpha1
+      kind: Application
+      name: kafka-crds
+      namespace: kafka
+      state: absent
+      delete_options:
+        propagationPolicy: Foreground
+
+- name: delete crds
+  block: 
+    - name: Delete KafkaTopics
+      kubernetes.core.k8s:
+        state: absent
+        kind: KafkaTopic
+        namespace: kafka
+        label_selectors:
+          strimzi.io/cluster: cyphria-cluster
+
+    - name: Delete KafkaUsers
+      kubernetes.core.k8s:
+        state: absent
+        kind: KafkaUser
+        namespace: kafka
+        label_selectors:
+          strimzi.io/cluster: cyphria-cluster
+
+    - name: Delete KafkaNodePools
+      kubernetes.core.k8s:
+        state: absent
+        kind: KafkaNodePool
+        namespace: kafka
+        label_selectors:
+          strimzi.io/cluster: cyphria-cluster
+
+    - name: Delete Kafka cluster
+      kubernetes.core.k8s:
+        state: absent
+        kind: Kafka
+        namespace: kafka
+        name: my-cluster
+    
+    - name: Delete Kafka persistent volumes
+      kubernetes.core.k8s:
+        state: absent
+        kind: PersistentVolumeClaim
+        namespace: kafka
+        label_selectors:
+          strimzi.io/cluster: cyphria-cluster

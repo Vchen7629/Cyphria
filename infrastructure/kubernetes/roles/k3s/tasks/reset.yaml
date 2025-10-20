@@ -4,7 +4,15 @@
 
 - name: Role Reset
   block:
-    - name: Stop and disable K3s
+    - name: Stop and disable K3s agent first (if present)
+      ansible.builtin.systemd:
+        name: k3s-agent
+        state: stopped
+        enabled: no
+      ignore_errors: true
+      become: true
+
+    - name: Stop and disable K3s server
       ansible.builtin.systemd:
         name: k3s
         state: stopped
@@ -12,13 +20,16 @@
       ignore_errors: true
       become: true
 
-    - name: Stop and disable k3s-agent
-      ansible.builtin.systemd:
-        name: k3s-agent
-        state: stopped
-        enabled: no
+    - name: Wait until k3s and k3s-agent services are fully stopped
+      ansible.builtin.command: systemctl is-active {{ item }}
+      register: service_status
+      retries: 5
+      delay: 2
+      until: service_status.rc != 0
+      with_items:
+        - k3s
+        - k3s-agent
       ignore_errors: true
-      become: true
     
     - name: Clear old k3s-agent state
       ansible.builtin.shell: |
@@ -46,6 +57,9 @@
         ip link delete flannel.1 2>/dev/null || true
         ip link delete cilium_net 2>/dev/null || true
         ip link delete cilium_host 2>/dev/null || true
+        ip link delete vxlan.calico 2>/dev/null || true
+        ip link delete cilium_vxlan 2>/dev/null || true
+        # Remove any veth* links leftover from previous pods
         # Remove any veth* links leftover from previous pods
         for link in $(ip -o link show | awk -F': ' '{print $2}' | grep '^veth'); do
           ip link delete "$link" 2>/dev/null || true
@@ -60,8 +74,24 @@
         iptables -t mangle -F
         iptables -X
         ipset destroy || true
+        for table in $(iptables-save | grep -oP "(?<=\*).+" | sort -u); do
+          iptables -t $table -F || true
+          iptables -t $table -X || true
+        done
       ignore_errors: true
       become: true
+    
+    - name: Remove Calico data directories
+      ansible.builtin.file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - /var/lib/calico
+        - /etc/calico
+        - /var/run/calico
+        - /opt/cni/bin/calico*
+      become: true
+      ignore_errors: true
 
     - name: Remove cluster files
       ansible.builtin.shell: |

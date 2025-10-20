@@ -1,0 +1,12 @@
+name: CD workflow
+
+on: 
+    schedule: 
+        - cron: '59 11 * * *'
+    push:
+        branches:
+          - main
+        paths:
+          - 'frontend/**'
+          - 'backend/**'
+

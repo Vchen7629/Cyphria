@@ -11,6 +11,9 @@ cluster-init: true
 embedded-registry: true
 disable:
   - traefik
+  - metrics-server
+disable-cloud-controller: true
+disable-kube-proxy: true
 disable-network-policy: true
 flannel-backend: none
 {% if k3s_map.server.ha %}

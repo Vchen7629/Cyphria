@@ -1,0 +1,21 @@
+- name: Role Facts
+  ansible.builtin.import_role:
+    name: k3s
+    tasks_from: facts
+
+- name: Role Reset
+  when: inventory_hostname in k3s_map.server.hosts
+  block:
+    - name: Remove repository
+      kubernetes.core.helm_repository:
+        name: '{{ cilium_vars.kubernetes.helm.repository.org }}'
+        repo_state: absent
+      when: "'helm' in ansible_facts.packages"
+
+    - name: Remove binary files
+      ansible.builtin.file:
+        path: '{{ k3s_map.node.directory.bin }}/{{ item }}'
+        state: absent
+      loop:
+        - cilium
+        - hubble

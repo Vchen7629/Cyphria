@@ -6,6 +6,29 @@
     name: cert-manager
     namespace: argocd
 
+- name: Delete Cert manager Services
+  kubernetes.core.k8s:
+    state: absent
+    api_version: v1
+    kind: Service
+    name: "{{ item }}"
+    namespace: cert-manager
+  loop:
+    - cert-manager
+    - cert-manager-cainjector 
+    - cert-manager-webhook
+  ignore_errors: true
+
+- name: Delete cert-manager namespace
+  kubernetes.core.k8s:
+    state: absent
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: cert-manager
+
 - name: Delete ArgoCD Secrets resourcs
   ansible.builtin.command:
     cmd: "{{ certificate_resource }}"

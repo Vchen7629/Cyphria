@@ -1,0 +1,45 @@
+---
+# External DNS
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: external-dns
+  namespace: external-dns
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: external-dns
+  egress:
+    # Kubernetes API access
+    - toEntities:
+      - kube-apiserver
+    - toEntities:
+      - host
+    # DNS lookups (UDP)
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # DNS lookups (TCP)
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: TCP
+    # Cloudflare API access
+    - toEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP

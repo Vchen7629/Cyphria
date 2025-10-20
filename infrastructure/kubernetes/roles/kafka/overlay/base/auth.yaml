@@ -1,0 +1,251 @@
+# Auth users to secure the kafka cluster so only allowed services can
+# produce and consume from allowed topics
+
+# data ingestion user
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: data-ingestion-user
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: cyphria-cluster
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+      # Allows producing messages to raw-topic
+      - resource:
+          type: topic
+          name: '{{ kafka_vars.kubernetes.auth.data_ingestion.dest_topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+
+      # Allows producing messages to raw-topic dlq
+      - resource:
+          type: topic
+          name: '{{ kafka_map.auth.data-ingestion-dlq.topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+
+# category classification user
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: category-classification-user
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: cyphria-cluster
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+      # Allows producing messages to aggregated
+      - resource:
+          type: topic
+          name: '{{ kafka_vars.kubernetes.auth.category_classification.dest_topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+      # Allows producing messages to aggregated dlq
+      - resource:
+          type: topic
+          name: '{{ kafka_map.auth.category-classification-dlq.topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+      # Allows consuming from sentence-embeddings topic
+      - resource:
+          type: topic
+          name: '{{ kafka_vars.kubernetes.auth.category_classification.source_topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+      # consumer group defined in service code
+      - resource:
+          type: group
+          name: '{{ kafka_vars.kubernetes.auth.category_classification.consumer_group }}'
+          patternType: literal
+        operations:
+          - Read
+
+# post embeddings user
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: post-embeddings-user
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: cyphria-cluster
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+      # Allows producing messages to sentence-embeddings
+      - resource:
+          type: topic
+          name: '{{ kafka_vars.kubernetes.auth.post_embeddings.dest_topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+      # Allows producing messages to sentence-embeddings dlq
+      - resource:
+          type: topic
+          name: '{{ kafka_map.auth.post-embeddings-dlq.topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+      # Allows consuming from raw data topic
+      - resource:
+          type: topic
+          name: '{{ kafka_vars.kubernetes.auth.post_embeddings.source_topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+      # consumer group defined in service code
+      - resource:
+          type: group
+          name: '{{ kafka_vars.kubernetes.auth.post_embeddings.consumer_group }}'
+          patternType: literal
+        operations:
+          - Read
+
+# sentiment analysis user
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: sentiment-analysis-user
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: cyphria-cluster
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+      # Allows producing messages to aggregated
+      - resource:
+          type: topic
+          name: '{{ kafka_vars.kubernetes.auth.sentiment_analysis.dest_topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+      # Allows producing messages to aggregated dlq
+      - resource:
+          type: topic
+          name: '{{ kafka_map.auth.sentiment-analysis-dlq.topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+      # Allows consuming from topic-classified topic
+      - resource:
+          type: topic
+          name: '{{ kafka_vars.kubernetes.auth.sentiment_analysis.source_topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+      # consumer group defined in service code
+      - resource:
+          type: group
+          name: '{{ kafka_vars.kubernetes.auth.sentiment_analysis.consumer_group }}'
+          patternType: literal
+        operations:
+          - Read
+
+# topic classification user
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: topic-classification-user
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: cyphria-cluster
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+      # Allows producing messages to topic-classified
+      - resource:
+          type: topic
+          name: '{{ kafka_vars.kubernetes.auth.topic_classification.dest_topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+      # Allows producing messages to topic-classified dlq
+      - resource:
+          type: topic
+          name: '{{ kafka_map.auth.topic-classification-dlq.topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+      # Allows consuming from topic-classified topic
+      - resource:
+          type: topic
+          name: '{{ kafka_vars.kubernetes.auth.topic_classification.source_topic }}'
+          patternType: literal
+        operations:
+          - Describe
+          - Create
+          - Write
+        host: "*"
+      # consumer group defined in service code
+      - resource:
+          type: group
+          name: '{{ kafka_vars.kubernetes.auth.topic_classification.consumer }}'
+          patternType: literal
+        operations:
+          - Read

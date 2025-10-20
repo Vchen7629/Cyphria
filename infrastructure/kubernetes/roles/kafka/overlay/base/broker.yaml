@@ -1,0 +1,28 @@
+# Broker and controller combined
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  name: broker
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: cyphria-cluster
+spec:
+  replicas: 2 # same as the amount of nodes i have allocated to kafka
+  roles:
+    - broker
+    - controller
+  resources:
+    requests:
+      cpu: "{{ kafka_vars.kubernetes.broker_resources.requests.cpu }}"
+      memory: "{{ kafka_vars.kubernetes.broker_resources.requests.memory }}"
+    limits:
+      cpu: "{{ kafka_vars.kubernetes.broker_resources.limits.cpu }}"
+      memory: "{{ kafka_vars.kubernetes.broker_resources.limits.memory }}"
+  storage:
+    type: jbod
+    volumes:
+      - id: 0
+        type: persistent-claim
+        size: 100Gi
+        kraftMetadata: shared
+        deleteClaim: false

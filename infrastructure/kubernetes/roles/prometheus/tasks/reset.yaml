@@ -1,34 +1,70 @@
-- name: Delete Prometheus Operator Deployment
-  kubernetes.core.k8s:
-    state: absent
-    api_version: apps/v1
-    kind: Deployment
-    name: prometheus-operator
-    namespace: prometheus 
+- name: Fully reset Prometheus Operator
+  block:
+    - name: Remove ArgoCD finalizer from Application
+      ansible.builtin.shell: |
+        kubectl patch application prometheus -n argocd -p '{"metadata":{"finalizers":null}}' --type=merge
+      ignore_errors: true
 
-- name: Delete Prometheus StatefulSet
-  kubernetes.core.k8s:
-    state: absent
-    api_version: apps/v1
-    kind: StatefulSet
-    name: prometheus-prometheus
-    namespace: prometheus  
+    - name: Remove ArgoCD Application
+      kubernetes.core.k8s:
+        api_version: argoproj.io/v1alpha1
+        kind: Application
+        name: prometheus
+        namespace: argocd
+        state: absent
+        delete_options:
+          propagationPolicy: Foreground
 
-- name: Delete Prometheus Services
-  kubernetes.core.k8s:
-    state: absent
-    api_version: v1
-    kind: Service
-    name: "{{ item }}"
-    namespace: prometheus 
-  loop:
-    - prometheus-operated
-    - prometheus-operator
+    - name: Delete Prometheus CR
+      kubernetes.core.k8s:
+        api_version: monitoring.coreos.com/v1
+        kind: Prometheus
+        name: prometheus
+        namespace: prometheus
+        state: absent
+        delete_options:
+          propagationPolicy: Foreground
 
-- name: Uninstall prometheus operator in argocd
-  kubernetes.core.k8s:
-    api_version: argoproj.io/v1alpha1
-    state: absent
-    kind: Application
-    name: prometheus
-    namespace: argocd
+    - name: Delete Prometheus StatefulSet
+      kubernetes.core.k8s:
+        api_version: apps/v1
+        kind: StatefulSet
+        name: prometheus-prometheus
+        namespace: prometheus
+        state: absent
+        delete_options:
+          propagationPolicy: Foreground
+
+    - name: Delete Prometheus Operator Deployment
+      kubernetes.core.k8s:
+        api_version: apps/v1
+        kind: Deployment
+        name: prometheus-operator
+        namespace: prometheus
+        state: absent
+        delete_options:
+          propagationPolicy: Foreground
+
+    - name: Delete Prometheus Services
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: Service
+        name: "{{ item }}"
+        namespace: prometheus 
+        delete_options:
+          propagationPolicy: Foreground
+      loop:
+        - prometheus-operated
+        - prometheus-operator
+        - prometheus-prometheus-server
+    
+    - name: Delete Prometheus namespace (and all its resources)
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: Namespace
+        name: prometheus
+        state: absent
+        delete_options:
+          propagationPolicy: Foreground
+

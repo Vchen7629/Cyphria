@@ -1,0 +1,42 @@
+{% if metricsserver_vars.kubernetes.server.args is iterable and metricsserver_vars.kubernetes.server.args | length > 0 %}
+args:
+  {{ metricsserver_vars.kubernetes.server.args | to_nice_yaml | trim | indent(2) }}
+{% endif %}
+{% if metricsserver_map.server.default_args is iterable and metricsserver_map.server.default_args | length > 0 %}
+defaultArgs:
+  {{ metricsserver_map.server.default_args | to_nice_yaml | trim | indent(2) }}
+{% endif %}
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
+replicas: {{ metricsserver_vars.kubernetes.replicas }}
+resources:
+  limits:
+{% if metricsserver_vars.kubernetes.resources.limits.cpu is truthy %}
+    cpu: {{ metricsserver_vars.kubernetes.resources.limits.cpu }}
+{% endif %}
+    memory: {{ metricsserver_vars.kubernetes.resources.limits.memory }}
+  requests:
+    cpu: {{ metricsserver_vars.kubernetes.resources.requests.cpu }}
+    memory: {{ metricsserver_vars.kubernetes.resources.requests.memory }}
+service:
+  labels:
+    kubernetes.io/cluster-service: 'true'
+    kubernetes.io/name: {{ metricsserver_vars.kubernetes.helm.chart.name }}
+{% if metricsserver_postinstall is truthy and metricsserver_map.metrics.service.monitor.enabled is truthy %}
+metrics:
+  enabled: true
+serviceMonitor:
+  enabled: true
+  interval: {{ metricsserver_map.metrics.service.monitor.scrape.interval }}
+  namespace: kube-system
+  scrapeTimeout: {{ metricsserver_map.metrics.service.monitor.scrape.timeout }}
+{% endif %}
+tls:
+    clusterDomain: {{ k3s_vars.cluster.domain }}
+    type: {{ metricsserver_vars.kubernetes.server.tls.type }}
+updateStrategy:
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+  type: RollingUpdate

@@ -11,5 +11,4 @@
         - cifs-utils
       when: 
         - item in ansible_facts.packages
-        - prompt_remove_packages in ['y', 'Y']
     

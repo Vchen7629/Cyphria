@@ -12,23 +12,19 @@
         tasks_from: reset
       loop:
         #- network_policies
+        #- prometheus
         #- cert_manager
-        - prometheus
         #- nginx
+        #- kafka
         #- cloudflare_tunnel
         #- external_dns
         #- frontend
-        - argo_cd
-        - calico
+        #- metrics_server
+        #- argo_cd
+        - cilium
       loop_control:
         loop_var: reset
-      when: (ansible_run_tags == ['all']) or (reset in ansible_run_tags)
-
-- name: Reset Cluster - Cluster Roles
-  hosts: cluster
-  become: true
-  gather_facts: true
-  tasks:
+    
     - name: Reset cluster roles
       ansible.builtin.include_role:
         name: "{{ reset }}"
@@ -38,7 +34,24 @@
         - k3s
       loop_control:
         loop_var: reset
-      when: (ansible_run_tags == ['all']) or (reset in ansible_run_tags)
+
+- name: Reset Cluster - Agent
+  hosts: agent
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Get packages information
+      ansible.builtin.package_facts:
+      
+    - name: Reset cluster roles
+      ansible.builtin.include_role:
+        name: "{{ reset }}"
+        tasks_from: reset
+      loop:
+        - cluster
+        - k3s
+      loop_control:
+        loop_var: reset
 
 - name: Post Tasks
   hosts: cluster

@@ -29,7 +29,11 @@ spec:
   kafkaExporter:
     groupRegex: ".*"
     topicRegex: ".*"
-    template: {}
+    template: 
+      service:
+        metadata:
+          labels:
+            app: kafka-exporter
 
   entityOperator:
     topicOperator: {}

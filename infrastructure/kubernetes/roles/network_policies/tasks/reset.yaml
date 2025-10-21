@@ -8,6 +8,7 @@
         - nginx
         - prometheus
         - frontend
+        - kafka
         - cloudflare-tunnel
         - external-dns
         - cert-manager

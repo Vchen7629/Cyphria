@@ -121,3 +121,14 @@ spec:
         - ports:
             - port: "20241"
               protocol: TCP
+    
+    # KMinion (Kafka metrics exporter)
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: kminion
+            app.kubernetes.io/instance: kafka-metrics
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP

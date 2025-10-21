@@ -1,13 +1,19 @@
 ---
 kafka_vars:
   kubernetes:
-    helm:
+    helm_operator:
       chart:
         name: strimzi-kafka-operator
         version: "0.48.0"
       repository:
         name: strimzi-kafka-operator
         url: oci://quay.io/strimzi-helm
+    helm_metrics:
+      chart:
+        name: kminion
+        version: "0.14.2"
+      repository:
+        url: https://charts.redpanda.com
     namespace: kafka
     replicas: 1
     node: tachyon-optiplex-3050
@@ -21,7 +27,7 @@ kafka_vars:
     metrics:
       limits:
         cpu: 100m
-        memory: 6Gi
+        memory: 128mi
       requests:
-        cpu: "1"
-        memory: 4Gi
+        cpu: 100m
+        memory: 128mi

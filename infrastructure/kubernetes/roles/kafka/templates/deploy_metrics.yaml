@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka-metrics
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: '{{ kafka_vars.kubernetes.helm_metrics.repository.url }}'
+    targetRevision: '{{ kafka_vars.kubernetes.helm_metrics.chart.version }}'
+    chart: '{{ kafka_vars.kubernetes.helm_metrics.chart.name }}'
+
+    helm:
+      valuesObject:
+        kminion:
+          config:
+            kafka:
+              brokers:
+                - cyphria-cluster-kafka-bootstrap:9092
+            minion:
+              consumerGroups:
+                enabled: true
+                scrapeMode: adminApi
+                granularity: topic
+                allowedGroups:
+                  - "sentiment-analysis-service"
+                  - "keyword-extraction-service"
+                  - "sentence-embeddings-service"
+                  - "category-classifier-service"
+                ignoredGroups: []
+
+        replicaCount: {{ kafka_vars.kubernetes.replicas }}
+
+        resources:
+          limits:
+            memory: '{{ kafka_vars.kubernetes.operator_resources.limits.memory }}'
+          requests:
+            cpu: '{{ kafka_vars.kubernetes.operator_resources.requests.cpu }}'
+            memory: '{{ kafka_vars.kubernetes.operator_resources.requests.memory }}'
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kafka
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=true

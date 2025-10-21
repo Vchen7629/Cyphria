@@ -1,0 +1,273 @@
+---
+# Kafka Broker Network Policy
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: kafka-broker
+  namespace: kafka
+spec:
+  endpointSelector:
+    matchLabels:
+      strimzi.io/cluster: cyphria-cluster
+      strimzi.io/kind: Kafka
+      strimzi.io/name: cyphria-cluster-kafka
+  ingress:
+    # Allow intra-cluster Kafka communication
+    - fromEndpoints:
+        - matchLabels:
+            strimzi.io/cluster: cyphria-cluster
+            strimzi.io/kind: Kafka
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "9090"
+              protocol: TCP
+            - port: "9091"
+              protocol: TCP
+    # Allow Strimzi Cluster Operator
+    - fromEndpoints:
+        - matchLabels:
+            strimzi.io/kind: cluster-operator
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "8443"
+              protocol: TCP
+            - port: "9090"
+              protocol: TCP
+            - port: "9091"
+              protocol: TCP
+    # Allow Entity Operator
+    - fromEndpoints:
+        - matchLabels:
+            strimzi.io/name: cyphria-cluster-entity-operator
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "9091"
+              protocol: TCP
+    # Allow Kafka Exporter
+    - fromEndpoints:
+        - matchLabels:
+            strimzi.io/name: cyphria-cluster-kafka-exporter
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "9091"
+              protocol: TCP
+    # Allow client connections (internal)
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "9092"
+              protocol: TCP
+    # Allow external client connections
+    - toPorts:
+        - ports:
+            - port: "9093"
+              protocol: TCP
+    # Allow Prometheus scraping
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: prometheus
+      toPorts:
+        - ports:
+            - port: "9091"
+              protocol: TCP
+  egress:
+    # Allow DNS resolution
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Allow Kubernetes API access (critical for PVC creation)
+    - toEntities:
+        - kube-apiserver
+    # Allow host access
+    - toEntities:
+        - host
+    # Allow intra-cluster Kafka communication
+    - toEndpoints:
+        - matchLabels:
+            strimzi.io/cluster: cyphria-cluster
+            strimzi.io/kind: Kafka
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "9090"
+              protocol: TCP
+            - port: "9091"
+              protocol: TCP
+            - port: "9092"
+              protocol: TCP
+    # Allow connection to Strimzi Cluster Operator
+    - toEndpoints:
+        - matchLabels:
+            strimzi.io/kind: cluster-operator
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+
+---
+# Strimzi Cluster Operator Network Policy
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: strimzi-cluster-operator
+  namespace: kafka
+spec:
+  endpointSelector:
+    matchLabels:
+      strimzi.io/kind: cluster-operator
+  ingress:
+    # Allow health checks and metrics
+    - toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+    # Allow Prometheus scraping
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: prometheus
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+  egress:
+    # Allow DNS resolution
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Allow Kubernetes API access
+    - toEntities:
+        - kube-apiserver
+    # Allow host access
+    - toEntities:
+        - host
+    # Allow communication with Kafka brokers
+    - toEndpoints:
+        - matchLabels:
+            strimzi.io/cluster: cyphria-cluster
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "8443"
+              protocol: TCP
+            - port: "9090"
+              protocol: TCP
+            - port: "9091"
+              protocol: TCP
+
+---
+# Entity Operator Network Policy
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: entity-operator
+  namespace: kafka
+spec:
+  endpointSelector:
+    matchLabels:
+      strimzi.io/name: cyphria-cluster-entity-operator
+  ingress:
+    # Allow Prometheus scraping
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: prometheus
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+  egress:
+    # Allow DNS resolution
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Allow Kubernetes API access
+    - toEntities:
+        - kube-apiserver
+    # Allow host access
+    - toEntities:
+        - host
+    # Allow communication with Kafka brokers
+    - toEndpoints:
+        - matchLabels:
+            strimzi.io/cluster: cyphria-cluster
+            strimzi.io/kind: Kafka
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "9091"
+              protocol: TCP
+
+---
+# KMinion Network Policy
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: kminion
+  namespace: kafka
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: kminion
+      app.kubernetes.io/instance: kafka-metrics
+  ingress:
+    # Allow Prometheus scraping
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: prometheus
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+  egress:
+    # Allow DNS resolution
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Allow communication with Kafka brokers (bootstrap service on port 9092)
+    - toEndpoints:
+        - matchLabels:
+            strimzi.io/cluster: cyphria-cluster
+            strimzi.io/kind: Kafka
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "9092"
+              protocol: TCP

@@ -6,13 +6,13 @@ metadata:
   labels:
     grafana_dashboard: "1"
 data:
-  my-dashboard.json: |-
+  kafka_cluster.json: |-
     {
       "__inputs": [
         {
-          "name": "DS_CORTEX",
-          "label": "Prometheus",
-          "description": "Prometheus Server",
+          "name": "DS_VICTORIA_METRICS",
+          "label": "VictoriaMetrics",
+          "description": "Kafka Cluster Info",
           "type": "datasource",
           "pluginId": "prometheus",
           "pluginName": "Prometheus"
@@ -76,7 +76,7 @@ data:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_CORTEX}",
+          "datasource": "VictoriaMetrics",
           "description": "Summed delta between High and Low watermark of all partitions in the given topic. Therefore not accurate for compacted topics that contain compacted records.",
           "fieldConfig": {
             "defaults": {
@@ -179,7 +179,7 @@ data:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${DS_CORTEX}",
+          "datasource": "VictoriaMetrics",
           "fieldConfig": {
             "defaults": {
               "custom": {}
@@ -265,7 +265,7 @@ data:
           "valueName": "current"
         },
         {
-          "datasource": "${DS_CORTEX}",
+          "datasource": "VictoriaMetrics",
           "fieldConfig": {
             "defaults": {
               "custom": {
@@ -370,7 +370,7 @@ data:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${DS_CORTEX}",
+          "datasource": "VictoriaMetrics",
           "fieldConfig": {
             "defaults": {
               "custom": {}
@@ -460,7 +460,7 @@ data:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_CORTEX}",
+          "datasource": "VictoriaMetrics",
           "description": "Log dir size across all log dirs, topics and partitions for a given broker.",
           "fieldConfig": {
             "defaults": {
@@ -559,7 +559,7 @@ data:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_CORTEX}",
+          "datasource": "VictoriaMetrics",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -660,7 +660,7 @@ data:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_CORTEX}",
+          "datasource": "VictoriaMetrics",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -761,7 +761,7 @@ data:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_CORTEX}",
+          "datasource": "VictoriaMetrics",
           "fieldConfig": {
             "defaults": {
               "custom": {},
@@ -866,7 +866,7 @@ data:
           {
             "allValue": null,
             "current": {},
-            "datasource": "${DS_CORTEX}",
+            "datasource": "VictoriaMetrics",
             "definition": "query_result(topk(15, avg by (topic_name) (avg_over_time(kminion_kafka_topic_high_water_mark_sum[${__range_s}s]))))",
             "error": null,
             "hide": 2,
@@ -889,7 +889,7 @@ data:
           {
             "allValue": null,
             "current": {},
-            "datasource": "${DS_CORTEX}",
+            "datasource": "VictoriaMetrics",
             "definition": "query_result(topk(5, avg by (group_id) (avg_over_time(kminion_kafka_consumer_group_offset_commits_total[${__range_s}s]))))",
             "error": null,
             "hide": 2,

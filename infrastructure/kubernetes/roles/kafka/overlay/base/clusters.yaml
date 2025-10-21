@@ -26,15 +26,6 @@ spec:
       default.replication.factor: 2
       min.insync.replicas: 1
 
-  kafkaExporter:
-    groupRegex: ".*"
-    topicRegex: ".*"
-    template: 
-      service:
-        metadata:
-          labels:
-            app: kafka-exporter
-
   entityOperator:
     topicOperator: {}
     userOperator: {}

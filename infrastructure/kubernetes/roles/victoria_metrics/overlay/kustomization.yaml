@@ -7,3 +7,5 @@ resources:
   - targets/kafka.yaml
   - dashboards/kafka-cluster.yaml
   - dashboards/kafka-topic.yaml
+  - dashboards/kafka-consumer-group.yaml
+  - dashboards/cert-manager.yaml

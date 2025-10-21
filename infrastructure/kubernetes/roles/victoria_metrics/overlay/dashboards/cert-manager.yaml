@@ -638,7 +638,7 @@ data:
       "schemaVersion": 39,
       "tags": [
         "cert-manager",
-        "victoriametrics",
+        "victoriametrics"
       ],
       "templating": {
         "list": [

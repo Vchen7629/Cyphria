@@ -860,7 +860,11 @@ data:
       ],
       "schemaVersion": 26,
       "style": "dark",
-      "tags": [],
+      "tags": [
+        "kafka",
+        "victoriametrics",
+        "data-pipeline"
+      ],
       "templating": {
         "list": [
           {

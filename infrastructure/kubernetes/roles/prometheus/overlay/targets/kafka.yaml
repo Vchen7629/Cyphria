@@ -1,20 +1,20 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: kafka-exporter-pod-monitor
+  name: kminion-pod-monitor
   namespace: prometheus
   labels:
     release: prometheus
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: kafka-exporter
-      strimzi.io/cluster: cyphria-cluster
+      app.kubernetes.io/name: kminion
+      app.kubernetes.io/instance: kafka-metrics
   namespaceSelector:
     matchNames:
       - kafka
   podMetricsEndpoints:
-    - port: tcp-prometheus
+    - port: metrics
       path: /metrics
       interval: 30s
 

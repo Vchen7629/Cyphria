@@ -2,20 +2,12 @@
 - name: Set map fact
   ansible.builtin.set_fact:
     kafka_map:
-      helm:
+      helm_operator:
         repository:
-          url: '{{ kafka_vars.kubernetes.helm.repository.url }}/{{ kafka_vars.kubernetes.helm.repository.name }}'
+          url: '{{ kafka_vars.kubernetes.helm_operator.repository.url }}/{{ kafka_vars.kubernetes.helm_operator.repository.name }}'
         timeout: 5m0s
-      auth:
-        data-ingestion-dlq: 
-          topic: '{{ kafka_vars.kubernetes.auth.data_ingestion.dest_topic }}-dlq'
-        category-classification-dlq:
-          topic: '{{ kafka_vars.kubernetes.auth.category_classification.dest_topic }}-dlq'
-        post-embeddings-dlq:
-          topic: '{{ kafka_vars.kubernetes.auth.post_embeddings.dest_topic }}-dlq'
-        sentiment-analysis-dlq:
-          topic: '{{ kafka_vars.kubernetes.auth.sentiment_analysis.dest_topic }}-dlq'
-        topic-classification-dlq:
-          topic: '{{ kafka_vars.kubernetes.auth.topic_classification.dest_topic }}-dlq'
-        
+      helm_metrics:
+        repository:
+          url: '{{ kafka_vars.kubernetes.helm_metrics.repository.url }}/{{ kafka_vars.kubernetes.helm_operator.repository.name }}'
+        timeout: 5m0s
         

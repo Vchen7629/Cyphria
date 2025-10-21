@@ -6,41 +6,28 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: '{{ kafka_map.helm.repository.url }}'
-    targetRevision: '{{ kafka_vars.kubernetes.helm.chart.version }}'
-    chart: '{{ kafka_vars.kubernetes.helm.chart.name }}'
+    repoURL: '{{ kafka_map.helm_operator.repository.url }}'
+    targetRevision: '{{ kafka_vars.kubernetes.helm_operator.chart.version }}'
+    chart: '{{ kafka_vars.kubernetes.helm_operator.chart.name }}'
 
     helm:
       valuesObject:
         replicas: '{{ kafka_vars.kubernetes.replicas }}'
-        dashboards:
-          enabled: true
-          namespace: kafka
-          label: kafka_grafana_dashboard 
-          labelValue: "1"
-          annotations: {}
-          extraLabels: {}
+
         resources:
-            limits:
-                memory: '{{ kafka_vars.kubernetes.operator_resources.limits.memory }}'
-            requests:
-                cpu: '{{ kafka_vars.kubernetes.operator_resources.requests.cpu }}'
-                memory: '{{ kafka_vars.kubernetes.operator_resources.requests.memory }}'
+          limits:
+              memory: '{{ kafka_vars.kubernetes.operator_resources.limits.memory }}'
+          requests:
+              cpu: '{{ kafka_vars.kubernetes.operator_resources.requests.cpu }}'
+              memory: '{{ kafka_vars.kubernetes.operator_resources.requests.memory }}'
 
   destination:
     server: https://kubernetes.default.svc
     namespace: kafka
-  
+
   syncPolicy:
     automated:
       selfHeal: true
     syncOptions:
       - ServerSideApply=true
       - CreateNamespace=true
-
-  ignoreDifferences:
-    - group: apiextensions.k8s.io
-      kind: CustomResourceDefinition
-      jqPathExpressions:
-        - '.spec.versions[].schema.openAPIV3Schema.properties.spec.properties.*.deprecated'
-        - '.spec.versions[].schema.openAPIV3Schema.properties.status.properties.*.deprecated'

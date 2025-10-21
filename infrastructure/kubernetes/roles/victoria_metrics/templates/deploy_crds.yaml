@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vm-crds
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Vchen7629/Cyphria.git
+    targetRevision: main
+    path: infrastructure/kubernetes/roles/victoria_metrics/overlay
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: victoria-metrics
+  
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

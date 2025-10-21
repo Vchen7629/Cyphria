@@ -1,0 +1,40 @@
+- name: Fully reset Victoria-metrics
+  block:
+    - name: Remove ArgoCD Application (Victoria Metrics Stack)
+      kubernetes.core.k8s:
+        api_version: argoproj.io/v1alpha1
+        kind: Application
+        name: vm-stack
+        namespace: argocd
+        state: absent
+        delete_options:
+          propagationPolicy: Foreground
+    
+    - name: Remove ArgoCD Application (Victoria Metrics CRD)
+      kubernetes.core.k8s:
+        api_version: argoproj.io/v1alpha1
+        kind: Application
+        name: vm-crds
+        namespace: argocd
+        state: absent
+        delete_options:
+          propagationPolicy: Foreground
+    
+    - name: Wait for ArgoCD Applications to be fully gone
+      ansible.builtin.command: >
+        kubectl wait --for=delete application/vm-stack --timeout=120s -n argocd
+      ignore_errors: true
+
+    - name: Force remove orphaned finalizers (if stuck)
+      ansible.builtin.shell: |
+        kubectl patch application vm-stack -n argocd -p '{"metadata":{"finalizers":[]}}' --type=merge || true
+        kubectl patch application vm-crds -n argocd -p '{"metadata":{"finalizers":[]}}' --type=merge || true
+      ignore_errors: true
+
+    - name: Delete victoria-metrics namespace (optional full wipe)
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: Namespace
+        name: victoria-metrics
+        state: absent
+        wait: true

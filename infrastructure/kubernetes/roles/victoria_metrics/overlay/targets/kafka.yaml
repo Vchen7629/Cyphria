@@ -1,0 +1,20 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: kminion-pod-monitor
+  namespace: victoria-metrics
+  labels:
+    app.kubernetes.io/instance: victoria-metrics
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kminion
+      app.kubernetes.io/instance: kafka-metrics
+  namespaceSelector:
+    matchNames:
+      - kafka
+  podMetricsEndpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+

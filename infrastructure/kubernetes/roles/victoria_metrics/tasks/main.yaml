@@ -4,7 +4,6 @@
     tasks_from: facts
   loop:
     - k3s
-    - victoria_metrics
   loop_control:
     loop_var: role
 

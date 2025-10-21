@@ -141,7 +141,7 @@
           delay: 1
           retries: 3
           until: cilium_result is not failed
-          
+
         - name: Reset secret metadata
           kubernetes.core.k8s:
             definition:

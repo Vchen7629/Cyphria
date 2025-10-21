@@ -3,7 +3,7 @@ argocd_vars:
     helm:
       chart:  
         name: argo-cd
-        version: v7.8.26
+        version: v9.0.0
       repository:
         name: argo-helm
         org: argoproj
@@ -83,4 +83,4 @@ argocd_vars:
     repository:
       name: argo-cd
       org: argoproj
-    version: v2.14.10
+    version: v3.1.8

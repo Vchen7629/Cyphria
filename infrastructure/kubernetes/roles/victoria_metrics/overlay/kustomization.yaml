@@ -5,3 +5,5 @@ resources:
   - targets/argocd.yaml
   - targets/calico.yaml
   - targets/kafka.yaml
+  - dashboards/kafka-cluster.yaml
+  - dashboards/kafka-topic.yaml

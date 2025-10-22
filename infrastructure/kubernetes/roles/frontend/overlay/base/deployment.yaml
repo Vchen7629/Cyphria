@@ -18,8 +18,7 @@ spec:
           image: ghcr.io/vchen7629/cyphria-frontend
           resources:
             limits:
-              cpu: 100m
-              memory: 256Mi
-            requests: 
-              cpu: 50m
               memory: 128Mi
+            requests: 
+              cpu: 100m
+              memory: 64Mi

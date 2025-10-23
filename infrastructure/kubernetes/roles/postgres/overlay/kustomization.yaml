@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - database/postgres.yaml
+  - database/backup.yaml
+  - database/schema.yaml
+  - database/timescaledb_extension.yaml
+  - security/user.yaml

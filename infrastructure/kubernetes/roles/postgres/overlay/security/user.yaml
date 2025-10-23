@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cyphria-user-secret
+type: Opaque
+stringData:
+  username: tiamat
+  password: YD%ioc9'TI9dFD2=~=oB7s,M"sP`1;

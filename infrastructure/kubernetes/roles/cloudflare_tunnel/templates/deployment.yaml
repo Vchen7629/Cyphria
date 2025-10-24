@@ -8,15 +8,15 @@ metadata:
 spec:
   project: default
   source: 
-    chart: cloudflared
-    repoURL: https://charts.kubito.dev
-    targetRevision: v1.6.1
+    chart: '{{ cloudflared_vars.kubernetes.helm.chart.name }}'
+    repoURL: '{{ cloudflared_vars.kubernetes.helm.repository.url }}'
+    targetRevision: '{{ cloudflared_vars.kubernetes.helm.chart.version }}'
 
     helm:
       valuesObject:
         metrics:
-          enabled: true
-          port: 20241
+          enabled: {{ cloudflared_vars.kubernetes.metrics.enable }}
+          port: '{{ cloudflared_vars.kubernetes.metrics.port }}'
 
         managed:
           enabled: false
@@ -30,21 +30,20 @@ spec:
             tunnelSecret: "{{ tunnel_secret }}"
 
           ingress:
-            - hostname: cyphria.com
-              service: http://nginx-ingress-nginx-controller.nginx.svc.cluster.local:80
+            - hostname: '{{ cloudflared_vars.kubernetes.ingress.hostname }}'
+              service: '{{ cloudflared_vars.kubernetes.ingress.controller }}'
 
             - hostname: '*.cyphria.com'
-              service: http://nginx-ingress-nginx-controller.nginx.svc.cluster.local:80
+              service: '{{ cloudflared_vars.kubernetes.ingress.controller }}'
             
             - service: http_status:404
               
         resources:
           limits:
-            cpu: 100m
-            memory: 256Mi
+            memory: '{{ cloudflared_vars.kubernetes.resources.limits.memory }}'
           requests:
-            cpu: 100m
-            memory: 256Mi
+            cpu: '{{ cloudflared_vars.kubernetes.resources.requests.cpu }}'
+            memory: '{{ cloudflared_vars.kubernetes.resources.requests.memory }}'
   destination:
     server: https://kubernetes.default.svc
     namespace: cloudflare-tunnel

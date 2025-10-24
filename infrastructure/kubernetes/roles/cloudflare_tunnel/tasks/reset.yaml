@@ -60,8 +60,3 @@
       Content-Type: "application/json"
   delegate_to: localhost
   become: false
-
-- name: Delete Secrets
-  ansible.builtin.command:
-    cmd: kubectl delete secrets tunnel-secret -n cloudflare-tunnel
-  ignore_errors: true

@@ -45,6 +45,6 @@
     - name: Deploy to argocd
       kubernetes.core.k8s:
         state: present
-        definition: "{{ lookup('ansible.builtin.template', 'argocd-deployment.j2') | from_yaml }}"
+        definition: "{{ lookup('ansible.builtin.template', 'deployment.yaml') | from_yaml }}"
         kubeconfig: /etc/rancher/k3s/k3s.yaml
  

@@ -8539,10 +8539,7 @@ data:
           },
           {
             "current": {},
-            "datasource": {
-              "type": "prometheus",
-              "uid": "${DS_PROMETHEUS}"
-            },
+            "datasource": "VictoriaMetrics",
             "definition": "label_values(controller_runtime_webhook_requests_total{webhook=\"/mutate-postgresql-cnpg-io-v1-cluster\"},namespace)",
             "description": "Namespace where the CNPG operator is located",
             "hide": 0,
@@ -8564,10 +8561,7 @@ data:
           },
           {
             "current": {},
-            "datasource": {
-              "type": "prometheus",
-              "uid": "${DS_PROMETHEUS}"
-            },
+            "datasource": "VictoriaMetrics",
             "definition": "cnpg_collector_up",
             "description": "Namespace where the database cluster is located",
             "hide": 0,
@@ -8588,10 +8582,7 @@ data:
           },
           {
             "current": {},
-            "datasource": {
-              "type": "prometheus",
-              "uid": "${DS_PROMETHEUS}"
-            },
+            "datasource": "VictoriaMetrics",
             "definition": "cnpg_collector_up{namespace=~\"$namespace\"}",
             "description": "CNPG Cluster",
             "hide": 0,
@@ -8605,7 +8596,7 @@ data:
               "refId": "PrometheusVariableQueryEditor-VariableQuery"
             },
             "refresh": 2,
-            "regex": "/\\bcluster\\b=\"(?<text>[^\"]+)/g",
+            "regex": "/exported_cluster=\"(?<text>[^\"]+)/g",
             "skipUrlSync": false,
             "sort": 1,
             "type": "query"
@@ -8613,10 +8604,7 @@ data:
           {
             "allValue": "$cluster-([1-9][0-9]*)",
             "current": {},
-            "datasource": {
-              "type": "prometheus",
-              "uid": "${DS_PROMETHEUS}"
-            },
+            "datasource": "VictoriaMetrics",
             "definition": "cnpg_collector_up{namespace=~\"$namespace\",pod=~\"$cluster-([1-9][0-9]*)$\"}",
             "description": "Database cluster instances",
             "hide": 0,

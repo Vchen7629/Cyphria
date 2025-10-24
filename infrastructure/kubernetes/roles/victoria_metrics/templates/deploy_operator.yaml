@@ -1,0 +1,82 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata: 
+  name: vm-stack
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: victoria-metrics
+    
+  source:
+    repoURL: '{{ vm_vars.kubernetes.helm.repository.url }}'
+    targetRevision: '{{ vm_vars.kubernetes.helm.chart.version }}'
+    chart: '{{ vm_vars.kubernetes.helm.chart.name }}'
+
+    helm:
+      valuesObject:
+        victoria-metrics-operator:
+          enabled: {{ vm_vars.kubernetes.operator.enable }}
+          resources:
+            limits:
+              memory: '{{ vm_vars.kubernetes.operator.resources.limits.memory }}'
+            requests:
+              cpu: '{{ vm_vars.kubernetes.operator.resources.requests.cpu }}'
+              memory: '{{ vm_vars.kubernetes.operator.resources.requests.memory }}'
+        vmsingle:
+          enabled: {{ vm_vars.kubernetes.vmsingle.enable }}
+          spec:
+            retentionPeriod: '{{ vm_vars.kubernetes.vmsingle.retention_period }}'
+            storage:
+              resources: 
+                requests:
+                  storage: '{{ vm_vars.kubernetes.vmsingle.storage }}'
+        alertmanager:
+          enabled: '{{ vm_vars.kubernetes.alertmanager.enable }}'
+        vmalert:
+          enabled: {{ vm_vars.kubernetes.vmalert.enable }}
+        grafana:
+          enabled: {{ vm_vars.kubernetes.grafana.enable }}
+          replicas: '{{ vm_vars.kubernetes.grafana.replicas }}'
+          ingress:
+            enabled: {{ vm_vars.kubernetes.grafana.ingress.enable }}
+          adminUser: '{{ vm_vars.kubernetes.grafana.admin.username }}'
+          adminPassword: '{{ vm_vars.kubernetes.grafana.admin.password }}'
+          resources:
+            limits:
+              memory: '{{ vm_vars.kubernetes.grafana.resources.limits.memory }}'
+            requests:
+              cpu: '{{ vm_vars.kubernetes.grafana.resources.requests.cpu }}'
+              memory: '{{ vm_vars.kubernetes.grafana.resources.requests.memory }}'
+        prometheus-node-exporter:
+          enabled: {{ vm_vars.kubernetes.prometheus_node_exporter.enable }}
+          resources:
+            limits:
+              memory: '{{ vm_vars.kubernetes.prometheus_node_exporter.resources.limits.memory }}'
+            requests:
+              cpu: '{{ vm_vars.kubernetes.prometheus_node_exporter.resources.requests.cpu }}'
+              memory: '{{ vm_vars.kubernetes.prometheus_node_exporter.resources.requests.memory }}'
+        kube-state-metrics:
+          replicas: '{{ vm_vars.kubernetes.kube_state_metrics.replicas }}'
+          resources:
+            limits:
+              memory: '{{ vm_vars.kubernetes.kube_state_metrics.resources.limits.memory }}'
+            requests:
+              cpu: '{{ vm_vars.kubernetes.kube_state_metrics.resources.requests.cpu }}'
+              memory: '{{ vm_vars.kubernetes.kube_state_metrics.resources.requests.memory }}'
+        kubeEtcd:
+          enabled: {{ vm_vars.kubernetes.kubeEtcd.enable }}
+        vmagent:
+          spec:
+            externalLabels:
+              cluster: k3s
+
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=true

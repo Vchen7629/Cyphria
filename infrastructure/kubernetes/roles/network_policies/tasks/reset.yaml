@@ -6,7 +6,7 @@
       with_items:
         - argocd
         - nginx
-        - prometheus
+        - victoria-metrics
         - frontend
         - kafka
         - cloudflare-tunnel

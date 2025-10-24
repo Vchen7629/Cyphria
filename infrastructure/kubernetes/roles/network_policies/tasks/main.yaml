@@ -13,12 +13,14 @@
       with_items:
         - "{{ role_path }}/templates/argocd.yaml"
         - "{{ role_path }}/templates/nginx-namespace.yaml"
-        - "{{ role_path }}/templates/prometheus-namespace.yaml"
+        - "{{ role_path }}/templates/kafka-namespace.yaml"
+        - "{{ role_path }}/templates/victoria-metrics-namespace.yaml"
         - "{{ role_path }}/templates/frontend-namespace.yaml"
         - "{{ role_path }}/templates/cloudflare-tunnel-namespace.yaml"
         - "{{ role_path }}/templates/external-dns-namespace.yaml"
         - "{{ role_path }}/templates/cert-manager-namespace.yaml"
         - "{{ role_path }}/templates/backend-namespace.yaml"
+        - "{{ role_path }}/templates/postgres-namespace.yaml"
       register: result
       retries: 3
       delay: 1

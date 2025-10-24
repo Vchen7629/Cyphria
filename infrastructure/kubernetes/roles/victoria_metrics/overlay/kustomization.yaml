@@ -9,3 +9,4 @@ resources:
   - dashboards/kafka-topic.yaml
   - dashboards/kafka-consumer-group.yaml
   - dashboards/cert-manager.yaml
+  - dashboards/postgres.yaml

@@ -68,14 +68,6 @@ spec:
         - ports:
             - port: "9093"
               protocol: TCP
-    # Allow Prometheus scraping
-    - fromEndpoints:
-        - matchLabels:
-            io.kubernetes.pod.namespace: prometheus
-      toPorts:
-        - ports:
-            - port: "9091"
-              protocol: TCP
   egress:
     # Allow DNS resolution
     - toEndpoints:
@@ -243,7 +235,7 @@ spec:
     # Allow Prometheus scraping
     - fromEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: prometheus
+            io.kubernetes.pod.namespace: victoria-metrics
       toPorts:
         - ports:
             - port: "8080"

@@ -1,0 +1,375 @@
+---
+# VictoriaMetrics Operator Network Policy
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: victoria-metrics-operator
+  namespace: victoria-metrics
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: victoria-metrics-operator
+  ingress:
+    # Allow health checks and metrics
+    - toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+  egress:
+    # Allow DNS resolution
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Allow Kubernetes API access
+    - toEntities:
+        - kube-apiserver
+    # Allow host access
+    - toEntities:
+        - host
+
+---
+# Grafana Network Policy
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: grafana
+  namespace: victoria-metrics
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+      app.kubernetes.io/instance: vm-stack
+  ingress:
+    # Allow health checks from kubelet (host)
+    - fromEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "3000"
+              protocol: TCP
+    # Allow scraping from within namespace
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: victoria-metrics
+      toPorts:
+        - ports:
+            - port: "3000"
+              protocol: TCP
+  egress:
+    # Allow DNS resolution
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Allow Kubernetes API access
+    - toEntities:
+        - kube-apiserver
+    # Allow host access
+    - toEntities:
+        - host
+    # Allow connection to VMSingle for data source
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: victoria-metrics
+      toPorts:
+        - ports:
+            - port: "8428"
+              protocol: TCP
+    - toFQDNs:
+        - matchName: "grafana.com"
+        - matchPattern: "*.grafana.com"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+
+
+---
+# VMSingle Network Policy
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: vmsingle
+  namespace: victoria-metrics
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: vmsingle
+  ingress:
+    # Allow health checks from kubelet (host)
+    - fromEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "8428"
+              protocol: TCP
+    # Allow VMAgent to scrape
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: vmagent
+            io.kubernetes.pod.namespace: victoria-metrics
+      toPorts:
+        - ports:
+            - port: "8428"
+              protocol: TCP
+    # Allow Grafana to query
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: grafana
+            io.kubernetes.pod.namespace: victoria-metrics
+      toPorts:
+        - ports:
+            - port: "8428"
+              protocol: TCP
+  egress:
+    # Allow DNS resolution
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Allow Kubernetes API access
+    - toEntities:
+        - kube-apiserver
+    # Allow host access
+    - toEntities:
+        - host
+
+---
+# VMAgent Network Policy
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: vmagent
+  namespace: victoria-metrics
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: vmagent
+  ingress:
+    # Allow health checks from kubelet (host)
+    - fromEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "8429"
+              protocol: TCP
+  egress:
+    # Allow DNS resolution
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Allow Kubernetes API access (for service discovery)
+    - toEntities:
+        - kube-apiserver
+    # Allow host access
+    - toEntities:
+      - remote-node
+      toPorts:
+        - ports:
+            - port: "9100"
+              protocol: TCP
+            - port: "10250"
+              protocol: TCP
+    # Allow scraping victoria metrics components
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: victoria-metrics
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+            - port: "3000"
+              protocol: TCP
+            - port: "9093"
+              protocol: TCP
+            - port: "9100" # node exporter
+              protocol: TCP
+            - port: "8428" # VMSingle
+              protocol: TCP
+    # Allow scraping cloudflared
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: cloudflare-tunnel
+      toPorts:
+        - ports:
+            - port: "20241"
+              protocol: TCP    
+    # Allow Scraping Kube-DNS
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "9153"
+              protocol: TCP
+    # Allow Scraping Argocd
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: argocd
+      toPorts:
+        - ports:
+            - port: "8082" # Application Controller
+              protocol: TCP
+            - port: "9121" # redis
+              protocol: TCP
+            - port: "8084" # repo server
+              protocol: TCP
+            - port: "8083" # server
+              protocol: TCP
+    # Allow Scraping KMinion
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+    # Allow scraping cert manager
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: cert-manager
+      toPorts:
+        - ports:
+            - port: "9402" 
+              protocol: TCP
+    # Allow scraping nginx ingress
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: nginx
+      toPorts:
+        - ports:
+            - port: "10254"
+              protocol: TCP
+    # Allow scraping postgres components
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: postgres
+      toPorts:
+        - ports:
+            - port: "8080" # Operator metrics
+              protocol: TCP
+            - port: "9187" # Database metrics
+              protocol: TCP
+
+---
+# Prometheus Node Exporter Network Policy
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: prometheus-node-exporter
+  namespace: victoria-metrics
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-node-exporter
+  ingress:
+    # Allow health checks from kubelet (host)
+    - fromCIDR:
+        - 10.0.0.0/24
+      toPorts:
+        - ports:
+            - port: "9100"
+              protocol: TCP
+    # Allow VMAgent to scrape
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: vmagent
+            io.kubernetes.pod.namespace: victoria-metrics
+      toPorts:
+        - ports:
+            - port: "9100"
+              protocol: TCP
+  egress:
+    # Allow DNS resolution
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Allow host access
+    - toEntities:
+        - host
+
+---
+# Kube State Metrics Network Policy
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: kube-state-metrics
+  namespace: victoria-metrics
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: kube-state-metrics
+  ingress:
+    # Allow health checks from kubelet (host)
+    - fromEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+    # Allow VMAgent to scrape
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: vmagent
+            io.kubernetes.pod.namespace: victoria-metrics
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+  egress:
+    # Allow DNS resolution
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Allow Kubernetes API access
+    - toEntities:
+        - kube-apiserver
+    # Allow host access
+    - toEntities:
+        - host

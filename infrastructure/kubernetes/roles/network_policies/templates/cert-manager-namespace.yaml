@@ -22,7 +22,7 @@ spec:
     # Prometheus metrics
     - fromEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: prometheus
+            io.kubernetes.pod.namespace: victoria-metrics
       toPorts:
         - ports:
             - port: "9402"

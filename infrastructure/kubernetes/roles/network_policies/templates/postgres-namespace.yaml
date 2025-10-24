@@ -1,0 +1,86 @@
+
+# Postgres operator
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: cnpg-operator-access
+  namespace: postgres
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: postgres-operator
+  ingress:
+    # Exposing webhooks server
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: cnpg-system
+      toPorts:
+        - ports:
+            - port: "9443"
+              protocol: TCP
+    # Allow Prometheus scraping
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: victoria-metrics
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+
+# Postgres cluster
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: cluster-access
+  namespace: postgres
+spec:
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: timescaledb-cluster-pg17
+  ingress:
+    # PostgreSQL database access from kafka cluster
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kafka
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
+
+    # Allow metrics scraping from victoria-metrics
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: victoria-metrics
+      toPorts:
+        - ports:
+            - port: "9187"
+              protocol: TCP
+
+    # Allow status endpoint from victoria-metrics
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: victoria-metrics
+      toPorts:
+        - ports:
+            - port: "8000"
+              protocol: TCP
+
+    # Allow operator to manage instances
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: cloudnative-pg
+      toPorts:
+        - ports:
+            - port: "8000"
+              protocol: TCP
+
+    # Allow replica communication
+    - fromEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: timescaledb-cluster-pg17
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP

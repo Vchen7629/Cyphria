@@ -24,7 +24,7 @@ spec:
     # Exposing ArgoCD server metrics endpoint
     - fromEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: prometheus
+            io.kubernetes.pod.namespace: victoria-metrics
       toPorts:
         - ports:
             - port: "8083"
@@ -126,7 +126,7 @@ spec:
     # Metrics endpoint
     - fromEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: prometheus
+            io.kubernetes.pod.namespace: victoria-metrics
       toPorts:
         - ports:
             - port: "8084"
@@ -202,7 +202,7 @@ spec:
     # Metrics endpoint
     - fromEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: prometheus
+            io.kubernetes.pod.namespace: victoria-metrics
       toPorts:
         - ports:
             - port: "9121"
@@ -346,7 +346,7 @@ spec:
     # Metrics endpoint
     - fromEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: prometheus
+            io.kubernetes.pod.namespace: victoria-metrics
       toPorts:
         - ports:
             - port: "8082"

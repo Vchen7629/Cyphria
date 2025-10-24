@@ -4,6 +4,7 @@ metadata:
   name: timescaledb-cluster-pg17
 spec:
   instances: 1
+
   # referencing imageCatalog to use timescale extension with postgres
   imageCatalogRef:
     apiGroup: postgresql.cnpg.io
@@ -17,8 +18,8 @@ spec:
         - ReadWriteOnce
       resources:
         requests:
-          storage:  300Gi
-      storageClassName: local-path
+          storage: 1Ti
+      storageClassName: local-storage
       volumeMode: Filesystem
   # WAL PVC (SSD)
   walStorage:
@@ -27,7 +28,7 @@ spec:
         - "ReadWriteOnce"
       resources:
         requests:
-          storage: 50Gi
+          storage: 100Gi
       storageClassName: local-path
       volumeMode: Filesystem
   # Creating the database with the user secret

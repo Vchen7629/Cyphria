@@ -43,12 +43,19 @@ data:
     -- Create Hypertable (2 hour chunks)
     SELECT create_hypertable('aggregated_metrics', by_range('time_bucket', INTERVAL '2 hours'));
 
+    -- Enable columnstore compression
+    ALTER TABLE aggregated_metrics SET (
+        timescaledb.compress,
+        timescaledb.compress_segmentby = 'category_id, topic_id, subreddit_id',
+        timescaledb.compress_orderby = 'time_bucket DESC'
+    );
+
     --- Index for queries (filtering by category, topic, subreddit)
     CREATE INDEX idx_aggregated_metrics_category ON aggregated_metrics (category_id, time_bucket DESC);
     CREATE INDEX idx_aggregated_metrics_topic ON aggregated_metrics (topic_id, time_bucket DESC);
     CREATE INDEX idx_aggregated_metrics_subreddit ON aggregated_metrics (subreddit_id, time_bucket DESC);
 
-    -- Compress data older than 2 hours since i'm insert-only
-    SELECT add_compression_policy('aggregated_metrics', INTERVAL '30 minutes');
+    -- Compress data older than 2 hours
+    SELECT add_compression_policy('aggregated_metrics', INTERVAL '2 hours');
 
     

@@ -6,14 +6,30 @@ data:
   init-schema.sql: |
     CREATE EXTENSION IF NOT EXISTS timescaledb;
 
-    -- My Fact Table
+    -- Dimension Tables
+    CREATE TABLE categories (
+        category_id   TEXT   PRIMARY KEY,
+        name          TEXT   NOT NULL UNIQUE
+    );
+
+    CREATE TABLE topics (
+        topic_id  TEXT   PRIMARY KEY,
+        name      TEXT   NOT NULL UNIQUE
+    );
+
+    CREATE TABLE subreddits (
+        subreddit_id  TEXT   PRIMARY KEY,
+        name          TEXT   NOT NULL UNIQUE
+    );
+
+    -- Fact Table
     CREATE TABLE aggregated_metrics (
         time_bucket   TIMESTAMPTZ  NOT NULL,
         category_id   TEXT         NOT NULL,
         topic_id      TEXT         NOT NULL,
         subreddit_id  TEXT         NOT NULL,
         post_count    INTEGER      NOT NULL,
-        avg_sentiment INTEGER      NOT NULL
+        avg_sentiment INTEGER      NOT NULL,
 
         -- Foreign keys
         CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES categories(category_id),
@@ -22,22 +38,6 @@ data:
 
         -- Composite Primary key to prevent duplicates
         PRIMARY KEY (time_bucket, category_id, topic_id, subreddit_id)
-    );
-
-    -- Fact Tables
-    CREATE TABLE categories (
-        category_id   TEXT   PRIMARY KEY,
-        name          TEXT   NOT NULL UNIQUE
-    );
-
-    CREATE TABLE topics (
-        topic_id  TEXT   PRIMARY KEY,     
-        name      TEXT   NOT NULL UNIQUE
-    );
-
-    CREATE TABLE subreddit (
-        subreddit_id  TEXT   PRIMARY KEY,
-        name          TEXT   NOT NULL UNIQUE
     );
 
     -- Create Hypertable (2 hour chunks)

@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres-operator
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: cloudnative-pg 
+    repoURL: https://cloudnative-pg.io/charts/
+    targetRevision: v0.23.2
+
+    helm:
+      valuesObject:
+        monitoring:
+          podMonitorEnabled: true
+        config:
+          clusterWide: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: postgres
+  
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=true

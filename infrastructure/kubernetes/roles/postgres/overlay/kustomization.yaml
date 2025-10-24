@@ -6,4 +6,5 @@ resources:
   - database/backup.yaml
   - database/schema.yaml
   - database/timescaledb_extension.yaml
+  - database/storage-class.yaml
   - security/user.yaml

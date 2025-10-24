@@ -4,13 +4,15 @@ metadata:
   name: timescaledb-cluster-pg17
 spec:
   instances: 1
-
   # referencing imageCatalog to use timescale extension with postgres
   imageCatalogRef:
     apiGroup: postgresql.cnpg.io
     kind: ImageCatalog
     name: cloudnative-pg-timescaledb-pg17
     major: 17
+  # timescale/timescaledb image uses UID/GID 70 for postgres user
+  postgresUID: 70
+  postgresGID: 70
   # Database PVC (HDD)
   storage:
     pvcTemplate:

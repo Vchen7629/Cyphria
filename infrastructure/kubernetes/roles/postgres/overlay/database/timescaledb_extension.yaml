@@ -1,9 +1,0 @@
-apiVersion: postgresql.cnpg.io/v1
-kind: ImageCatalog
-metadata:
-  name: cloudnative-pg-timescaledb-pg17
-spec:
-  images:
-    - major: 17           # PostgreSQL major version
-      image: timescale/timescaledb:2.22.1-pg17
-      

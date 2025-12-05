@@ -1,9 +1,0 @@
----
-- name: Set map fact
-  ansible.builtin.set_fact:
-    vm_map:
-      helm:
-        repository:
-          url: '{{ km_vars.kubernetes.helm.repository.url }}/{{ km.kubernetes.helm.repository.name }}'
-        timeout: 5m0s
-        

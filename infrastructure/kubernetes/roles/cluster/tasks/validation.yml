@@ -1,8 +1,0 @@
-# This Validates various things like internet before running any configurations
-    
-- name: Check Internet Connection
-  ansible.builtin.wait_for:
-    host: github.com
-    port: 443
-    timeout: 30
-

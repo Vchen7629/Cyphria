@@ -28,7 +28,7 @@ class Start_Service:
     def __init__(self) -> None:
         self.structured_logger = StructuredLogger(pod="idk")
         self.queue: Queue = Queue(maxsize=1000)  # processing queue
-        self.consumer = KafkaConsumer(topic="raw-data", logger=self.structured_logger)
+        self.consumer = KafkaConsumer(topic="sentence-embeddings", logger=self.structured_logger)
         self.producer = KafkaProducer(logger=self.structured_logger)
         self.model = get_model()
         self.kw_model = KeyBERT(model=self.model)
@@ -57,8 +57,8 @@ class Start_Service:
 
                 for item in processed_data:
                     pub_handler(
-                        topic="test",
-                        error_topic="test-dlq",
+                        topic="topic-classified",
+                        error_topic="topic-classified-dlq",
                         producer=self.producer,
                         message=item["keywords"],
                         postID=item["post_id"],

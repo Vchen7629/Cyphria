@@ -13,7 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 class StartService:
     def __init__(self) -> None:
         self.structured_logger = StructuredLogger(pod="idk2")
-        self.consumer = KafkaConsumer(topic="sentiment-analysis", logger=self.structured_logger)
+        self.consumer = KafkaConsumer(topic="topic-classified", logger=self.structured_logger)
         self.producer = KafkaProducer(logger=self.structured_logger)
         self.queue: Queue = Queue(maxsize=1000)
         model_data = sentiment_analysis_model("yangheng/deberta-v3-base-absa-v1.1")
@@ -43,7 +43,7 @@ class StartService:
 
             for item in sentiment_analysis:
                 try:
-                    self.producer.produce(topic="aggregator", key=post_ids, value=item)
+                    self.producer.produce(topic="aggregated", key=post_ids, value=item)
                 except Exception as e:
                     print(f"error: {e}")
                     raise e

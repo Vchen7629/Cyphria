@@ -10,3 +10,86 @@ on:
           - 'frontend/**'
           - 'backend/**'
 
+permissions:
+  packages: write
+
+jobs: 
+  path-filter:
+    runs-on: ubuntu-latest
+    outputs:
+        frontend: ${{ steps.changes.outputs.frontend }}
+        category_classification: ${{ steps.changes.outputs.category_classification }}
+        data_ingestion: ${{ steps.changes.outputs.data_ingestion }}
+        sentiment_analysis: ${{ steps.changes.outputs.sentiment_analysis }}
+        topic_classification: ${{ steps.changes.outputs.topic_classification }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            category_classification:
+              - 'backend/data_processing/category_classification/**'
+            data_ingestion:
+              - 'backend/data_processing/data_ingestion/**'
+            post_embeddings:
+              - 'backend/data_processing/post_embeddings/**'
+            sentiment_analysis:
+              - 'backend/data_processing/sentiment_analysis/**'
+            topic_classification
+              - 'backend/data_processing/topic_classification/**'
+            frontend:
+              - 'frontend/**'
+
+  frontend-cd:
+    needs: path-filter
+    if: ${{ needs.path-filter.outputs.frontend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3 
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3 
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: ghcr.io/vchen7629/cyphria-frontend:latest
+  
+  category-classification-cd:
+    needs: path-filter
+    if: ${{ needs.path-filter.outputs.backend. == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+          
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3 # v3.0.0
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3 # v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend/data_processing/category_classification
+          file: ./backend/data_processing/category_classification/Dockerfile
+          push: true
+          tags: ghcr.io/vchen7629/cyphria-category-classifier:latest
+

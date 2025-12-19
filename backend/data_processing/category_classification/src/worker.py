@@ -6,7 +6,7 @@ from src.components.batch import batch
 from src.components.offsets import offset_helper
 from src.components.pub_handler import pub_handler
 from src.configs.model import load_model
-from src.components.text_classification import text_classification
+from backend.data_processing.category_classification.src.components.text_classification import text_classification
 from threading import Thread
 from queue import Queue
 
@@ -48,10 +48,10 @@ class Category_Classification:
 
                 pub_handler(
                     producer=self.producer,
-                    topic="category-classified",
+                    topic="aggregated",
                     message=msg,
                     postID=post_id,
-                    error_topic="category-classified-dlq",
+                    error_topic="aggregated-dlq",
                     logger=self.structured_logger,
                     max_retries=3,
                 )

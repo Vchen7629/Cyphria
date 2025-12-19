@@ -1,4 +1,4 @@
-from src.preprocessing.stop_words import stop_words
+from backend.data_processing.post_embeddings.src.preprocessing.stop_words import stop_words
 from pathlib import Path
 import sys
 

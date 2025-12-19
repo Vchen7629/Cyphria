@@ -1,7 +1,7 @@
 from src.components.fetch_post import get_posts
 from src.preprocessing.relevant_fields import process_post, RedditPost
-from src.preprocessing.stop_words import stop_words
 from src.preprocessing.url_remover import remove_url
+from src.preprocessing.demojify import demojify
 from src.config.reddit_client import createRedditClient
 from src.middleware.kafka_producer import KafkaClient
 from src.preprocessing.check_english import detect_english
@@ -30,11 +30,11 @@ class Worker:
                 extracted = process_post(
                     post, self.logger
                 )  # extracting only relevant parts of the api response
-                no_stop_words = stop_words(extracted.body)  # removing stop words from the body
-                url_removed = remove_url(no_stop_words)
+                url_removed = remove_url(post)
+                demojified = demojify
 
                 processed_post = RedditPost(
-                    body=url_removed,
+                    body=demojified,
                     subreddit=extracted.subreddit,
                     timestamp=extracted.timestamp,
                     post_id=extracted.post_id,

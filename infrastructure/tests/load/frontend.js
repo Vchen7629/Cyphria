@@ -6,9 +6,9 @@ import { check } from 'k6';
 export const options = {
   stages: [
     { duration: '30s', target: 50 },   // ramp up to 50 users
-    { duration: '1m', target: 50 },    // stay at 50
-    { duration: '30s', target: 200 },  // ramp up to 200
-    { duration: '1m', target: 200 },   // stay at 200
+    { duration: '30s', target: 200 },    // stay at 50
+    { duration: '30s', target: 500 },  // ramp up to 200
+    { duration: '30s', target: 1000 },   // stay at 200
     { duration: '30s', target: 500 },  // ramp up to 500
     { duration: '1m', target: 500 },   // stay at 500
     { duration: '30s', target: 1000 }, // ramp up to 1000

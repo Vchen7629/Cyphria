@@ -1,0 +1,34 @@
+[project]
+name = "data-ingestion"
+version = "0.1.0"
+description = "Worker Service in charge of taking in data from reddit api and sending messages to kafka"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "confluent-kafka>=2.11.1",
+    "dotenv>=0.9.9",
+    "emoji>=2.15.0",
+    "langdetect>=1.0.9",
+    "praw>=7.8.1",
+    "pydantic>=2.11.10",
+    "testcontainers[kafka]>=4.13.2",
+]
+
+[tool.pyrefly]
+python-version = "3.13"
+untyped-def-behavior = "check-and-infer-return-any"
+search-path = ["."] # so pyrefly knows we are running from ingestion folder not ingestion/src
+
+[tool.pyrefly.errors]
+unannotated-parameter = "error"
+unannotated-return = "error"
+unannotated-attribute = "error"
+implicit-any = "error"
+
+[dependency-groups]
+dev = [
+    "pyrefly>=0.47.0",
+    "pytest>=9.0.2",
+    "ruff>=0.14.11",
+]
+

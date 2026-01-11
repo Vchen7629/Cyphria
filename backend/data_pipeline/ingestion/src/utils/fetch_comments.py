@@ -1,6 +1,7 @@
 from prawcore.exceptions import PrawcoreException  # type: ignore
 from ..core.logger import StructuredLogger
 from praw.models import Submission, Comment
+from typing import cast
 
 def fetch_comments(post: Submission, logger: StructuredLogger, limit: int | None = None) -> list[Comment]:
     """
@@ -21,7 +22,8 @@ def fetch_comments(post: Submission, logger: StructuredLogger, limit: int | None
         post.comments.replace_more(limit=limit)
 
         # flatten comment forest into list
-        return post.comments.list()
+        # After replace_more(), only Comment objects remain (MoreComments are replaced)
+        return cast(list[Comment], post.comments.list())
     except PrawcoreException as e:
         logger.error(
             event_type="RedditApi",

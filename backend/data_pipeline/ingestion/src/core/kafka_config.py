@@ -1,6 +1,6 @@
 KAFKA_SETTINGS = {
-    """Config settings for configuring kafka producer"""
-    
+    # Config settings for configuring kafka producer
+
     # for message reliability
     "acks": "all",
     "retries": 3,

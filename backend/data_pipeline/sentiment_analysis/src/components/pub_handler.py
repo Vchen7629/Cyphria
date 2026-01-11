@@ -1,19 +1,29 @@
-from typing import Union, Sequence
-from ..middleware.logger import StructuredLogger
+from typing import Any
+from src.core.logger import StructuredLogger
 import json
 from time import sleep
+from confluent_kafka import Producer
 
 
 # Error handling for bad requests for publishing to kafka topic
 def pub_handler(  # type: ignore[no-untyped-def]
-    producer,
-    topic: str,  # successful messages topic
-    message: Union[str, str | Sequence[str]],
+    producer: Producer,
+    topic: str,
+    message: Any,
     postID: str,
     error_topic: str,
     logger: StructuredLogger,
     max_retries: int = 3,
 ) -> None:
+    """
+    Handler function for publishing the message to regular kafka topic
+    built in error handling with retries before sending to the dlq on errors
+
+    Args:
+        producer: 
+        topic: kafka topic to publish the processed messages to
+        message: 
+    """
     retries = 0
     json_str = json.dumps(message)
     while retries <= max_retries:
@@ -24,9 +34,7 @@ def pub_handler(  # type: ignore[no-untyped-def]
                 value=json_str.encode("utf-8"),
             )
 
-            producer.poll(
-                0
-            )  # poll to actually process the produce message and free the internal queue
+            producer.poll(0)  # poll to actually process the produce message and free the internal queue
 
             break
         except BufferError:

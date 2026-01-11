@@ -1,11 +1,12 @@
-from ..config.kafka import KAFKA_SETTINGS_CONSUMER
-from ..middleware.logger import StructuredLogger
+from src.core.kafka_config import KAFKA_SETTINGS_CONSUMER
+from src.core.logger import StructuredLogger
 from confluent_kafka import Consumer  # type: ignore
 from typing import Any, Union, Tuple, Optional
 
 
 # This class implements the Kafka Consumer
 class KafkaConsumer:
+    """Kafka consumer that consumes messages sent to the raw-data topic"""
     def __init__(self, topic: str, logger: StructuredLogger) -> None:
         self.structured_logger = logger
         try:
@@ -18,6 +19,14 @@ class KafkaConsumer:
 
     # Commit Offsets after successful processing
     def commit(self, offsets: Any = None, asynchronous: bool = False) -> None:
+        """
+        Method invoked to commit the message offset after successful processing to
+        prevent processed messages from being reprocessed
+
+        Args:
+            offsets: 
+            asynchronous:
+        """
         try:
             if offsets is not None:
                 self.consumer.commit(offsets=offsets, asynchronous=asynchronous)
@@ -29,16 +38,39 @@ class KafkaConsumer:
                 message=f"Offset commit failed: {e}",
             )
 
-    # pause method: used if queue is overloaded
     def pause(self) -> None:
+        """
+        Pause method invoked if queue is overloaded, there are messages 
+        in the internal queue over 80% of the queue size limit
+        """
         self.consumer.pause(self.consumer.assignment())
 
-    # resume method: used if queue is stabilized again
     def resume(self) -> None:
+        """
+        Resume method invoked if queue is stabilized again, the queue is paused
+        and messages are processed until there are messages in the queue less than 
+        40% of the max queue size 
+        """
         self.consumer.resume(self.consumer.assignment())
 
     # poll method: fetch new messages from kafka topic
     def poll(self, timeout_ms: int = 1000) ->  Union[Tuple[Optional[str], str, int, str, int], None]:
+        """
+        method for fetching new messages from the kafka topic, polls the queue and extracts/returns
+        the kafka topic message metadata. 
+
+        Args:
+            timeout_msg
+
+        Returns:
+            A tuple containing:
+                - post_id: The comment ID
+                - postBody: The comment json string
+                - partition: Partition the msg belongs to
+                - topic: The raw-data topic
+                - offset: current message offset
+            or None if no msg key
+        """
         try:
             msg = self.consumer.poll(timeout=timeout_ms)
 

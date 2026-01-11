@@ -91,7 +91,6 @@ class Worker:
             return None
         
         return RedditComment(
-            comment_id=extracted.comment_id,
             comment_body=demojified,
             subreddit=extracted.subreddit,
             detected_products=extracted.detected_products,

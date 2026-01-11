@@ -1,7 +1,7 @@
 # Todo: Use Testcontainers to test publishing messages to kafka
 from kafka import KafkaConsumer
-from src.middleware.kafka_producer import KafkaClient
-from src.middleware.logger import StructuredLogger
+from src.core.kafka_producer import KafkaClient
+from src.core.logger import StructuredLogger
 import pytest
 
 @pytest.mark.integration

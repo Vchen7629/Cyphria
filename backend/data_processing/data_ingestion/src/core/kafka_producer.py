@@ -1,7 +1,7 @@
 # Class responsible for sending messages to a kafka topic
-from ..config.kafka import KAFKA_SETTINGS
-from ..middleware.logger import StructuredLogger
-from confluent_kafka import Producer  # type: ignore
+from .kafka_config import KAFKA_SETTINGS
+from .logger import StructuredLogger
+from confluent_kafka import Producer, KafkaError, Message  # type: ignore
 import json
 from typing import Mapping, Any
 
@@ -13,10 +13,16 @@ class KafkaClient:
             bootstrap_server: str
         ) -> None:
         self.structured_logger = logger  # logger instance
+        self.bootstrap_server = bootstrap_server
+
+        self._initialize_producer()
+
+    def _initialize_producer(self) -> None:
+        """Initialize and create the kafka producer instance"""
         try:
             self.producer = Producer({
                 **KAFKA_SETTINGS,  # adding kafka settings
-                "bootstrap.servers": bootstrap_server
+                "bootstrap.servers": self.bootstrap_server
                 # logger=kafka_logger # logging setup messages
             })
             print("Producer connected...")
@@ -28,8 +34,14 @@ class KafkaClient:
             )
             exit()
 
-    # Handler to convert kafka logs to structure handler
-    def kafka_message_log_handler(self, err, msg):
+    def kafka_message_log_handler(self, err: KafkaError | None, msg: Message) -> None:
+        """
+        Handler to convert kafka logs to structured logs format
+
+        Args:
+            err: Kafka error object, None if no error
+            msg: the message object containing the produced message
+        """
         if err is not None:
             self.structured_logger.error(
                 event_type="Kafka",
@@ -43,13 +55,16 @@ class KafkaClient:
                 post_id=msg.key().decode() if msg.key() else None,
             )
 
-    # This sends a single message to kafka topic
-    def send_message(
-        self,
-        topic: str,  # kafka topic
-        message_body: Mapping[str, Any],  # reddit post body
-        postID: str,  # reddit post id to be used as key
-    ) -> None:
+    def send_message(self, topic: str, message_body: Mapping[str, Any], postID: str) -> None:
+        """
+        Send a single message to the designated kafka topic
+
+        Args:
+            topic: kafka topic name
+            message_body: message body containing fields such as comment text, timestamp, etc
+            postID: the unique id for each comment
+        """
+
         try:
             json_str = json.dumps(message_body)
             self.producer.produce(
@@ -61,7 +76,11 @@ class KafkaClient:
         except Exception as e:
             raise RuntimeError(f"Error sending message: {e}")
     
-    # This sends all the queries messages to broker
-    def flush(self, timeout: float = 30.0):
-        """Wait for all messages to be delivered."""
+    def flush(self, timeout: float = 30.0) -> None:
+        """
+        Send all query messages to the broker
+
+        Args: 
+            timeout: idk
+        """
         self.producer.flush(timeout)

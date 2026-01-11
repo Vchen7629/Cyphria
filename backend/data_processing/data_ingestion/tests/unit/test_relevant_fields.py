@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 from src.preprocessing.relevant_fields import process_post, RedditPost
-from src.middleware.logger import StructuredLogger
+from src.core.logger import StructuredLogger
 
 logger = StructuredLogger(pod="idk")
 

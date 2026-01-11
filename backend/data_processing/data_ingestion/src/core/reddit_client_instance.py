@@ -4,9 +4,13 @@ import os
 
 load_dotenv()
 
-
-# Sets up the reddit client with praw to be called
 def createRedditClient() -> praw.Reddit:
+    """
+    Creates an instance of reddit client required for praw
+
+    Returns:
+        reddit: instance of praw reddit client
+    """
     reddit = praw.Reddit(
         client_id=os.getenv("Reddit-Api-Client-ID"),
         client_secret=os.getenv("Reddit-Api-Client-Secret"),

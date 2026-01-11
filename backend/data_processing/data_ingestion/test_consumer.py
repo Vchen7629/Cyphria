@@ -1,4 +1,4 @@
-from src.middleware.kafka_producer import KafkaClient
+from src.core.kafka_producer import KafkaClient
 
 
 def test_consumer(

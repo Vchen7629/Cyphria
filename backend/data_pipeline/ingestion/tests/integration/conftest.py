@@ -1,6 +1,6 @@
-import pytest, time
+import pytest
+import time
 from testcontainers.kafka import KafkaContainer
-from src.core.logger import StructuredLogger
 
 # Creating Pytest Fixture to create Kafka Session 
 # for all integration tests

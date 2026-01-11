@@ -1,6 +1,7 @@
 import logging
 import json
 from datetime import datetime
+from typing import Any
 
 class StructuredLogger:
     """Central Logging for this worker service"""
@@ -14,7 +15,7 @@ class StructuredLogger:
         handler.setFormatter(logging.Formatter("%(message)s"))  # just output JSON
         self.logger.addHandler(handler)
 
-    def _log(self, level: str, event_type: str, message: str, **kwargs) -> str:
+    def _log(self, level: str, event_type: str, message: str, **kwargs: Any) -> str:
         """
         log message json object containing all relevant info in the log
 
@@ -39,7 +40,7 @@ class StructuredLogger:
             }
         )
 
-    def info(self, event_type: str, message: str, **kwargs) -> None:
+    def info(self, event_type: str, message: str, **kwargs: Any) -> None:
         """
         Info log event
         
@@ -50,7 +51,7 @@ class StructuredLogger:
         """
         self.logger.info(self._log("INFO", event_type, message, **kwargs))
 
-    def error(self, event_type: str, message: str, **kwargs) -> None:
+    def error(self, event_type: str, message: str, **kwargs: Any) -> None:
         """
         error log event
         
@@ -61,7 +62,7 @@ class StructuredLogger:
         """
         self.logger.error(self._log("ERROR", event_type, message, **kwargs))
 
-    def debug(self, event_type: str, message: str, **kwargs) -> None:
+    def debug(self, event_type: str, message: str, **kwargs: Any) -> None:
         """
         debug log event
         

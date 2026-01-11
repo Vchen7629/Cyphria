@@ -20,8 +20,8 @@ import prawcore
 class Worker:
     def __init__(
         self,
-        kafka_client=None,  # Dependency Injection Kafka Client for Testing
-    ):
+        kafka_client: KafkaClient | None = None,  # Dependency Injection Kafka Client for Testing
+    ) -> None:
         self.logger = StructuredLogger(pod="idk")
         self.kafka_producer = kafka_client or KafkaClient(self.logger, bootstrap_server="localhost:9092")
         self.reddit_client: Reddit = createRedditClient()
@@ -40,9 +40,7 @@ class Worker:
             all_posts = []
 
             for subreddit in self.subreddits:
-                posts: list[Submission] = list(
-                    fetch_post_delayed(self.reddit_client, subreddit, self.logger)
-                )
+                posts = fetch_post_delayed(self.reddit_client, subreddit, self.logger)
                 if posts:
                     all_posts.extend(posts)
             
@@ -111,7 +109,7 @@ class Worker:
             postID=processed_comment.comment_id,
         )
             
-    def post_message(self):
+    def post_message(self) -> None:
         """Main orchestrator function: fetch, process, and publish comments"""
         all_posts = self._fetch_all_posts()
                     

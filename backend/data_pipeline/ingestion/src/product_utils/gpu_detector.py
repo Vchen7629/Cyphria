@@ -57,7 +57,10 @@ class GPUDetector:
                 # if it's a bare number (no brand prefix), validate it
                 if not any(brand in gpu_name for brand in ['rtx', 'gtx', 'gt', 'rx', 'arc']):
                     # Extract just the numeric part (e.g., "3080" from "3080fe" or "3080 ti")
-                    base_num = re.match(r'(\d{3,4})', gpu_name).group(1)
+                    num_match = re.match(r'(\d{3,4})', gpu_name)
+                    if num_match is None:
+                        continue
+                    base_num = num_match.group(1)
                     # skip numbers not matching the known gpu numbers
                     if base_num not in self.KNOWN_NVIDIA_MODELS and base_num not in self.KNOWN_AMD_MODELS and base_num not in self.KNOWN_INTEL_MODELS:
                         continue

@@ -16,7 +16,7 @@ def ExportCSV(
         "comment_id",
         "comment_body",
         "subreddit",
-        "detected_products"
+        "detected_products",
         "timestamp",
         "author",
         "score",
@@ -34,7 +34,7 @@ def ExportCSV(
         post_id,
     ]
 
-    file_name = "testing2.csv"  # file name to export to
+    file_name = "testing3.csv"  # file name to export to
     script_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(
         script_dir,

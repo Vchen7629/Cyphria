@@ -1,4 +1,4 @@
-from src.preprocessing.gpu_detector import GPUDetector
+from src.product_utils.gpu_detector import GPUDetector
 
 def test_matches_bare_gpu_number():
     """ Test if extract gpu function can detect a bare gpu number like 4090"""

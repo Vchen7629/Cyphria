@@ -2,9 +2,8 @@ import logging
 import json
 from datetime import datetime
 
-
-# Central Logging for this worker service
 class StructuredLogger:
+    """Central Logging for this worker service"""
     def __init__(self, pod: str) -> None:
         self.pod_name = pod
 
@@ -16,6 +15,18 @@ class StructuredLogger:
         self.logger.addHandler(handler)
 
     def _log(self, level: str, event_type: str, message: str, **kwargs) -> str:
+        """
+        log message json object containing all relevant info in the log
+
+        Args:
+            level: either info, error, debug
+            event_type: the event (component) that triggered this
+            message: the log message describing what happened
+            **kwargs: extra arguments
+
+        Returns
+            str: the whole log json as a string
+        """
         return json.dumps(
             {
                 "timestamp": datetime.now().isoformat(),
@@ -28,12 +39,35 @@ class StructuredLogger:
             }
         )
 
-    # log levels
     def info(self, event_type: str, message: str, **kwargs) -> None:
+        """
+        Info log event
+        
+        Args:
+            event_type: the event type that triggered this
+            message: log message describing the log
+            **kwargs: extra arguments
+        """
         self.logger.info(self._log("INFO", event_type, message, **kwargs))
 
     def error(self, event_type: str, message: str, **kwargs) -> None:
+        """
+        error log event
+        
+        Args:
+            event_type: the event type that triggered this
+            message: log message describing the log
+            **kwargs: extra arguments
+        """
         self.logger.error(self._log("ERROR", event_type, message, **kwargs))
 
     def debug(self, event_type: str, message: str, **kwargs) -> None:
+        """
+        debug log event
+        
+        Args:
+            event_type: the event type that triggered this
+            message: log message describing the log
+            **kwargs: extra arguments
+        """
         self.logger.debug(self._log("DEBUG", event_type, message, **kwargs))

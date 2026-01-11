@@ -1,35 +1,43 @@
-import praw  # type: ignore
-from datetime import datetime
+from datetime import datetime, timezone
 from pydantic import BaseModel
-from ..middleware.logger import StructuredLogger
+from praw.models import Comment
 
-
-# This pydantic class implements a type interface
-# for processed reddit posts
-class RedditPost(BaseModel):
-    body: str  # full body (title + selftext)
+# Pydantic class for reddit comments
+class RedditComment(BaseModel):
+    comment_id: str
+    comment_body: str
     subreddit: str
+    detected_products: list[str]
     timestamp: datetime
+    score: int
+    author: str
     post_id: str
 
+def extract_relevant_fields(comment: Comment, detected_products: list[str]) -> RedditComment:
+    """
+    Extract relevant data fields from reddit comment to
+    reduce amount of data being sent to data pipeline
+    
+    Args:
+        comment: PRAW reddit comment object containing all data fields
+        detected_products: List of product strings found in the comment text
 
-# Python Function to extract relevant data from reddit
-# posts before sending to the kafka producer
-def process_post(apiRes: praw.models.Submission, logger: StructuredLogger) -> RedditPost:
-    title = apiRes.title or ""
-    selftext = apiRes.selftext or ""
-    fullBody = title + " " + selftext
-
-    if fullBody == " ":
-        logger.error(
-            event_type="data_ingestion",
-            message="Post Missing Body Text",
-            post_id=apiRes.id,
-        )
-
-    return RedditPost(
-        body=fullBody,
-        subreddit=apiRes.subreddit.display_name,
-        timestamp=apiRes.created_utc,
-        post_id=apiRes.id,
+    Returns
+        comment_id: unique id for each comment
+        comment_body: comment text
+        subreddit: the subreddit the post is from
+        timestamp: timestamp converted from posix timestamp to utc
+        score: total score of the reddit comment (upvotes - downvotes)
+        author: the comment poster name
+        post_id: id linking each comment to the parent reddit post
+    """
+    return RedditComment(
+        comment_id=comment.id,
+        comment_body=comment.body,
+        subreddit=comment.subreddit.display_name,
+        detected_products=detected_products,
+        timestamp=datetime.fromtimestamp(comment.created_utc, tz=timezone.utc),
+        score=comment.score,
+        author=comment.author.name,
+        post_id=comment.link_id,
     )

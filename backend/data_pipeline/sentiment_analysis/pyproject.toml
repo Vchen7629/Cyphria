@@ -11,9 +11,6 @@ dependencies = [
     "protobuf>=6.32.1",
     "tiktoken>=0.12.0",
     "sentencepiece>=0.2.1",
-    "mypy>=1.18.2",
-    "ruff>=0.14.0",
-    "pytest>=8.4.2",
 ]
 
 [tool.uv.sources]
@@ -24,10 +21,20 @@ name = "pytorch-cu124"
 url = "https://download.pytorch.org/whl/cu124"
 explicit = true
 
-[tool.mypy]
-python_version = "3.13"
-check_untyped_defs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-warn_return_any = true
-warn_unused_ignores = true
+[tool.pyrefly]
+python-version = "3.13"
+untyped-def-behavior = "check-and-infer-return-any"
+search-path = ["."] # so pyrefly knows we are running from ingestion folder not ingestion/src
+
+[tool.pyrefly.errors]
+unannotated-parameter = "error"
+unannotated-return = "error"
+unannotated-attribute = "error"
+implicit-any = "error"
+
+[dependency-groups]
+dev = [
+    "pyrefly>=0.47.0",
+    "pytest>=9.0.2",
+    "ruff>=0.14.11",
+]

@@ -1,5 +1,6 @@
-from ..config.kafka import KAFKA_SETTINGS_PRODUCER
-from ..middleware.logger import StructuredLogger
+from src.core.kafka_config import KAFKA_SETTINGS_PRODUCER
+from src.core.logger import StructuredLogger
+from src.components.pub_handler import pub_handler
 from confluent_kafka import Producer, KafkaError, Message  # type: ignore
 
 # Class responsible for sending messages to a kafka topic
@@ -34,9 +35,23 @@ class KafkaProducer:
             )
 
     # Publish the message locally
-    def produce(self, topic: str, key: list[str], value: tuple[str, int]) -> None:
-        self.producer.produce(
-            topic=topic, key=key, value=value, callback=self.kafka_message_log_handler
+    def produce(self, topic: str, comment_id: str, processed_msg: dict[str, str | int]) -> None:
+        """
+        Call pub handler to publish a message to the topic with error handling
+
+        Args:
+            topic: the kafka topic to publish the msg to
+            comment_id: comment id string
+            processed_msg: dictionary containing the comment_id, product name, and sentiment score
+
+        """
+        pub_handler(
+            producer=self.producer,
+            topic=topic,
+            message=processed_msg,
+            postID=comment_id,
+            error_topic="topic-classified-dlq",
+            logger=self.structured_logger
         )
 
     # Call this method after produce to actually process

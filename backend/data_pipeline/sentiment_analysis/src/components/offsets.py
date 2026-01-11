@@ -1,7 +1,7 @@
 from confluent_kafka import TopicPartition  # type: ignore
-from ..middleware.kafka_consumer import KafkaConsumer
-from ..middleware.logger import StructuredLogger
-from ..config.my_types import QueueMessage
+from src.core.kafka_consumer import KafkaConsumer
+from src.core.logger import StructuredLogger
+from src.core.types import QueueMessage
 from typing import Dict, Tuple
 
 
@@ -10,6 +10,12 @@ from typing import Dict, Tuple
 def offset_helper(
     batch: list[QueueMessage], consumer: KafkaConsumer, logger: StructuredLogger
 ) -> None:
+    """
+    Helper function for commiting offsets to kafka
+
+    Args:
+        batch: a batch
+    """
     partition_offsets: Dict[Tuple[str, int], int] = {}
 
     for msg in batch:

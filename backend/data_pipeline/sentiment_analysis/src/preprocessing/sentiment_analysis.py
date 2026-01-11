@@ -1,13 +1,18 @@
 import torch.nn.functional as F
 import torch
 from typing import List
+from concurrent.futures import ThreadPoolExecutor
+from transformers import (
+    AutoTokenizer,
+    AutoModelForSequenceClassification
+)
 
 class Aspect_Based_Sentiment_Analysis:
-    def __init__(  # type: ignore[no-untyped-def]
+    def __init__(
         self,
-        tokenizer,
-        model,
-        executor,
+        tokenizer: AutoTokenizer,
+        model: AutoModelForSequenceClassification,
+        executor: ThreadPoolExecutor,
         device: str = "cpu",
         model_batch_size: int = 64,
     ) -> None:
@@ -33,15 +38,25 @@ class Aspect_Based_Sentiment_Analysis:
 
         return outputs
 
-    def SentimentAnalysis(self, pairs: List[tuple[str, str]]) -> list[tuple[str, int]]:
-        if not pairs:
+    def SentimentAnalysis(self, product_pairs: List[tuple[str, str]]) -> list[tuple[str, int]]:
+        """
+        Public method for running ABSA sentiment analysis. Does sentiment analysis of the sentiments
+        of the comment torwards a product in the comment
+        
+        Args:
+            product_pairs: a list of product pair tuples (comment_text, product)
+
+        Returns:
+            a list of tuples of the sentiment score torwards the product in the comment
+        """
+        if not product_pairs:
             return []
 
         all_results = []
-        num_pairs = len(pairs)
+        num_pairs = len(product_pairs)
 
         for i in range(0, num_pairs, self.model_batch_size):
-            current_batch = pairs[i : i + self.model_batch_size]
+            current_batch = product_pairs[i : i + self.model_batch_size]
 
             sentences = [x[0] for x in current_batch]
             aspects = [x[1] for x in current_batch]

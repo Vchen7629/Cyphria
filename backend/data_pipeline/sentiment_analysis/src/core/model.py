@@ -3,14 +3,14 @@ from transformers import (
     AutoModelForSequenceClassification,
 )
 
-from typing import Optional, Tuple
+from typing import Tuple
 
 # yangheng/deberta-v3-base-absa-v1.1
 
 
 def sentiment_analysis_model(
     model_name: str,
-) -> Optional[Tuple[AutoTokenizer, AutoModelForSequenceClassification]]:
+) -> Tuple[AutoTokenizer, AutoModelForSequenceClassification]:
     try:
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForSequenceClassification.from_pretrained(model_name)

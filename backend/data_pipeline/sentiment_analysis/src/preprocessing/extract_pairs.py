@@ -1,23 +1,28 @@
 # Helper function for extracting Relevant fields for ABSA
-from typing import List
 import json
-from confluent_kafka import Message  # type: ignore
 
+def extract_pairs(post_body: str) -> list[tuple[str, str]]:
+    """
+    Create pairs of (comment_body, product_name) for each detected product in the kafka message
+    so we can run absa sentiment analysis on each product properly
 
-# This extracts the reddit post text and keywords and adds the pair of sentence
-# and keyword for every keyword associated with the post
-def extract_pairs(msg: Message) -> List[tuple[str, str]]:
-    postBody = json.loads(msg.value())
+    Args:
+        post_body: the message body string we are extracting comment body and product name from
 
-    reddit_post = postBody.get("body", "").strip()
-    keywords = postBody.get("keywords", [])
+    Returns:
+        a list of all the tuple pairs of (comment body, product_name)
+    """
+    postBody = json.loads(post_body)
 
-    if not reddit_post or not keywords:
+    comment_text: str = postBody.get("comment_body", "").strip()
+    product_list: list[str] = postBody.get("detected_products", [])
+
+    if not comment_text or not product_list:
         return []
 
     batch = []
 
-    for kw in keywords:
-        batch.append((reddit_post, kw))
+    for product in product_list:
+        batch.append((comment_text, product))
 
     return batch

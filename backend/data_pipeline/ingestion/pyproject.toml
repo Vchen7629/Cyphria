@@ -5,13 +5,14 @@ description = "Worker Service in charge of taking in data from reddit api and se
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "confluent-kafka>=2.11.1",
     "dotenv>=0.9.9",
     "emoji>=2.15.0",
     "langdetect>=1.0.9",
     "praw>=7.8.1",
+    "psycopg[binary]>=3.3.2",
+    "psycopg-pool>=3.3.0",
     "pydantic>=2.11.10",
-    "testcontainers[kafka]>=4.13.2",
+    "pydantic-settings>=2.12.0",
 ]
 
 [tool.pyrefly]
@@ -30,5 +31,6 @@ dev = [
     "pyrefly>=0.47.0",
     "pytest>=9.0.2",
     "ruff>=0.14.11",
+    "testcontainers[postgres]>=4.14.0",
 ]
 

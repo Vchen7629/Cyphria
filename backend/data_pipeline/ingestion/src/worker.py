@@ -31,33 +31,31 @@ class Worker:
 
     def _fetch_all_posts(self) -> list[Submission]:
         """
-        Fetch posts from all configured subreddits
-        
-        Returns:
-           all_posts: list containing reddit post submission objects 
-        """
-        try:
-            all_posts = []
+        Fetch posts from all configured subreddits with per-subreddit error handling
 
-            for subreddit in self.subreddits:
+        Returns:
+           all_posts: list containing reddit post submission objects
+        """
+        all_posts = []
+
+        for subreddit in self.subreddits:
+            try:
                 posts = fetch_post_delayed(self.reddit_client, subreddit, self.logger)
                 if posts:
                     all_posts.extend(posts)
-            
-            return all_posts
+            except prawcore.exceptions.ServerError as e:
+                self.logger.error(
+                    event_type="Subreddit Fetch",
+                    message=f"Reddit API server error for r/{subreddit}: {e}"
+                )
+            except Exception as e:
+                self.logger.error(
+                    event_type="Subreddit Fetch",
+                    message=f"Failed to fetch from r/{subreddit}: {e}"
+                )
+                # python will automatically continue the loop if the exception as thrown
 
-        except prawcore.exceptions.ServerError:  # reddit api server error handling
-            self.logger.error(
-                event_type="Reddit Api",
-                message="Server Error",
-            )
-            return []
-        except Exception as e:
-            self.logger.error(
-                event_type="Reddit Api",
-                message=f"Post Fetch Error: {e}",
-            )
-            return []
+        return all_posts
 
     def _process_comment(self, comment: Comment) -> RedditComment | None:
         """
@@ -151,6 +149,6 @@ class Worker:
         if batch_comments:
             self._batch_insert_to_db(batch_comments)
 
-if __name__ == "__main__":
+if __name__ == "__main__":#
     for i in range(1):
         Worker().main()

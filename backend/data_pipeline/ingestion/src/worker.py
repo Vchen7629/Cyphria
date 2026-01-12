@@ -6,8 +6,8 @@ from src.preprocessing.relevant_fields import extract_relevant_fields, RedditCom
 from src.preprocessing.url_remover import remove_url
 from src.preprocessing.demojify import demojify
 from src.preprocessing.is_valid_comment import is_valid_comment
-from src.product_utils.gpu_detector import GPUDetector
-from src.product_utils.gpu_normalization import GPUNameNormalizer
+from src.product_utils.detector_factory import DetectorFactory
+from src.product_utils.normalizer_factory import NormalizerFactory
 from src.core.reddit_client_instance import createRedditClient
 from src.preprocessing.check_english import detect_english
 from src.core.logger import StructuredLogger
@@ -25,8 +25,8 @@ class Worker:
         self.reddit_client: Reddit = createRedditClient()
         self.category = settings.product_category
         self.subreddits: list[str] = category_to_subreddit_mapping(self.logger, self.category)
-        self.gpu_detector = GPUDetector()
-        self.gpu_normalizer = GPUNameNormalizer()
+        self.detector = DetectorFactory.get_detector(self.category)
+        self.normalizer = NormalizerFactory
         self.db_pool = create_connection_pool()
 
     def _fetch_all_posts(self) -> list[Submission]:
@@ -73,11 +73,11 @@ class Worker:
             return None
         
         # if the comment doesnt contain a gpu name or number we should skip it
-        if not self.gpu_detector.contains_gpu(comment.body):
+        if not self.detector.contains_product(comment.body):
             return None
         
-        gpus_in_comment: list[str] = self.gpu_detector.extract_gpus(comment.body)
-        normalized_gpus: list[str] = self.gpu_normalizer.normalize_product_list(gpus_in_comment)
+        gpus_in_comment: list[str] = self.detector.extract_products(comment.body)
+        normalized_gpus: list[str] = self.normalizer.normalize(self.category, gpus_in_comment)
 
         # extracting only relevant parts of the comment api res
         extracted: RedditComment = extract_relevant_fields(comment, normalized_gpus)

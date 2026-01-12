@@ -163,7 +163,7 @@ class GPUNameNormalizer:
 
         return self._format_name(brand, model, brand_prefix, variant)
     
-    def normalize_product_list(self, detected_products: list[str]) -> list[str]:
+    def normalize_gpu_list(self, detected_products: list[str]) -> list[str]:
         """
         Normalize a list of detected GPU names to canonical format
 

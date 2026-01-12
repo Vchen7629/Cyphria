@@ -4,6 +4,7 @@ from praw.models import Comment
 
 # Pydantic class for reddit comments
 class RedditComment(BaseModel):
+    comment_id: str
     comment_body: str
     subreddit: str
     detected_products: list[str]
@@ -22,6 +23,7 @@ def extract_relevant_fields(comment: Comment, detected_products: list[str]) -> R
         detected_products: List of product strings found in the comment text
 
     Returns
+        comment_id: the comment unique id
         comment_body: comment text
         subreddit: the subreddit the post is from
         timestamp: timestamp converted from posix timestamp to utc
@@ -30,6 +32,7 @@ def extract_relevant_fields(comment: Comment, detected_products: list[str]) -> R
         post_id: id linking each comment to the parent reddit post
     """
     return RedditComment(
+        comment_id=comment.id,
         comment_body=comment.body,
         subreddit=comment.subreddit.display_name,
         detected_products=detected_products,

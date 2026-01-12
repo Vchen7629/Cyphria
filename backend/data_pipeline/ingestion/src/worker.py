@@ -1,6 +1,7 @@
 from src.utils.fetch_post import fetch_post_delayed
 from src.utils.fetch_comments import fetch_comments
 from src.utils.export_csv import ExportCSV
+from src.utils.category_to_subreddit_mapping import category_to_subreddit_mapping
 from src.preprocessing.relevant_fields import extract_relevant_fields, RedditComment
 from src.preprocessing.url_remover import remove_url
 from src.preprocessing.demojify import demojify
@@ -8,26 +9,25 @@ from src.preprocessing.is_valid_comment import is_valid_comment
 from src.product_utils.gpu_detector import GPUDetector
 from src.product_utils.gpu_normalization import GPUNameNormalizer
 from src.core.reddit_client_instance import createRedditClient
-from src.core.kafka_producer import KafkaClient
 from src.preprocessing.check_english import detect_english
 from src.core.logger import StructuredLogger
+from src.core.settings_config import settings
+from src.db_utils.conn import create_connection_pool
+from src.db_utils.queries import batch_insert_raw_comments
 from praw.models import Submission, Comment
 from praw import Reddit
-import json
 import prawcore
 
 
 class Worker:
-    def __init__(
-        self,
-        kafka_client: KafkaClient | None = None,  # Dependency Injection Kafka Client for Testing
-    ) -> None:
+    def __init__(self) -> None:
         self.logger = StructuredLogger(pod="idk")
-        self.kafka_producer = kafka_client or KafkaClient(self.logger, bootstrap_server="localhost:9092")
         self.reddit_client: Reddit = createRedditClient()
-        self.subreddits: list[str] = ["nvidia", "amd", "buildapc", "gamingpc", "pcbuild", "hardware"]
+        self.category = settings.product_category
+        self.subreddits: list[str] = category_to_subreddit_mapping(self.logger, self.category)
         self.gpu_detector = GPUDetector()
         self.gpu_normalizer = GPUNameNormalizer()
+        self.db_pool = create_connection_pool()
 
     def _fetch_all_posts(self) -> list[Submission]:
         """
@@ -91,6 +91,7 @@ class Worker:
             return None
         
         return RedditComment(
+            comment_id=extracted.comment_id,
             comment_body=demojified,
             subreddit=extracted.subreddit,
             detected_products=extracted.detected_products,
@@ -99,18 +100,38 @@ class Worker:
             author=extracted.author,
             post_id=extracted.post_id
         )
-    
-    def _publish_to_kafka(self, processed_comment: RedditComment) -> None:
-        """Publish a processed comment to kafka"""
-        self.kafka_producer.send_message(
-            topic="raw-data",
-            message_body=json.loads(processed_comment.model_dump_json()),
-            postID=processed_comment.comment_id,
-        )
-            
-    def post_message(self) -> None:
+
+    def _batch_insert_to_db(self, comment_list: list[RedditComment]) -> None:
+        """
+        Method for taking in a batch of valid comments, converting it into a dict, 
+        and batch writing to PG table
+
+        Args:
+            comment_list: list of reddit comment
+        """
+        # Convert to dict format expected by batch_insert
+        comment_dicts = [
+            {
+                'comment_id': comment.comment_id,
+                'post_id': comment.post_id,
+                'comment_body': comment.comment_body,
+                'detected_products': comment.detected_products,
+                'subreddit': comment.subreddit,
+                'author': comment.author,
+                'score': comment.score,
+                'created_utc': comment.timestamp,
+                'category': self.category
+            }
+            for comment in comment_list
+        ]
+
+        with self.db_pool.connection() as conn:
+            batch_insert_raw_comments(conn, comment_dicts)
+
+    def main(self) -> None:
         """Main orchestrator function: fetch, process, and publish comments"""
         all_posts = self._fetch_all_posts()
+        batch_comments = []
                     
         for post in all_posts:
             comments: list[Comment] = fetch_comments(post, self.logger)
@@ -120,23 +141,16 @@ class Worker:
                 if not processed_comment:
                     continue
 
-                ExportCSV(
-                    processed_comment.comment_id,
-                    processed_comment.comment_body,
-                    processed_comment.subreddit,
-                    processed_comment.detected_products, 
-                    processed_comment.timestamp, 
-                    processed_comment.author, 
-                    processed_comment.score, 
-                    processed_comment.post_id
-                )
-                
-                self._publish_to_kafka(processed_comment)
+                batch_comments.append(processed_comment)
 
-        print("flushing")
-        self.kafka_producer.flush()
+                if len(batch_comments) >= 100:
+                    self._batch_insert_to_db(batch_comments)
+                    batch_comments = []
 
+        # this ensures remaining comments after loops are written to the db
+        if batch_comments:
+            self._batch_insert_to_db(batch_comments)
 
 if __name__ == "__main__":
     for i in range(1):
-        Worker().post_message()
+        Worker().main()

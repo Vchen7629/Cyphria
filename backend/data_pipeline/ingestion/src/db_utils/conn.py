@@ -1,4 +1,3 @@
-import os
 from psycopg_pool import ConnectionPool
 from src.core.settings_config import Settings
 
@@ -23,4 +22,4 @@ def create_connection_pool(min_size: int = 1, max_size: int = 10) -> ConnectionP
         f"password={settings.db_pass} "
     )
 
-    return ConnectionPool(conninfo=conninfo, min_size=min_size, max_size=max_size)     
+    return ConnectionPool(conninfo=conninfo, min_size=min_size, max_size=max_size, open=True)     

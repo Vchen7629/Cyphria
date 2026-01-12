@@ -124,7 +124,7 @@ class Worker:
         ]
 
         with self.db_pool.connection() as conn:
-            batch_insert_raw_comments(conn, comment_dicts)
+            batch_insert_raw_comments(conn, comment_dicts, logger=self.logger)
 
     def main(self) -> None:
         """Main orchestrator function: fetch, process, and publish comments"""

@@ -82,8 +82,6 @@ def batch_insert_product_sentiment(conn: psycopg.Connection, sentiments: list[Pr
         cursor.executemany(query, [s.model_dump() for s in sentiments])
         rows_inserted = cursor.rowcount
 
-    conn.commit()
-
     return rows_inserted
 
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=structured_logger)
@@ -112,7 +110,5 @@ def mark_comments_processed(conn: psycopg.Connection, comment_ids: list[str]) ->
     with conn.cursor() as cursor:
         cursor.execute(query, (comment_ids,))
         rows_updated = cursor.rowcount
-
-    conn.commit()
 
     return rows_updated

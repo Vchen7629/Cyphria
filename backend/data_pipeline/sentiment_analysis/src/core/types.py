@@ -1,12 +1,14 @@
-from typing import TypedDict
+from pydantic import BaseModel
+from datetime import datetime
 
-class QueueMessage(TypedDict):
-    topic: str
-    partition: int
-    offset: int
-    postID: str
-    postBody: str
-    subreddit: str
-    timestamp: str  # ISO format datetime string
-    score: int
-    author: str
+class UnprocessedComment(BaseModel):
+    comment_id: str
+    comment_body: str
+    detected_products: list[str]
+    created_utc: datetime
+
+class ProductSentiment(BaseModel):
+    comment_id: str
+    product_name: str
+    sentiment_score: float | None
+    created_utc: datetime

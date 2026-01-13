@@ -117,6 +117,9 @@ def test_transaction_rollback_on_error(db_connection: psycopg.Connection) -> Non
 
     batch_insert_product_sentiment(db_connection, [sentiment])
 
+    # Commit the first insert so second error insert doesnt affect first valid insert
+    db_connection.commit()
+
     invalid_sentiment = ProductSentiment(
         comment_id='invalid',
         product_name='rtx 4090',

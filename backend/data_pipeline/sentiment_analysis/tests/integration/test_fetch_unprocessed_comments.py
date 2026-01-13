@@ -1,24 +1,8 @@
 from typing import Any
 import psycopg
-import pytest
 from datetime import datetime, timezone
 
 from src.db_utils.queries import fetch_unprocessed_comments
-
-@pytest.fixture
-def single_comment() -> dict[str, Any]:
-    """Fixture for single comment instance"""
-    return {
-        'comment_id': 'test_comment_1',
-        'post_id': 'test_post_1',
-        'comment_body': 'This is a test comment about RTX 4090',
-        'detected_products': ['rtx 4090'],
-        'subreddit': 'nvidia',
-        'author': 'test_user',
-        'score': 42,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
-    }
 
 def test_fetch_single_comment(db_connection: psycopg.Connection, single_comment: dict[str, Any]) -> None:
     """Fetching a single comment from the database should return it."""

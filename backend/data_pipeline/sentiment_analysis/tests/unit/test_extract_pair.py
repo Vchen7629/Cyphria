@@ -1,51 +1,60 @@
-import json
 from src.preprocessing.extract_pairs import extract_pairs
-
-
-# Mocking Kafka Message
-class MockMessage:
-    def __init__(self, value: dict[str, str | list[str]]) -> None:
-        self._value = json.dumps(value).encode("utf-8")
-
-    def value(self) -> bytes:
-        return self._value
-
+from src.core.types import UnprocessedComment
+from datetime import datetime, timezone
 
 def test_normal() -> None:
-    """mock message with the body and product list"""
-    msg = MockMessage(
-        value={"comment_body": "This is test post about cats and dogs", "detected_products": ["cats", "dogs"]}
+    """Test with valid comment body and product list"""
+    unprocessed_comment = UnprocessedComment(
+        comment_id="idk123",
+        comment_body="This is test post about cats and dogs",
+        detected_products=["cats", "dogs"],
+        created_utc=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc) 
     )
 
-    result = extract_pairs(msg.value().decode("utf-8"))
+    result = extract_pairs(unprocessed_comment)
 
     assert result == [
-        ("This is test post about cats and dogs", "cats"),
-        ("This is test post about cats and dogs", "dogs"),
+        ("idk123", "This is test post about cats and dogs", "cats", datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)),
+        ("idk123", "This is test post about cats and dogs", "dogs", datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)),
     ]
+
 
 def test_no_comment_body() -> None:
     """No comment body in value edge case"""
-    msg = MockMessage(value={"comment_body": "", "detected_products": ["cats", "dogs"]})
+    unprocessed_comment = UnprocessedComment(
+        comment_id="idk123",
+        comment_body="",
+        detected_products=["cats", "dogs"],
+        created_utc=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc) 
+    )
 
-    result = extract_pairs(msg.value().decode("utf-8"))
+    result = extract_pairs(unprocessed_comment)
 
     assert result == []
 
 
 def test_no_detected_products() -> None:
     """No detected products list in value edge case"""
-    msg = MockMessage(value={"comment_body": "This is test post about cats and dogs", "detected_products": []})
+    unprocessed_comment = UnprocessedComment(
+        comment_id="idk123",
+        comment_body="This is test post about cats and dogs",
+        detected_products=[],
+        created_utc=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+    )
 
-    result = extract_pairs(msg.value().decode("utf-8"))
+    result = extract_pairs(unprocessed_comment)
 
     assert result == []
 
-
 def test_no_comment_body_or_detected_products() -> None:
-    """No comment body or detected_product list in mock message edge case"""
-    msg = MockMessage(value={"comment_body": "", "detected_products": []})
+    """No comment body or detected_product list edge case"""
+    unprocessed_comment = UnprocessedComment(
+        comment_id="idk123",
+        comment_body="",
+        detected_products=[],
+        created_utc=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc) 
+    )
 
-    result = extract_pairs(msg.value().decode("utf-8"))
+    result = extract_pairs(unprocessed_comment)
 
     assert result == []

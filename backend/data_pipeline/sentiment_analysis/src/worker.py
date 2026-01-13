@@ -1,83 +1,183 @@
+from src.core.types import UnprocessedComment, ProductSentiment
 from src.core.logger import StructuredLogger
-from src.core.kafka_consumer import KafkaConsumer
-from src.core.kafka_producer import KafkaProducer
 from src.core.model import sentiment_analysis_model
-from src.core.types import QueueMessage
+from src.core.settings_config import Settings
 from src.preprocessing.sentiment_analysis import Aspect_Based_Sentiment_Analysis
-from src.components.queue import bounded_internal_queue
-from src.components.batch import batch
-from src.components.offsets import offset_helper
-from queue import Queue
-from threading import Thread
+from src.preprocessing.extract_pairs import extract_pairs
+from src.db_utils.conn import create_connection_pool
+from src.db_utils.queries import (
+    fetch_unprocessed_comments,
+    batch_insert_product_sentiment,
+    mark_comments_processed
+)
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
+import time
+import signal
 
 class StartService:
     def __init__(self) -> None:
-        self.structured_logger = StructuredLogger(pod="idk2")
-        self.consumer = KafkaConsumer(topic="raw-data", logger=self.structured_logger)
-        self.producer = KafkaProducer(logger=self.structured_logger)
-        self.queue: Queue[QueueMessage] = Queue(maxsize=1000)
+        self.settings = Settings()
+        self.structured_logger = StructuredLogger(pod="sentiment-analysis-worker")
         self.executor = ThreadPoolExecutor(max_workers=1)
+        self.sentiment_batch_size: int = 64
+        self.shutdown_requested: bool = False
+
+        signal.signal(signal.SIGTERM, self._signal_handler)
+        signal.signal(signal.SIGINT, self._signal_handler)
+
+        self._database_conn_lifespan()
+        self._initialize_absa_model()
+
+        self.structured_logger.info(event_type="sentiment_analysis startup", message="Worker init complete")
+
+    def _database_conn_lifespan(self) -> None:
+        """
+        Method for handling database connection lifespan including creating connection pool,
+        and checking the health
+        """
+        self.structured_logger.info(event_type="sentiment_analysis startup", message="Creating database conenction pool")
+        self.db_pool = create_connection_pool()
+
+        # Perform health check for db connection on startup
+        self.structured_logger.info(event_type="sentiment_analysis startup", message="Checking Database health check...")
+        try:
+            with self.db_pool.connection() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("SELECT 1")
+                    cursor.fetchone()
+                self.structured_logger.info(event_type="sentiment_analysis startup", message="Database health check passed")
+        except Exception as e:
+            self.structured_logger.error(event_type="sentiment_analysis startup", message=f"Database health check failed: {e}")
+            self.db_pool.close()
+            raise 
+  
+    def _initialize_absa_model(self) -> None:
+        """Method for initializing the ABSA sentiment analysis model"""
+        self.structured_logger.info(event_type="sentiment_analysis startup", message="loading ABSA model")
+
         model_data = sentiment_analysis_model("yangheng/deberta-v3-base-absa-v1.1")
         tokenizer, model = model_data
-        self.ABSA = Aspect_Based_Sentiment_Analysis(tokenizer, model, self.executor)
+        self.ABSA = Aspect_Based_Sentiment_Analysis(tokenizer, model, self.executor, model_batch_size=self.sentiment_batch_size)
+
+    def _signal_handler(self, signum: int, _frame: object) -> None:
+        """
+        Signal handler for graceful shutdown
+
+        Args:
+            signum: Signal number
+            _frame: Current stack frame (unused but required by signal handler signature)
+        """
+        signal_name = signal.Signals(signum).name
+        self.structured_logger.info(event_type="sentiment_analysis shutdown", message=f"Received {signal_name} signal, initiating graceful shutdown")
+        self.shutdown_requested = True
+        
+    def _cleanup(self) -> None:
+        """Cleanup resources on shutdown"""
+        self.structured_logger.info(event_type="sentiment_analysis shutdown", message="Cleaning up resources")
+
+        # Close thread pool executor
+        self.executor.shutdown(wait=True)
+        self.structured_logger.info(event_type="sentiment_analysis shutdown", message="Thread pool executor closed")
+
+        # Close database connection pool
+        self.db_pool.close()
+        self.structured_logger.info(event_type="sentiment_analysis shutdown", message="Database connection pool closed")
+
+        self.structured_logger.info(event_type="sentiment_analysis shutdown", message="Shutdown complete")
+
+    def _process_sentiment_and_write_to_db(
+        self, 
+        text_product_pairs: list[tuple[str, str]],
+        enriched_pairs: list[tuple[str, str, str, datetime]],
+        comment_ids: set[str]
+    ) -> tuple[int, int]:
+        """
+        Method for taking in a list of tuples (comment_text, product_name) and doing sentiment analysis
+        and batch writing to database
+
+        Args:
+            text_product_pairs: a list of tuples (comment_text, product_name)
+            enriched_pairs: a list of tuples (comment_id, comment_body, product_name, created_utc)
+            comment_ids: a set of all unique comment ids that were processed
+
+        Returns:
+            tuple containing the number of rows inserted and rows updated
+        """
+        product_sentiments: list[ProductSentiment] = []
+
+        sentiment_results = self.ABSA.SentimentAnalysis(text_product_pairs)
+
+        # use zip to preserve comment id ordering
+        for (comment_id, _, product_name, created_utc), (_, sentiment_score) in zip(enriched_pairs, sentiment_results):
+            product_sentiments.append(ProductSentiment(
+                comment_id=comment_id,
+                product_name=product_name,
+                sentiment_score=sentiment_score,
+                created_utc=created_utc
+            ))
+
+        with self.db_pool.connection() as conn:
+            with conn.transaction():
+                rows_inserted = batch_insert_product_sentiment(conn, product_sentiments)
+                rows_updated = mark_comments_processed(conn, list(comment_ids))
+
+        return rows_inserted, rows_updated
+
+    def _process_comments(self, comments: list[UnprocessedComment]) -> tuple[int, int]:
+        """
+        Method for processing comments fetched from the postgres unprocessed_comment table
+
+        Args:
+            comments: a list of unprocessed comments
+        """
+        enriched_pairs: list[tuple[str, str, str, datetime]] = []
+        comment_ids: set[str] = set()
+
+        for comment in comments:
+            pairs = extract_pairs(comment)
+            enriched_pairs.extend(pairs)
+            if pairs:
+                comment_ids.add(comment.comment_id)
+
+        if not enriched_pairs:
+            return 0, 0
+
+        # absa sentiment analysis only needs text pairs
+        text_product_pairs = [(comment_text, product_name)
+                              for _, comment_text, product_name, _ in enriched_pairs]
+        
+        rows_inserted, rows_updated = self._process_sentiment_and_write_to_db(text_product_pairs, enriched_pairs, comment_ids)
+        
+        return rows_inserted, rows_updated
 
     def run(self) -> None:
-        t = Thread(
-            target=bounded_internal_queue,
-            kwargs={
-                "consumer": self.consumer,
-                "high_wm": 800,
-                "low_wm": 400,
-                "structured_logger": self.structured_logger,
-                "internal_queue": self.queue,
-            },
-            daemon=True,  # this makes this thread stop with main thread
-        )
-        t.start()
+        """Main worker loop that polls for unprocessed comments and processes them"""
+        try:
+            self.structured_logger.info(event_type="sentiment_analysis worker", message="Starting main worker loop")
 
-        for post_id_mappings, all_product_pairs, curr_batch in batch(self.queue, batch_size=65):
-            # Run sentiment analysis on all product pairs in batch
-            sentiment_results = self.ABSA.SentimentAnalysis(all_product_pairs)
+            while not self.shutdown_requested:
+                with self.db_pool.connection() as conn:
+                    comments = fetch_unprocessed_comments(conn, batch_size=200)
 
-            print(f"Processed {len(sentiment_results)} sentiment results from {len(post_id_mappings)} posts")
+                if not comments:
+                    if self.shutdown_requested:
+                        break
+                    time.sleep(self.settings.polling_interval)
+                    continue
 
-            # Map sentiment results back to post_ids and publish individually
-            for post_id, start_idx, end_idx, metadata in post_id_mappings:
-                # Extract sentiment results for this specific post using index range
-                post_sentiments = sentiment_results[start_idx:end_idx]
+                rows_inserted, rows_updated = self._process_comments(comments)
+                self.structured_logger.info(
+                    event_type="sentiment_analysis worker",
+                    message=f"Processed batch: {rows_inserted} sentiments inserted, {rows_updated} comments marked processed"
+                )
 
-                # Publish each sentiment result with its correct post_id and metadata
-                for product_name, sentiment_score in post_sentiments:
-                    try:
-                        # Create message payload with metadata
-                        message = {
-                            "comment_id": post_id,
-                            "product": product_name,
-                            "sentiment": sentiment_score,
-                            "subreddit": metadata["subreddit"],
-                            "timestamp": metadata["timestamp"],
-                            "score": metadata["score"],
-                            "author": metadata["author"]
-                        }
-
-                        self.producer.produce(
-                            topic="aggregated",
-                            comment_id=post_id,
-                            processed_msg=message
-                        )
-                    except Exception as e:
-                        self.structured_logger.error(
-                            event_type="Kafka publish",
-                            message=f"Error publishing sentiment for post {post_id}: {e}"
-                        )
-
-            # flush producer to ensure all messages are sent before committing offsets
-            self.producer.flush()
-
-            # Commit offsets to broker after processing is done and sent to next topic
-            offset_helper(batch=curr_batch, consumer=self.consumer, logger=self.structured_logger)
-
+        except Exception as e:
+            self.structured_logger.error(event_type="sentiment_analysis worker", message=f"Error in worker loop: {e}")
+            raise
+        finally:
+            self._cleanup()
+                
 
 if __name__ == "__main__":
     StartService().run()

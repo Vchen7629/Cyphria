@@ -12,6 +12,8 @@ class Settings(BaseSettings):
 
     # --- Injected variables by airflow ---
     product_category: str
+    time_windows: str # either 90d or all_time
+    bayesian_params: int # optional, minimum mentions threshold
 
     # --- DB Settings --- 
     db_host: str = "localhost"

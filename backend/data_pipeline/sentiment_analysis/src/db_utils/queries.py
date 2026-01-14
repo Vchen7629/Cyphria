@@ -10,13 +10,14 @@ from src.db_utils.retry import retry_with_backoff
 structured_logger = StructuredLogger(pod="idk")
 
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=structured_logger)
-def fetch_unprocessed_comments(conn: psycopg.Connection, batch_size: int = 100) -> list[UnprocessedComment]:
+def fetch_unprocessed_comments(conn: psycopg.Connection, category: str, batch_size: int = 100) -> list[UnprocessedComment]:
     """
-    Fetch a batch of unprocessed comments from the raw_comments table
+    Fetch a batch of unprocessed comments for a category from the raw_comments table
     for further processing with this worker
 
     Args:
         conn: psycopg3 database connection
+        category: the product category we are fetching the comments for
         batch_size: number of comments to fetch per batch
 
     Returns:
@@ -27,19 +28,22 @@ def fetch_unprocessed_comments(conn: psycopg.Connection, batch_size: int = 100) 
             - created_utc
     """
     query = """
-        SELECT 
+        SELECT
             comment_id,
             comment_body,
             detected_products,
-            created_utc 
-        FROM raw_comments 
+            created_utc
+        FROM raw_comments
         WHERE sentiment_processed = FALSE
+        AND UPPER(TRIM(category)) = UPPER(TRIM(%s))
         ORDER BY created_utc ASC
         LIMIT %s
     """
 
+    normalized_category = category.strip().upper()
+
     with conn.cursor(row_factory=dict_row) as cursor:
-        cursor.execute(query, (batch_size,))
+        cursor.execute(query, (normalized_category, batch_size))
         results = cursor.fetchall()
 
     return [UnprocessedComment.model_validate(row) for row in results]

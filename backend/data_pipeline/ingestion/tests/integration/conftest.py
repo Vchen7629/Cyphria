@@ -1,3 +1,8 @@
+import os
+os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
+from src.worker import Worker
+from unittest.mock import patch
+from typing import Callable
 import pytest
 import psycopg
 from testcontainers.postgres import PostgresContainer
@@ -5,12 +10,9 @@ from typing import Generator
 from psycopg_pool import ConnectionPool
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def postgres_container() -> Generator[PostgresContainer, None, None]:
-    """
-    Start a PostgreSQL container for integration tests.
-    This fixture is module-scoped so the container is reused across all tests in each module.
-    """
+    """ Start a PostgreSQL container for integration tests."""
     with PostgresContainer("postgres:16") as postgres:
         # Set up the schema
         # Convert SQLAlchemy URL to PostgreSQL URI for psycopg
@@ -68,7 +70,7 @@ def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Co
     conn.close()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, None, None]:
     """
     Create a connection pool for testing pool-based operations.
@@ -82,4 +84,44 @@ def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, 
         open=True
     )
     yield pool
+
     pool.close()
+
+@pytest.fixture(autouse=True)
+def clean_db(db_pool: ConnectionPool) -> Generator[None, None, None]:
+    """Auto-use fixture that wipes the table before each test for test isolation"""
+    with db_pool.connection() as conn:
+        # Rollback any failed transaction first
+        if conn.info.transaction_status != psycopg.pq.TransactionStatus.IDLE:
+            conn.rollback()
+
+        with conn.cursor() as cursor:
+            cursor.execute("TRUNCATE TABLE raw_comments RESTART IDENTITY CASCADE;")
+        conn.commit()
+    
+    yield
+
+@pytest.fixture
+def create_worker(db_pool: ConnectionPool) -> Generator[Callable[[], Worker], None, None]:
+    """
+    Factory fixture that creates an ingestion Worker with mocked heavy dependencies.
+    Patches _database_conn_lifespan, _cleanup, and expensive init calls, then injects the test db_pool.
+
+    Usage:
+        def test_something(create_worker):
+            worker = create_worker()
+            worker.run()
+    """
+
+    with patch.object(Worker, '_database_conn_lifespan'), \
+         patch.object(Worker, '_cleanup'), \
+         patch('src.worker.createRedditClient'), \
+         patch('src.worker.category_to_subreddit_mapping', return_value=['test_subreddit']), \
+         patch('src.worker.DetectorFactory.get_detector'):
+
+        def _create() -> Worker:
+            service = Worker()
+            service.db_pool = db_pool
+            return service
+
+        yield _create

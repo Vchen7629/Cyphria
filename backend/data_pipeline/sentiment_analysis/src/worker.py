@@ -12,7 +12,6 @@ from src.db_utils.queries import (
 )
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-import time
 import signal
 
 class StartService:
@@ -89,7 +88,7 @@ class StartService:
     def _process_sentiment_and_write_to_db(
         self, 
         text_product_pairs: list[tuple[str, str]],
-        enriched_pairs: list[tuple[str, str, str, datetime]],
+        enriched_pairs: list[tuple[str, str, str, str, datetime]],
         comment_ids: set[str]
     ) -> tuple[int, int]:
         """
@@ -109,10 +108,11 @@ class StartService:
         sentiment_results = self.ABSA.SentimentAnalysis(text_product_pairs)
 
         # use zip to preserve comment id ordering
-        for (comment_id, _, product_name, created_utc), (_, sentiment_score) in zip(enriched_pairs, sentiment_results):
+        for (comment_id, _, category, product_name, created_utc), (_, sentiment_score) in zip(enriched_pairs, sentiment_results):
             product_sentiments.append(ProductSentiment(
                 comment_id=comment_id,
                 product_name=product_name,
+                category=category,
                 sentiment_score=sentiment_score,
                 created_utc=created_utc
             ))
@@ -131,7 +131,7 @@ class StartService:
         Args:
             comments: a list of unprocessed comments
         """
-        enriched_pairs: list[tuple[str, str, str, datetime]] = []
+        enriched_pairs: list[tuple[str, str, str, str, datetime]] = []
         comment_ids: set[str] = set()
 
         for comment in comments:
@@ -145,7 +145,7 @@ class StartService:
 
         # absa sentiment analysis only needs text pairs
         text_product_pairs = [(comment_text, product_name)
-                              for _, comment_text, product_name, _ in enriched_pairs]
+                              for _, comment_text, _, product_name, _ in enriched_pairs]
         
         rows_inserted, rows_updated = self._process_sentiment_and_write_to_db(text_product_pairs, enriched_pairs, comment_ids)
         

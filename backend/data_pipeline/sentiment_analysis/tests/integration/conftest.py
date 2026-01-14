@@ -59,6 +59,7 @@ def postgres_container() -> Generator[PostgresContainer, None, None]:
                         id SERIAL PRIMARY KEY,
                         comment_id VARCHAR(50) NOT NULL,
                         product_name VARCHAR(100) NOT NULL,
+                        category VARCHAR(100) NOT NULL,
                         sentiment_score FLOAT NOT NULL,
                         created_utc TIMESTAMPTZ NOT NULL,
 

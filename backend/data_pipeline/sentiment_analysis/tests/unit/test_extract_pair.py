@@ -7,6 +7,7 @@ def test_normal() -> None:
     unprocessed_comment = UnprocessedComment(
         comment_id="idk123",
         comment_body="This is test post about cats and dogs",
+        category="Animal",
         detected_products=["cats", "dogs"],
         created_utc=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc) 
     )
@@ -14,8 +15,8 @@ def test_normal() -> None:
     result = extract_pairs(unprocessed_comment)
 
     assert result == [
-        ("idk123", "This is test post about cats and dogs", "cats", datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)),
-        ("idk123", "This is test post about cats and dogs", "dogs", datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)),
+        ("idk123", "This is test post about cats and dogs", "Animal", "cats", datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)),
+        ("idk123", "This is test post about cats and dogs", "Animal", "dogs", datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)),
     ]
 
 
@@ -24,6 +25,7 @@ def test_no_comment_body() -> None:
     unprocessed_comment = UnprocessedComment(
         comment_id="idk123",
         comment_body="",
+        category="Animal",
         detected_products=["cats", "dogs"],
         created_utc=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc) 
     )
@@ -38,6 +40,7 @@ def test_no_detected_products() -> None:
     unprocessed_comment = UnprocessedComment(
         comment_id="idk123",
         comment_body="This is test post about cats and dogs",
+        category="Animal",
         detected_products=[],
         created_utc=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
     )
@@ -51,6 +54,7 @@ def test_no_comment_body_or_detected_products() -> None:
     unprocessed_comment = UnprocessedComment(
         comment_id="idk123",
         comment_body="",
+        category="Animal",
         detected_products=[],
         created_utc=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc) 
     )

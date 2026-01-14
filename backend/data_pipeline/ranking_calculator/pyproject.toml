@@ -1,0 +1,31 @@
+[project]
+name = "ranking-calculator"
+version = "0.1.0"
+description = "Python worker service that aggregates sentiment data from product sentiment table and calculate the ranking score for each product and compute rankings and write to product_rankings table"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "psycopg>=3.3.2",
+    "psycopg-pool>=3.3.0",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.12.0",
+]
+
+[tool.pyrefly]
+python-version = "3.13"
+untyped-def-behavior = "check-and-infer-return-any"
+search-path = ["."] # so pyrefly knows we are running from ingestion folder not ingestion/src
+
+[tool.pyrefly.errors]
+unannotated-parameter = "error"
+unannotated-return = "error"
+unannotated-attribute = "error"
+implicit-any = "error"
+
+[dependency-groups]
+dev = [
+    "pyrefly>=0.48.0",
+    "pytest>=9.0.2",
+    "ruff>=0.14.11",
+    "testcontainers[postgres]>=4.14.0",
+]

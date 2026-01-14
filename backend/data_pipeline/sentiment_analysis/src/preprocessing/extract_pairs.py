@@ -1,28 +1,25 @@
-# Helper function for extracting Relevant fields for ABSA
-import json
+from src.core.types import UnprocessedComment
+from datetime import datetime
 
-def extract_pairs(post_body: str) -> list[tuple[str, str]]:
+def extract_pairs(unprocessed_comment: UnprocessedComment) -> list[tuple[str, str, str, datetime]]:
     """
-    Create pairs of (comment_body, product_name) for each detected product in the kafka message
-    so we can run absa sentiment analysis on each product properly
+    Create enriched pairs from an unprocessed comment containing all metadata
+    needed for sentiment analysis and database insertion.
 
     Args:
-        post_body: the message body string we are extracting comment body and product name from
+        unprocessed_comment: UnprocessedComment Pydantic model containing comment data
 
     Returns:
-        a list of all the tuple pairs of (comment body, product_name)
+        A list of tuples: (comment_id, comment_body, product_name, created_utc)
+        Returns empty list if comment_body is empty or no products detected
     """
-    postBody = json.loads(post_body)
-
-    comment_text: str = postBody.get("comment_body", "").strip()
-    product_list: list[str] = postBody.get("detected_products", [])
+    comment_text: str = unprocessed_comment.comment_body.strip()
+    product_list: list[str] = unprocessed_comment.detected_products
 
     if not comment_text or not product_list:
         return []
 
-    batch = []
-
-    for product in product_list:
-        batch.append((comment_text, product))
-
-    return batch
+    return [
+        (unprocessed_comment.comment_id, comment_text, product, unprocessed_comment.created_utc)
+        for product in product_list
+    ]

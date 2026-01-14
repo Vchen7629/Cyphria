@@ -76,5 +76,5 @@ def test_lost_connection_during_operation(db_connection: psycopg.Connection, sin
     db_connection.close()
 
     with pytest.raises(psycopg.OperationalError):
-        fetch_unprocessed_comments(db_connection, batch_size=10)
+        fetch_unprocessed_comments(db_connection, category='GPU', batch_size=10)
 

@@ -19,11 +19,11 @@ os.environ.setdefault("DB_NAME", "test_db")
 os.environ.setdefault("DB_USER", "test_user")
 os.environ.setdefault("DB_PASS", "test_pass")
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def postgres_container() -> Generator[PostgresContainer, None, None]:
     """
     Start a PostgreSQL container for integration tests.
-    This fixture is module-scoped so the container is reused across all tests in each module.
+    This fixture is session-scoped so one container is shared across all tests.
     """
     with PostgresContainer("postgres:16") as postgres:
         # Set up the schema
@@ -74,23 +74,21 @@ def postgres_container() -> Generator[PostgresContainer, None, None]:
 def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Connection, None, None]:
     """
     Create a fresh database connection for each test.
-    Cleans up the table after each test.
+    Cleans up tables before each test to ensure isolation.
     """
-    # Convert SQLAlchemy URL to PostgreSQL URI for psycopg
     connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")
     conn = psycopg.connect(connection_url)
+
+    # Cleanup BEFORE test to ensure clean state
+    with conn.cursor() as cursor:
+        cursor.execute("TRUNCATE TABLE product_sentiment, raw_comments RESTART IDENTITY CASCADE;")
+    conn.commit()
+
     yield conn
 
-    # Cleanup after test
-    # Only cleanup if connection is still open (some tests may close it intentionally)
     if not conn.closed:
-        # Rollback any failed transaction first
         if conn.info.transaction_status != psycopg.pq.TransactionStatus.IDLE:
             conn.rollback()
-
-        with conn.cursor() as cursor:
-            cursor.execute("TRUNCATE TABLE product_sentiment, raw_comments RESTART IDENTITY CASCADE;")
-        conn.commit()
         conn.close()
 
 
@@ -107,8 +105,6 @@ def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, 
         max_size=5,
         open=True
     )
-    yield pool
-
     with pool.connection() as conn:
         # Rollback any failed transaction first
         if conn.info.transaction_status != psycopg.pq.TransactionStatus.IDLE:
@@ -117,8 +113,11 @@ def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, 
         with conn.cursor() as cursor:
             cursor.execute("TRUNCATE TABLE product_sentiment, raw_comments RESTART IDENTITY CASCADE;")
         conn.commit()
+        
+    yield pool
 
     pool.close()
+    
 
 @pytest.fixture
 def single_comment() -> dict[str, Any]:

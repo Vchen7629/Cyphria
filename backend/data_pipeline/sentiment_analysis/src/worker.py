@@ -152,19 +152,21 @@ class StartService:
         return rows_inserted, rows_updated
 
     def run(self) -> None:
-        """Main worker loop that polls for unprocessed comments and processes them"""
+        """Main worker loop that polls for unprocessed comments for a category and processes them"""
         try:
+            category = self.settings.product_category
             self.structured_logger.info(event_type="sentiment_analysis worker", message="Starting main worker loop")
 
             while not self.shutdown_requested:
                 with self.db_pool.connection() as conn:
-                    comments = fetch_unprocessed_comments(conn, batch_size=200)
+                    comments = fetch_unprocessed_comments(conn, category, batch_size=200)
 
                 if not comments:
-                    if self.shutdown_requested:
-                        break
-                    time.sleep(self.settings.polling_interval)
-                    continue
+                    self.structured_logger.info(
+                        event_type="sentiment analysis worker",
+                        message=f"All comments processed for category {category}. Exiting"
+                    )
+                    break
 
                 rows_inserted, rows_updated = self._process_comments(comments)
                 self.structured_logger.info(

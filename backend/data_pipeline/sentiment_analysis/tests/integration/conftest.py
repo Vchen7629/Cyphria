@@ -1,10 +1,15 @@
+from unittest.mock import patch
+from typing import Callable
+from unittest.mock import MagicMock
 import pytest
 import psycopg
 from testcontainers.postgres import PostgresContainer
 from typing import Generator, Any
 from psycopg_pool import ConnectionPool
 from datetime import datetime, timezone
+from src.worker import StartService
 import os
+import time
 
 os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
 os.environ.setdefault("POLLING_INTERVAL", "5.0")
@@ -129,3 +134,44 @@ def single_comment() -> dict[str, Any]:
         'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
         'category': 'GPU'
     }
+
+@pytest.fixture
+def mock_absa() -> MagicMock:
+    """
+    Mock ABSA model that returns fixed sentiment scores.
+    Returns list of (None, sentiment_score) tuples matching input length.
+    """
+    mock = MagicMock()
+
+    def mock_sentiment_analysis(pairs: list[tuple[str, str]]) -> list[tuple[None, float]]:
+        time.sleep(0.5)
+        return [(None, 0.5) for _ in pairs]
+
+    mock.SentimentAnalysis.side_effect = mock_sentiment_analysis
+    return mock
+
+
+@pytest.fixture
+def create_worker(db_pool: ConnectionPool, mock_absa: MagicMock) -> Generator[Callable[[], Any], None, None]:
+    """
+    Factory fixture that creates a StartService with mocked heavy dependencies.
+    Patches _database_conn_lifespan, _initialize_absa_model, and _cleanup,
+    then injects the test db_pool and mock_absa.
+
+    Usage:
+        def test_something(create_worker):
+            worker = create_worker()
+            worker.run()
+    """
+
+    with patch.object(StartService, '_database_conn_lifespan'), \
+         patch.object(StartService, '_initialize_absa_model'), \
+         patch.object(StartService, '_cleanup'):
+
+        def _create() -> StartService:
+            service = StartService()
+            service.db_pool = db_pool
+            service.ABSA = mock_absa
+            return service
+
+        yield _create

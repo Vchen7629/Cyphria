@@ -44,6 +44,7 @@ def fetch_aggregated_product_scores(conn: psycopg.Connection, category: str, tim
                 COUNT(*) FILTER (WHERE sentiment_score > 0.2) AS positive_count,
                 COUNT(*) FILTER (WHERE sentiment_score < -0.2) AS negative_count,
                 COUNT(*) FILTER (WHERE sentiment_score BETWEEN -0.2 AND 0.2) AS neutral_count
+                ROUND(COUNT(*) FILTER (WHERE sentiment_score > 0.2) * 100.0 / COUNT(*))::INT AS approval_percentage
             FROM product_sentiment
             WHERE category = %(category)s
             GROUP BY product_name
@@ -60,6 +61,7 @@ def fetch_aggregated_product_scores(conn: psycopg.Connection, category: str, tim
                 COUNT(*) FILTER (WHERE sentiment_score > 0.2) AS positive_count,
                 COUNT(*) FILTER (WHERE sentiment_score < -0.2) AS negative_count,
                 COUNT(*) FILTER (WHERE sentiment_score BETWEEN -0.2 AND 0.2) AS neutral_count
+                ROUND(COUNT(*) FILTER (WHERE sentiment_score > 0.2) * 100.0 / COUNT(*))::INT AS approval_percentage            
             FROM product_sentiment
             WHERE category = %(category)s
               AND created_utc >= NOW() - %(time_window)s::INTERVAL

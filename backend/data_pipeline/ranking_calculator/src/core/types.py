@@ -10,7 +10,7 @@ class SentimentAggregate(BaseModel):
     positive_count: int
     negative_count: int
     neutral_count: int
-
+    approval_percentage: int
 
 class ProductRanking(BaseModel):
     """Data model for product ranking row to be inserted into gold layer."""

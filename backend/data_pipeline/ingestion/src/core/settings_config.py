@@ -20,6 +20,12 @@ class Settings(BaseSettings):
     db_user: str = "postgres"
     db_pass: str = ''
 
+    # --- Reddit Client ---
+    Reddit_Api_Client_ID: str
+    Reddit_Api_Client_Secret: str
+    Reddit_Account_Username: str
+    Reddit_Account_Password: str
+
     @field_validator('product_category')
     @classmethod
     def validate_category(cls, v: str) -> str:

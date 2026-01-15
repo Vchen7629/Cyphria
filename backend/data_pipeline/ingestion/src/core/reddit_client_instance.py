@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 import praw  # type: ignore
-import os
+from src.core.settings_config import Settings
 
-load_dotenv()
+settings = Settings()
 
 def createRedditClient() -> praw.Reddit:
     """
@@ -12,10 +12,10 @@ def createRedditClient() -> praw.Reddit:
         reddit: instance of praw reddit client
     """
     reddit = praw.Reddit(
-        client_id=os.getenv("Reddit-Api-Client-ID"),
-        client_secret=os.getenv("Reddit-Api-Client-Secret"),
-        username=os.getenv("Reddit-Account-Username"),
-        password=os.getenv("Reddit-Account-Password"),
+        client_id=settings.Reddit_Api_Client_ID,
+        client_secret=settings.Reddit_Api_Client_Secret,
+        username=settings.Reddit_Account_Username,
+        password=settings.Reddit_Account_Password,
         user_agent="ChangeMeClient/0.1 by u/ZephyrusDragon",
     )
 

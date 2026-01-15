@@ -5,18 +5,18 @@ def test_assign_rank_one_in_list_unsorted() -> None:
     """Rank 1 in numpy list should be assigned as true in an unsorted numpy array"""
     ranks = np.array([3, 7, 2, 1, 4, 6, 5])
 
-    assert assign_is_top_pick(ranks)[3] == True
-    assert assign_is_top_pick(ranks)[0] == False
+    assert assign_is_top_pick(ranks)[3]
+    assert not assign_is_top_pick(ranks)[0]
     assert len(assign_is_top_pick(ranks)) == 7 
 
 def test_no_rank_one_in_list() -> None:
     """Rank list with no rank 1 should be outputted as a list with no True"""
     ranks = np.array([3, 2, 4, 5])
 
-    assert assign_is_top_pick(ranks)[0] == False
-    assert assign_is_top_pick(ranks)[1] == False
-    assert assign_is_top_pick(ranks)[2] == False
-    assert assign_is_top_pick(ranks)[3] == False
+    assert not assign_is_top_pick(ranks)[0]
+    assert not assign_is_top_pick(ranks)[1]
+    assert not assign_is_top_pick(ranks)[2]
+    assert not assign_is_top_pick(ranks)[3]
     assert len(assign_is_top_pick(ranks)) == 4
 
 def test_empty_input_list() -> None:

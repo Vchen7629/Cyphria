@@ -1,7 +1,5 @@
 from datetime import timedelta
 from datetime import timezone
-from tests.integration.conftest import single_product_score_comment
-from tests.integration.conftest import db_connection
 from src.core.types import ProductScore
 from src.db_utils.queries import batch_upsert_product_score
 from datetime import datetime
@@ -80,9 +78,9 @@ def test_upsert_updates_booleans(db_connection: psycopg.Connection, single_produ
         result = cursor.fetchone()
         assert result is not None
         assert len(result) == 3
-        assert result[0] == False
-        assert result[1] == True
-        assert result[2] == True
+        assert not result[0]
+        assert result[1]
+        assert result[2]
 
 def test_upsert_updates_floats(db_connection: psycopg.Connection, single_product_score_comment: ProductScore) -> None:
     """Duplicate product score comment (product_name, time_window) with different float value should be updated"""

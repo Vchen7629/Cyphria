@@ -1,7 +1,6 @@
 from src.core.types import ProductScore
 from unittest.mock import patch
 from typing import Callable
-from unittest.mock import MagicMock
 import pytest
 import psycopg
 from testcontainers.postgres import PostgresContainer
@@ -9,7 +8,6 @@ from typing import Generator, Any
 from psycopg_pool import ConnectionPool
 from datetime import datetime, timezone
 import os
-import time
 
 os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
 os.environ.setdefault("TIME_WINDOWS", "all_time")

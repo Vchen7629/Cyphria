@@ -291,18 +291,18 @@ def test_sentiment_boundary_values(db_connection: psycopg.Connection) -> None:
 
     assert len(result) == 4
     assert result[0].product_name == 'rtx 4080'
-    assert result[0].positive_count == True
+    assert result[0].positive_count
 
     assert result[1].product_name == 'rtx 4070'
-    assert result[1].neutral_count == True
-    assert result[1].positive_count == False
+    assert result[1].neutral_count
+    assert not result[1].positive_count
     
     assert result[2].product_name == 'rtx 4090'
-    assert result[2].neutral_count == True
-    assert result[2].negative_count == False
+    assert result[2].neutral_count
+    assert not result[2].negative_count
 
     assert result[3].product_name == 'rtx 5070'
-    assert result[3].negative_count == True
+    assert result[3].negative_count
 
 def test_multiple_categories_in_database(db_connection: psycopg.Connection) -> None:
     """It should only fetch the product comments for the category specified"""

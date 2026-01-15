@@ -1,3 +1,6 @@
+import pytest
+from testcontainers.postgres import PostgresContainer
+import signal
 from typing import Callable, Any
 import threading
 from src.worker import StartService
@@ -61,6 +64,26 @@ def test_cleanup_called_on_shutdown(db_pool: ConnectionPool) -> None:
             service.run()
 
             mock_cleanup.assert_called_once()
+
+def test_cleanup_called_on_exception(db_pool: ConnectionPool) -> None:
+    """Cleanup method should be called when worker shuts down"""
+    with patch.object(StartService, '_database_conn_lifespan'), \
+         patch.object(StartService, '_initialize_absa_model'):
+
+        service = StartService()
+        service.db_pool = db_pool
+
+        mock_absa_instance = MagicMock()
+        service.ABSA = mock_absa_instance
+
+        with patch('src.worker.fetch_unprocessed_comments', return_value=[MagicMock()]), \
+             patch.object(service, '_process_comments', side_effect=RuntimeError("Processing failed")), \
+             patch.object(service, '_cleanup') as mock_cleanup:
+            with pytest.raises(RuntimeError, match="Processing failed"):
+                service.run()
+
+            mock_cleanup.assert_called_once()
+
 
 def test_no_data_loss_when_shutdown_between_batches(
     db_pool: ConnectionPool, create_worker: Callable[[], StartService]
@@ -158,3 +181,93 @@ def test_current_batch_completes_before_shutdown(db_pool: ConnectionPool, create
             assert sentiment_count is not None
             assert sentiment_count[0] == 3
         
+def test_db_pool_closed_during_cleanup(mock_absa: MagicMock) -> None:
+    """Database pool should be closed when cleanup is called"""
+    with patch.object(StartService, '_database_conn_lifespan'), \
+         patch.object(StartService, '_initialize_absa_model'):
+        worker = StartService()
+        worker.ABSA = mock_absa
+
+        mock_pool = MagicMock(spec=ConnectionPool)
+        worker.db_pool = mock_pool
+
+        mock_executor = MagicMock()
+        worker.executor = mock_executor
+
+        worker._cleanup()
+
+        mock_pool.close.assert_called_once()
+
+def test_double_cleanup_is_safe(mock_absa: MagicMock) -> None:
+    """Calling cleanup twice should not raise errors"""
+    with patch.object(StartService, '_database_conn_lifespan'), \
+         patch.object(StartService, '_initialize_absa_model'):
+        worker = StartService()
+        worker.ABSA = mock_absa
+
+        mock_pool = MagicMock(spec=ConnectionPool)
+        worker.db_pool = mock_pool
+
+        mock_executor = MagicMock()
+        worker.executor = mock_executor
+
+        worker._cleanup()
+        worker._cleanup()
+
+        assert mock_pool.close.call_count == 2
+    
+def test_pool_connections_released_on_shutdown(postgres_container: PostgresContainer) -> None:
+    """All pool connections should be released when worker shuts down"""
+    connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")
+
+    test_pool = ConnectionPool(
+        conninfo=connection_url,
+        min_size=1,
+        max_size=3,
+        open=True
+    )
+
+    try:
+        with patch.object(StartService, '_database_conn_lifespan'):
+            worker = StartService()
+            worker.db_pool = test_pool
+
+            stats_before = test_pool.get_stats()
+            assert stats_before['pool_available'] >= 0
+
+            worker._cleanup()
+
+            assert test_pool.closed
+    finally:
+        if not test_pool.closed:
+            test_pool.close()
+
+def test_multiple_signals_handled_gracefully(create_worker: Callable[[], StartService]) -> None:
+    """Multiple shutdown signals should be handled without errors"""
+    worker = create_worker()
+
+    worker._signal_handler(signal.SIGTERM, None)
+    assert worker.shutdown_requested
+
+    worker._signal_handler(signal.SIGINT, None)
+    assert worker.shutdown_requested
+
+    worker._signal_handler(signal.SIGTERM, None)
+    assert worker.shutdown_requested
+
+def test_sigterm_sets_shutdown_flag(create_worker: Callable[[], StartService]) -> None:
+    """SIGTERM signal should set shutdown requested to True"""
+    worker = create_worker()
+
+    assert not worker.shutdown_requested
+    
+    worker._signal_handler(signal.SIGTERM, None)
+    assert worker.shutdown_requested
+
+def test_sigint_sets_shutdown_flag(create_worker: Callable[[], StartService]) -> None:
+    """SIGINT signal should set shutdown requested to True"""
+    worker = create_worker()
+    assert not worker.shutdown_requested
+
+    worker._signal_handler(signal.SIGINT, None)
+    assert worker.shutdown_requested

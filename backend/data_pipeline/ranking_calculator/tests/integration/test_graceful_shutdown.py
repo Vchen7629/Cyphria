@@ -127,7 +127,7 @@ def test_pool_connections_released_on_shutdown(postgres_container: PostgresConta
         if not test_pool.closed:
             test_pool.close()
 
-def test_multiple_signals_handled_gracefully(db_pool: ConnectionPool, mock_db_conn_lifespan: Callable[[], RankingCalculatorWorker]) -> None:
+def test_multiple_signals_handled_gracefully(mock_db_conn_lifespan: Callable[[], RankingCalculatorWorker]) -> None:
     """Multiple shutdown signals should be handled without errors"""
     worker = mock_db_conn_lifespan()
 

@@ -1,3 +1,4 @@
+from testcontainers.postgres import PostgresContainer
 from src.preprocessing.relevant_fields import RedditComment
 import pytest
 from typing import Callable, Any
@@ -5,7 +6,7 @@ from src.worker import Worker
 from psycopg_pool.pool import ConnectionPool
 from unittest.mock import patch, MagicMock
 from datetime import datetime, timezone
-
+import signal
 
 def create_reddit_comment(comment_id: str) -> RedditComment:
     """Helper to create RedditComment with unique ID"""
@@ -28,12 +29,7 @@ def mock_post() -> MagicMock:
     post.id = 'test_post_1'
     return post
 
-
-def test_shutdown_flag_stops_worker_at_comment_level(
-    db_pool: ConnectionPool,
-    create_worker: Callable[[], Worker],
-    mock_post: MagicMock
-) -> None:
+def test_shutdown_flag_stops_worker_at_comment_level(create_worker: Callable[[], Worker], mock_post: MagicMock) -> None:
     """Shutdown requested flag should stop worker loop at comment iteration level"""
     service = create_worker()
 
@@ -108,10 +104,7 @@ def test_remaining_batch_saved_on_shutdown(db_pool: ConnectionPool, create_worke
             assert count[0] == 30
 
 
-def test_shutdown_stops_at_post_level(
-    db_pool: ConnectionPool,
-    create_worker: Callable[[], Worker]
-) -> None:
+def test_shutdown_stops_at_post_level(create_worker: Callable[[], Worker]) -> None:
     """Shutdown_requested flag should break out of post iteration loop"""
     service = create_worker()
 
@@ -165,3 +158,83 @@ def test_shutdown_after_batch_insert_no_duplicate_save(
             assert count is not None
             assert count[0] == 100
         
+def test_db_pool_closed_during_cleanup() -> None:
+    """Database pool should be closed when cleanup is called"""
+    with patch.object(Worker, '_database_conn_lifespan'):
+        worker = Worker()
+
+        mock_pool = MagicMock(spec=ConnectionPool)
+        worker.db_pool = mock_pool
+
+        worker._cleanup()
+
+        mock_pool.close.assert_called_once()
+
+def test_double_cleanup_is_safe() -> None:
+    """Calling cleanup twice should not raise errors"""
+    with patch.object(Worker, '_database_conn_lifespan'):
+        worker = Worker()
+
+        mock_pool = MagicMock(spec=ConnectionPool)
+        worker.db_pool = mock_pool
+
+        worker._cleanup()
+        worker._cleanup()
+
+        assert mock_pool.close.call_count == 2
+    
+def test_pool_connections_released_on_shutdown(postgres_container: PostgresContainer) -> None:
+    """All pool connections should be released when worker shuts down"""
+    connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")
+
+    test_pool = ConnectionPool(
+        conninfo=connection_url,
+        min_size=1,
+        max_size=3,
+        open=True
+    )
+
+    try:
+        with patch.object(Worker, '_database_conn_lifespan'):
+            worker = Worker()
+            worker.db_pool = test_pool
+
+            stats_before = test_pool.get_stats()
+            assert stats_before['pool_available'] >= 0
+
+            worker._cleanup()
+
+            assert test_pool.closed
+    finally:
+        if not test_pool.closed:
+            test_pool.close()
+
+def test_multiple_signals_handled_gracefully(create_worker: Callable[[], Worker]) -> None:
+    """Multiple shutdown signals should be handled without errors"""
+    worker = create_worker()
+
+    worker._signal_handler(signal.SIGTERM, None)
+    assert worker.shutdown_requested
+
+    worker._signal_handler(signal.SIGINT, None)
+    assert worker.shutdown_requested
+
+    worker._signal_handler(signal.SIGTERM, None)
+    assert worker.shutdown_requested
+
+def test_sigterm_sets_shutdown_flag(create_worker: Callable[[], Worker]) -> None:
+    """SIGTERM signal should set shutdown requested to True"""
+    worker = create_worker()
+
+    assert not worker.shutdown_requested
+    
+    worker._signal_handler(signal.SIGTERM, None)
+    assert worker.shutdown_requested
+
+def test_sigint_sets_shutdown_flag(create_worker: Callable[[], Worker]) -> None:
+    """SIGINT signal should set shutdown requested to True"""
+    worker = create_worker()
+    assert not worker.shutdown_requested
+
+    worker._signal_handler(signal.SIGINT, None)
+    assert worker.shutdown_requested

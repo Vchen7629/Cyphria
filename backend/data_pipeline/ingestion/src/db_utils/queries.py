@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Any, Optional
 import psycopg
 from src.core.logger import StructuredLogger

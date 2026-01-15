@@ -24,7 +24,7 @@ def test_supported_category_contains_product() -> None:
 
     res = factory.contains_product("i have RTX 4090, i want RTX 5090")
 
-    assert res == True
+    assert res
 
 def test_category_case_insensitivity() -> None:
     """Mixed case should still match"""
@@ -32,7 +32,7 @@ def test_category_case_insensitivity() -> None:
 
     res = factory.contains_product("i have RTX 4090")
 
-    assert res == True
+    assert res
 
 def test_white_space_category() -> None:
     """White space should still match"""
@@ -40,4 +40,4 @@ def test_white_space_category() -> None:
 
     res = factory.contains_product("i have RTX 4090")
 
-    assert res == True
+    assert res

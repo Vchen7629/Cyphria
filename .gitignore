@@ -17,3 +17,5 @@ datasets/
 
 # Kafka Streams Java files/folders
 target
+
+*.csv

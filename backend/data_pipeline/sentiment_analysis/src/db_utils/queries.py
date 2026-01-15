@@ -24,6 +24,7 @@ def fetch_unprocessed_comments(conn: psycopg.Connection, category: str, batch_si
         list of dicts with the comment metadata:
             - comment_id
             - comment_body
+            - category
             - detected_products (array)
             - created_utc
     """
@@ -31,6 +32,7 @@ def fetch_unprocessed_comments(conn: psycopg.Connection, category: str, batch_si
         SELECT
             comment_id,
             comment_body,
+            category,
             detected_products,
             created_utc
         FROM raw_comments
@@ -58,6 +60,7 @@ def batch_insert_product_sentiment(conn: psycopg.Connection, sentiments: list[Pr
         comments: list of comment dictionaries with keys:
             - comment_id (str): ID of the source comment
             - product_name (str): normalized product name
+            - category (str): the category of the product
             - sentiment_score (float): sentiment score from -1 to +1
             - created_utc (str): ISO UTC timestamp when comment was created
 
@@ -71,11 +74,13 @@ def batch_insert_product_sentiment(conn: psycopg.Connection, sentiments: list[Pr
         INSERT INTO product_sentiment (
             comment_id,
             product_name,
+            category,
             sentiment_score,
             created_utc
         ) VALUES (
             %(comment_id)s,
             %(product_name)s,
+            %(category)s,
             %(sentiment_score)s,
             %(created_utc)s
         )

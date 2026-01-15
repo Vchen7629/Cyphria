@@ -1,3 +1,4 @@
+from src.core.types import ProductScore
 from unittest.mock import patch
 from typing import Callable
 from unittest.mock import MagicMock
@@ -7,17 +8,19 @@ from testcontainers.postgres import PostgresContainer
 from typing import Generator, Any
 from psycopg_pool import ConnectionPool
 from datetime import datetime, timezone
-from src.worker import StartService
 import os
 import time
 
 os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
-os.environ.setdefault("POLLING_INTERVAL", "5.0")
+os.environ.setdefault("TIME_WINDOWS", "all_time")
+os.environ.setdefault("BAYESIAN_PARAMS", "10")
 os.environ.setdefault("DB_HOST", "localhost")
 os.environ.setdefault("DB_PORT", "5432")
 os.environ.setdefault("DB_NAME", "test_db")
 os.environ.setdefault("DB_USER", "test_user")
 os.environ.setdefault("DB_PASS", "test_pass")
+
+from src.worker import RankingCalculatorWorker
 
 @pytest.fixture(scope="session")
 def postgres_container() -> Generator[PostgresContainer, None, None]:
@@ -32,29 +35,6 @@ def postgres_container() -> Generator[PostgresContainer, None, None]:
         with psycopg.connect(connection_url) as conn:
             with conn.cursor() as cursor:
                 cursor.execute("""
-                    CREATE TABLE raw_comments (
-                        id SERIAL PRIMARY KEY,
-                        comment_id VARCHAR(50) UNIQUE NOT NULL,
-                        post_id VARCHAR(50) NOT NULL,
-
-                        -- Comment content
-                        comment_body TEXT NOT NULL,
-                        detected_products TEXT[] NOT NULL,
-
-                        -- Metadata
-                        subreddit VARCHAR(100) NOT NULL,
-                        author VARCHAR(100),
-                        score INT DEFAULT 0,
-                        created_utc TIMESTAMPTZ NOT NULL,
-                        category VARCHAR(50) NOT NULL,
-
-                        -- Processing tracking
-                        ingested_at TIMESTAMPTZ DEFAULT NOW(),
-                        sentiment_processed BOOLEAN DEFAULT FALSE,
-
-                        CONSTRAINT chk_detected_products CHECK (array_length(detected_products, 1) > 0)
-                    );
-
                     CREATE TABLE product_sentiment (
                         id SERIAL PRIMARY KEY,
                         comment_id VARCHAR(50) NOT NULL,
@@ -65,11 +45,37 @@ def postgres_container() -> Generator[PostgresContainer, None, None]:
 
                         UNIQUE (comment_id, product_name)
                     );
+
+                    CREATE TABLE product_rankings (
+                        id SERIAL PRIMARY KEY,
+                        product_name VARCHAR(50) NOT NULL,
+                        category VARCHAR(100) NOT NULL,
+                        time_window VARCHAR(20) NOT NULL,
+
+                        rank INTEGER NOT NULL,
+                        grade VARCHAR(5),
+
+                        bayesian_score DOUBLE PRECISION NOT NULL,
+                        avg_sentiment DOUBLE PRECISION NOT NULL,
+                        approval_percentage INT,
+
+                        mention_count INTEGER NOT NULL,
+                        positive_count INTEGER,
+                        negative_count INTEGER,
+                        neutral_count INTEGER,
+
+                        is_top_pick BOOLEAN DEFAULT FALSE,
+                        is_most_discussed BOOLEAN DEFAULT FALSE,
+                        has_limited_data BOOLEAN DEFAULT FALSE,
+
+                        calculation_date DATE NOT NULL,
+
+                        UNIQUE(product_name, time_window)
+                    )
                 """)
             conn.commit()
 
         yield postgres
-
 
 @pytest.fixture
 def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Connection, None, None]:
@@ -82,7 +88,7 @@ def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Co
 
     # Cleanup BEFORE test to ensure clean state
     with conn.cursor() as cursor:
-        cursor.execute("TRUNCATE TABLE product_sentiment, raw_comments RESTART IDENTITY CASCADE;")
+        cursor.execute("TRUNCATE TABLE product_sentiment, product_rankings RESTART IDENTITY CASCADE;")
     conn.commit()
 
     yield conn
@@ -112,51 +118,18 @@ def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, 
             conn.rollback()
 
         with conn.cursor() as cursor:
-            cursor.execute("TRUNCATE TABLE product_sentiment, raw_comments RESTART IDENTITY CASCADE;")
+            cursor.execute("TRUNCATE TABLE product_sentiment, product_rankings RESTART IDENTITY CASCADE;")
         conn.commit()
         
     yield pool
 
     pool.close()
-    
 
 @pytest.fixture
-def single_comment() -> dict[str, Any]:
-    """Fixture for single comment instance"""
-    return {
-        'comment_id': 'test_comment_1',
-        'post_id': 'test_post_1',
-        'comment_body': 'This is a test comment about RTX 4090',
-        'detected_products': ['rtx 4090'],
-        'subreddit': 'nvidia',
-        'author': 'test_user',
-        'score': 42,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
-    }
-
-@pytest.fixture
-def mock_absa() -> MagicMock:
-    """
-    Mock ABSA model that returns fixed sentiment scores.
-    Returns list of (None, sentiment_score) tuples matching input length.
-    """
-    mock = MagicMock()
-
-    def mock_sentiment_analysis(pairs: list[tuple[str, str]]) -> list[tuple[None, float]]:
-        time.sleep(0.5)
-        return [(None, 0.5) for _ in pairs]
-
-    mock.SentimentAnalysis.side_effect = mock_sentiment_analysis
-    return mock
-
-
-@pytest.fixture
-def create_worker(db_pool: ConnectionPool, mock_absa: MagicMock) -> Generator[Callable[[], Any], None, None]:
+def mock_db_conn_lifespan(db_pool: ConnectionPool) -> Generator[Callable[[], Any], None, None]:
     """
     Factory fixture that creates a StartService with mocked heavy dependencies.
-    Patches _database_conn_lifespan, _initialize_absa_model, and _cleanup,
-    then injects the test db_pool and mock_absa.
+    Patches _db_conn_lifespan then injects the test db_pool
 
     Usage:
         def test_something(create_worker):
@@ -164,14 +137,43 @@ def create_worker(db_pool: ConnectionPool, mock_absa: MagicMock) -> Generator[Ca
             worker.run()
     """
 
-    with patch.object(StartService, '_database_conn_lifespan'), \
-         patch.object(StartService, '_initialize_absa_model'), \
-         patch.object(StartService, '_cleanup'):
-
-        def _create() -> StartService:
-            service = StartService()
+    with patch.object(RankingCalculatorWorker, '_db_conn_lifespan'):
+        def _create() -> RankingCalculatorWorker:
+            service = RankingCalculatorWorker()
             service.db_pool = db_pool
-            service.ABSA = mock_absa
             return service
 
         yield _create
+    
+@pytest.fixture
+def single_sentiment_comment() -> dict[str, Any]:
+    """Fixture for single sentiment comment instance"""
+    return {
+        'comment_id': 'test_comment_1',
+        'product_name': 'rtx 4090',
+        'category': 'GPU',
+        'sentiment_score': 0.89,
+        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+    }
+
+@pytest.fixture
+def single_product_score_comment() -> ProductScore:
+    """Fixture for single Product score Object"""
+    return ProductScore(
+        product_name="rtx 4090",
+        category="GPU",
+        time_window="all_time",
+        rank=1,
+        grade="S",
+        bayesian_score=0.96,
+        avg_sentiment=0.96,
+        approval_percentage=100,
+        mention_count=100,
+        positive_count=100,
+        negative_count=0,
+        neutral_count=0,
+        is_top_pick=True,
+        is_most_discussed=False,
+        has_limited_data=False,
+        calculation_date=datetime.now(timezone.utc)
+    )

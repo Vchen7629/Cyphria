@@ -1,5 +1,5 @@
+from datetime import datetime
 from pydantic import BaseModel
-from datetime import date
 
 class SentimentAggregate(BaseModel):
     """Aggregated sentiment data for a single product from product_sentiment table."""
@@ -12,8 +12,8 @@ class SentimentAggregate(BaseModel):
     neutral_count: int
     approval_percentage: int
 
-class ProductRanking(BaseModel):
-    """Data model for product ranking row to be inserted into gold layer."""
+class ProductScore(BaseModel):
+    """Data model for product score row to be inserted into gold layer."""
     product_name: str
     category: str
     time_window: str  # "90d" or "all_time"
@@ -39,4 +39,4 @@ class ProductRanking(BaseModel):
     has_limited_data: bool = False
 
     # Metadata
-    calculation_date: date
+    calculation_date: datetime

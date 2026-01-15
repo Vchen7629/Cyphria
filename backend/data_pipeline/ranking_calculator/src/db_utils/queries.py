@@ -1,6 +1,6 @@
 import psycopg
 from psycopg.rows import dict_row
-from src.core.types import SentimentAggregate, ProductRanking
+from src.core.types import SentimentAggregate, ProductScore
 from src.core.logger import StructuredLogger
 from src.db_utils.retry import retry_with_backoff
 
@@ -9,7 +9,7 @@ structured_logger = StructuredLogger(pod="idk")
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=structured_logger)
 def fetch_aggregated_product_scores(conn: psycopg.Connection, category: str, time_window: str) -> list[SentimentAggregate]:
     """
-    Fetch a aggregated sentiment scores per product for a category and time window.
+    Fetch a list of aggregated sentiment scores for a category and time window.
     Joins product sentiment with raw comments to filter by category
 
     Args:
@@ -43,7 +43,7 @@ def fetch_aggregated_product_scores(conn: psycopg.Connection, category: str, tim
                 COUNT(*) AS mention_count,
                 COUNT(*) FILTER (WHERE sentiment_score > 0.2) AS positive_count,
                 COUNT(*) FILTER (WHERE sentiment_score < -0.2) AS negative_count,
-                COUNT(*) FILTER (WHERE sentiment_score BETWEEN -0.2 AND 0.2) AS neutral_count
+                COUNT(*) FILTER (WHERE sentiment_score BETWEEN -0.2 AND 0.2) AS neutral_count,
                 ROUND(COUNT(*) FILTER (WHERE sentiment_score > 0.2) * 100.0 / COUNT(*))::INT AS approval_percentage
             FROM product_sentiment
             WHERE category = %(category)s
@@ -60,7 +60,7 @@ def fetch_aggregated_product_scores(conn: psycopg.Connection, category: str, tim
                 COUNT(*) AS mention_count,
                 COUNT(*) FILTER (WHERE sentiment_score > 0.2) AS positive_count,
                 COUNT(*) FILTER (WHERE sentiment_score < -0.2) AS negative_count,
-                COUNT(*) FILTER (WHERE sentiment_score BETWEEN -0.2 AND 0.2) AS neutral_count
+                COUNT(*) FILTER (WHERE sentiment_score BETWEEN -0.2 AND 0.2) AS neutral_count,
                 ROUND(COUNT(*) FILTER (WHERE sentiment_score > 0.2) * 100.0 / COUNT(*))::INT AS approval_percentage            
             FROM product_sentiment
             WHERE category = %(category)s
@@ -78,13 +78,13 @@ def fetch_aggregated_product_scores(conn: psycopg.Connection, category: str, tim
     return [SentimentAggregate.model_validate(row) for row in results]
 
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=structured_logger)
-def batch_upsert_product_score(conn: psycopg.Connection, sentiments: list[ProductRanking]) -> None:
+def batch_upsert_product_score(conn: psycopg.Connection, scores: list[ProductScore]) -> None:
     """
     Batch upsert multiple processed product scores to the product rankings table (gold layer).
 
     Args:
         conn: psycopg3 database connection
-        sentiments: list of product scores calculated using baysian estimate formula:
+        scores: list of product scores calculated using baysian estimate formula:
             - product_name: name of the product
             - category: the category of the product
             - time_window: time window its calculated from, either 90d or all_time
@@ -102,7 +102,7 @@ def batch_upsert_product_score(conn: psycopg.Connection, sentiments: list[Produc
             - has_limited_data: boolean marking the product having less than a threshold amount of mentions
             - calculation_date: the utc timestamp when the product was last calculated ranking for
     """
-    if not sentiments:
+    if not scores:
         return None
 
     query = """
@@ -131,4 +131,4 @@ def batch_upsert_product_score(conn: psycopg.Connection, sentiments: list[Produc
     """
 
     with conn.cursor() as cursor:
-        cursor.executemany(query, [s.model_dump() for s in sentiments])
+        cursor.executemany(query, [s.model_dump() for s in scores])

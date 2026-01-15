@@ -124,6 +124,26 @@ def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, 
     yield pool
 
     pool.close()
+
+@pytest.fixture
+def mock_db_conn_lifespan(db_pool: ConnectionPool) -> Generator[Callable[[], Any], None, None]:
+    """
+    Factory fixture that creates a StartService with mocked heavy dependencies.
+    Patches _db_conn_lifespan then injects the test db_pool
+
+    Usage:
+        def test_something(create_worker):
+            worker = create_worker()
+            worker.run()
+    """
+
+    with patch.object(RankingCalculatorWorker, '_db_conn_lifespan'):
+        def _create() -> RankingCalculatorWorker:
+            service = RankingCalculatorWorker()
+            service.db_pool = db_pool
+            return service
+
+        yield _create
     
 @pytest.fixture
 def single_sentiment_comment() -> dict[str, Any]:

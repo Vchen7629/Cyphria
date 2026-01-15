@@ -190,6 +190,7 @@ class RankingCalculatorWorker:
         """Main worker loop"""
         try:
             res = self._calculate_rankings_for_window(self.settings.product_category, self.settings.time_windows)
+            print(res)
         except Exception as e:
             self.logger.error(event_type="ranking calculator worker", message=f"Error in worker loop: {e}")
             raise

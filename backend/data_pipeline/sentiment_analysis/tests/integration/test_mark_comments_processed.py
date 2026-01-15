@@ -32,7 +32,7 @@ def test_mark_single_comment_processed(db_connection: psycopg.Connection, single
 
         result = cursor.fetchone()
         assert result is not None
-        assert result[0] == True
+        assert result[0]
 
 def test_mark_already_processed_comment(db_connection: psycopg.Connection, single_comment: dict[str, Any]) -> None:
     """Marking a already processed comment shouldnt update the database."""
@@ -62,7 +62,7 @@ def test_mark_already_processed_comment(db_connection: psycopg.Connection, singl
 
         result = cursor.fetchone()
         assert result is not None
-        assert result[0] == True
+        assert result[0]
 
 def test_mark_non_existant_comment(db_connection: psycopg.Connection, single_comment: dict[str, Any]) -> None:
     """Marking a non existant comment shouldnt update the database."""
@@ -92,7 +92,7 @@ def test_mark_non_existant_comment(db_connection: psycopg.Connection, single_com
 
         result = cursor.fetchone()
         assert result is not None
-        assert result[0] == False
+        assert not result[0]
 
 def test_mark_comment_in_empty_database(db_connection: psycopg.Connection) -> None:
     """Marking a comment in an empty database shouldnt update anything"""
@@ -134,7 +134,7 @@ def test_mark_existing_non_existing_comment(db_connection: psycopg.Connection) -
 
         result = cursor.fetchone()
         assert result is not None
-        assert result[0] == True
+        assert result[0]
 
         cursor.execute(
             "SELECT sentiment_processed \
@@ -144,7 +144,7 @@ def test_mark_existing_non_existing_comment(db_connection: psycopg.Connection) -
 
         result = cursor.fetchone()
         assert result is not None
-        assert result[0] == False
+        assert not result[0]
 
 def test_empty_comment_input_list(db_connection: psycopg.Connection) -> None:
     """Empty comment id input list should return 0"""
@@ -182,7 +182,7 @@ def test_duplicate_comment_ids_in_input_list(db_connection: psycopg.Connection) 
 
         result = cursor.fetchone()
         assert result is not None
-        assert result[0] == True
+        assert result[0]
 
         cursor.execute(
             "SELECT sentiment_processed \
@@ -192,7 +192,7 @@ def test_duplicate_comment_ids_in_input_list(db_connection: psycopg.Connection) 
 
         result = cursor.fetchone()
         assert result is not None
-        assert result[0] == True
+        assert result[0]
 
 def test_special_characters_in_comment_ids(db_connection: psycopg.Connection) -> None:
     """Comment IDs with special chars (quotes, backslashes, Unicode, etc) should match"""
@@ -231,7 +231,7 @@ def test_special_characters_in_comment_ids(db_connection: psycopg.Connection) ->
 
         result = cursor.fetchone()
         assert result is not None
-        assert result[0] == True
+        assert result[0]
 
         cursor.execute(
             "SELECT sentiment_processed \
@@ -241,7 +241,7 @@ def test_special_characters_in_comment_ids(db_connection: psycopg.Connection) ->
 
         result = cursor.fetchone()
         assert result is not None
-        assert result[0] == True
+        assert result[0]
 
         cursor.execute(
             "SELECT sentiment_processed \
@@ -251,4 +251,4 @@ def test_special_characters_in_comment_ids(db_connection: psycopg.Connection) ->
 
         result = cursor.fetchone()
         assert result is not None
-        assert result[0] == True
+        assert result[0]

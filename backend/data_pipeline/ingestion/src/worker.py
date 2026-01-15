@@ -1,6 +1,5 @@
 from src.utils.fetch_post import fetch_post_delayed
 from src.utils.fetch_comments import fetch_comments
-from src.utils.export_csv import ExportCSV
 from src.utils.category_to_subreddit_mapping import category_to_subreddit_mapping
 from src.preprocessing.relevant_fields import extract_relevant_fields
 from src.preprocessing.url_remover import remove_url

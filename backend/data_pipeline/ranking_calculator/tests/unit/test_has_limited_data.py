@@ -13,11 +13,11 @@ def test_assigns_badge_unsorted_list() -> None:
 
     assign = assign_has_limited_data(mention_counts, threshold=10)
 
-    assert assign[0] == False
-    assert assign[1] == True
-    assert assign[2] == False
-    assert assign[3] == False
-    assert assign[4] == False
+    assert not assign[0]
+    assert assign[1]
+    assert not assign[2]
+    assert not assign[3]
+    assert not assign[4]
     assert len(assign) == 5
 
 def test_mention_same_as_threshold() -> None:
@@ -26,9 +26,9 @@ def test_mention_same_as_threshold() -> None:
 
     assign = assign_has_limited_data(mention_counts, threshold=10)
 
-    assert assign[0] == False
-    assert assign[1] == False
-    assert assign[2] == False
+    assert not assign[0]
+    assert not assign[1]
+    assert not assign[2]
     assert len(assign) == 3
 
 def test_no_mentions() -> None:
@@ -48,8 +48,8 @@ def test_multiple_mentions_below_threshold() -> None:
 
     result = assign_has_limited_data(mention_counts, threshold=10)
 
-    assert result[0] == True
-    assert result[1] == True
-    assert result[2] == False
-    assert result[3] == False
+    assert result[0]
+    assert result[1]
+    assert not result[2]
+    assert not result[3]
     assert len(result) == 4

@@ -90,7 +90,7 @@ def test_run_endpoint_error_handling(fastapi_client: FastAPITestClient) -> None:
 
         response = fastapi_client.client.post("/worker/run", json=req_body.model_dump())
 
-        assert response.status_code == 200
+        assert response.status_code == 500
         data = response.json()
         assert data["status"] == "error"
         assert "Reddit API error" in data["error"]

@@ -1,3 +1,7 @@
+from typing import Any
+from src.api.schemas import IngestionResult
+from src.product_utils.detector_factory import ProductDetectorWrapper
+from psycopg_pool.pool import ConnectionPool
 from src.utils.fetch_post import fetch_post_delayed
 from src.utils.fetch_comments import fetch_comments
 from src.utils.category_to_subreddit_mapping import category_to_subreddit_mapping
@@ -8,7 +12,7 @@ from src.preprocessing.is_valid_comment import is_valid_comment
 from src.product_utils.detector_factory import DetectorFactory
 from src.product_utils.normalizer_factory import NormalizerFactory
 from src.core.reddit_client_instance import createRedditClient
-from src.core.types import RedditComment
+from src.api.schemas import RedditComment
 from src.preprocessing.check_english import detect_english
 from src.core.logger import StructuredLogger
 from src.core.settings_config import settings
@@ -19,66 +23,29 @@ from praw import Reddit
 import prawcore
 import signal
 
-class Worker:
-    def __init__(self) -> None:
-        self.logger = StructuredLogger(pod="data_ingestion")
-        self.shutdown_requested = False
-        signal.signal(signal.SIGTERM, self._signal_handler)
-        signal.signal(signal.SIGINT, self._signal_handler)
+class IngestionService:
+    """Ingestion service that processes Reddit Comments and filters for valid comments"""
+    def __init__(
+        self,
+        reddit_client: Reddit,
+        db_pool: ConnectionPool,
+        logger: StructuredLogger,
+        category: str,
+        subreddits: list[str],
+        detector: ProductDetectorWrapper,
+        normalizer: Any
+    ) -> None:
+        self.reddit_client = reddit_client
+        self.db_pool = db_pool
+        self.logger = logger
+        self.category = category
+        self.subreddits = subreddits
+        self.detector = detector
+        self.normalizer = normalizer
 
-        self.reddit_client: Reddit = createRedditClient()
-        self.category = settings.product_category
-        self.subreddits: list[str] = category_to_subreddit_mapping(self.logger, self.category)
-        self.detector = DetectorFactory.get_detector(self.category)
-        self.normalizer = NormalizerFactory
-
-        self._database_conn_lifespan()
-        self.logger.info(event_type="data ingestion startup", message="Worker init complete")
-
-
-    def _database_conn_lifespan(self) -> None:
-        """
-        Method for handling database connection lifespan including creating connection pool,
-        and checking the health
-        """
-        self.logger.info(event_type="data ingestion startup", message="Creating database conenction pool")
-        self.db_pool = create_connection_pool()
-
-        # Perform health check for db connection on startup
-        self.logger.info(event_type="data ingestion startup", message="Checking Database health check...")
-        try:
-            with self.db_pool.connection() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute("SELECT 1")
-                    cursor.fetchone()
-                self.logger.info(event_type="data ingestion startup", message="Database health check passed")
-        except Exception as e:
-            self.logger.error(event_type="data ingestion startup", message=f"Database health check failed: {e}")
-            self.db_pool.close()
-            raise 
-
-    def _signal_handler(self, signum: int, _frame: object) -> None:
-        """
-        Signal handler for graceful shutdown
-
-        Args:
-            signum: Signal number
-            _frame: Current stack frame (unused but required by signal handler signature)
-        """
-        signal_name = signal.Signals(signum).name
-        self.logger.info(event_type="data ingestion shutdown", message=f"Received {signal_name} signal, initiating graceful shutdown")
-        self.shutdown_requested = True
+        # cancellation flag, used to request graceful shutdown
+        self.cancel_requested = False
     
-    def _cleanup(self) -> None:
-        """Cleanup resources on shutdown"""
-        self.logger.info(event_type="data ingestion shutdown", message="Cleaning up resources")
-
-        # Close database connection pool
-        self.db_pool.close()
-        self.logger.info(event_type="data ingestion shutdown", message="Database connection pool closed")
-
-        self.logger.info(event_type="data ingestion shutdown", message="Shutdown complete")
-
     def _fetch_all_posts(self) -> list[Submission]:
         """
         Fetch posts from all configured subreddits with per-subreddit error handling
@@ -176,41 +143,60 @@ class Worker:
         with self.db_pool.connection() as conn:
             batch_insert_raw_comments(conn, comment_dicts, logger=self.logger)
 
-    def run(self) -> None:
-        """Main orchestrator function: fetch, process, and publish comments"""
+    def run(self) -> IngestionResult:
+        """
+        Main orchestrator function: fetch, process, and publish comments
+        
+        Returns:
+            IngestionResult with counts of posts/comments processed
+        """
         all_posts = self._fetch_all_posts()
         batch_comments = []
 
-        try:            
-            for post in all_posts:
-                if self.shutdown_requested:
+        posts_processed = 0
+        comments_processed = 0
+        comments_inserted = 0
+
+        for post in all_posts:
+            if self.cancel_requested:
+                self.logger.info(
+                    event_type="ingestion",
+                    message="Cancellation requested, stopping at post level"
+                )
+                break
+
+            comments: list[Comment] = fetch_comments(post, self.logger)
+            posts_processed += 1
+
+            for comment in comments:
+                if self.cancel_requested:
                     break
-
-                comments: list[Comment] = fetch_comments(post, self.logger)
                 
-                for comment in comments:
-                    if self.shutdown_requested:
-                        break
-                    
-                    processed_comment: RedditComment | None = self._process_comment(comment)
-                    if not processed_comment:
-                        continue
+                processed_comment: RedditComment | None = self._process_comment(comment)
+                comments_processed += 1
+                if not processed_comment:
+                    continue
 
-                    batch_comments.append(processed_comment)
+                batch_comments.append(processed_comment)
 
-                    if len(batch_comments) >= 100:
-                        self._batch_insert_to_db(batch_comments)
-                        batch_comments = []
+                if len(batch_comments) >= 100:
+                    self._batch_insert_to_db(batch_comments)
+                    comments_inserted += len(batch_comments)
+                    batch_comments = []
 
-            # this ensures remaining comments after loops are written to the db
-            if batch_comments:
-                self._batch_insert_to_db(batch_comments)
-        except Exception as e:
-            self.logger.error(event_type="data ingestion worker", message=f"Error in worker loop: {e}")
-            raise
-        finally:
-            self._cleanup()
+        # this ensures remaining comments after loops are written to the db
+        if batch_comments:
+            self._batch_insert_to_db(batch_comments)
+            comments_inserted += len(batch_comments)
 
-if __name__ == "__main__":#
-    for i in range(1):
-        Worker().run()
+        return IngestionResult(
+            posts_processed=posts_processed,
+            comments_processed=comments_processed,
+            comments_inserted=comments_inserted,
+            cancelled=self.cancel_requested
+        )
+
+if __name__ == "__main__":
+    pass
+    #for i in range(1):
+    #    IngestionService().run()

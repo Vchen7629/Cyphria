@@ -1,6 +1,7 @@
+from src.product_utils.detector_factory import DetectorFactory
 from src.api.schemas import HealthResponse
 from fastapi.routing import APIRouter
-from src.api.schemas import RunResponse
+from src.api.schemas import RunResponse, RunRequest
 from src.worker import IngestionService
 from fastapi import Request, HTTPException
 from src.api.signal_handler import run_state
@@ -8,7 +9,7 @@ from src.api.signal_handler import run_state
 router = APIRouter(prefix="/worker", tags=["routes"])
 
 @router.post("/run", response_model=RunResponse)
-def trigger_ingestion(request: Request) -> RunResponse:
+def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
     """
     Trigger an ingestion run.
 
@@ -31,14 +32,15 @@ def trigger_ingestion(request: Request) -> RunResponse:
     run_state.run_in_progress = True
 
     try:
+        detector = DetectorFactory.get_detector(body.category)
         # Create service with injected dependencies
         service = IngestionService(
             reddit_client=request.app.state.reddit_client,
             db_pool=request.app.state.db_pool,
             logger=request.app.state.logger,
-            category=request.app.state.category,
-            subreddits=request.app.state.subreddits,
-            detector=request.app.state.detector,
+            category=body.category,
+            subreddits=body.subreddits,
+            detector=detector,
             normalizer=request.app.state.normalizer,
         )
 

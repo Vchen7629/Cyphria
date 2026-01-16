@@ -19,6 +19,11 @@ class IngestionResult(BaseModel):
     comments_inserted: int
     cancelled: bool = False
 
+class RunRequest(BaseModel):
+    """Request to the /run endpoint"""
+    category: str               # Category like "GPU" or "Laptop"
+    subreddits: list[str]       # list of subreddits for that category
+
 class RunResponse(BaseModel):
     """Response from /run endpoint"""
     status: str # "completed" | "cancelled" | "error"

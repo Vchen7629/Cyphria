@@ -1,6 +1,5 @@
 from src.product_utils.normalizer_factory import NormalizerFactory
 from src.product_utils.detector_factory import DetectorFactory
-from src.utils.category_to_subreddit_mapping import category_to_subreddit_mapping
 from src.core.settings_config import Settings
 from src.core.reddit_client_instance import createRedditClient
 from src.db_utils.conn import create_connection_pool
@@ -39,18 +38,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info(event_type="data_ingestion startup", message="Creating Reddit Client")
     reddit_client = createRedditClient()
 
-    category: str = settings.product_category
-    subreddits: list[str] = category_to_subreddit_mapping(logger, category)
-    detector = DetectorFactory.get_detector(category)
     normalizer = NormalizerFactory
 
     # Store these values in app state for dependency injection
     app.state.db_pool = db_pool
     app.state.reddit_client = reddit_client
     app.state.logger = logger
-    app.state.category = category
-    app.state.subreddits = subreddits
-    app.state.detector = detector
     app.state.normalizer = normalizer
     logger.info(event_type="data_ingestion startup", message="Ingestion service ready")
 

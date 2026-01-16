@@ -1,13 +1,36 @@
+from typing import Any
+from src.product_utils.normalizer_factory import NormalizerFactory
+from src.product_utils.detector_factory import DetectorFactory
+from src.core.logger import StructuredLogger
+from unittest.mock import MagicMock
 import os
 os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
-from src.worker import Worker
-from unittest.mock import patch
+os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
+os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "reddit_secret")
+os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "username")
+os.environ.setdefault("REDDIT_ACCOUNT_PASSWORD", "password")
+from src.worker import IngestionService
 from typing import Callable
 import pytest
 import psycopg
 from testcontainers.postgres import PostgresContainer
-from typing import Generator
+from typing import Generator, NamedTuple
 from psycopg_pool import ConnectionPool
+from fastapi.testclient import TestClient
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from src.api.routes import router as base_router
+
+
+class FastAPITestClient(NamedTuple):
+    client: TestClient
+    app: FastAPI
+
+
+@asynccontextmanager
+async def null_lifespan(_app: FastAPI) -> Any:
+    """No-op lifespan for testing - state is set by fixtures"""
+    yield
 
 
 @pytest.fixture(scope="session")
@@ -102,26 +125,40 @@ def clean_db(db_pool: ConnectionPool) -> Generator[None, None, None]:
     yield
 
 @pytest.fixture
-def create_worker(db_pool: ConnectionPool) -> Generator[Callable[[], Worker], None, None]:
-    """
-    Factory fixture that creates an ingestion Worker with mocked heavy dependencies.
-    Patches _database_conn_lifespan, _cleanup, and expensive init calls, then injects the test db_pool.
+def mock_reddit_client() -> MagicMock:
+    """Mock reddit client"""
+    client = MagicMock()
+    client.user.me.return_value = MagicMock(name="test_user")
+    return client
 
-    Usage:
-        def test_something(create_worker):
-            worker = create_worker()
-            worker.run()
-    """
+@pytest.fixture
+def create_ingestion_service(db_pool: ConnectionPool, mock_reddit_client: MagicMock) -> Callable[[], IngestionService]:
+    """Factory fixture for creating ingestionService with mocked heavy dependencies"""
+    def _create() -> IngestionService:
+        return IngestionService(
+            reddit_client=mock_reddit_client,
+            db_pool=db_pool,
+            logger=StructuredLogger(pod="ingestion_service"),
+            category="GPU",
+            subreddits=["nvidia"],
+            detector=DetectorFactory.get_detector(category="GPU"),
+            normalizer=NormalizerFactory
+        )
+    return _create
 
-    with patch.object(Worker, '_database_conn_lifespan'), \
-         patch.object(Worker, '_cleanup'), \
-         patch('src.worker.createRedditClient'), \
-         patch('src.worker.category_to_subreddit_mapping', return_value=['test_subreddit']), \
-         patch('src.worker.DetectorFactory.get_detector'):
+@pytest.fixture
+def fastapi_client(db_pool: ConnectionPool, mock_reddit_client: MagicMock) -> Generator[FastAPITestClient, None, None]:
+    """Fastapi TestClient with mocked heavy dependencies"""
+    test_app = FastAPI(lifespan=null_lifespan)
+    test_app.include_router(base_router)
 
-        def _create() -> Worker:
-            service = Worker()
-            service.db_pool = db_pool
-            return service
+    test_app.state.db_pool = db_pool
+    test_app.state.reddit_client = mock_reddit_client
+    test_app.state.logger = StructuredLogger(pod="ingestion_service_test")
+    test_app.state.category = "GPU"
+    test_app.state.subreddits = ["nvidia"]
+    test_app.state.detector = DetectorFactory.get_detector("GPU")
+    test_app.state.normalizer = NormalizerFactory
 
-        yield _create
+    with TestClient(test_app, raise_server_exceptions=False) as client:
+        yield FastAPITestClient(client=client, app=test_app)

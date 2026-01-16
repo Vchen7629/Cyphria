@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from praw.models import Comment
-from src.core.types import RedditComment
+from src.api.schemas import RedditComment
 
 def extract_relevant_fields(comment: Comment, detected_products: list[str]) -> RedditComment:
     """

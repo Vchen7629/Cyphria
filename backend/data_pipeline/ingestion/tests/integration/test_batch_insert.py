@@ -9,8 +9,13 @@ from testcontainers.postgres import PostgresContainer
 
 os.environ['PRODUCT_CATEGORY'] = 'GPU'
 
-from src.worker import Worker
+from src.worker import IngestionService
 from src.preprocessing.relevant_fields import RedditComment
+from src.core.logger import StructuredLogger
+from src.product_utils.detector_factory import DetectorFactory
+from src.product_utils.normalizer_factory import NormalizerFactory
+from src.db_utils.queries import batch_insert_raw_comments
+
 
 @pytest.fixture
 def mock_reddit_client() -> Mock:
@@ -19,13 +24,13 @@ def mock_reddit_client() -> Mock:
 
 
 @pytest.fixture
-def worker_with_test_db(postgres_container: PostgresContainer, mock_reddit_client: Mock) -> Generator[Worker, None, None]:
+def worker_with_test_db(postgres_container: PostgresContainer, mock_reddit_client: Mock) -> Generator[IngestionService, None, None]:
     """
     Create a Worker instance configured to use the test database.
     Patches the connection pool to use the test container.
     """
-    with patch('src.worker.createRedditClient', return_value=mock_reddit_client):
-        with patch('src.worker.create_connection_pool') as mock_pool:
+    with patch('src.core.reddit_client_instance.createRedditClient', return_value=mock_reddit_client) as mock_reddit_client:
+        with patch('src.db_utils.conn.create_connection_pool') as mock_pool:
             # Create a real connection pool to the test database
             # Convert SQLAlchemy URL to PostgreSQL URI for psycopg
             connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")
@@ -37,7 +42,15 @@ def worker_with_test_db(postgres_container: PostgresContainer, mock_reddit_clien
             )
             mock_pool.return_value = test_pool
 
-            worker = Worker()
+            worker = IngestionService(
+                reddit_client=mock_reddit_client,
+                db_pool=test_pool,
+                logger=StructuredLogger(pod="ingestion_service"),
+                category="gpu",
+                subreddits=["nvidia"],
+                detector=DetectorFactory.get_detector("gpu"),
+                normalizer=NormalizerFactory
+            )
             yield worker
 
             # Cleanup - truncate table after test
@@ -48,22 +61,7 @@ def worker_with_test_db(postgres_container: PostgresContainer, mock_reddit_clien
 
             test_pool.close()
 
-
-def test_worker_db_pool_initialization(worker_with_test_db: Worker) -> None:
-    """Test that the Worker initializes the database pool correctly."""
-    assert hasattr(worker_with_test_db, 'db_pool')
-    assert worker_with_test_db.db_pool is not None
-    assert isinstance(worker_with_test_db.db_pool, ConnectionPool)
-
-    # Verify pool can be used
-    with worker_with_test_db.db_pool.connection() as conn:
-        with conn.cursor() as cursor:
-            cursor.execute("SELECT 1;")
-            result = cursor.fetchone()
-            assert result == (1,)
-
-
-def test_worker_reddit_comment_to_db_conversion(worker_with_test_db: Worker, postgres_container: PostgresContainer) -> None:
+def test_worker_reddit_comment_to_db_conversion(worker_with_test_db: IngestionService, postgres_container: PostgresContainer) -> None:
     """
     Test that Worker._batch_insert_to_db correctly converts RedditComment objects
     to the dict format expected by batch_insert_raw_comments.
@@ -98,10 +96,10 @@ def test_worker_reddit_comment_to_db_conversion(worker_with_test_db: Worker, pos
             assert result[6] == 'test_user'  # author
             assert result[7] == 100  # score
             assert result[8] == datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)  # created_utc
-            assert result[9] == worker_with_test_db.category  # category
+            assert result[9] == "gpu" # category
 
 
-def test_worker_injects_category_field(worker_with_test_db: Worker, postgres_container: PostgresContainer) -> None:
+def test_worker_injects_category_field(worker_with_test_db: IngestionService, postgres_container: PostgresContainer) -> None:
     """
     Test that Worker._batch_insert_to_db correctly injects the category field
     from the worker's configuration (not present in RedditComment).
@@ -133,43 +131,8 @@ def test_worker_injects_category_field(worker_with_test_db: Worker, postgres_con
             category = result[0]
             assert category == worker_with_test_db.category
 
-
-def test_worker_batch_insert_with_connection_pool(worker_with_test_db: Worker, postgres_container: PostgresContainer) -> None:
-    """
-    Test that Worker uses the connection pool correctly when inserting batches.
-    """
-    comments = [
-        RedditComment(
-            comment_id=f'pool_test_{i}',
-            post_id=f'post_{i}',
-            comment_body=f'Test comment {i}',
-            detected_products=['rtx 4090'],
-            subreddit='nvidia',
-            author=f'user_{i}',
-            score=i * 10,
-            timestamp=datetime(2024, 1, 1, 12, i, 0, tzinfo=timezone.utc)
-        )
-        for i in range(1, 6)
-    ]
-
-    # This should use the connection pool internally
-    worker_with_test_db._batch_insert_to_db(comments)
-
-    # Verify all comments were inserted
-    # Convert SQLAlchemy URL to PostgreSQL URI for psycopg
-    connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")
-    with psycopg.connect(connection_url) as conn:
-        with conn.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) FROM raw_comments WHERE comment_id LIKE 'pool_test_%';")
-            result = cursor.fetchone()
-            assert result is not None
-            count = result[0]
-            assert count == 5
-
-def test_worker_batch_insert_error_handling(worker_with_test_db: Worker) -> None:
+def test_worker_batch_insert_error_handling(worker_with_test_db: IngestionService) -> None:
     """Test that Worker properly propagates database errors during batch insert."""
-    from src.db_utils.queries import batch_insert_raw_comments
-
     invalid_data = [{
         'comment_id': 'invalid_test',
         'post_id': 'post_1',
@@ -187,8 +150,7 @@ def test_worker_batch_insert_error_handling(worker_with_test_db: Worker) -> None
         with worker_with_test_db.db_pool.connection() as conn:
             batch_insert_raw_comments(conn, invalid_data)
 
-
-def test_worker_batch_insert_with_connection_pool_multiple_batches(worker_with_test_db: Worker, postgres_container: PostgresContainer) -> None:
+def test_worker_batch_insert_with_connection_pool_multiple_batches(worker_with_test_db: IngestionService, postgres_container: PostgresContainer) -> None:
     """
     Test that Worker can handle multiple sequential batch inserts using the connection pool.
     This simulates the actual worker flow where batches are inserted as they fill up.

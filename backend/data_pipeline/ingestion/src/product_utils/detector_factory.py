@@ -38,6 +38,8 @@ class DetectorFactory:
     def get_detector(category: str) -> ProductDetectorWrapper:
         """
         Get the appropriate detector for the given product category
+        this detector is used for checking if the comment contains a mention
+        0f a product or how many products mentioned for the specified category
 
         Args:
             category: Product category, ie 'gpu', 'laptop', 'headphone'

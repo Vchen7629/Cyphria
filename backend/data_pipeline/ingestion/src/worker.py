@@ -4,24 +4,17 @@ from src.product_utils.detector_factory import ProductDetectorWrapper
 from psycopg_pool.pool import ConnectionPool
 from src.utils.fetch_post import fetch_post_delayed
 from src.utils.fetch_comments import fetch_comments
-from src.utils.category_to_subreddit_mapping import category_to_subreddit_mapping
 from src.preprocessing.relevant_fields import extract_relevant_fields
 from src.preprocessing.url_remover import remove_url
 from src.preprocessing.demojify import demojify
 from src.preprocessing.is_valid_comment import is_valid_comment
-from src.product_utils.detector_factory import DetectorFactory
-from src.product_utils.normalizer_factory import NormalizerFactory
-from src.core.reddit_client_instance import createRedditClient
 from src.api.schemas import RedditComment
 from src.preprocessing.check_english import detect_english
 from src.core.logger import StructuredLogger
-from src.core.settings_config import settings
-from src.db_utils.conn import create_connection_pool
 from src.db_utils.queries import batch_insert_raw_comments
 from praw.models import Submission, Comment
 from praw import Reddit
 import prawcore
-import signal
 
 class IngestionService:
     """Ingestion service that processes Reddit Comments and filters for valid comments"""

@@ -1,4 +1,5 @@
-from src.core.types import UnprocessedComment, ProductSentiment
+from src.api.schemas import UnprocessedComment
+from src.api.schemas import ProductSentiment
 from src.core.logger import StructuredLogger
 from src.core.model import sentiment_analysis_model
 from src.core.settings_config import Settings
@@ -161,6 +162,7 @@ class StartService:
                 with self.db_pool.connection() as conn:
                     comments = fetch_unprocessed_comments(conn, category, batch_size=200)
 
+                # This stops the service from running once all comments are processed
                 if not comments:
                     self.structured_logger.info(
                         event_type="sentiment analysis worker",

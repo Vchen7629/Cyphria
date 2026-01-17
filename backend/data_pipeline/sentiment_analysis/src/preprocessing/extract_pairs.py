@@ -1,4 +1,4 @@
-from src.core.types import UnprocessedComment
+from src.api.schemas import UnprocessedComment
 from datetime import datetime
 
 def extract_pairs(unprocessed_comment: UnprocessedComment) -> list[tuple[str, str, str, str, datetime]]:

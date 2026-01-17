@@ -2,10 +2,8 @@ import torch.nn.functional as F
 import torch
 from typing import List
 from concurrent.futures import ThreadPoolExecutor
-from transformers import (
-    AutoTokenizer,
-    AutoModelForSequenceClassification
-)
+from transformers import AutoTokenizer
+from transformers import AutoModelForSequenceClassification
 
 class Aspect_Based_Sentiment_Analysis:
     def __init__(

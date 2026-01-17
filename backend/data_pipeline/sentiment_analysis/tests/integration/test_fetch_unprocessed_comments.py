@@ -162,7 +162,7 @@ def test_fetch_empty_detected_products(db_connection: psycopg.Connection) -> Non
         'comment_id': 'no_products',
         'post_id': 'post_1',
         'comment_body': 'abcdefg',
-        'detected_products': [],
+        'detected_products': [], # type: ignore
         'subreddit': 'test',
         'author': 'user',
         'score': 5,

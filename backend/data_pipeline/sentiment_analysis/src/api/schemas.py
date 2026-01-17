@@ -12,5 +12,5 @@ class ProductSentiment(BaseModel):
     comment_id: str
     product_name: str
     category: str
-    sentiment_score: float | None
+    sentiment_score: float
     created_utc: datetime

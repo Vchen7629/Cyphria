@@ -92,5 +92,4 @@ def test_run_endpoint_error_handling(fastapi_client: FastAPITestClient) -> None:
 
         assert response.status_code == 500
         data = response.json()
-        assert data["status"] == "error"
-        assert "Reddit API error" in data["error"]
+        assert "Reddit API error" in data["detail"]

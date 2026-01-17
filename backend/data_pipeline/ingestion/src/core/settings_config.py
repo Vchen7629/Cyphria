@@ -1,5 +1,4 @@
 from pathlib import Path
-from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -9,6 +8,7 @@ class Settings(BaseSettings):
     """All of the worker settings live here"""
 
     production_mode: bool = False
+    fastapi_port: int = 8000
 
     # --- DB Settings --- 
     db_host: str = "localhost"

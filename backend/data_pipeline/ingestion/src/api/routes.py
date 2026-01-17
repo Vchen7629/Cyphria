@@ -58,9 +58,9 @@ def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
             event_type="ingestion",
             message=f"Ingestion failed: {e}"
         )
-        return RunResponse(
-            status="error",
-            error=str(e),
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
         )
     finally:
         run_state.current_service = None

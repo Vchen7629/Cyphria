@@ -1,11 +1,9 @@
 from sqlalchemy.ext.asyncio.session import AsyncSession
-from fastapi import Request
 from fastapi import Depends
 from fastapi import APIRouter
 from fastapi import HTTPException
+from fastapi import Query
 from src.core.settings import Settings
-from src.schemas.request import GetViewMoreProductMetadataRequest
-from src.schemas.request import GetTopCommentsProductRequest
 from src.schemas.response import GetViewMoreProductsMetadataResponse
 from src.schemas.response import GetTopCommentsProductResponse
 from src.schemas.response import GetProductResponse
@@ -20,46 +18,31 @@ routes = APIRouter(prefix=f"/api/{settings.API_VERSION}")
 
 @routes.get(path="/products/view_more")
 async def get_view_more_products_metadata(
-    body: GetViewMoreProductMetadataRequest, 
+    product_name: str = Query(..., description="Product name to fetch metadata for"),
+    time_window: str = Query(..., description="Time window filter (e.g. 90d, 30d)"),
     session: AsyncSession = Depends(get_session)
 ) -> GetViewMoreProductsMetadataResponse:
     """
     Called when the view more tab is clicked for a product, shows additional metadata like
     Sentiment Breakdown (positive, neutral, negative comment counts), sentiment over time etc
     """
-    product_name: str = body.product_name
-    time_window: str = body.time_window
 
-    if not product_name:
-        raise HTTPException(status_code=400, detail="Missing product_name in request body")
-    
-    if not time_window:
-        raise HTTPException(status_code=400, detail="Missing time_window in request body")
-
-    product_metadata = fetch_view_more_products_metadata(session, product_name, time_window)
+    product_metadata = await fetch_view_more_products_metadata(session, product_name, time_window)
 
     return GetViewMoreProductsMetadataResponse(product=product_metadata)
 
-@routes.get(path="/products/top_comments/{name}", response_model=GetTopCommentsProductResponse)
+@routes.get(path="/products/top_comments", response_model=GetTopCommentsProductResponse)
 async def get_products_top_comments(
-    body: GetTopCommentsProductRequest, 
+    product_name: str = Query(..., description="Product name to fetch top comments for"),
+    time_window: str = Query(..., description="Time window filter (e.g. 90d, 30d)"),
     session: AsyncSession = Depends(get_session)
 ) -> GetTopCommentsProductResponse:
     """
-    Get top comments for the specific comment
+    Get top comments for the specific product.
 
     Returns:
         a list of the top comments with the comment text, link, and score
     """
-    product_name: str = body.product_name
-    time_window: str = body.time_window
-
-    if not product_name:
-        raise HTTPException(status_code=400, detail="Missing product_name in request body")
-    
-    if not time_window:
-        raise HTTPException(status_code=400, detail="Missing time_window in request body")
-
     top_comments = await fetch_top_comments_for_product(session, product_name, time_window)
 
     return GetTopCommentsProductResponse(top_comments=top_comments)

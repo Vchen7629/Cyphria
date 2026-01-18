@@ -1,0 +1,28 @@
+[project]
+name = "insights-api"
+version = "0.1.0"
+description = "Fastapi api for frontend to query to get product insights"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.128.0",
+    "pydantic-settings>=2.12.0",
+]
+
+[tool.pyrefly]
+python-version = "3.13"
+untyped-def-behavior = "check-and-infer-return-any"
+search-path = ["."]
+
+[tool.pyrefly.errors]
+unannotated-parameter = "error"
+unannotated-return = "error"
+unannotated-attribute = "error"
+implicit-any = "error"
+
+[dependency-groups]
+dev = [
+    "pyrefly>=0.48.2",
+    "pytest>=9.0.2",
+    "ruff>=0.14.13",
+]

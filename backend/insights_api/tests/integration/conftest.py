@@ -10,7 +10,8 @@ from typing import Generator
 from typing import NamedTuple
 from typing import Callable
 from fastapi import FastAPI
-from fastapi.testclient import TestClient
+from httpx import AsyncClient
+from httpx import ASGITransport
 from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker
@@ -18,7 +19,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 import os
 import pytest
-import asyncio
+import pytest_asyncio
 
 os.environ.setdefault("DB_HOST", "localhost")
 os.environ.setdefault("DB_PORT", "5432")
@@ -28,7 +29,7 @@ os.environ.setdefault("DB_PASS", "test_pass")
 
 
 class FastAPITestClient(NamedTuple):
-    client: TestClient
+    client: AsyncClient
     app: FastAPI
 
 
@@ -48,13 +49,12 @@ def postgres_container() -> Generator[PostgresContainer, None, None]:
         yield postgres
 
 
-@pytest.fixture(scope="session")
-def test_engine(postgres_container: PostgresContainer) -> AsyncEngine:
+@pytest_asyncio.fixture(scope="session")
+async def test_engine(postgres_container: PostgresContainer) -> AsyncGenerator[AsyncEngine, None]:
     """
     Create an async SQLAlchemy engine for the test database.
     Session-scoped to reuse across tests.
     """
-    # Convert connection URL to async format
     connection_url = postgres_container.get_connection_url()
     async_url = connection_url.replace("postgresql+psycopg2", "postgresql+asyncpg")
 
@@ -64,11 +64,14 @@ def test_engine(postgres_container: PostgresContainer) -> AsyncEngine:
         max_overflow=10,
         pool_pre_ping=True
     )
-    return engine
+
+    yield engine
+
+    await engine.dispose()
 
 
-@pytest.fixture(scope="session")
-def test_async_session(test_engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
+@pytest_asyncio.fixture(scope="session")
+async def test_async_session(test_engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
     """Create an async sessionmaker for testing."""
     return async_sessionmaker(
         bind=test_engine,
@@ -77,70 +80,124 @@ def test_async_session(test_engine: AsyncEngine) -> async_sessionmaker[AsyncSess
     )
 
 
-@pytest.fixture(scope="session", autouse=True)
-def setup_test_database(test_engine: AsyncEngine) -> Generator[Any, Any, Any]:
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def setup_test_database(test_engine: AsyncEngine) -> AsyncGenerator[None, None]:
     """Set up the database schema once per test session."""
+    async with test_engine.begin() as conn:
+        await conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS raw_comments (
+                id SERIAL PRIMARY KEY,
+                comment_id VARCHAR(50) UNIQUE NOT NULL,
+                post_id VARCHAR(50) NOT NULL,
+                comment_body TEXT NOT NULL,
+                detected_products TEXT[] NOT NULL,
+                subreddit VARCHAR(100) NOT NULL,
+                author VARCHAR(100),
+                score INT DEFAULT 0,
+                created_utc TIMESTAMPTZ NOT NULL,
+                category VARCHAR(50) NOT NULL,
+                ingested_at TIMESTAMPTZ DEFAULT NOW(),
+                sentiment_processed BOOLEAN DEFAULT FALSE,
+                CONSTRAINT chk_detected_products CHECK (array_length(detected_products, 1) > 0)
+            )
+        """))
+        await conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS product_sentiment (
+                id SERIAL PRIMARY KEY,
+                comment_id VARCHAR(50) NOT NULL,
+                product_name VARCHAR(100) NOT NULL,
+                category VARCHAR(100) NOT NULL,
+                sentiment_score FLOAT NOT NULL,
+                created_utc TIMESTAMPTZ NOT NULL,
+                UNIQUE (comment_id, product_name)
+            )
+        """))
+        await conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS product_rankings (
+                id SERIAL PRIMARY KEY,
+                product_name VARCHAR(100) NOT NULL,
+                category VARCHAR(100) NOT NULL,
+                time_window VARCHAR(20) NOT NULL,
+                rank INT NOT NULL,
+                grade VARCHAR(2) NOT NULL,
+                bayesian_score FLOAT NOT NULL,
+                mention_count INT NOT NULL,
+                approval_percentage INT NOT NULL,
+                positive_count INT NOT NULL,
+                neutral_count INT NOT NULL,
+                negative_count INT NOT NULL,
+                is_top_pick BOOLEAN DEFAULT FALSE,
+                is_most_discussed BOOLEAN DEFAULT FALSE,
+                has_limited_data BOOLEAN DEFAULT FALSE,
+                UNIQUE (product_name, time_window)
+            )
+        """))
 
-    async def create_tables() -> Any:
-        async with test_engine.begin() as conn:
-            await conn.execute(text("""
-                CREATE TABLE IF NOT EXISTS raw_comments (
-                    id SERIAL PRIMARY KEY,
-                    comment_id VARCHAR(50) UNIQUE NOT NULL,
-                    post_id VARCHAR(50) NOT NULL,
-                    comment_body TEXT NOT NULL,
-                    detected_products TEXT[] NOT NULL,
-                    subreddit VARCHAR(100) NOT NULL,
-                    author VARCHAR(100),
-                    score INT DEFAULT 0,
-                    created_utc TIMESTAMPTZ NOT NULL,
-                    category VARCHAR(50) NOT NULL,
-                    ingested_at TIMESTAMPTZ DEFAULT NOW(),
-                    sentiment_processed BOOLEAN DEFAULT FALSE,
-                    CONSTRAINT chk_detected_products CHECK (array_length(detected_products, 1) > 0)
-                )
-            """))
-            await conn.execute(text("""
-                CREATE TABLE IF NOT EXISTS product_sentiment (
-                    id SERIAL PRIMARY KEY,
-                    comment_id VARCHAR(50) NOT NULL,
-                    product_name VARCHAR(100) NOT NULL,
-                    category VARCHAR(100) NOT NULL,
-                    sentiment_score FLOAT NOT NULL,
-                    created_utc TIMESTAMPTZ NOT NULL,
-                    UNIQUE (comment_id, product_name)
-                )
-            """))
-
-    asyncio.get_event_loop().run_until_complete(create_tables())
     yield
 
-    async def drop_tables() -> Any:
-        async with test_engine.begin() as conn:
-            await conn.execute(text("DROP TABLE IF EXISTS product_sentiment, raw_comments CASCADE;"))
-
-    asyncio.get_event_loop().run_until_complete(drop_tables())
+    async with test_engine.begin() as conn:
+        await conn.execute(text("DROP TABLE IF EXISTS product_rankings, product_sentiment, raw_comments CASCADE;"))
 
 
-@pytest.fixture
-def clean_tables(test_async_session: async_sessionmaker[AsyncSession]) -> Generator[Any, Any]:
+@pytest_asyncio.fixture
+async def clean_tables(test_async_session: async_sessionmaker[AsyncSession]) -> AsyncGenerator[None, None]:
     """Clean up tables before each test to ensure isolation."""
-
-    async def truncate() -> None:
-        async with test_async_session() as session:
-            await session.execute(text("TRUNCATE TABLE product_sentiment, raw_comments RESTART IDENTITY CASCADE;"))
-            await session.commit()
-
-    asyncio.get_event_loop().run_until_complete(truncate())
+    async with test_async_session() as session:
+        await session.execute(text("TRUNCATE TABLE product_rankings, product_sentiment, raw_comments RESTART IDENTITY CASCADE;"))
+        await session.commit()
     yield
 
 
-@pytest.fixture
-def fastapi_client(
+@pytest_asyncio.fixture
+async def seed_product_rankings(
     test_async_session: async_sessionmaker[AsyncSession],
-    clean_tables: Callable[[], Any]
-) -> Generator[FastAPITestClient, None, None]:
-    """FastAPI TestClient with test database session."""
+    clean_tables: None
+) -> AsyncGenerator[None, None]:
+    """Seed product_rankings table with test data."""
+    async with test_async_session() as session:
+        await session.execute(text("""
+            INSERT INTO product_rankings
+                (product_name, category, time_window, rank, grade, bayesian_score,
+                 mention_count, approval_percentage, positive_count, neutral_count,
+                 negative_count, is_top_pick, is_most_discussed, has_limited_data)
+            VALUES
+                ('nvidia rtx 4090', 'GPU', '90d', 1, 'A', 9.5, 500, 95, 100, 10, 5, true, true, false),
+                ('nvidia rtx 4080', 'GPU', '90d', 2, 'A', 8.8, 300, 88, 80, 15, 10, false, false, false),
+                ('amd rx 7900 xtx', 'GPU', '90d', 3, 'B', 7.5, 200, 75, 60, 20, 15, false, false, false),
+                ('nvidia rtx 4090', 'GPU', 'all_time', 1, 'A', 9.2, 1000, 92, 200, 20, 10, true, true, false)
+        """))
+        await session.commit()
+    yield
+
+
+@pytest_asyncio.fixture
+async def seed_raw_comments(
+    test_async_session: async_sessionmaker[AsyncSession],
+    clean_tables: None
+) -> AsyncGenerator[None, None]:
+    """Seed raw_comments table with test data."""
+    async with test_async_session() as session:
+        await session.execute(text("""
+            INSERT INTO raw_comments
+                (comment_id, post_id, comment_body, detected_products, subreddit,
+                 author, score, created_utc, category, sentiment_processed)
+            VALUES
+                ('comment_1', 'post_1', 'The RTX 4090 is amazing for gaming!', ARRAY['nvidia rtx 4090'], 'nvidia', 'user1', 150, NOW() - INTERVAL '30 days', 'GPU', true),
+                ('comment_2', 'post_1', 'Great performance on the 4090', ARRAY['nvidia rtx 4090'], 'nvidia', 'user2', 100, NOW() - INTERVAL '60 days', 'GPU', true),
+                ('comment_3', 'post_2', 'The 4090 runs hot but worth it', ARRAY['nvidia rtx 4090'], 'buildapc', 'user3', 75, NOW() - INTERVAL '10 days', 'GPU', true),
+                ('comment_4', 'post_3', 'Old comment about 4090', ARRAY['nvidia rtx 4090'], 'nvidia', 'user4', 200, NOW() - INTERVAL '120 days', 'GPU', true),
+                ('comment_5', 'post_4', 'Unprocessed comment', ARRAY['nvidia rtx 4090'], 'nvidia', 'user5', 50, NOW() - INTERVAL '5 days', 'GPU', false)
+        """))
+        await session.commit()
+    yield
+
+
+@pytest_asyncio.fixture
+async def fastapi_client(
+    test_async_session: async_sessionmaker[AsyncSession],
+    clean_tables: None
+) -> AsyncGenerator[FastAPITestClient, None]:
+    """FastAPI AsyncClient with test database session."""
     test_app = FastAPI(lifespan=null_lifespan)
     test_app.include_router(category_router)
     test_app.include_router(product_router)
@@ -148,7 +205,6 @@ def fastapi_client(
     test_app.state.async_session = test_async_session
     test_app.state.logger = StructuredLogger(pod="insights_api_test")
 
-    # Override the get_session dependency to use test database
     async def override_get_session() -> AsyncGenerator[AsyncSession, None]:
         async with test_async_session() as session:
             try:
@@ -157,10 +213,8 @@ def fastapi_client(
             except Exception:
                 await session.rollback()
                 raise
-            finally:
-                await session.close()
 
     test_app.dependency_overrides[get_session] = override_get_session
 
-    with TestClient(test_app, raise_server_exceptions=False) as client:
+    async with AsyncClient(transport=ASGITransport(app=test_app), base_url="http://test") as client:
         yield FastAPITestClient(client=client, app=test_app)

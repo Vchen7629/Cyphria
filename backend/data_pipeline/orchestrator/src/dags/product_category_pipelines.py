@@ -40,7 +40,7 @@ def create_pipeline_dag(category: str) -> DAG:
         reddit_raw_comment_ingest = HttpOperator(
             task_id=f'ingest_{category.lower()}_comments',
             http_conn_id='ingestion_service',
-            endpoint='/worker/run',
+            endpoint='/run',
             method='POST',
             headers={'Content-Type': 'application/json'},
             data=json.dumps({
@@ -60,13 +60,10 @@ def create_pipeline_dag(category: str) -> DAG:
         sentiment_analysis = HttpOperator(
             task_id=f'analyze_{category.lower()}_product_sentiments',
             http_conn_id='sentiment_analysis_service',
-            endpoint='/worker/run',
+            endpoint='/run',
             method='POST',
             headers={'Content-Type': 'application/json'},
-            data=json.dumps({
-                'category': category,
-                'polling_interval': "0.5"
-            }),
+            data=json.dumps({'category': category}),
             response_check=lambda response: response.json()['status'] in ['completed', 'cancelled'],
             log_response=True,
             execution_timeout=settings.EXECUTION_TIMEOUT,
@@ -80,7 +77,7 @@ def create_pipeline_dag(category: str) -> DAG:
         llm_summary = HttpOperator(
             task_id=f'generate_{category.lower()}_product_summaries',
             http_conn_id='llm_summary_service',
-            endpoint='/worker/run',
+            endpoint='/run',
             method='POST',
             headers={'Content-Type': 'application/json'},
             data=json.dumps({'category': category}),

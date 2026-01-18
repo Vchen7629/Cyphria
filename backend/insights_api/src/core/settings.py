@@ -19,6 +19,11 @@ class Settings(BaseSettings):
     DB_USER: str = "postgres"
     DB_PASS: str = ''
 
+    # Database connection string
+    @property
+    def database_url(self) -> str:
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE) if not PRODUCTION_MODE else None,
         env_file_encoding="utf-8",

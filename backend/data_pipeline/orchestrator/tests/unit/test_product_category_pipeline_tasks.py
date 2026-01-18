@@ -14,7 +14,7 @@ def test_ingestion_task_correct_configs() -> None:
 
     assert isinstance(ingest_task, HttpOperator)
     assert ingest_task.task_id == "ingest_gpu_comments"
-    assert ingest_task.endpoint == "/worker/run"
+    assert ingest_task.endpoint == "/run"
     assert ingest_task.method == "POST"
     assert ingest_task.headers == {"Content-Type": "application/json"}
 
@@ -41,14 +41,11 @@ def test_sentiment_analysis_task_correct_configs() -> None:
 
     assert isinstance(sentiment_analysis_task, HttpOperator)
     assert sentiment_analysis_task.task_id == "analyze_gpu_product_sentiments"
-    assert sentiment_analysis_task.endpoint == "/worker/run"
+    assert sentiment_analysis_task.endpoint == "/run"
     assert sentiment_analysis_task.method == "POST"
     assert sentiment_analysis_task.headers == {"Content-Type": "application/json"}
 
-    expected_api_params = json.dumps({
-        'category': "GPU",
-        'polling_interval': "0.5"
-    })
+    expected_api_params = json.dumps({'category': "GPU"})
     assert sentiment_analysis_task.data == expected_api_params
 
     assert sentiment_analysis_task.log_response is True
@@ -65,7 +62,7 @@ def test_llm_summary_task_correct_configs() -> None:
 
     assert isinstance(llm_summary_task, HttpOperator)
     assert llm_summary_task.task_id == "generate_gpu_product_summaries"
-    assert llm_summary_task.endpoint == "/worker/run"
+    assert llm_summary_task.endpoint == "/run"
     assert llm_summary_task.method == "POST"
     assert llm_summary_task.headers == {"Content-Type": "application/json"}
 

@@ -14,7 +14,7 @@ def test_ranking_all_time_task_correct_configs() -> None:
 
     assert isinstance(ranking_task, HttpOperator)
     assert ranking_task.task_id == "rank_gpu_products_all_time"
-    assert ranking_task.endpoint == "/worker/run"
+    assert ranking_task.endpoint == "/run"
     assert ranking_task.method == "POST"
     assert ranking_task.headers == {"Content-Type": "application/json"}
 
@@ -40,7 +40,7 @@ def test_ranking_90_day_task_correct_configs() -> None:
 
     assert isinstance(ranking_task, HttpOperator)
     assert ranking_task.task_id == "rank_gpu_products_90_day"
-    assert ranking_task.endpoint == "/worker/run"
+    assert ranking_task.endpoint == "/run"
     assert ranking_task.method == "POST"
     assert ranking_task.headers == {"Content-Type": "application/json"}
 

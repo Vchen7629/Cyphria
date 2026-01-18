@@ -15,11 +15,11 @@ def create_connection_pool(min_size: int = 1, max_size: int = 10) -> ConnectionP
     settings = Settings()
 
     conninfo = (
-        f"host={settings.db_host} "
-        f"port={settings.db_port} "
-        f"dbname={settings.db_name} "
-        f"user={settings.db_user} "
-        f"password={settings.db_pass} "
+        f"host={settings.DB_HOST} "
+        f"port={settings.DB_PORT} "
+        f"dbname={settings.DB_NAME} "
+        f"user={settings.DB_USER} "
+        f"password={settings.DB_PASS} "
     )
 
     return ConnectionPool(conninfo=conninfo, min_size=min_size, max_size=max_size, open=True)     

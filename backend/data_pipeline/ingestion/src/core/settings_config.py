@@ -7,24 +7,24 @@ ENV_FILE = PROJECT_ROOT / ".env"
 class Settings(BaseSettings):
     """All of the worker settings live here"""
 
-    production_mode: bool = False
-    fastapi_port: int = 8000
+    PRODUCTION_MODE: bool = False
+    FASTAPI_PORT: int = 8000
 
     # --- DB Settings --- 
-    db_host: str = "localhost"
-    db_port: int = 5432
-    db_name: str = "cyphria"
-    db_user: str = "postgres"
-    db_pass: str = ''
+    DB_HOST: str = "localhost"
+    DB_PORT: int = 5432
+    DB_NAME: str = "cyphria"
+    DB_USER: str = "postgres"
+    DB_PASS: str = ''
 
     # --- Reddit Client ---
-    Reddit_Api_Client_ID: str
-    Reddit_Api_Client_Secret: str
-    Reddit_Account_Username: str
-    Reddit_Account_Password: str
+    REDDIT_API_CLIENT_ID: str
+    REDDIT_API_CLIENT_SECRET: str
+    REDDIT_ACCOUNT_USERNAME: str
+    REDDIT_ACCOUNT_PASSWORD: str
 
     model_config = SettingsConfigDict(
-        env_file=str(ENV_FILE) if not production_mode else None,
+        env_file=str(ENV_FILE) if not PRODUCTION_MODE else None,
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore"

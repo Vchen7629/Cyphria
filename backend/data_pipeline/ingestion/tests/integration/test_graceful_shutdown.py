@@ -18,9 +18,9 @@ def create_reddit_comment(comment_id: str) -> RedditComment:
         timestamp=datetime.now(timezone.utc)
     )
 
-def test_cancel_flag_stops_worker_at_comment_level(create_ingestion_service: Callable[[], IngestionService]) -> None:
+def test_cancel_flag_stops_worker_at_comment_level(create_ingestion_service: IngestionService) -> None:
     """cancel_requested flag should stop worker loop at comment iteration level"""
-    service = create_ingestion_service()
+    service = create_ingestion_service
 
     mock_post = MagicMock(id="test_post")
     mock_comments = [MagicMock(id=f"c_{i}") for i in range(20)]
@@ -40,9 +40,9 @@ def test_cancel_flag_stops_worker_at_comment_level(create_ingestion_service: Cal
     assert result.cancelled is True
     assert comments_processed["count"] < 20
 
-def test_cancel_flag_stops_at_post_level(create_ingestion_service: Callable[[], IngestionService]) -> None:
+def test_cancel_flag_stops_at_post_level(create_ingestion_service: IngestionService) -> None:
     """cancel_requested flag should break out of post iteration loop"""
-    service = create_ingestion_service()
+    service = create_ingestion_service
 
     posts = [MagicMock(id=f"post_{i}") for i in range(5)]
     posts_processed = {"count": 0}
@@ -60,9 +60,9 @@ def test_cancel_flag_stops_at_post_level(create_ingestion_service: Callable[[], 
     assert result.cancelled is True
     assert posts_processed["count"] == 2
 
-def test_remaining_batch_saved_on_shutdown(db_pool: ConnectionPool, create_ingestion_service: Callable[[], IngestionService]) -> None:
+def test_remaining_batch_saved_on_shutdown(db_pool: ConnectionPool, create_ingestion_service: IngestionService) -> None:
     """Remaining comments in batch should be saved when shutdown occurs"""
-    service = create_ingestion_service()
+    service = create_ingestion_service
 
     mock_post = MagicMock(id="test_post")
     mock_comments = [MagicMock(id=f"c_{i}") for i in range(50)]
@@ -88,9 +88,9 @@ def test_remaining_batch_saved_on_shutdown(db_pool: ConnectionPool, create_inges
             assert count is not None
             assert count[0] == 30
 
-def test_shutdown_after_batch_insert_no_duplicate_save(db_pool: ConnectionPool, create_ingestion_service: Callable[[], IngestionService],) -> None:
+def test_shutdown_after_batch_insert_no_duplicate_save(db_pool: ConnectionPool, create_ingestion_service: IngestionService) -> None:
     """When shutdown occurs right after a batch insert, no duplicate data should be saved"""
-    service = create_ingestion_service()
+    service = create_ingestion_service
 
     # 100 comments = exactly one batch
     mock_post = MagicMock(id="test_post")

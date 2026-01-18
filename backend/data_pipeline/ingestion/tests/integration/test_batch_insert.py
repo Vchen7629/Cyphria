@@ -136,7 +136,7 @@ def test_worker_batch_insert_error_handling(worker_with_test_db: IngestionServic
     invalid_data = [{
         'comment_id': 'invalid_test',
         'post_id': 'post_1',
-        'comment_body': None,
+        'comment_body': None, # type: ignore
         'detected_products': ['rtx 4090'],
         'subreddit': 'nvidia',
         'author': 'user1',

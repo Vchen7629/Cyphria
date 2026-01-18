@@ -232,7 +232,7 @@ def test_transaction_rollback_on_error(db_connection: psycopg.Connection) -> Non
     invalid_comment = {
         'comment_id': 'test_invalid',
         'post_id': 'test_post_2',
-        'comment_body': None, 
+        'comment_body': None, # type: ignore
         'detected_products': ['rtx 4090'],
         'subreddit': 'nvidia',
         'author': 'user2',

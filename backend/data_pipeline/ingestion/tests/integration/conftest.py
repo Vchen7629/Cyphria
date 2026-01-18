@@ -132,19 +132,17 @@ def mock_reddit_client() -> MagicMock:
     return client
 
 @pytest.fixture
-def create_ingestion_service(db_pool: ConnectionPool, mock_reddit_client: MagicMock) -> Callable[[], IngestionService]:
-    """Factory fixture for creating ingestionService with mocked heavy dependencies"""
-    def _create() -> IngestionService:
-        return IngestionService(
-            reddit_client=mock_reddit_client,
-            db_pool=db_pool,
-            logger=StructuredLogger(pod="ingestion_service"),
-            category="GPU",
-            subreddits=["nvidia"],
-            detector=DetectorFactory.get_detector(category="GPU"),
-            normalizer=NormalizerFactory
-        )
-    return _create
+def create_ingestion_service(db_pool: ConnectionPool, mock_reddit_client: MagicMock) -> IngestionService:
+    """Creates a Sentiment Service Instance fixture"""
+    return IngestionService(
+        reddit_client=mock_reddit_client,
+        db_pool=db_pool,
+        logger=StructuredLogger(pod="ingestion_service"),
+        category="GPU",
+        subreddits=["nvidia"],
+        detector=DetectorFactory.get_detector(category="GPU"),
+        normalizer=NormalizerFactory
+    )
 
 @pytest.fixture
 def fastapi_client(db_pool: ConnectionPool, mock_reddit_client: MagicMock) -> Generator[FastAPITestClient, None, None]:

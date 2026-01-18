@@ -4,22 +4,16 @@ from datetime import datetime, timezone
 from unittest.mock import MagicMock
 from src.worker import StartService
 
-def test_worker_exits_immediately_when_no_comments(
-    create_worker: Callable[[], StartService],
-    mock_absa: MagicMock
-) -> None:
+def test_worker_exits_immediately_when_no_comments(create_sentiment_service: StartService, mock_absa: MagicMock) -> None:
     """Worker should exit immediately when no unprocessed comments exist for category"""
-    worker = create_worker()
+    worker = create_sentiment_service
 
     worker.run()
 
     mock_absa.SentimentAnalysis.assert_not_called()
 
 
-def test_worker_exits_after_processing_single_batch(
-    db_pool: ConnectionPool,
-    create_worker: Callable[[], StartService]
-) -> None:
+def test_worker_exits_after_processing_single_batch(db_pool: ConnectionPool, create_sentiment_service: StartService) -> None:
     """Worker should process all comments and exit when done"""
     # Insert test comments
     with db_pool.connection() as conn:
@@ -36,7 +30,7 @@ def test_worker_exits_after_processing_single_batch(
                 """, (f'comment_{i}', datetime(2024, 1, 1, 12, i, 0, tzinfo=timezone.utc)))
         conn.commit()
 
-    worker = create_worker()
+    worker = create_sentiment_service
     worker.run()
 
     # Verify all comments are now marked as processed
@@ -60,10 +54,7 @@ def test_worker_exits_after_processing_single_batch(
     assert processed_count == 5, "All 5 comments should be processed"
 
 
-def test_worker_processes_multiple_batches_until_done(
-    db_pool: ConnectionPool,
-    create_worker: Callable[[], StartService]
-) -> None:
+def test_worker_processes_multiple_batches_until_done(db_pool: ConnectionPool, create_sentiment_service: StartService) -> None:
     """Worker should process multiple batches and exit when all done"""
     with db_pool.connection() as conn:
         with conn.cursor() as cursor:
@@ -79,7 +70,7 @@ def test_worker_processes_multiple_batches_until_done(
                 """, (f'batch_comment_{i}', datetime(2024, 1, 1, 12, i, 0, tzinfo=timezone.utc)))
         conn.commit()
 
-    worker = create_worker()
+    worker = create_sentiment_service
     worker.run()
 
     # Verify all comments processed

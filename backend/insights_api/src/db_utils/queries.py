@@ -58,8 +58,8 @@ async def fetch_view_more_products_metadata(
     """
     query = text("""
         SELECT positive_count, neutral_count, negative_count
-        FROM product_rankings 
-        WHERE product_name = :product_rank
+        FROM product_rankings
+        WHERE product_name = :product_name
         AND time_window = :time_window
     """)
 

@@ -77,7 +77,7 @@ async def fetch_view_more_products_metadata(
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
 async def fetch_top_comments_for_product(
     session: AsyncSession, product_name: str, time_window: str
-) -> list[dict[str, int]]:
+) -> list[dict[str, int]] | None:
     """
     Fetch the top 5 comments (highest scores) for a product in a time window
 
@@ -88,9 +88,13 @@ async def fetch_top_comments_for_product(
 
     Returns:
         A list of product dicts containing comment text, upvotes, and link to comment
+        None otherwise
     """
     base_query = """
-        SELECT comment_body, score, comment_id
+        SELECT
+            comment_body AS comment_text,
+            score,
+            'https://reddit.com/comments/' || comment_id AS link
         FROM raw_comments
         WHERE :product_name = ANY(detected_products)
         AND sentiment_processed = TRUE
@@ -104,7 +108,7 @@ async def fetch_top_comments_for_product(
     result = await session.execute(text(base_query), {"product_name": product_name})
     rows = result.fetchall()
 
-    return [row._asdict() for row in rows]
+    return [row._asdict() for row in rows] if rows else None
 
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
 async def fetch_matching_product_name(session: AsyncSession, query: str) -> list[dict[str, str]] | None:
@@ -117,6 +121,7 @@ async def fetch_matching_product_name(session: AsyncSession, query: str) -> list
 
     Returns:
         A list of matching dicts containing the product names matching the query
+        if rows else none
     """
     base_query = text("""
         SELECT DISTINCT product_name
@@ -131,6 +136,6 @@ async def fetch_matching_product_name(session: AsyncSession, query: str) -> list
     result = await session.execute(base_query, {"query": query})
     rows = result.fetchall()
 
-    return [row._asdict() for row in rows]
+    return [row._asdict() for row in rows] if rows else None
 
 

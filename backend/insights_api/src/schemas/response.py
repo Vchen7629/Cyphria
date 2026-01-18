@@ -14,12 +14,12 @@ class GetRankedProductsResponse(BaseModel):
 
 class GetViewMoreProductsMetadataResponse(BaseModel):
     """Api response for /api/v1/products/{name}/details endpoint"""
-    product: ViewMoreProduct
+    product: ViewMoreProduct | None
 
 class GetTopCommentsProductResponse(BaseModel):
     """Api response for /api/v1/products/{name}/top_comments endpoint"""
-    top_comments: list[top_comment]
+    top_comments: list[top_comment] | None
 
 class GetProductResponse(BaseModel):
     """Api response for /api/v1/products/search?q={query} endpoint"""
-    products: list[ProductName]
+    products: list[ProductName] | None

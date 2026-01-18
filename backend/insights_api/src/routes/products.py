@@ -29,7 +29,7 @@ async def get_view_more_products_metadata(
 
     product_metadata = await fetch_view_more_products_metadata(session, product_name, time_window)
 
-    return GetViewMoreProductsMetadataResponse(product=product_metadata)
+    return GetViewMoreProductsMetadataResponse(product=product_metadata or None)
 
 @routes.get(path="/products/top_comments", response_model=GetTopCommentsProductResponse)
 async def get_products_top_comments(
@@ -45,7 +45,7 @@ async def get_products_top_comments(
     """
     top_comments = await fetch_top_comments_for_product(session, product_name, time_window)
 
-    return GetTopCommentsProductResponse(top_comments=top_comments)
+    return GetTopCommentsProductResponse(top_comments=top_comments or [])
 
 @routes.get(path="/products/search?q={query}", response_model=GetProductResponse)
 async def get_product_by_name(

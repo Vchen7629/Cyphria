@@ -1,6 +1,11 @@
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.db_utils.retry import retry_with_backoff
+from src.core.logger import StructuredLogger
 
+logger = StructuredLogger(pod="insights_api")
+
+@retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
 async def fetch_ranked_products_for_category(
     session: AsyncSession, category: str, time_window: str
 ) -> list[dict[str, str | int | float | bool]]:

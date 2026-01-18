@@ -6,7 +6,7 @@ from src.worker import IngestionService
 from fastapi import Request, HTTPException
 from src.api.signal_handler import run_state
 
-router = APIRouter(prefix="/worker", tags=["routes"])
+router = APIRouter()
 
 @router.post("/run", response_model=RunResponse)
 def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:

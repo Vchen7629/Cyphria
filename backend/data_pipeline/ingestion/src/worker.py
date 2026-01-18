@@ -144,7 +144,7 @@ class IngestionService:
             IngestionResult with counts of posts/comments processed
         """
         all_posts = self._fetch_all_posts()
-        batch_comments = []
+        batch_comments: list[Any] = []
 
         posts_processed = 0
         comments_processed = 0

@@ -3,7 +3,7 @@ import pytest
 from datetime import datetime, timezone
 
 from src.db_utils.queries import batch_insert_product_sentiment
-from src.core.types import ProductSentiment
+from src.api.schemas import ProductSentiment
 
 def test_single_sentiment_insert(db_connection: psycopg.Connection) -> None:
     """Inserting a single product sentiment into the database should be returned."""
@@ -125,11 +125,11 @@ def test_transaction_rollback_on_error(db_connection: psycopg.Connection) -> Non
     # Commit the first insert so second error insert doesnt affect first valid insert
     db_connection.commit()
 
-    invalid_sentiment = ProductSentiment(
+    invalid_sentiment = ProductSentiment.model_construct(
         comment_id='invalid',
         product_name='rtx 4090',
         category="GPU",
-        sentiment_score=None,
+        sentiment_score=None, # type: ignore
         created_utc='2024-01-01T12:00:00+00:00'
     )
 

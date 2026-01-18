@@ -1,5 +1,5 @@
 from src.preprocessing.extract_pairs import extract_pairs
-from src.core.types import UnprocessedComment
+from src.api.schemas import UnprocessedComment
 from datetime import datetime, timezone
 
 def test_normal() -> None:

@@ -1,23 +1,38 @@
+from src.core.logger import StructuredLogger
 from unittest.mock import patch
-from typing import Callable
 from unittest.mock import MagicMock
-import pytest
-import psycopg
 from testcontainers.postgres import PostgresContainer
-from typing import Generator, Any
+from typing import Any
+from typing import Callable
+from typing import Generator
+from typing import NamedTuple
 from psycopg_pool import ConnectionPool
-from datetime import datetime, timezone
+from datetime import datetime
+from datetime import timezone
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+from contextlib import asynccontextmanager
 from src.worker import StartService
+from src.api.routes import router as base_router
 import os
 import time
-
+import pytest
+import psycopg
 os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
-os.environ.setdefault("POLLING_INTERVAL", "5.0")
 os.environ.setdefault("DB_HOST", "localhost")
 os.environ.setdefault("DB_PORT", "5432")
 os.environ.setdefault("DB_NAME", "test_db")
 os.environ.setdefault("DB_USER", "test_user")
 os.environ.setdefault("DB_PASS", "test_pass")
+
+class FastAPITestClient(NamedTuple):
+    client: TestClient
+    app: FastAPI
+
+@asynccontextmanager
+async def null_lifespan(_app: FastAPI) -> Any:
+    """No-op lifespan for testing - state is set by fixtures"""
+    yield
 
 @pytest.fixture(scope="session")
 def postgres_container() -> Generator[PostgresContainer, None, None]:
@@ -150,28 +165,25 @@ def mock_absa() -> MagicMock:
     mock.SentimentAnalysis.side_effect = mock_sentiment_analysis
     return mock
 
+@pytest.fixture
+def fastapi_client(db_pool: ConnectionPool, mock_absa: MagicMock) -> Generator[FastAPITestClient, None, None]:
+    """Fastapi TestClient with mocked heavy dependencies"""
+    test_app = FastAPI(lifespan=null_lifespan)
+    test_app.include_router(base_router)
+
+    test_app.state.db_pool = db_pool
+    test_app.state.logger = StructuredLogger(pod="ingestion_service_test")
+    test_app.state.model = mock_absa
+
+    with TestClient(test_app, raise_server_exceptions=False) as client:
+        yield FastAPITestClient(client=client, app=test_app)
 
 @pytest.fixture
-def create_worker(db_pool: ConnectionPool, mock_absa: MagicMock) -> Generator[Callable[[], Any], None, None]:
-    """
-    Factory fixture that creates a StartService with mocked heavy dependencies.
-    Patches _database_conn_lifespan, _initialize_absa_model, and _cleanup,
-    then injects the test db_pool and mock_absa.
-
-    Usage:
-        def test_something(create_worker):
-            worker = create_worker()
-            worker.run()
-    """
-
-    with patch.object(StartService, '_database_conn_lifespan'), \
-         patch.object(StartService, '_initialize_absa_model'), \
-         patch.object(StartService, '_cleanup'):
-
-        def _create() -> StartService:
-            service = StartService()
-            service.db_pool = db_pool
-            service.ABSA = mock_absa
-            return service
-
-        yield _create
+def create_sentiment_service(db_pool: ConnectionPool, mock_absa: MagicMock) -> StartService:
+    """Creates a Sentiment Service Instance fixture"""
+    return StartService(
+        logger=StructuredLogger(pod="sentiment_analysis"),
+        category="GPU",
+        db_pool=db_pool,
+        model=mock_absa
+    )

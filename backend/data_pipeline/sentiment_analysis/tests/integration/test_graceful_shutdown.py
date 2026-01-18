@@ -1,14 +1,11 @@
-import pytest
-from testcontainers.postgres import PostgresContainer
-import signal
-from typing import Callable, Any
-import threading
-from src.worker import StartService
+from typing import Any
+from unittest.mock import patch
 from psycopg_pool.pool import ConnectionPool
-from unittest.mock import patch, MagicMock
+from src.worker import StartService
 import time
+import threading
 
-def test_shutdown_flag_stops_worker_loop(db_pool: ConnectionPool, create_worker: Callable[[], StartService]) -> None:
+def test_cancel_flag_stops_worker_loop(db_pool: ConnectionPool, create_sentiment_service: StartService) -> None:
     """Shutdown_requested flag should cause worker loop to exit properly"""
     with db_pool.connection() as conn:
         with conn.cursor() as cursor:
@@ -23,19 +20,19 @@ def test_shutdown_flag_stops_worker_loop(db_pool: ConnectionPool, create_worker:
                     )
                 """, (f"c{i}",))
 
-    service = create_worker()
+    service = create_sentiment_service
 
-    # Use seperate thread to trigger shutdown to prevent blocking
+    # Use seperate thread to trigger cancel to prevent blocking
     def trigger_shutdown() -> None:
         time.sleep(0.5) # short delay so worker can process at least one batch
-        service.shutdown_requested = True
+        service.cancel_requested = True
 
     shutdown_thread = threading.Thread(target=trigger_shutdown, daemon=True)
     shutdown_thread.start()
 
     service.run()
 
-    assert service.shutdown_requested is True
+    assert service.cancel_requested is True
 
     # verify that some comments were processed before shutdown
     with db_pool.connection() as conn:
@@ -46,52 +43,8 @@ def test_shutdown_flag_stops_worker_loop(db_pool: ConnectionPool, create_worker:
             assert count is not None
             assert count[0] > 0
 
-def test_cleanup_called_on_shutdown(db_pool: ConnectionPool) -> None:
-    """Cleanup method should be called when worker shuts down"""
-    with patch.object(StartService, '_database_conn_lifespan'), \
-         patch.object(StartService, '_initialize_absa_model'):
-
-        service = StartService()
-        service.db_pool = db_pool
-
-        mock_absa_instance = MagicMock()
-        service.ABSA = mock_absa_instance
-
-        service.shutdown_requested = True
-
-        # Mock cleanup without wrapping to prevent pool closure
-        with patch.object(service, '_cleanup') as mock_cleanup:
-            service.run()
-
-            mock_cleanup.assert_called_once()
-
-def test_cleanup_called_on_exception(db_pool: ConnectionPool) -> None:
-    """Cleanup method should be called when worker shuts down"""
-    with patch.object(StartService, '_database_conn_lifespan'), \
-         patch.object(StartService, '_initialize_absa_model'):
-
-        service = StartService()
-        service.db_pool = db_pool
-
-        mock_absa_instance = MagicMock()
-        service.ABSA = mock_absa_instance
-
-        with patch('src.worker.fetch_unprocessed_comments', return_value=[MagicMock()]), \
-             patch.object(service, '_process_comments', side_effect=RuntimeError("Processing failed")), \
-             patch.object(service, '_cleanup') as mock_cleanup:
-            with pytest.raises(RuntimeError, match="Processing failed"):
-                service.run()
-
-            mock_cleanup.assert_called_once()
-
-
-def test_no_data_loss_when_shutdown_between_batches(
-    db_pool: ConnectionPool, create_worker: Callable[[], StartService]
-) -> None:
-    """
-    Shutting down between batches shouln't cause data loss.
-    All processed comments should be properly marked
-    """
+def test_no_data_loss_when_cancelled_between_batches(db_pool: ConnectionPool, create_sentiment_service: StartService) -> None:
+    """Cancelling between batches shouln't cause data loss. All processed comments should be properly marked"""
     with db_pool.connection() as conn:
         with conn.cursor() as cursor:
             for i in range(250):
@@ -105,7 +58,7 @@ def test_no_data_loss_when_shutdown_between_batches(
                     )
                 """, (f"c{i}",))
 
-    service = create_worker()
+    service = create_sentiment_service
 
     # Track how many batches have been processed
     original_process_comments = service._process_comments
@@ -116,7 +69,7 @@ def test_no_data_loss_when_shutdown_between_batches(
         batch_count["count"] += 1
 
         if batch_count["count"] == 1:
-            service.shutdown_requested = True
+            service.cancel_requested = True
         return result
 
     with patch.object(service, '_process_comments', side_effect=track_batches):
@@ -138,11 +91,8 @@ def test_no_data_loss_when_shutdown_between_batches(
 
             assert processed_count[0] + unprocessed_count[0] == 250
 
-def test_current_batch_completes_before_shutdown(db_pool: ConnectionPool, create_worker: Callable[[], StartService]) -> None:
-    """
-    When shutdown is triggered, current batch should
-    complete processing before the worker exits
-    """
+def test_current_batch_completes_before_cancelled(db_pool: ConnectionPool, create_sentiment_service: StartService) -> None:
+    """When cancel is triggered, current batch should complete processing before the worker exits"""
     with db_pool.connection() as conn:
         with conn.cursor() as cursor:
             for i in range(3):
@@ -156,12 +106,12 @@ def test_current_batch_completes_before_shutdown(db_pool: ConnectionPool, create
                     )
                 """, (f"c{i}",))
     
-    service = create_worker()
+    service = create_sentiment_service
 
     original_process = service._process_sentiment_and_write_to_db
 
     def trigger_shutdown_during_processing(*args: Any, **kwargs: Any) -> Any:
-        service.shutdown_requested = True
+        service.cancel_requested = True
         return original_process(*args, **kwargs)
 
     with patch.object(service, '_process_sentiment_and_write_to_db',
@@ -180,94 +130,3 @@ def test_current_batch_completes_before_shutdown(db_pool: ConnectionPool, create
             sentiment_count = cursor.fetchone()
             assert sentiment_count is not None
             assert sentiment_count[0] == 3
-        
-def test_db_pool_closed_during_cleanup(mock_absa: MagicMock) -> None:
-    """Database pool should be closed when cleanup is called"""
-    with patch.object(StartService, '_database_conn_lifespan'), \
-         patch.object(StartService, '_initialize_absa_model'):
-        worker = StartService()
-        worker.ABSA = mock_absa
-
-        mock_pool = MagicMock(spec=ConnectionPool)
-        worker.db_pool = mock_pool
-
-        mock_executor = MagicMock()
-        worker.executor = mock_executor
-
-        worker._cleanup()
-
-        mock_pool.close.assert_called_once()
-
-def test_double_cleanup_is_safe(mock_absa: MagicMock) -> None:
-    """Calling cleanup twice should not raise errors"""
-    with patch.object(StartService, '_database_conn_lifespan'), \
-         patch.object(StartService, '_initialize_absa_model'):
-        worker = StartService()
-        worker.ABSA = mock_absa
-
-        mock_pool = MagicMock(spec=ConnectionPool)
-        worker.db_pool = mock_pool
-
-        mock_executor = MagicMock()
-        worker.executor = mock_executor
-
-        worker._cleanup()
-        worker._cleanup()
-
-        assert mock_pool.close.call_count == 2
-    
-def test_pool_connections_released_on_shutdown(postgres_container: PostgresContainer) -> None:
-    """All pool connections should be released when worker shuts down"""
-    connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")
-
-    test_pool = ConnectionPool(
-        conninfo=connection_url,
-        min_size=1,
-        max_size=3,
-        open=True
-    )
-
-    try:
-        with patch.object(StartService, '_database_conn_lifespan'):
-            worker = StartService()
-            worker.db_pool = test_pool
-
-            stats_before = test_pool.get_stats()
-            assert stats_before['pool_available'] >= 0
-
-            worker._cleanup()
-
-            assert test_pool.closed
-    finally:
-        if not test_pool.closed:
-            test_pool.close()
-
-def test_multiple_signals_handled_gracefully(create_worker: Callable[[], StartService]) -> None:
-    """Multiple shutdown signals should be handled without errors"""
-    worker = create_worker()
-
-    worker._signal_handler(signal.SIGTERM, None)
-    assert worker.shutdown_requested
-
-    worker._signal_handler(signal.SIGINT, None)
-    assert worker.shutdown_requested
-
-    worker._signal_handler(signal.SIGTERM, None)
-    assert worker.shutdown_requested
-
-def test_sigterm_sets_shutdown_flag(create_worker: Callable[[], StartService]) -> None:
-    """SIGTERM signal should set shutdown requested to True"""
-    worker = create_worker()
-
-    assert not worker.shutdown_requested
-    
-    worker._signal_handler(signal.SIGTERM, None)
-    assert worker.shutdown_requested
-
-def test_sigint_sets_shutdown_flag(create_worker: Callable[[], StartService]) -> None:
-    """SIGINT signal should set shutdown requested to True"""
-    worker = create_worker()
-    assert not worker.shutdown_requested
-
-    worker._signal_handler(signal.SIGINT, None)
-    assert worker.shutdown_requested

@@ -1,13 +1,8 @@
-from transformers import (
-    AutoTokenizer,
-    AutoModelForSequenceClassification,
-)
-
+from transformers import AutoTokenizer
+from transformers import AutoModelForSequenceClassification
 from typing import Tuple
 
 # yangheng/deberta-v3-base-absa-v1.1
-
-
 def sentiment_analysis_model(
     model_name: str,
 ) -> Tuple[AutoTokenizer, AutoModelForSequenceClassification]:

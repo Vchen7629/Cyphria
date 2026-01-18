@@ -1,9 +1,7 @@
 import psycopg
 from psycopg.rows import dict_row
-from src.core.types import (
-    UnprocessedComment,
-    ProductSentiment
-)
+from src.api.schemas import UnprocessedComment
+from src.api.schemas import ProductSentiment
 from src.core.logger import StructuredLogger
 from src.db_utils.retry import retry_with_backoff
 

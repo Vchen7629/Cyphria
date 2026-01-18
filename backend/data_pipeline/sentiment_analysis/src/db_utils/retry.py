@@ -42,7 +42,7 @@ def retry_with_backoff(
     """
     def decorator(func: Callable[..., ReturnType]) -> Callable[..., ReturnType]:
         @wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> ReturnType:
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             delay = initial_delay
 
             for attempt in range(max_retries + 1):

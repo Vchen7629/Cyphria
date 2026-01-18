@@ -45,7 +45,7 @@ def create_ranking_dag(category: str) -> DAG:
         product_ranking_all_time = HttpOperator(
             task_id=f'rank_{category.lower()}_products_all_time',
             http_conn_id="product_ranking_service",
-            endpoint='/worker/run',
+            endpoint='/run',
             method='POST',
             headers={'Content-Type': 'application/json'},
             data=json.dumps({
@@ -66,7 +66,7 @@ def create_ranking_dag(category: str) -> DAG:
         product_ranking_90_days = HttpOperator(
             task_id=f'rank_{category.lower()}_products_90_day',
             http_conn_id="product_ranking_service",
-            endpoint='/worker/run',
+            endpoint='/run',
             method='POST',
             headers={'Content-Type': 'application/json'},
             data=json.dumps({

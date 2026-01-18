@@ -49,27 +49,11 @@ def batch_insert_raw_comments(
     def _insert() -> None:
         query = """
             INSERT INTO raw_comments (
-                comment_id,
-                post_id,
-                comment_body,
-                detected_products,
-                subreddit,
-                author,
-                score,
-                created_utc,
-                category,
-                sentiment_processed
+                comment_id, post_id, comment_body, detected_products, subreddit,
+                author, score, created_utc, category, sentiment_processed
             ) VALUES (
-                %(comment_id)s,
-                %(post_id)s,
-                %(comment_body)s,
-                %(detected_products)s,
-                %(subreddit)s,
-                %(author)s,
-                %(score)s,
-                %(created_utc)s,
-                %(category)s,
-                FALSE
+                %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
+                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
             )
             ON CONFLICT (comment_id) DO NOTHING;
         """

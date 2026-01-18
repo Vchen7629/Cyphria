@@ -25,8 +25,9 @@ async def get_all_product_categories() -> GetAllCategoriesResponse:
         categories=["Gpus", "Laptops", "Headphones"]
     )
 
-@routes.get(path="/categories/{category}/products", response_model=GetRankedProductsResponse)
-async def get_ranked_products_for_category(body: GetRankedProductsRequest, session: AsyncSession = Depends(get_session)
+@routes.get(path="/categories/products", response_model=GetRankedProductsResponse)
+async def get_ranked_products_for_category(
+    body: GetRankedProductsRequest, session: AsyncSession = Depends(get_session)
 ) -> GetRankedProductsResponse:
     """
     Route that frontend calls to get ranked products for specified category

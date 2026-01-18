@@ -7,7 +7,7 @@ class GetAllCategoriesResponse(BaseModel):
     categories: list[str]
 
 class GetRankedProductsResponse(BaseModel):
-    """Api response for /api/v1/categories/{category}/products endpoint"""
+    """Api response for /api/v1/categories/products endpoint"""
     products: list[RankedProduct]
 
 class GetViewMoreProductsMetadataResponse(BaseModel):

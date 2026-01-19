@@ -4,12 +4,9 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from tests.integration.conftest import FastAPITestClient
 
 @pytest.mark.asyncio
-async def test_get_product_by_name(
-    fastapi_client: FastAPITestClient,
-    seed_product_rankings: None
-) -> None:
+async def test_success(fastapi_client: FastAPITestClient,seed_product_rankings: None) -> None:
     """get products by name endpoint should products including nvidia."""
-    response = await fastapi_client.client.get("/api/v1/products/search?q=nvidia")
+    response = await fastapi_client.client.get("/api/v1/product/search?q=nvidia")
 
     assert response.status_code == 200
     data = response.json()
@@ -22,33 +19,25 @@ async def test_get_product_by_name(
     assert comments[1]["product_name"] == "nvidia rtx 4090"
 
 @pytest.mark.asyncio
-async def test_get_product_by_name_not_found(
-    fastapi_client: FastAPITestClient,
-    seed_raw_comments: None
-) -> None:
+async def test_name_not_found(fastapi_client: FastAPITestClient, seed_raw_comments: None) -> None:
     """get products by name endpoint should return empty list for unknown product."""
-    response = await fastapi_client.client.get("/api/v1/products/search?q=intel")
+    response = await fastapi_client.client.get("/api/v1/product/search?q=intel")
 
     assert response.status_code == 200
     data = response.json()
     assert data["products"] == []
 
 @pytest.mark.asyncio
-async def test_get_products_by_name_missing_params(
-    fastapi_client: FastAPITestClient
-) -> None:
+async def test_missing_search_param(fastapi_client: FastAPITestClient) -> None:
     """get products_by_name endpoint should return 422 when required params are missing."""
-    response = await fastapi_client.client.get("/api/v1/products/search?q=")
+    response = await fastapi_client.client.get("/api/v1/product/search?q=")
     assert response.status_code == 422
 
 @pytest.mark.asyncio
-async def test_get_products_by_name_sql_injection(
-    fastapi_client: FastAPITestClient,
-    seed_product_rankings: None
-) -> None:
+async def test_sql_injection(fastapi_client: FastAPITestClient, seed_product_rankings: None) -> None:
     """Search should be safe from SQL injection attempts."""
     response = await fastapi_client.client.get(
-        "/api/v1/products/search",
+        "/api/v1/product/search",
         params={"q": "'; DROP TABLE product_rankings; --"}
     )
 
@@ -58,13 +47,10 @@ async def test_get_products_by_name_sql_injection(
     assert data["products"] == []
 
 @pytest.mark.asyncio
-async def test_get_products_by_name_sql_wildcard_percent(
-    fastapi_client: FastAPITestClient,
-    seed_product_rankings: None
-) -> None:
+async def test_sql_wildcard_percent(fastapi_client: FastAPITestClient, seed_product_rankings: None) -> None:
     """Search with % character should be treated literally, not as wildcard."""
     response = await fastapi_client.client.get(
-        "/api/v1/products/search",
+        "/api/v1/product/search",
         params={"q": "%"}
     )
 
@@ -74,13 +60,10 @@ async def test_get_products_by_name_sql_wildcard_percent(
     assert data["products"] == []
 
 @pytest.mark.asyncio
-async def test_get_products_by_name_sql_wildcard_underscore(
-    fastapi_client: FastAPITestClient,
-    seed_product_rankings: None
-) -> None:
+async def test_sql_wildcard_underscore(fastapi_client: FastAPITestClient, seed_product_rankings: None) -> None:
     """Search with _ character should be treated literally, not as single-char wildcard."""
     response = await fastapi_client.client.get(
-        "/api/v1/products/search",
+        "/api/v1/product/search",
         params={"q": "_"}
     )
 
@@ -90,13 +73,10 @@ async def test_get_products_by_name_sql_wildcard_underscore(
     assert data["products"] == []
 
 @pytest.mark.asyncio
-async def test_get_products_by_name_case_insensitive(
-    fastapi_client: FastAPITestClient,
-    seed_product_rankings: None
-) -> None:
+async def test_case_insensitive(fastapi_client: FastAPITestClient, seed_product_rankings: None) -> None:
     """Search should be case-insensitive due to ILIKE."""
     response = await fastapi_client.client.get(
-        "/api/v1/products/search",
+        "/api/v1/product/search",
         params={"q": "NVIDIA"}
     )
 
@@ -105,13 +85,10 @@ async def test_get_products_by_name_case_insensitive(
     assert len(data["products"]) == 2
 
 @pytest.mark.asyncio
-async def test_get_products_by_name_whitespace_in_query(
-    fastapi_client: FastAPITestClient,
-    seed_product_rankings: None
-) -> None:
+async def test_whitespace_in_query(fastapi_client: FastAPITestClient, seed_product_rankings: None) -> None:
     """Search with internal whitespace should still find matches."""
     response = await fastapi_client.client.get(
-        "/api/v1/products/search",
+        "/api/v1/product/search",
         params={"q": "rtx 4090"}
     )
 
@@ -122,7 +99,7 @@ async def test_get_products_by_name_whitespace_in_query(
     assert data["products"][0]["product_name"] == "nvidia rtx 4090"
 
 @pytest.mark.asyncio
-async def test_get_products_by_name_returns_max_10_results(
+async def test_returns_max_10_results(
     fastapi_client: FastAPITestClient,
     test_async_session: async_sessionmaker[AsyncSession],
     clean_tables: None
@@ -144,7 +121,7 @@ async def test_get_products_by_name_returns_max_10_results(
         await session.commit()
 
     response = await fastapi_client.client.get(
-        "/api/v1/products/search",
+        "/api/v1/product/search",
         params={"q": "gpu"}
     )
 
@@ -156,7 +133,7 @@ async def test_get_products_by_name_returns_max_10_results(
 
 
 @pytest.mark.asyncio
-async def test_get_products_by_name_prefix_match_ordering(
+async def test_prefix_match_ordering(
     fastapi_client: FastAPITestClient,
     test_async_session: async_sessionmaker[AsyncSession],
     clean_tables: None
@@ -177,7 +154,7 @@ async def test_get_products_by_name_prefix_match_ordering(
         await session.commit()
 
     response = await fastapi_client.client.get(
-        "/api/v1/products/search",
+        "/api/v1/product/search",
         params={"q": "rtx"}
     )
 

@@ -5,13 +5,10 @@ from tests.integration.conftest import FastAPITestClient
 import pytest
 
 @pytest.mark.asyncio
-async def test_get_product_top_comments_success(
-    fastapi_client: FastAPITestClient,
-    seed_raw_comments: None
-) -> None:
-    """top_comments endpoint should return top 5 comments ordered by score."""
+async def test_time_window_90_day(fastapi_client: FastAPITestClient, seed_raw_comments: None) -> None:
+    """top_comments endpoint should return comments with 90 day time window ordered by score."""
     response = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "nvidia rtx 4090", "time_window": "90d"}
     )
 
@@ -28,13 +25,10 @@ async def test_get_product_top_comments_success(
     assert comments[2]["score"] == 75
 
 @pytest.mark.asyncio
-async def test_get_product_top_comments_all_time(
-    fastapi_client: FastAPITestClient,
-    seed_raw_comments: None
-) -> None:
+async def test_time_window_all_time(fastapi_client: FastAPITestClient, seed_raw_comments: None) -> None:
     """top_comments endpoint with all_time should include older comments."""
     response = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "nvidia rtx 4090", "time_window": "all_time"}
     )
 
@@ -48,13 +42,10 @@ async def test_get_product_top_comments_all_time(
     assert comments[0]["score"] == 200
 
 @pytest.mark.asyncio
-async def test_get_product_top_comments_case_insensitive(
-    fastapi_client: FastAPITestClient,
-    seed_raw_comments: None
-) -> None:
+async def test_product_name_case_insensitive(fastapi_client: FastAPITestClient, seed_raw_comments: None) -> None:
     """top_comments endpoint sql query should be case insensitive for both product name"""
     response = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "NVIDIA RTX 4090", "time_window": "all_time"}
     )
 
@@ -68,10 +59,10 @@ async def test_get_product_top_comments_case_insensitive(
     assert comments[0]["score"] == 200
 
 @pytest.mark.asyncio
-async def test_get_product_top_comments_with_no_comments(fastapi_client: FastAPITestClient) -> None:
+async def test_no_comments(fastapi_client: FastAPITestClient) -> None:
     """top_comments should return empty list for product with no comments."""
     response = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "intel arc a770", "time_window": "90d"}
     )
 
@@ -80,13 +71,10 @@ async def test_get_product_top_comments_with_no_comments(fastapi_client: FastAPI
     assert data["top_comments"] == []
 
 @pytest.mark.asyncio
-async def test_get_product_get_top_comments_not_found(
-    fastapi_client: FastAPITestClient,
-    seed_raw_comments: None
-) -> None:
+async def test_product_name_not_found(fastapi_client: FastAPITestClient, seed_raw_comments: None) -> None:
     """top_comments endpoint should return empty list for unknown product."""
     response = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "nonexistent product", "time_window": "90d"}
     )
 
@@ -96,51 +84,46 @@ async def test_get_product_get_top_comments_not_found(
 
 
 @pytest.mark.asyncio
-async def test_get_product_top_comments_missing_params(
-    fastapi_client: FastAPITestClient
-) -> None:
+async def test_missing_params(fastapi_client: FastAPITestClient) -> None:
     """top_comments endpoint should return 422 when required params are missing."""
     response = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"time_window": "90d"}
     )
     assert response.status_code == 422
 
     response = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "nvidia rtx 4090"}
     )
     assert response.status_code == 422
 
 @pytest.mark.asyncio
-async def test_get_product_top_comments_invalid_time_window(
-    fastapi_client: FastAPITestClient,
-    seed_raw_comments: None
-) -> None:
+async def test_invalid_time_window(fastapi_client: FastAPITestClient, seed_raw_comments: None) -> None:
     """top_comments should return 422 if time_window is something other than all_time or 90d."""
     response_30d = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "nvidia rtx 4090", "time_window": "30d"}
     )
 
     assert response_30d.status_code == 422
 
     response_7d = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "nvidia rtx 4090", "time_window": "7d"}
     )
 
     assert response_7d.status_code == 422
 
     response_random_string = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "nvidia rtx 4090", "time_window": "asdasd"}
     )
 
     assert response_random_string.status_code == 422
 
 @pytest.mark.asyncio
-async def test_get_product_top_comments_all_unprocessed(
+async def test_comments_all_unprocessed(
     fastapi_client: FastAPITestClient,
     test_async_session: async_sessionmaker[AsyncSession],
     clean_tables: None
@@ -158,7 +141,7 @@ async def test_get_product_top_comments_all_unprocessed(
         await session.commit()
 
     response = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "amd rx 7800 xt", "time_window": "90d"}
     )
 
@@ -168,7 +151,7 @@ async def test_get_product_top_comments_all_unprocessed(
 
 
 @pytest.mark.asyncio
-async def test_get_product_top_comments_identical_scores(
+async def test_comments_identical_scores(
     fastapi_client: FastAPITestClient,
     test_async_session: async_sessionmaker[AsyncSession],
     clean_tables: None
@@ -187,7 +170,7 @@ async def test_get_product_top_comments_identical_scores(
         await session.commit()
 
     response = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "test product", "time_window": "90d"}
     )
 
@@ -200,7 +183,7 @@ async def test_get_product_top_comments_identical_scores(
     assert all(c["score"] == 100 for c in comments)
 
 @pytest.mark.asyncio
-async def test_get_product_top_comments_more_than_five_returns_only_five(
+async def test_more_than_five_comments_returns_only_five(
     fastapi_client: FastAPITestClient,
     test_async_session: async_sessionmaker[AsyncSession],
     clean_tables: None
@@ -223,7 +206,7 @@ async def test_get_product_top_comments_more_than_five_returns_only_five(
         await session.commit()
 
     response = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "seven product", "time_window": "90d"}
     )
 
@@ -242,7 +225,7 @@ async def test_get_product_top_comments_more_than_five_returns_only_five(
 
 
 @pytest.mark.asyncio
-async def test_get_product_top_comments_90_day_boundary(
+async def test_time_window_90_day_boundary(
     fastapi_client: FastAPITestClient,
     test_async_session: async_sessionmaker[AsyncSession],
     clean_tables: None
@@ -261,7 +244,7 @@ async def test_get_product_top_comments_90_day_boundary(
         await session.commit()
 
     response = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "boundary product", "time_window": "90d"}
     )
 
@@ -277,7 +260,7 @@ async def test_get_product_top_comments_90_day_boundary(
     assert 60 not in scores  # after 90 days - excluded
 
 @pytest.mark.asyncio
-async def test_get_products_top_comments_negative_and_zero_scores(
+async def test_comments_negative_and_zero_scores(
     fastapi_client: FastAPITestClient,
     test_async_session: async_sessionmaker[AsyncSession],
     clean_tables: None
@@ -297,7 +280,7 @@ async def test_get_products_top_comments_negative_and_zero_scores(
         await session.commit()
 
     response = await fastapi_client.client.get(
-        "/api/v1/products/top_comments",
+        "/api/v1/product/top_comments",
         params={"product_name": "score product", "time_window": "90d"}
     )
 

@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 settings = Settings()
 
-routes = APIRouter(prefix=f"/{settings.API_VERSION}", tags=["Production"])
+routes = APIRouter(prefix=f"/api/{settings.API_VERSION}", tags=["Production"])
 
 @routes.get(path="/category", response_model=GetAllCategoriesResponse)
 async def get_all_product_categories() -> GetAllCategoriesResponse:

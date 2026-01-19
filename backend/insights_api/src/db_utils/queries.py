@@ -26,8 +26,8 @@ async def fetch_ranked_products_for_category(
             is_top_pick, is_most_discussed, has_limited_data
         FROM product_rankings 
         WHERE LOWER(category) = LOWER(:category)
-        AND time_window = :time_window
-        ORDER BY rank DESC;
+        AND LOWER(time_window) = :time_window
+        ORDER BY rank ASC;
     """)
 
     result = await session.execute(

@@ -12,7 +12,7 @@ settings = Settings()
 
 routes = APIRouter(prefix=f"/{settings.API_VERSION}", tags=["Production"])
 
-@routes.get(path="/categories", response_model=GetAllCategoriesResponse)
+@routes.get(path="/category", response_model=GetAllCategoriesResponse)
 async def get_all_product_categories() -> GetAllCategoriesResponse:
     """
     Route that frontend calls to get all product categories
@@ -24,7 +24,7 @@ async def get_all_product_categories() -> GetAllCategoriesResponse:
         categories=["Gpus", "Laptops", "Headphones"]
     )
 
-@routes.get(path="/categories/products", response_model=GetRankedProductsResponse)
+@routes.get(path="/category/products", response_model=GetRankedProductsResponse)
 async def get_ranked_products_for_category(
     category: str = Query(..., description="Product category to fetch ranked products for"),
     time_window: str = Query(..., description="Time window filter (e.g. 90d, 30d)"),

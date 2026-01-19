@@ -17,8 +17,8 @@ settings = Settings()
 
 routes = APIRouter(prefix=f"/api/{settings.API_VERSION}")
 
-@routes.get(path="/products/view_more")
-async def get_view_more_products_metadata(
+@routes.get(path="/product/view_more")
+async def get_view_more_product_metadata(
     product_name: str = Query(..., description="Product name to fetch metadata for"),
     time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter (e.g. 90d, 30d)"),
     session: AsyncSession = Depends(get_session)
@@ -31,8 +31,8 @@ async def get_view_more_products_metadata(
 
     return GetViewMoreProductsMetadataResponse(product=product_metadata or None)
 
-@routes.get(path="/products/top_comments", response_model=GetTopCommentsProductResponse)
-async def get_products_top_comments(
+@routes.get(path="/product/top_comments", response_model=GetTopCommentsProductResponse)
+async def get_product_top_comments(
     product_name: str = Query(..., description="Product name to fetch top comments for"),
     time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter (e.g. 90d, 30d)"),
     session: AsyncSession = Depends(get_session)
@@ -47,7 +47,7 @@ async def get_products_top_comments(
 
     return GetTopCommentsProductResponse(top_comments=top_comments or [])
 
-@routes.get(path="/products/search", response_model=GetProductResponse)
+@routes.get(path="/product/search", response_model=GetProductResponse)
 async def get_product_by_name(
     query: str = Query(..., alias="q", min_length=1, description="the product name we are trying to find"), 
     session: AsyncSession = Depends(get_session)

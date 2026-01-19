@@ -25,7 +25,7 @@ async def fetch_ranked_products_for_category(
             product_name, grade, bayesian_score, mention_count, approval_percentage,
             is_top_pick, is_most_discussed, has_limited_data
         FROM product_rankings 
-        WHERE category = :category
+        WHERE LOWER(category) = LOWER(:category)
         AND time_window = :time_window
         ORDER BY rank DESC;
     """)
@@ -33,7 +33,7 @@ async def fetch_ranked_products_for_category(
     result = await session.execute(
         query,
         {
-            "category": category,
+            "category": category.strip(),
             "time_window": time_window
         }
     )
@@ -59,14 +59,14 @@ async def fetch_view_more_products_metadata(
     query = text("""
         SELECT positive_count, neutral_count, negative_count
         FROM product_rankings
-        WHERE product_name = :product_name
+        WHERE LOWER(product_name) = LOWER(:product_name)
         AND time_window = :time_window
     """)
 
     result = await session.execute(
         query,
         {
-            "product_name": product_name,
+            "product_name": product_name.strip(),
             "time_window": time_window
         }
     )
@@ -96,7 +96,7 @@ async def fetch_top_comments_for_product(
             score,
             'https://reddit.com/comments/' || comment_id AS link
         FROM raw_comments
-        WHERE :product_name = ANY(detected_products)
+        WHERE LOWER(:product_name) = ANY(SELECT LOWER(unnest(detected_products)))
         AND sentiment_processed = TRUE
     """
 
@@ -105,7 +105,7 @@ async def fetch_top_comments_for_product(
 
     base_query += " ORDER BY score DESC LIMIT 5;"
 
-    result = await session.execute(text(base_query), {"product_name": product_name})
+    result = await session.execute(text(base_query), {"product_name": product_name.strip()})
     rows = result.fetchall()
 
     return [row._asdict() for row in rows] if rows else None
@@ -123,17 +123,21 @@ async def fetch_matching_product_name(session: AsyncSession, query: str) -> list
         A list of matching dicts containing the product names matching the query
         if rows else none
     """
+    # Escape SQL LIKE/ILIKE wildcards to treat them as literal characters
+    escaped_query = query.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")                                                                                               
+
     base_query = text("""
-        SELECT DISTINCT product_name
+        SELECT product_name
         FROM product_rankings
-        WHERE product_name ILIKE '%' || :query || '%'
+        WHERE product_name ILIKE '%' || :query || '%' ESCAPE '\\'
+        GROUP BY product_name
         ORDER BY
-            CASE WHEN product_name ILIKE :query || '%' THEN 0 ELSE 1 END,
+            CASE WHEN product_name ILIKE :query || '%' ESCAPE '\\' THEN 0 ELSE 1 END,
             product_name
         LIMIT 10
     """)
 
-    result = await session.execute(base_query, {"query": query})
+    result = await session.execute(base_query, {"query": escaped_query})
     rows = result.fetchall()
 
     return [row._asdict() for row in rows] if rows else None

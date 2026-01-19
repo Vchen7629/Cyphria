@@ -1,3 +1,4 @@
+from typing import Literal
 from src.core.settings import Settings
 from src.db_utils.conn import get_session
 from src.db_utils.queries import fetch_ranked_products_for_category
@@ -27,7 +28,7 @@ async def get_all_product_categories() -> GetAllCategoriesResponse:
 @routes.get(path="/category/products", response_model=GetRankedProductsResponse)
 async def get_ranked_products_for_category(
     category: str = Query(..., description="Product category to fetch ranked products for"),
-    time_window: str = Query(..., description="Time window filter (e.g. 90d, 30d)"),
+    time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter (e.g. 90d, 30d)"),
     session: AsyncSession = Depends(get_session)
 ) -> GetRankedProductsResponse:
     """

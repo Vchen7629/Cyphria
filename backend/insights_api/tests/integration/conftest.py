@@ -8,7 +8,6 @@ from typing import Any
 from typing import AsyncGenerator
 from typing import Generator
 from typing import NamedTuple
-from typing import Callable
 from fastapi import FastAPI
 from httpx import AsyncClient
 from httpx import ASGITransport

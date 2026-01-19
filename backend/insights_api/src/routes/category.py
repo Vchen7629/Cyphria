@@ -37,4 +37,4 @@ async def get_ranked_products_for_category(
     """
     ranked_products = await fetch_ranked_products_for_category(session, category, time_window)
 
-    return GetRankedProductsResponse(products=ranked_products)
+    return GetRankedProductsResponse(products=ranked_products or [])

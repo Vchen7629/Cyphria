@@ -10,7 +10,7 @@ class GetAllCategoriesResponse(BaseModel):
 
 class GetRankedProductsResponse(BaseModel):
     """Api response for /api/v1/categories/products endpoint"""
-    products: list[RankedProduct]
+    products: list[RankedProduct] | None
 
 class GetViewMoreProductsMetadataResponse(BaseModel):
     """Api response for /api/v1/products/{name}/details endpoint"""

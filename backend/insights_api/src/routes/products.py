@@ -1,3 +1,4 @@
+from typing import Literal
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from fastapi import Depends
 from fastapi import APIRouter
@@ -19,14 +20,13 @@ routes = APIRouter(prefix=f"/api/{settings.API_VERSION}")
 @routes.get(path="/products/view_more")
 async def get_view_more_products_metadata(
     product_name: str = Query(..., description="Product name to fetch metadata for"),
-    time_window: str = Query(..., description="Time window filter (e.g. 90d, 30d)"),
+    time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter (e.g. 90d, 30d)"),
     session: AsyncSession = Depends(get_session)
 ) -> GetViewMoreProductsMetadataResponse:
     """
     Called when the view more tab is clicked for a product, shows additional metadata like
     Sentiment Breakdown (positive, neutral, negative comment counts), sentiment over time etc
     """
-
     product_metadata = await fetch_view_more_products_metadata(session, product_name, time_window)
 
     return GetViewMoreProductsMetadataResponse(product=product_metadata or None)
@@ -34,7 +34,7 @@ async def get_view_more_products_metadata(
 @routes.get(path="/products/top_comments", response_model=GetTopCommentsProductResponse)
 async def get_products_top_comments(
     product_name: str = Query(..., description="Product name to fetch top comments for"),
-    time_window: str = Query(..., description="Time window filter (e.g. 90d, 30d)"),
+    time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter (e.g. 90d, 30d)"),
     session: AsyncSession = Depends(get_session)
 ) -> GetTopCommentsProductResponse:
     """
@@ -47,15 +47,12 @@ async def get_products_top_comments(
 
     return GetTopCommentsProductResponse(top_comments=top_comments or [])
 
-@routes.get(path="/products/search?q={query}", response_model=GetProductResponse)
+@routes.get(path="/products/search", response_model=GetProductResponse)
 async def get_product_by_name(
-    query: str, 
+    query: str = Query(..., alias="q", min_length=1, description="the product name we are trying to find"), 
     session: AsyncSession = Depends(get_session)
 ) -> GetProductResponse:
     """Search top 10 matching product names with query"""
-    if not query:
-        raise HTTPException(status_code=400, detail="Missing search query")
-
     product_list = await fetch_matching_product_name(session, query)
 
     return GetProductResponse(products=product_list or [])

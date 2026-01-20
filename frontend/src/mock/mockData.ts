@@ -64,6 +64,7 @@ export const mockCategories: Category[] = [
     slug: "computing",
     icon: "Monitor",
     viewCount: 45200,
+    rankedAmount: 12,
     topics: [
       { id: "sub-1", name: "Laptops", slug: "laptops", icon: "Laptop", parentSlug: "computing", productCount: 6 },
       { id: "sub-2", name: "GPUs", slug: "gpus", icon: "Gpu", parentSlug: "computing", productCount: 6 },
@@ -78,6 +79,7 @@ export const mockCategories: Category[] = [
     slug: "audio",
     icon: "Headphones",
     viewCount: 38700,
+    rankedAmount: 7,
     topics: [
       { id: "sub-6", name: "Headphones", slug: "headphones", icon: "Headphones", parentSlug: "audio", productCount: 5 },
       { id: "sub-7", name: "Earbuds", slug: "earbuds", icon: "Headphones", parentSlug: "audio", productCount: 2 },
@@ -91,6 +93,7 @@ export const mockCategories: Category[] = [
     slug: "mobile",
     icon: "Smartphone",
     viewCount: 52300,
+    rankedAmount: 0,
     topics: [
       { id: "sub-10", name: "Smartphones", slug: "smartphones", icon: "Smartphone", parentSlug: "mobile", productCount: 0 },
       { id: "sub-11", name: "Tablets", slug: "tablets", icon: "Tablet", parentSlug: "mobile", productCount: 0 },
@@ -103,6 +106,7 @@ export const mockCategories: Category[] = [
     slug: "gaming",
     icon: "Gamepad2",
     viewCount: 41200,
+    rankedAmount: 3,
     topics: [
       { id: "sub-13", name: "Gaming Mice", slug: "gaming-mice", icon: "mouse", parentSlug: "gaming", productCount: 3 },
       { id: "sub-14", name: "Gaming Keyboards", slug: "gaming-keyboards", icon: "keyboard", parentSlug: "gaming", productCount: 0 },
@@ -116,6 +120,7 @@ export const mockCategories: Category[] = [
     slug: "photography",
     icon: "Camera",
     viewCount: 23400,
+    rankedAmount: 3,
     topics: [
       { id: "sub-17", name: "Cameras", slug: "cameras", icon: "Camera", parentSlug: "photography", productCount: 0 },
       { id: "sub-18", name: "Lenses", slug: "lenses", icon: "Camera", parentSlug: "photography", productCount: 0 },
@@ -128,6 +133,7 @@ export const mockCategories: Category[] = [
     slug: "home",
     icon: "Home",
     viewCount: 19800,
+    rankedAmount: 0,
     topics: [
       { id: "sub-20", name: "Robot Vacuums", icon: "Camera", slug: "robot-vacuums", parentSlug: "home", productCount: 0 },
       { id: "sub-21", name: "Air Purifiers", icon: "Camera",  slug: "air-purifiers", parentSlug: "home", productCount: 0 },

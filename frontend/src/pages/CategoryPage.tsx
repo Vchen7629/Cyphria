@@ -35,7 +35,7 @@ const CategoryPage = () => {
         <section className="mb-7">
           <h1 className="text-2xl font-semibold text-zinc-100">{category.name}</h1>
           <p className="text-sm text-zinc-500 mt-1">
-            {category.topics.length} topics · 1000 products ranked
+            {category.topics.length} topics · {category.rankedAmount} products ranked
           </p>
         </section>
         <section className="mb-8">

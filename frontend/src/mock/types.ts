@@ -10,6 +10,7 @@ export interface Category {
   slug: string;
   icon: string;
   viewCount: number;
+  rankedAmount: number;
   topics: Topic[];
 }
 

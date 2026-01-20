@@ -1,4 +1,4 @@
-import SidebarSection from "./SidebarSection";
+import SidebarSection from "../layout/SideBarSectionLayout";
 import SidebarCategoryTree from "./SidebarCategoryTree";
 import type { Category } from "../../mock/types";
 import { getPopularCategories } from "../../mock/mockData";

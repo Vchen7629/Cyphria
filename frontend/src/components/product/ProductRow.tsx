@@ -26,7 +26,7 @@ const ProductRow = ({ product, sentiment, comments = [] }: ProductRowProps) => {
   };
 
   return (
-    <li className="border-b border-zinc-800/40 last:border-0">
+    <li className="border-b bg-zinc-700/20 border-zinc-800/40 last:border-0">
       <div className="w-full py-4 px-4 flex items-start gap-4 text-left hover:bg-zinc-900/20 transition-colors">
         <ProductRankingDetailsBadge 
           rank={product.rank}
@@ -58,16 +58,17 @@ const ProductRow = ({ product, sentiment, comments = [] }: ProductRowProps) => {
           <section className="flex items-center space-x-2 mt-2">
             <button 
               onClick={() => setIsExpanded(!isExpanded)}
-              className="flex items-center space-x-1 px-2 py-1 rounded-xl text-xs bg-zinc-900 border border-zinc-700 text-zinc-500"
+              className="flex items-center space-x-1 px-2 py-1 rounded-lg text-xs bg-orange-600 text-white hover:bg-orange-700 hover:text-zinc-200 transition-colors duration-250"
             >
               <span className="flex items-center">View more details</span>
               <ChevronDown
                 className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-180" : ""}`}
               />
             </button>
-            <button
-              className="flex items-center space-x-1 px-2 py-1 rounded-md text-xs bg-gray-700 border border-zinc-700 text-zinc-500"
-            >
+            <button                                                                                                                                                                           
+              className="flex items-center space-x-1 px-2 py-1 rounded-md text-xs bg-[#FF9900] hover:bg-[#E68A00] border border-zinc-700 hover:border-[#E68A00] text-black transition-colors  
+              duration-200"                                                                                                                                                                     
+            >           
               <span className="flex items-center">View Prices</span>
             </button>
           </section>

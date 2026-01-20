@@ -15,10 +15,10 @@ const ExtraRedditSourceList = ({ subreddits, totalExtra }: ExtraRedditSourceProp
         <div className="relative">
             <button 
                 onClick={() => setShowList(prev => !prev)}
-                className="flex items-center py-1 px-3 bg-orange-400 rounded-lg text-zinc-200 border border-orange-600 hover:bg-orange-500 hover:border-orange-400 transition-colors duration-250"
+                className="flex items-center py-1 px-3 bg-zinc-700 rounded-lg text-zinc-200 border border-zinc-600 hover:bg-zinc-800 hover:border-zinc-700 transition-colors duration-250"
             >
                 <span className="flex items-center text-xs">
-                +{totalExtra} more <ChevronDown size={14} className="ml-1 mt-0.5"/>
+                    +{totalExtra} more <ChevronDown size={14} className={`ml-1 mt-0.5 transition-transform duration-250 ${showList ? "rotate-180" : ""}`}/>
                 </span>
             </button>
             {showList && (

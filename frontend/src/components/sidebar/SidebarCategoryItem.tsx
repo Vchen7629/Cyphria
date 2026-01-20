@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { ChevronRight, Monitor, Headphones, Smartphone, Gamepad2, Camera, Home } from "lucide-react";
-import SidebarSubcategoryItem from "./SidebarSubcategoryItem";
+import SidebarSubcategoryItem from "./SidebarTopicItem";
 import type { Category } from "../../mock/types";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {

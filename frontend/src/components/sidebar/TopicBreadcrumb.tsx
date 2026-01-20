@@ -1,27 +1,27 @@
 import { Link } from "react-router";
 import { ChevronRight } from "lucide-react";
 
-interface SubcategoryBreadcrumbProps {
+interface TopicBreadcrumbProps {
   parentName: string;
   parentSlug: string;
-  subcategoryName: string;
+  topicName: string;
 }
 
 /**
  @Component
 
- @description - Navigation breadcrumb that displays on each subcategory page. 
+ @description - Navigation breadcrumb that displays on each topic page. 
  Allows the use to navigate back to the parent category or homepage
  
  @param {string} parentName - Parent Category name
  @param {string} parentSlug - Endpoint for parent category
- @param {string} subcategoryName - Name of the current page subcategory
+ @param {string} topicName - Name of the current page topic
  */
-const SubcategoryBreadcrumb = ({
+const TopicBreadcrumb = ({
   parentName,
   parentSlug,
-  subcategoryName
-}: SubcategoryBreadcrumbProps) => {
+  topicName
+}: TopicBreadcrumbProps) => {
   return (
     <nav className="flex items-center gap-2 text-sm">
       <Link
@@ -38,9 +38,9 @@ const SubcategoryBreadcrumb = ({
         {parentName}
       </Link>
       <ChevronRight className="w-4 h-4 text-zinc-600" />
-      <span className="text-zinc-300">{subcategoryName}</span>
+      <span className="text-zinc-300">{topicName}</span>
     </nav>
   );
 }
 
-export default SubcategoryBreadcrumb
+export default TopicBreadcrumb

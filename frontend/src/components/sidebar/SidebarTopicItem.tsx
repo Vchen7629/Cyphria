@@ -1,12 +1,20 @@
 import { Link } from "react-router";
 import type { Topic } from "../../mock/types";
 
-interface SidebarSubcategoryItemProps {
+interface SidebarTopicItemProps {
   topic: Topic;
   isActive?: boolean;
 }
 
-const SidebarSubcategoryItem = ({ topic, isActive = false }: SidebarSubcategoryItemProps) => {
+/**
+  @component
+
+  @description - Single navigation button item for a single topic in the sidebar topic list
+
+  @param {Topic} topic - The topic this item is for
+  @param {boolean} isActive - boolean flag that is set to true if the current page is the topic
+ */
+const SidebarTopicItem = ({ topic, isActive = false }: SidebarTopicItemProps) => {
   return (
     <li>
       <Link
@@ -23,4 +31,4 @@ const SidebarSubcategoryItem = ({ topic, isActive = false }: SidebarSubcategoryI
   );
 }
 
-export default SidebarSubcategoryItem
+export default SidebarTopicItem

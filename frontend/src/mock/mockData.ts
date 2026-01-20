@@ -65,11 +65,11 @@ export const mockCategories: Category[] = [
     icon: "Monitor",
     viewCount: 45200,
     topics: [
-      { id: "sub-1", name: "Laptops", slug: "laptops", icon: "Laptop", parentSlug: "computing", productCount: 156 },
-      { id: "sub-2", name: "GPUs", slug: "gpus", icon: "Gpu", parentSlug: "computing", productCount: 89 },
-      { id: "sub-3", name: "CPUs", slug: "cpus", icon: "Cpu", parentSlug: "computing", productCount: 67 },
-      { id: "sub-4", name: "Monitors", slug: "monitors", icon: "Monitor", parentSlug: "computing", productCount: 124 },
-      { id: "sub-5", name: "Keyboards", slug: "keyboards", icon: "Keyboard", parentSlug: "computing", productCount: 203 },
+      { id: "sub-1", name: "Laptops", slug: "laptops", icon: "Laptop", parentSlug: "computing", productCount: 6 },
+      { id: "sub-2", name: "GPUs", slug: "gpus", icon: "Gpu", parentSlug: "computing", productCount: 6 },
+      { id: "sub-3", name: "CPUs", slug: "cpus", icon: "Cpu", parentSlug: "computing", productCount: 0 },
+      { id: "sub-4", name: "Monitors", slug: "monitors", icon: "Monitor", parentSlug: "computing", productCount: 0 },
+      { id: "sub-5", name: "Keyboards", slug: "keyboards", icon: "Keyboard", parentSlug: "computing", productCount: 0 },
     ],
   },
   {
@@ -79,10 +79,10 @@ export const mockCategories: Category[] = [
     icon: "Headphones",
     viewCount: 38700,
     topics: [
-      { id: "sub-6", name: "Headphones", slug: "headphones", icon: "Headphones", parentSlug: "audio", productCount: 178 },
-      { id: "sub-7", name: "Earbuds", slug: "earbuds", icon: "Headphones", parentSlug: "audio", productCount: 145 },
-      { id: "sub-8", name: "Speakers", slug: "speakers", icon: "Speaker", parentSlug: "audio", productCount: 92 },
-      { id: "sub-9", name: "DACs & Amps", slug: "dacs-amps", icon: "Megaphone", parentSlug: "audio", productCount: 56 },
+      { id: "sub-6", name: "Headphones", slug: "headphones", icon: "Headphones", parentSlug: "audio", productCount: 5 },
+      { id: "sub-7", name: "Earbuds", slug: "earbuds", icon: "Headphones", parentSlug: "audio", productCount: 2 },
+      { id: "sub-8", name: "Speakers", slug: "speakers", icon: "Speaker", parentSlug: "audio", productCount: 0 },
+      { id: "sub-9", name: "DACs & Amps", slug: "dacs-amps", icon: "Megaphone", parentSlug: "audio", productCount: 0 },
     ],
   },
   {
@@ -92,9 +92,9 @@ export const mockCategories: Category[] = [
     icon: "Smartphone",
     viewCount: 52300,
     topics: [
-      { id: "sub-10", name: "Smartphones", slug: "smartphones", icon: "Smartphone", parentSlug: "mobile", productCount: 234 },
-      { id: "sub-11", name: "Tablets", slug: "tablets", icon: "Tablet", parentSlug: "mobile", productCount: 78 },
-      { id: "sub-12", name: "Smartwatches", slug: "smartwatches", icon: "watch", parentSlug: "mobile", productCount: 65 },
+      { id: "sub-10", name: "Smartphones", slug: "smartphones", icon: "Smartphone", parentSlug: "mobile", productCount: 0 },
+      { id: "sub-11", name: "Tablets", slug: "tablets", icon: "Tablet", parentSlug: "mobile", productCount: 0 },
+      { id: "sub-12", name: "Smartwatches", slug: "smartwatches", icon: "watch", parentSlug: "mobile", productCount: 0 },
     ],
   },
   {
@@ -104,10 +104,10 @@ export const mockCategories: Category[] = [
     icon: "Gamepad2",
     viewCount: 41200,
     topics: [
-      { id: "sub-13", name: "Gaming Mice", slug: "gaming-mice", icon: "mouse", parentSlug: "gaming", productCount: 187 },
-      { id: "sub-14", name: "Gaming Keyboards", slug: "gaming-keyboards", icon: "keyboard", parentSlug: "gaming", productCount: 156 },
-      { id: "sub-15", name: "Controllers", slug: "controllers", icon:"keyboard" , parentSlug: "gaming", productCount: 45 },
-      { id: "sub-16", name: "Gaming Headsets", slug: "gaming-headsets", icon: "headset", parentSlug: "gaming", productCount: 98 },
+      { id: "sub-13", name: "Gaming Mice", slug: "gaming-mice", icon: "mouse", parentSlug: "gaming", productCount: 3 },
+      { id: "sub-14", name: "Gaming Keyboards", slug: "gaming-keyboards", icon: "keyboard", parentSlug: "gaming", productCount: 0 },
+      { id: "sub-15", name: "Controllers", slug: "controllers", icon:"keyboard" , parentSlug: "gaming", productCount: 0 },
+      { id: "sub-16", name: "Gaming Headsets", slug: "gaming-headsets", icon: "headset", parentSlug: "gaming", productCount: 0 },
     ],
   },
   {
@@ -117,9 +117,9 @@ export const mockCategories: Category[] = [
     icon: "Camera",
     viewCount: 23400,
     topics: [
-      { id: "sub-17", name: "Cameras", slug: "cameras", icon: "Camera", parentSlug: "photography", productCount: 112 },
-      { id: "sub-18", name: "Lenses", slug: "lenses", icon: "Camera", parentSlug: "photography", productCount: 234 },
-      { id: "sub-19", name: "Tripods", slug: "tripods", icon: "Camera", parentSlug: "photography", productCount: 67 },
+      { id: "sub-17", name: "Cameras", slug: "cameras", icon: "Camera", parentSlug: "photography", productCount: 0 },
+      { id: "sub-18", name: "Lenses", slug: "lenses", icon: "Camera", parentSlug: "photography", productCount: 0 },
+      { id: "sub-19", name: "Tripods", slug: "tripods", icon: "Camera", parentSlug: "photography", productCount: 0 },
     ],
   },
   {
@@ -129,9 +129,9 @@ export const mockCategories: Category[] = [
     icon: "Home",
     viewCount: 19800,
     topics: [
-      { id: "sub-20", name: "Robot Vacuums", icon: "Camera", slug: "robot-vacuums", parentSlug: "home", productCount: 78 },
-      { id: "sub-21", name: "Air Purifiers", icon: "Camera",  slug: "air-purifiers", parentSlug: "home", productCount: 56 },
-      { id: "sub-22", name: "Smart Home", icon: "HousePlug", slug: "smart-home", parentSlug: "home", productCount: 123 },
+      { id: "sub-20", name: "Robot Vacuums", icon: "Camera", slug: "robot-vacuums", parentSlug: "home", productCount: 0 },
+      { id: "sub-21", name: "Air Purifiers", icon: "Camera",  slug: "air-purifiers", parentSlug: "home", productCount: 0 },
+      { id: "sub-22", name: "Smart Home", icon: "HousePlug", slug: "smart-home", parentSlug: "home", productCount: 0 },
     ],
   },
 ];

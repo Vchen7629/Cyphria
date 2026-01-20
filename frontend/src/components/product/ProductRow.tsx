@@ -3,9 +3,10 @@ import { ChevronDown } from "lucide-react";
 import type { ProductV3, Sentiment, Comment } from "../../mock/types";
 import ProductRankingDetailsBadge from './RankingDetailsBadge'
 import ProductBadges from "./ProductBadges";
-import ProductDetails from "./AdditionalDetails";
 import { Trophy } from "lucide-react";
 import { getRankColors } from "../../utils/product/getRankColors";
+import SentimentBar from "./SentimentBar";
+import TopComments from "./TopComments";
 
 
 interface ProductRowProps {
@@ -72,12 +73,12 @@ const ProductRow = ({ product, sentiment, comments = [] }: ProductRowProps) => {
           </section>
         </div>
       </div>
-
-      <ProductDetails
-        sentiment={defaultSentiment}
-        comments={comments}
-        isExpanded={isExpanded}
-      />
+      {isExpanded && (
+        <div className="px-4 pb-4 pt-2 space-y-4 border-t border-zinc-800/40 mt-3 ml-12">
+          <SentimentBar sentiment={defaultSentiment} />
+          <TopComments comments={comments} />
+        </div>
+      )}
     </li>
   );
 }

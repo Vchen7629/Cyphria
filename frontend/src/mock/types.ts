@@ -21,6 +21,7 @@ export interface Topic {
   icon: string;
   parentSlug: string;
   productCount: number;
+  sourceSubreddits: Subreddit[]
   viewCount?: number;
 }
 
@@ -60,4 +61,8 @@ export interface TrendingCategory {
   subcategory: string;
   grade: Grade;
   trendReason: string;
+}
+
+export interface Subreddit {
+  name: string
 }

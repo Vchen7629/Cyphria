@@ -1,7 +1,7 @@
 import type { ProductV3 } from "../../mock/types";
 import { mockProducts, getCategoryBySlug } from "../../mock/mockData";
 
-export function getTopProductsByCategory(categorySlug: string, limit?: number): ProductV3[] {
+export function getTopProductsByCategory(categorySlug: string, limit?: number): ProductV3[] | [] {
   const category = getCategoryBySlug(categorySlug);
 
   if (!category) {

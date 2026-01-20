@@ -6,8 +6,8 @@ import ProductList from "../components/product/ProductList";
 import { mockComments } from "../mock/mockData";
 import type { FilterType } from "../mock/types";
 import FilterTabs from "../components/product/FilterTabs";
-import { getProductsByTopic } from "../utils/product/getProductsByTopic";
 import { getTopicBySlug } from "../utils/topic/GetTopicBySlug";
+import { getProducts } from "../utils/topic/GetProducts";
 
 const TopicPage = () => {
   const { category: categorySlug, topic: topicSlug } = useParams<{
@@ -23,10 +23,7 @@ const TopicPage = () => {
     return getTopicBySlug(categorySlug, topicSlug);
   }, [categorySlug, topicSlug]);
 
-  const products = useMemo(() => {
-    if (!topicSlug) return [];
-    return getProductsByTopic(topicSlug);
-  }, [topicSlug]);
+  const products = useMemo(() => getProducts(topicSlug), [topicSlug]);
 
   const filteredProducts = useMemo(() => {
     const sorted = [...products];
@@ -70,7 +67,7 @@ const TopicPage = () => {
         />
 
         <section className="mt-6 mb-8">
-          <h1 className="text-2xl font-semibold text-zinc-100">{sub.name}</h1>
+          <h1 className="text-2xl font-semibold text-zinc-100">Best {sub.name} based on reddit opinions </h1>
           <p className="text-sm text-zinc-500 mt-1">
             {filteredProducts.length} products ranked from Reddit discussions
           </p>
@@ -80,7 +77,7 @@ const TopicPage = () => {
           <FilterTabs activeFilter={activeFilter} onFilterChange={handleFilterChange} />
         </div>
 
-        <div className="border border-zinc-800/50 rounded-lg overflow-hidden">
+        <div className="border border-zinc-600/50 rounded-lg overflow-hidden">
           <ProductList
             products={filteredProducts}
             comments={mockComments}

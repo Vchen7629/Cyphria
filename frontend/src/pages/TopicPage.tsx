@@ -7,9 +7,10 @@ import { mockComments } from "../mock/mockData";
 import type { FilterType, Subreddit } from "../mock/types";
 import FilterTabs from "../components/product/FilterTabs";
 import { getTopicBySlug } from "../utils/topic/GetTopicBySlug";
-import { getProducts } from "../utils/topic/GetProducts";
 import RedditSourcePill from "../components/category/RedditSourcePill";
 import ExtraRedditSourceList from "../components/category/ExtraRedditSourceList";
+import { Clock } from "lucide-react";
+import { getProductsByTopic } from "../utils/product/GetProductsByTopic";
 
 const TopicPage = () => {
   const { category: categorySlug, topic: topicSlug } = useParams<{
@@ -25,7 +26,7 @@ const TopicPage = () => {
     return getTopicBySlug(categorySlug, topicSlug);
   }, [categorySlug, topicSlug]);
 
-  const products = useMemo(() => getProducts(topicSlug), [topicSlug]);
+  const products = useMemo(() => getProductsByTopic(topicSlug), [topicSlug]);
 
   const filteredProducts = useMemo(() => {
     const sorted = [...products];
@@ -69,7 +70,9 @@ const TopicPage = () => {
         />
 
         <section className="mt-6 mb-8 space-y-2">
-          <h1 className="text-2xl font-semibold text-zinc-100">Best {topic.name} based on reddit opinions </h1>
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-semibold text-zinc-100">Best {topic.name} based on reddit opinions </h1>
+          </div>
           <div className="flex items-center space-x-2">
             <span className="text-sm text-zinc-400">Sources: </span>
             <ul className="flex space-x-2">
@@ -77,12 +80,12 @@ const TopicPage = () => {
                 <RedditSourcePill key={subreddit.name} subreddit={subreddit}/>
               ))}
               {topic.sourceSubreddits.length > 6 && (
-                <ExtraRedditSourceList subreddits={topic.sourceSubreddits.slice(7)} totalExtra={topic.sourceSubreddits.length - 6}/>
+                <ExtraRedditSourceList subreddits={topic.sourceSubreddits.slice(7)} totalExtra={topic.sourceSubreddits.length - 7}/>
               )}
             </ul>
           </div>
-          <p className="text-sm text-zinc-500 mt-1">
-            500,000 opinions | {filteredProducts.length} products ranked from Reddit discussions
+          <p className="flex items-center text-sm text-zinc-500 mt-1">
+            500,000 opinions | {filteredProducts.length} products ranked from Reddit discussions | <Clock size={14} className="mx-1 mt-0.5"/> 12 months of discussion (Dec 2024 - Dec 2025)
           </p>
         </section>
 

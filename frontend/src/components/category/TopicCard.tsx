@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { CalendarCheck, ChevronRight, Dot } from "lucide-react";
 import type { ProductV3, Topic } from "../../mock/types";
 import { useMemo } from "react";
-import { getProducts } from "../../utils/topic/GetProducts";
+import { getProductsByTopic } from "../../utils/product/GetProductsByTopic";
 import TopMentionedProductCard from "./topMentionedProductCard";
 
 interface TopicCardProps {
@@ -10,7 +10,7 @@ interface TopicCardProps {
 }
 
 const TopicCard = ({ topic }: TopicCardProps) => {
-  const products = useMemo(() => getProducts(topic.slug), [topic.slug])
+  const products = useMemo(() => getProductsByTopic(topic.slug), [topic.slug])
 
   return (
     <Link

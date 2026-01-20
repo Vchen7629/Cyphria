@@ -8,6 +8,9 @@ export const mockTopics: Topic[] = [
     icon: "Laptop",
     parentSlug: "computing",
     productCount: 156,
+    sourceSubreddits: [
+      { name: "laptops"}    
+    ], 
     viewCount: 56
   },
   {
@@ -17,6 +20,16 @@ export const mockTopics: Topic[] = [
     icon: "Cpu",
     parentSlug: "computing",
     productCount: 89,
+    sourceSubreddits: [
+      { name: "nvidia"},
+      { name: "radeon"}, 
+      { name: "amd" }, 
+      { name: "IntelArc"}, 
+      { name: "buildapc"}, 
+      { name: "gamingpc"}, 
+      { name: "pcbuild"}, 
+      { name: "hardware"}    
+    ], 
     viewCount: 39
   },
   {
@@ -26,6 +39,14 @@ export const mockTopics: Topic[] = [
     icon: "Cpu",
     parentSlug: "computing",
     productCount: 67,
+    sourceSubreddits: [
+      { name: "amd" }, 
+      { name: "Intel"}, 
+      { name: "buildapc"}, 
+      { name: "gamingpc"}, 
+      { name: "pcbuild"}, 
+      { name: "hardware"}    
+    ], 
     viewCount: 30
   },
   {
@@ -35,24 +56,40 @@ export const mockTopics: Topic[] = [
     icon: "Monitor",
     parentSlug: "computing",
     productCount: 124,
+    sourceSubreddits: [
+      { name: "Monitors" }, 
+      { name: "buildapc"}, 
+      { name: "gamingpc"}, 
+      { name: "pcbuild"}, 
+      { name: "hardware"}    
+    ], 
     viewCount: 25
   },
   {
     id: "topic-5",
-    name: "Keyboards",
-    slug: "keyboards",
+    name: "Mechanical Keyboards",
+    slug: "mechanicalkeyboards",
     icon: "Keyboard",
     parentSlug: "computing",
     productCount: 203,
+    sourceSubreddits: [
+      { name: "MechanicalKeyboards" }  
+    ], 
     viewCount: 21
   },
   {
     id: "topic-6",
-    name: "Speakers",
-    slug: "speakers",
+    name: "Soundbars",
+    slug: "soundbars",
     icon: "Speaker",
-    parentSlug: "computing",
+    parentSlug: "Audio",
     productCount: 92,
+    sourceSubreddits: [
+      { name: "Soundbars"},
+      { name: "hometheater"},
+      { name: "Audiophile"},
+      { name: "BudgetAudiophile" }    
+    ], 
     viewCount: 12
   }
 ]
@@ -66,11 +103,33 @@ export const mockCategories: Category[] = [
     viewCount: 45200,
     rankedAmount: 12,
     topics: [
-      { id: "sub-1", name: "Laptops", slug: "laptops", icon: "Laptop", parentSlug: "computing", productCount: 6 },
-      { id: "sub-2", name: "GPUs", slug: "gpus", icon: "Gpu", parentSlug: "computing", productCount: 6 },
-      { id: "sub-3", name: "CPUs", slug: "cpus", icon: "Cpu", parentSlug: "computing", productCount: 0 },
-      { id: "sub-4", name: "Monitors", slug: "monitors", icon: "Monitor", parentSlug: "computing", productCount: 0 },
-      { id: "sub-5", name: "Keyboards", slug: "keyboards", icon: "Keyboard", parentSlug: "computing", productCount: 0 },
+      { id: "sub-1", name: "Laptops", slug: "laptops", icon: "Laptop", parentSlug: "computing", sourceSubreddits: [{ name: "laptops"}], productCount: 6 },
+      { id: "sub-2", name: "GPUs", slug: "gpus", icon: "Gpu", parentSlug: "computing", sourceSubreddits: [
+        { name: "nvidia"},
+        { name: "radeon"}, 
+        { name: "amd" }, 
+        { name: "IntelArc"}, 
+        { name: "buildapc"}, 
+        { name: "gamingpc"}, 
+        { name: "pcbuild"}, 
+        { name: "hardware"}    
+      ],  productCount: 6 },
+      { id: "sub-3", name: "CPUs", slug: "cpus", icon: "Cpu", parentSlug: "computing", sourceSubreddits: [
+        { name: "amd" }, 
+        { name: "Intel"}, 
+        { name: "buildapc"}, 
+        { name: "gamingpc"}, 
+        { name: "pcbuild"}, 
+        { name: "hardware"}    
+      ], productCount: 0 },
+      { id: "sub-4", name: "Monitors", slug: "monitors", icon: "Monitor", parentSlug: "computing", sourceSubreddits: [
+        { name: "Monitors" }, 
+        { name: "buildapc"}, 
+        { name: "gamingpc"}, 
+        { name: "pcbuild"}, 
+        { name: "hardware"}    
+      ], productCount: 0 },
+      { id: "sub-5", name: "Mechanical Keyboards", slug: "mechanicalkeyboards", icon: "Keyboard", sourceSubreddits: [{ name: "MechanicalKeyboards" }], parentSlug: "computing", productCount: 0 },
     ],
   },
   {
@@ -81,10 +140,29 @@ export const mockCategories: Category[] = [
     viewCount: 38700,
     rankedAmount: 7,
     topics: [
-      { id: "sub-6", name: "Headphones", slug: "headphones", icon: "Headphones", parentSlug: "audio", productCount: 5 },
-      { id: "sub-7", name: "Earbuds", slug: "earbuds", icon: "Headphones", parentSlug: "audio", productCount: 2 },
-      { id: "sub-8", name: "Speakers", slug: "speakers", icon: "Speaker", parentSlug: "audio", productCount: 0 },
-      { id: "sub-9", name: "DACs & Amps", slug: "dacs-amps", icon: "Megaphone", parentSlug: "audio", productCount: 0 },
+      { id: "sub-6", name: "Headphones", slug: "headphones", icon: "Headphones", parentSlug: "audio", sourceSubreddits: [
+        { name: "headphones" },
+        { name: "HeadphoneAdvice" },
+        { name: "Audiophile"},
+        { name: "BudgetAudiophile" }
+      ], productCount: 5 },
+      { id: "sub-7", name: "Earbuds", slug: "earbuds", icon: "Headphones", parentSlug: "audio", sourceSubreddits: [
+        { name: "Earbuds"},
+        { name: "Audiophile"},
+        { name: "BudgetAudiophile" }
+      ], productCount: 2 },
+      { id: "sub-8", name: "Soundbars", slug: "soundbars", icon: "Speaker", parentSlug: "audio", sourceSubreddits: [
+        { name: "Soundbars"},
+        { name: "hometheater"},
+        { name: "Audiophile"},
+        { name: "BudgetAudiophile" }
+      ], productCount: 0 },
+      { id: "sub-9", name: "DACs", slug: "dacs", icon: "Megaphone", parentSlug: "audio", sourceSubreddits: [
+        { name: "headphones" },
+        { name: "HeadphoneAdvice" },
+        { name: "Audiophile"},
+        { name: "BudgetAudiophile" }
+      ], productCount: 0 },
     ],
   },
   {
@@ -95,9 +173,17 @@ export const mockCategories: Category[] = [
     viewCount: 52300,
     rankedAmount: 0,
     topics: [
-      { id: "sub-10", name: "Smartphones", slug: "smartphones", icon: "Smartphone", parentSlug: "mobile", productCount: 0 },
-      { id: "sub-11", name: "Tablets", slug: "tablets", icon: "Tablet", parentSlug: "mobile", productCount: 0 },
-      { id: "sub-12", name: "Smartwatches", slug: "smartwatches", icon: "watch", parentSlug: "mobile", productCount: 0 },
+      { id: "sub-10", name: "Smartphones", slug: "smartphones", icon: "Smartphone", parentSlug: "mobile", sourceSubreddits: [
+        { name: "Smartphones" },
+        { name: "Android" },
+        { name: "PickAnAndroidForMe" },
+        { name: "iphone" }
+      ], productCount: 0 },
+      { id: "sub-11", name: "Tablets", slug: "tablets", icon: "Tablet", parentSlug: "mobile", sourceSubreddits: [
+        { name: "androidtablets" },
+        { name: "ipad" },
+        { name: "tablets" }
+      ], productCount: 0 },
     ],
   },
   {
@@ -108,10 +194,13 @@ export const mockCategories: Category[] = [
     viewCount: 41200,
     rankedAmount: 3,
     topics: [
-      { id: "sub-13", name: "Gaming Mice", slug: "gaming-mice", icon: "mouse", parentSlug: "gaming", productCount: 3 },
-      { id: "sub-14", name: "Gaming Keyboards", slug: "gaming-keyboards", icon: "keyboard", parentSlug: "gaming", productCount: 0 },
-      { id: "sub-15", name: "Controllers", slug: "controllers", icon:"keyboard" , parentSlug: "gaming", productCount: 0 },
-      { id: "sub-16", name: "Gaming Headsets", slug: "gaming-headsets", icon: "headset", parentSlug: "gaming", productCount: 0 },
+      { id: "sub-13", name: "Gaming Mice", slug: "gaming-mice", icon: "mouse", parentSlug: "gaming", sourceSubreddits: [{ name: "MouseReview" }], productCount: 3 },
+      { id: "sub-15", name: "Controllers", slug: "controllers", icon:"keyboard" , parentSlug: "gaming", sourceSubreddits: [
+        { name: "Controller" },
+        { name: "XboxController" },
+        { name: "SteamController" }
+      ], productCount: 0 },
+      { id: "sub-16", name: "Gaming Headsets", slug: "gaming-headsets", icon: "headset", parentSlug: "gaming", sourceSubreddits: [{ name: "Gaming_Headsets" }], productCount: 0 },
     ],
   },
   {
@@ -122,9 +211,38 @@ export const mockCategories: Category[] = [
     viewCount: 23400,
     rankedAmount: 3,
     topics: [
-      { id: "sub-17", name: "Cameras", slug: "cameras", icon: "Camera", parentSlug: "photography", productCount: 0 },
-      { id: "sub-18", name: "Lenses", slug: "lenses", icon: "Camera", parentSlug: "photography", productCount: 0 },
-      { id: "sub-19", name: "Tripods", slug: "tripods", icon: "Camera", parentSlug: "photography", productCount: 0 },
+      { id: "sub-17", name: "Cameras", slug: "cameras", icon: "Camera", parentSlug: "photography", sourceSubreddits: [
+        { name: "cameras" },
+        { name: "photography" },
+        { name: "Photography_Gear" },
+        { name: "canon"},
+        { name: "nikon"},
+        { name: "SonyAlpha" },
+        { name: "fujifilm" },
+        { name: "fujifilmX"},
+        { name: "Lumix"},
+        { name: "Leica" },
+        { name: "pentax" },
+        { name: "olympuscamera" },
+        { name: "DSLR" }
+      ], productCount: 0},
+      { id: "sub-18", name: "Lenses", slug: "lenses", icon: "Camera", parentSlug: "photography", sourceSubreddits: [
+        { name: "cameras" },
+        { name: "photography" },
+        { name: "Photography_Gear" },
+        { name: "canon"},
+        { name: "nikon"},
+        { name: "SonyAlpha" },
+        { name: "fujifilm" },
+        { name: "Lumix"},
+        { name: "Leica" },
+        { name: "pentax" },
+        { name: "olympuscamera" },
+      ], productCount: 0 },
+      { id: "sub-19", name: "Tripods", slug: "tripods", icon: "Camera", parentSlug: "photography", sourceSubreddits: [
+        { name: "photography" },
+        { name: "Photography_Gear" },
+      ], productCount: 0 },
     ],
   },
   {
@@ -135,11 +253,60 @@ export const mockCategories: Category[] = [
     viewCount: 19800,
     rankedAmount: 0,
     topics: [
-      { id: "sub-20", name: "Robot Vacuums", icon: "Camera", slug: "robot-vacuums", parentSlug: "home", productCount: 0 },
-      { id: "sub-21", name: "Air Purifiers", icon: "Camera",  slug: "air-purifiers", parentSlug: "home", productCount: 0 },
-      { id: "sub-22", name: "Smart Home", icon: "HousePlug", slug: "smart-home", parentSlug: "home", productCount: 0 },
+      { id: "sub-20", name: "Robot Vacuums", icon: "Camera", slug: "robot-vacuums", parentSlug: "home", sourceSubreddits: [
+        { name: "RobotVacuums" },
+        { name: "roomba" },
+        { name: "ecovacs" },
+        { name: "BuyItForLife" },
+      ], productCount: 0 },
+      { id: "sub-21", name: "Air Purifiers", icon: "Camera",  slug: "air-purifiers", parentSlug: "home", sourceSubreddits: [
+        { name: "AirPurifiers" },
+        { name: "BuyItForLife" }, 
+        { name: "Hvacadvice"} 
+      ], productCount: 0 },
+      { id: "sub-22", name: "Humidifiers", icon: "HousePlug", slug: "humidifiers", parentSlug: "home", sourceSubreddits: [
+        { name: "Humidifiers" },
+        { name: "AirPurifiers" },
+        { name: "BuyItForLife" }, 
+        { name: "Hvacadvice"} 
+      ], productCount: 0 },
     ],
   },
+  {
+    id: "cat-7",
+    name: "Wearables",
+    slug: "wearables",
+    icon: "Watch",
+    viewCount: 5000,
+    rankedAmount: 0,
+    topics: [
+      { id: "sub-23", name: "Smartwatches", slug: "smartwatches", icon: "watch", parentSlug: "wearables", sourceSubreddits: [
+        { name: "smartwatch"},
+        { name: "AppleWatch" },
+        { name: "GalaxyWatch" }
+      ], productCount: 0 },
+      { id: "sub-24", name: "Watches", slug: "watches", icon: "watch", parentSlug: "wearables", sourceSubreddits: [
+        { name: "Affordablewatches"},
+        { name: "Watches" },
+        { name: "GrandSeikos" },
+        { name: "Seiko" },
+        { name: "CitizenWatches" },
+        { name: "timex" },
+        { name: "rolex" },
+        { name: "Tudor" },
+        { name: "OmegaWatches" },
+        { name: "cartier" },
+        { name: "IWCschaffhausen" },
+        { name: "Breitling" },
+        { name: "Longineswatches" },
+        { name: "JaegerLecoultre" },
+        { name: "patekphilippe" },
+        { name: "audemarspiguet" },
+        { name: "Casio" },
+        { name: "gshock" },
+      ], productCount: 0 },
+    ]
+  }
 ];
 
 export const mockProducts: Record<string, ProductV3[]> = {

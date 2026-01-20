@@ -156,6 +156,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "The M3 Max delivers exceptional performance for creative professionals. Battery life is outstanding, and the display is widely praised. Price is the main criticism, but users say it's worth it for the workflow improvements.",
+      parentSlug: "computing",
       subcategory_slug: "laptops",
     },
     {
@@ -170,6 +171,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Consistently recommended for business users who prioritize keyboard quality and durability. The trackpoint remains a unique selling point. Some users note the display could be brighter for outdoor use.",
+      parentSlug: "computing",
       subcategory_slug: "laptops",
     },
     {
@@ -184,6 +186,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Praised for its modular design and repairability ethos. The community loves the expansion card system. Some early adopters note software quirks, but overall sentiment is very positive for the concept.",
+      parentSlug: "computing",
       subcategory_slug: "laptops",
     },
     {
@@ -198,6 +201,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Popular choice for portable gaming. Users appreciate the balance of power and portability. Fan noise under load is a common complaint, but thermals are generally well-managed.",
+      parentSlug: "computing",
       subcategory_slug: "laptops",
     },
     {
@@ -212,6 +216,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Beautiful display and build quality are frequently mentioned. However, thermal throttling and QC issues have hurt its reputation recently. Still a solid choice if you get a good unit.",
+      parentSlug: "computing",
       subcategory_slug: "laptops",
     },
     {
@@ -226,6 +231,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: true,
       has_limited_data: false,
       tldr_summary: "Underrated gaming laptop with excellent cooling and full-power GPU. The 16:10 display is appreciated. Build quality is good but design is polarizing.",
+      parentSlug: "computing",
       subcategory_slug: "laptops",
     },
   ],
@@ -242,6 +248,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Undisputed performance king for gaming and creative work. DLSS 3 frame generation is frequently praised. Price and power consumption are the main drawbacks, but those who can afford it rarely regret it.",
+      parentSlug: "computing",
       subcategory_slug: "gpus",
     },
     {
@@ -256,6 +263,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Undisputed performance king for gaming and creative work. DLSS 3 frame generation is frequently praised. Price and power consumption are the main drawbacks, but those who can afford it rarely regret it.",
+      parentSlug: "computing",
       subcategory_slug: "gpus",
     },
     {
@@ -270,6 +278,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Best value high-end GPU according to many users. Ray tracing lags behind NVIDIA, but raster performance is excellent. Driver stability has improved significantly since launch.",
+      parentSlug: "computing",
       subcategory_slug: "gpus",
     },
     {
@@ -284,6 +293,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Solid 4K gaming performance with better value than the original 4080. DLSS support gives it an edge in supported titles. Still considered expensive by many.",
+      parentSlug: "computing",
       subcategory_slug: "gpus",
     },
     {
@@ -298,6 +308,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Frequently recommended as the best value 1440p gaming card. 16GB VRAM is appreciated for longevity. SAM support with AMD CPUs adds extra value.",
+      parentSlug: "computing",
       subcategory_slug: "gpus",
     },
     {
@@ -312,6 +323,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Good 1440p card with excellent ray tracing. DLSS 3 support makes it more attractive. 12GB VRAM is a concern for some users looking at future-proofing.",
+      parentSlug: "computing",
       subcategory_slug: "gpus",
     },
   ],
@@ -328,6 +340,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Industry-leading ANC with excellent sound quality. Multipoint connection is highly valued. Some users prefer the XM4's folding design, but comfort improvements win most over.",
+      parentSlug: "audio",
       subcategory_slug: "headphones",
     },
     {
@@ -342,6 +355,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Premium build quality and seamless Apple ecosystem integration. Spatial Audio is frequently praised. Price and case design are common complaints. Best for Apple users.",
+      parentSlug: "audio",
       subcategory_slug: "headphones",
     },
     {
@@ -356,6 +370,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Excellent sound quality with a more neutral signature than competitors. Battery life is outstanding. ANC is good but not class-leading. Design change from M3 is divisive.",
+      parentSlug: "audio",
       subcategory_slug: "headphones",
     },
     {
@@ -370,6 +385,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Best-in-class comfort with excellent ANC. Immersive Audio feature divides opinions. Sound quality has improved significantly. Multipoint is appreciated.",
+      parentSlug: "audio",
       subcategory_slug: "headphones",
     },
     {
@@ -384,6 +400,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: true,
       has_limited_data: false,
       tldr_summary: "Studio monitor staple that's stood the test of time. Wired reliability and accurate sound reproduction. Some find them uncomfortable for long sessions. Outstanding value.",
+      parentSlug: "audio",
       subcategory_slug: "headphones",
     },
   ],
@@ -400,6 +417,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Best wireless earbuds for iPhone users. ANC and transparency mode are excellent. Spatial Audio adds immersion. Case improvements with USB-C and speaker are welcome.",
+      parentSlug: "audio",
       subcategory_slug: "earbuds",
     },
     {
@@ -414,6 +432,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Best sound quality in the category according to many audiophiles. ANC is top-tier. Smaller size than XM4 improves comfort. LDAC support is valued by Android users.",
+      parentSlug: "audio",
       subcategory_slug: "earbuds",
     },
   ],
@@ -430,6 +449,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Gold standard for competitive FPS gaming. The weight and sensor are frequently praised. Shape works for most grip styles. Premium price is the only real complaint.",
+      parentSlug: "gaming",
       subcategory_slug: "gaming-mice",
     },
     {
@@ -444,6 +464,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: false,
       has_limited_data: false,
       tldr_summary: "Ergonomic shape is loved by palm grip users. Excellent build quality and sensor performance. Some wish it had more buttons. Optical switches are polarizing.",
+      parentSlug: "gaming",
       subcategory_slug: "gaming-mice",
     },
     {
@@ -458,6 +479,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
       is_hidden_gem: true,
       has_limited_data: false,
       tldr_summary: "Excellent ambi shape at a competitive price. Build quality has improved with newer batches. Stock feet are a common upgrade target. Great value overall.",
+      parentSlug: "gaming",
       subcategory_slug: "gaming-mice",
     },
   ],

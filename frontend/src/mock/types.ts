@@ -36,6 +36,7 @@ export interface ProductV3 {
   is_hidden_gem: boolean;
   has_limited_data: boolean;
   tldr_summary: string;
+  parentSlug: string;
   subcategory_slug: string;
 }
 

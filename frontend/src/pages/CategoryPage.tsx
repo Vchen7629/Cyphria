@@ -4,8 +4,7 @@ import { ChevronRight } from "lucide-react";
 import MainLayout from "../components/layout/MainLayout";
 import TopicCard from "../components/category/TopicCard";
 import { getCategoryBySlug } from "../mock/mockData";
-import type { ProductV3, Topic } from "../mock/types";
-import TopProductsCard from "../components/category/TopProductsCard";
+import type {  Topic } from "../mock/types";
 import TopProductsGrid from "../components/category/topProductsGrid";
 
 const CategoryPage = () => {

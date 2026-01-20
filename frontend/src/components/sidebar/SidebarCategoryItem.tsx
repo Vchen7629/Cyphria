@@ -15,13 +15,14 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 interface SidebarCategoryItemProps {
   category: Category;
+  currentParent?: boolean;
   currentTopicSlug?: string;
   defaultExpanded?: boolean;
 }
 
-const SidebarCategoryItem = ({ category, currentTopicSlug, defaultExpanded = false}: SidebarCategoryItemProps) => {
+const SidebarCategoryItem = ({ category, currentParent, currentTopicSlug, defaultExpanded = false}: SidebarCategoryItemProps) => {
   const [isExpanded, setIsExpanded] = useState(
-    defaultExpanded || category.topics.some(topic => topic.slug === currentTopicSlug)
+    defaultExpanded || category.topics.some(topic => topic.slug === currentTopicSlug) && currentParent
   );
 
   const IconComponent = iconMap[category.icon] || Monitor;

@@ -63,7 +63,6 @@ export const mockCategories: Category[] = [
     name: "Computing",
     slug: "computing",
     icon: "Monitor",
-    guideCount: 24,
     viewCount: 45200,
     topics: [
       { id: "sub-1", name: "Laptops", slug: "laptops", icon: "Laptop", parentSlug: "computing", productCount: 156 },
@@ -78,7 +77,6 @@ export const mockCategories: Category[] = [
     name: "Audio",
     slug: "audio",
     icon: "Headphones",
-    guideCount: 18,
     viewCount: 38700,
     topics: [
       { id: "sub-6", name: "Headphones", slug: "headphones", icon: "Headphones", parentSlug: "audio", productCount: 178 },
@@ -92,7 +90,6 @@ export const mockCategories: Category[] = [
     name: "Mobile",
     slug: "mobile",
     icon: "Smartphone",
-    guideCount: 12,
     viewCount: 52300,
     topics: [
       { id: "sub-10", name: "Smartphones", slug: "smartphones", icon: "Smartphone", parentSlug: "mobile", productCount: 234 },
@@ -105,7 +102,6 @@ export const mockCategories: Category[] = [
     name: "Gaming",
     slug: "gaming",
     icon: "Gamepad2",
-    guideCount: 15,
     viewCount: 41200,
     topics: [
       { id: "sub-13", name: "Gaming Mice", slug: "gaming-mice", icon: "mouse", parentSlug: "gaming", productCount: 187 },
@@ -119,7 +115,6 @@ export const mockCategories: Category[] = [
     name: "Photography",
     slug: "photography",
     icon: "Camera",
-    guideCount: 8,
     viewCount: 23400,
     topics: [
       { id: "sub-17", name: "Cameras", slug: "cameras", icon: "Camera", parentSlug: "photography", productCount: 112 },
@@ -132,7 +127,6 @@ export const mockCategories: Category[] = [
     name: "Home",
     slug: "home",
     icon: "Home",
-    guideCount: 10,
     viewCount: 19800,
     topics: [
       { id: "sub-20", name: "Robot Vacuums", icon: "Camera", slug: "robot-vacuums", parentSlug: "home", productCount: 78 },

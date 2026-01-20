@@ -9,7 +9,6 @@ export interface Category {
   name: string;
   slug: string;
   icon: string;
-  guideCount: number;
   viewCount: number;
   topics: Topic[];
 }

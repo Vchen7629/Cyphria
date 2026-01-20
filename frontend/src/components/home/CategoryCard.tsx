@@ -27,7 +27,7 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
         <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
       </div>
       <p className="text-xs text-zinc-500 pl-11">
-        {category.guideCount} guides · {category.topics.length} subcategories
+        {category.topics.length} Product topics
       </p>
     </Link>
   );

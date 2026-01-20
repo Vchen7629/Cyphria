@@ -14,7 +14,7 @@ const Sidebar = ({ categories, currentParentSlug, currentTopicSlug }: SidebarPro
   const currentParent = categories.find(cat => cat.slug === currentParentSlug);
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-60 bg-[#0a0a0a] border-r border-zinc-800/50 pt-14 overflow-y-auto z-40">
+    <aside className="fixed left-0 top-0 h-screen w-60 bg-[#0a0a0a] border-r border-zinc-600/50 pt-14 overflow-y-auto z-40">
       <nav className="py-4 px-3 space-y-6">
         {currentParent && (
           <SidebarSection title={`${currentParent.name} Categories`}>

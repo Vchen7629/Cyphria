@@ -15,7 +15,7 @@ const Header = ({ onSearch }: HeaderProps) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-14 bg-[#0a0a0a] border-b border-zinc-800/50 z-50">
+    <header className="fixed top-0 left-0 right-0 h-14 bg-[#0a0a0a] border-b border-zinc-600/50 z-50">
       <div className="h-full px-6 flex items-center justify-between">
         <Link to="/" className="text-base font-semibold tracking-tight text-zinc-100 hover:text-white transition-colors">
           cyphria

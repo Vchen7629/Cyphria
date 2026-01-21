@@ -1,7 +1,7 @@
 import MainLayout from "../components/layout/MainLayout";
-import CategoryGrid from "../components/home/CategoryGrid";
 import { mockCategories, mockTopics } from "../mock/mockData";
 import TrendingTopics from "../components/home/TrendingTopics"
+import CategoryCardDropdownButton from "../components/home/CategoryCardDropdownButton";
 
 const HomePage = () => {
   return (
@@ -17,7 +17,15 @@ const HomePage = () => {
         </div>
 
         <div className="space-y-10 h-fit">
-          <CategoryGrid categories={mockCategories} />
+          <section>
+            <h2 className="text-lg font-medium text-zinc-100">Browse Categories</h2>
+            <span className="text-sm font-light text-zinc-400"></span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+              {mockCategories.slice(0,6).map((category) => (
+                <CategoryCardDropdownButton key={category.id} category={category} />
+              ))}
+            </div>
+          </section>
           <TrendingTopics topics={mockTopics} />
         </div>
       </div>

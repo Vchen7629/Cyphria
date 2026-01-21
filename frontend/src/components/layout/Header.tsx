@@ -27,7 +27,7 @@ const Header = ({ onSearch }: HeaderProps) => {
             type="text"
             value={query}
             onChange={handleChange}
-            placeholder="Search products..."
+            placeholder="Search all products..."
             className="w-64 pl-9 pr-4 py-1.5 text-sm bg-zinc-900/50 border border-zinc-800 rounded-lg text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
           />
         </div>

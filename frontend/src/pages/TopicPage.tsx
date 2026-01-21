@@ -10,10 +10,10 @@ import { getTopicBySlug } from "../utils/topic/GetTopicBySlug";
 import ExtraRedditSourceList from "../components/category/ExtraRedditSourceList";
 import { Clock } from "lucide-react";
 import { getProductsByTopic } from "../utils/product/GetProductsByTopic";
-import ProductSearchBar from "../components/product/SearchBar";
 import { FilterByBadge, FilterByPricePoint, FilterBySearchTerm, FilterByTimeWindow } from "../utils/product/productFilters";
 import PriceFilterSwitch from "../components/product/PriceFilterSwitch";
 import TimeRangeSwitch from "../components/product/TimeRangeSwitch";
+import TopicProductSearchBar from "../components/product/TopicProductSearchBar";
 
 const TopicPage = () => {
   const { category: categorySlug, topic: topicSlug } = useParams<{
@@ -97,7 +97,7 @@ const TopicPage = () => {
         <div className="flex items-center justify-between mb-6">
           <FilterTabs activeFilter={activeFilter} onFilterChange={handleFilterChange} />
           <PriceFilterSwitch selectedPrice={selectedPrice} setSelectedPrice={setSelectedPrice}/>
-          <ProductSearchBar query={searchTerm} setQuery={setSearchTerm} />
+          <TopicProductSearchBar query={searchTerm} setQuery={setSearchTerm} />
         </div>
 
         <div className="border border-zinc-600/50 rounded-lg overflow-hidden">

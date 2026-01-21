@@ -13,7 +13,7 @@ interface ProductSearchBarProps {
     @param {string} query - the search query string
     @param {React.Dispatch<React.SetStateAction<string>>} setQuery - the setter to set the query on
  */
-const ProductSearchBar = ({ query, setQuery }: ProductSearchBarProps) => {
+const TopicProductSearchBar = ({ query, setQuery }: ProductSearchBarProps) => {
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setQuery(e.target.value);
@@ -33,4 +33,4 @@ const ProductSearchBar = ({ query, setQuery }: ProductSearchBarProps) => {
     )
 }
 
-export default ProductSearchBar
+export default TopicProductSearchBar

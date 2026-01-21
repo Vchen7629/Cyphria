@@ -11,8 +11,9 @@ import RedditSourcePill from "../components/category/RedditSourcePill";
 import ExtraRedditSourceList from "../components/category/ExtraRedditSourceList";
 import { Clock } from "lucide-react";
 import { getProductsByTopic } from "../utils/product/GetProductsByTopic";
-import ProductSearchBar from "../components/product/searchbar";
-import { FilterByBadge, FilterBySearchTerm } from "../utils/product/productFilters";
+import ProductSearchBar from "../components/product/SearchBar";
+import { FilterByBadge, FilterByPricePoint, FilterBySearchTerm } from "../utils/product/productFilters";
+import PriceFilterSwitch from "../components/product/PriceFilterSwitch";
 
 const TopicPage = () => {
   const { category: categorySlug, topic: topicSlug } = useParams<{
@@ -23,6 +24,7 @@ const TopicPage = () => {
   const [activeFilter, setActiveFilter] = useState<FilterType>("best");
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("")
+  const [selectedPrice, setSelectedPrice] = useState<'$' | '$$' | '$$$' | null>(null);
 
   const topicData = useMemo(() => {
     if (!categorySlug || !topicSlug) return undefined;
@@ -34,8 +36,9 @@ const TopicPage = () => {
   const filteredProducts = useMemo(() => {
     const productsList = [...products];
     const badgeFilteredList = FilterByBadge(activeFilter, productsList)
-    return FilterBySearchTerm(searchTerm, badgeFilteredList)
-  }, [products, searchTerm, activeFilter]);
+    const SearchFilteredList =  FilterBySearchTerm(searchTerm, badgeFilteredList)
+    return FilterByPricePoint(selectedPrice, SearchFilteredList)
+  }, [products, searchTerm, selectedPrice, activeFilter]);
 
   const handleFilterChange = (filter: FilterType) => {
     setIsLoading(true);
@@ -83,6 +86,7 @@ const TopicPage = () => {
 
         <div className="flex items-center justify-between mb-6">
           <FilterTabs activeFilter={activeFilter} onFilterChange={handleFilterChange} />
+          <PriceFilterSwitch selectedPrice={selectedPrice} setSelectedPrice={setSelectedPrice}/>
           <ProductSearchBar query={searchTerm} setQuery={setSearchTerm} />
         </div>
 

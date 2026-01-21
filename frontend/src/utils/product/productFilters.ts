@@ -45,3 +45,27 @@ export function FilterBySearchTerm(searchTerm: string, productsList: ProductV3[]
         product.product_name.toLowerCase().includes(searchLower)
     );
 } 
+
+/** 
+    @function
+
+    @description - Filter an array of products based on the price point of the product
+
+    @param {string | null} pricePoint - the price point ($, $$, $$$ or null) we are matching product names on
+    @param {ProductV3} productsList - the original array of products we are filtering on
+
+    @returns {ProductV3[]} - the filtered array of products
+*/
+export function FilterByPricePoint(pricePoint: string | null, productsList: ProductV3[]) {
+    if (!pricePoint) {
+        return productsList
+    }
+
+    if (!pricePoint.trim()) {
+        return productsList;
+    }
+
+    return productsList.filter((product) =>
+        product.price_point == pricePoint
+    );
+}

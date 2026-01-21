@@ -314,6 +314,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "laptop-1",
       product_name: "MacBook Pro 16 M3 Max",
+      price_point: "$$",
       rank: 1,
       grade: "S",
       mention_count: 2341,
@@ -329,6 +330,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "laptop-2",
       product_name: "ThinkPad X1 Carbon Gen 11",
+      price_point: "$",
       rank: 2,
       grade: "A",
       mention_count: 1567,
@@ -344,6 +346,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "laptop-3",
       product_name: "Framework Laptop 16",
+      price_point: "$$$",
       rank: 3,
       grade: "A-",
       mention_count: 1234,
@@ -359,6 +362,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "laptop-4",
       product_name: "ASUS ROG Zephyrus G14",
+      price_point: "$$$",
       rank: 4,
       grade: "B+",
       mention_count: 876,
@@ -374,6 +378,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "laptop-5",
       product_name: "Dell XPS 15",
+      price_point: "$$",
       rank: 5,
       grade: "B",
       mention_count: 654,
@@ -389,6 +394,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "laptop-6",
       product_name: "Lenovo Legion Pro 7",
+      price_point: "$$",
       rank: 6,
       grade: "B",
       mention_count: 423,
@@ -406,6 +412,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "gpu-1",
       product_name: "NVIDIA RTX 5090",
+      price_point: "$$$",
       rank: 1,
       grade: "S",
       mention_count: 1234,
@@ -421,6 +428,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "gpu-1",
       product_name: "NVIDIA RTX 4090",
+      price_point: "$$$",
       rank: 2,
       grade: "A+",
       mention_count: 1234,
@@ -436,6 +444,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "gpu-2",
       product_name: "AMD RX 7900 XTX",
+      price_point: "$$",
       rank: 3,
       grade: "A",
       mention_count: 892,
@@ -451,6 +460,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "gpu-3",
       product_name: "NVIDIA RTX 4080 Super",
+      price_point: "$$",
       rank: 4,
       grade: "A-",
       mention_count: 756,
@@ -466,6 +476,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "gpu-4",
       product_name: "AMD RX 7800 XT",
+      price_point: "$",
       rank: 5,
       grade: "B+",
       mention_count: 543,
@@ -481,6 +492,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "gpu-5",
       product_name: "NVIDIA RTX 4070 Ti Super",
+      price_point: "$$",
       rank: 6,
       grade: "B+",
       mention_count: 421,
@@ -498,6 +510,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "headphone-1",
       product_name: "Sony WH-1000XM5",
+      price_point: "$",
       rank: 1,
       grade: "A+",
       mention_count: 3456,
@@ -513,6 +526,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "headphone-2",
       product_name: "Apple AirPods Max",
+      price_point: "$$",
       rank: 2,
       grade: "A",
       mention_count: 2890,
@@ -528,6 +542,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "headphone-3",
       product_name: "Sennheiser Momentum 4",
+      price_point: "$$$",
       rank: 3,
       grade: "A-",
       mention_count: 1234,
@@ -543,6 +558,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "headphone-4",
       product_name: "Bose QuietComfort Ultra",
+      price_point: "$$",
       rank: 4,
       grade: "A-",
       mention_count: 987,
@@ -558,6 +574,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "headphone-5",
       product_name: "Audio-Technica ATH-M50x",
+      price_point: "$$",
       rank: 5,
       grade: "B+",
       mention_count: 765,
@@ -575,6 +592,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "earbuds-1",
       product_name: "Apple AirPods Pro 2",
+      price_point: "$$",
       rank: 1,
       grade: "A+",
       mention_count: 4521,
@@ -590,6 +608,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "earbuds-2",
       product_name: "Sony WF-1000XM5",
+      price_point: "$$",
       rank: 2,
       grade: "A",
       mention_count: 2134,
@@ -607,6 +626,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "mouse-1",
       product_name: "Logitech G Pro X Superlight 2",
+      price_point: "$$",
       rank: 1,
       grade: "A+",
       mention_count: 1876,
@@ -622,6 +642,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "mouse-2",
       product_name: "Razer DeathAdder V3",
+      price_point: "$$",
       rank: 2,
       grade: "A",
       mention_count: 1234,
@@ -637,6 +658,7 @@ export const mockProducts: Record<string, ProductV3[]> = {
     {
       id: "mouse-3",
       product_name: "Pulsar X2",
+      price_point: "$",
       rank: 3,
       grade: "A-",
       mention_count: 876,

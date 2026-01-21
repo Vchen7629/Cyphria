@@ -7,7 +7,6 @@ import { mockComments } from "../mock/mockData";
 import type { FilterType, Subreddit } from "../mock/types";
 import FilterTabs from "../components/product/FilterTabs";
 import { getTopicBySlug } from "../utils/topic/GetTopicBySlug";
-import RedditSourcePill from "../components/category/RedditSourcePill";
 import ExtraRedditSourceList from "../components/category/ExtraRedditSourceList";
 import { Clock } from "lucide-react";
 import { getProductsByTopic } from "../utils/product/GetProductsByTopic";
@@ -70,14 +69,20 @@ const TopicPage = () => {
         <section className="mt-6 mb-8 space-y-2">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold text-zinc-100">Best {topic.name} based on reddit opinions </h1>
-            
             <TimeRangeSwitch selectedTimeWindow={selectedTimeWindow} setSelectedTimeWindow={setSelectedTimeWindow}/>
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-sm text-zinc-400">Sources: </span>
             <ul className="flex space-x-2">
               {topic.sourceSubreddits.slice(0, 6).map((subreddit: Subreddit) => (
-                <RedditSourcePill key={subreddit.name} subreddit={subreddit}/>
+                <a
+                  href={`https://www.reddit.com/r/${subreddit.name}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center py-1 px-3 bg-orange-600 rounded-lg text-white border border-orange-700 hover:text-zinc-200 hover:border-orange-400 transition-colors duration-250"
+                >
+                  <span className="text-xs truncate">r/{subreddit.name}</span>
+                </a>
               ))}
               {topic.sourceSubreddits.length > 6 && (
                 <ExtraRedditSourceList subreddits={topic.sourceSubreddits.slice(7)} totalExtra={topic.sourceSubreddits.length - 7}/>

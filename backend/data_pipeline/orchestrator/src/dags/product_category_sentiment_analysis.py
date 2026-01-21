@@ -11,9 +11,9 @@ import json
 
 settings = Settings()
 
-def create_pipeline_dag(category: str) -> DAG:
+def create_sentiment_analysis_dag(category: str) -> DAG:
     """
-    Create a pipeline DAG for a specific category.
+    Create a sentiment analysis DAG for a specific category.
     
     Args:
         category: the product category we are fetching for
@@ -22,16 +22,16 @@ def create_pipeline_dag(category: str) -> DAG:
         a dag that have tasks that fetch/process comments for the specific category
     """
     dag = DAG(
-        dag_id=f"product_{category.lower()}_pipeline",
+        dag_id=f"product_{category.lower()}_sentiment_analysis",
         schedule=CategoryMappings.CATEGORY_SCHEDULES.get(category),
         start_date=settings.START_DATE,
         catchup=False,
-        tags=['pipeline', category.lower()],
+        tags=['sentiment_analysis', category.lower()],
         max_active_runs=settings.MAX_ACTIVE_RUNS,
         doc_md="""
-        ## Pipeline DAG
-        Ingests Reddit comments, runs sentiment analysis, generates summaries.
-
+        ## Sentiment analysis DAG
+        Ingests Reddit comments and runs sentiment analysis
+        
         **Schedule:** Daily
         """
     )
@@ -74,28 +74,11 @@ def create_pipeline_dag(category: str) -> DAG:
             max_retry_delay=settings.MAX_RETRY_DELAY
         )
 
-        llm_summary = HttpOperator(
-            task_id=f'generate_{category.lower()}_product_summaries',
-            http_conn_id='llm_summary_service',
-            endpoint='/run',
-            method='POST',
-            headers={'Content-Type': 'application/json'},
-            data=json.dumps({'category': category}),
-            response_check=lambda response: response.json()['status'] in ['completed', 'cancelled'],
-            log_response=True,
-            execution_timeout=settings.EXECUTION_TIMEOUT,
-            on_failure_callback=on_task_failure,
-            retries=settings.NUM_RETRIES,
-            retry_delay=settings.RETRY_DELAY,
-            retry_exponential_backoff=True,
-            max_retry_delay=settings.MAX_RETRY_DELAY
-        )
-
-        reddit_raw_comment_ingest >> [sentiment_analysis, llm_summary]
+        reddit_raw_comment_ingest >> sentiment_analysis
 
     return dag
 
 
 # Create DAGs at module level so Airflow can discover them
 for _category in CategoryMappings.CATEGORIES:
-    globals()[f'product_{_category.lower()}_pipeline'] = create_pipeline_dag(_category)
+    globals()[f'product_{_category.lower()}_sentiment_analysis'] = create_sentiment_analysis_dag(_category)

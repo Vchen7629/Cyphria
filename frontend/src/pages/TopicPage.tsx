@@ -11,6 +11,8 @@ import RedditSourcePill from "../components/category/RedditSourcePill";
 import ExtraRedditSourceList from "../components/category/ExtraRedditSourceList";
 import { Clock } from "lucide-react";
 import { getProductsByTopic } from "../utils/product/GetProductsByTopic";
+import ProductSearchBar from "../components/product/searchbar";
+import { FilterByBadge, FilterBySearchTerm } from "../utils/product/productFilters";
 
 const TopicPage = () => {
   const { category: categorySlug, topic: topicSlug } = useParams<{
@@ -20,6 +22,7 @@ const TopicPage = () => {
 
   const [activeFilter, setActiveFilter] = useState<FilterType>("best");
   const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>("")
 
   const topicData = useMemo(() => {
     if (!categorySlug || !topicSlug) return undefined;
@@ -29,21 +32,10 @@ const TopicPage = () => {
   const products = useMemo(() => getProductsByTopic(topicSlug), [topicSlug]);
 
   const filteredProducts = useMemo(() => {
-    const sorted = [...products];
-
-    switch (activeFilter) {
-      case "best":
-        return sorted.sort((a, b) => a.rank - b.rank);
-      case "discussed":
-        return sorted.sort((a, b) => b.mention_count - a.mention_count);
-      case "approval":
-        return sorted.sort((a, b) => b.approval_percentage - a.approval_percentage);
-      case "hidden_gems":
-        return sorted.filter((p) => p.is_hidden_gem || (p.approval_percentage > 75 && p.mention_count < 500));
-      default:
-        return sorted;
-    }
-  }, [products, activeFilter]);
+    const productsList = [...products];
+    const badgeFilteredList = FilterByBadge(activeFilter, productsList)
+    return FilterBySearchTerm(searchTerm, badgeFilteredList)
+  }, [products, searchTerm, activeFilter]);
 
   const handleFilterChange = (filter: FilterType) => {
     setIsLoading(true);
@@ -89,8 +81,9 @@ const TopicPage = () => {
           </p>
         </section>
 
-        <div className="mb-6">
+        <div className="flex items-center justify-between mb-6">
           <FilterTabs activeFilter={activeFilter} onFilterChange={handleFilterChange} />
+          <ProductSearchBar query={searchTerm} setQuery={setSearchTerm} />
         </div>
 
         <div className="border border-zinc-600/50 rounded-lg overflow-hidden">

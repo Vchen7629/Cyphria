@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Subreddit } from "../../mock/types";
 import { useState } from "react";
 import RedditSourcePill from "./RedditSourcePill";

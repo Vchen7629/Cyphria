@@ -8,15 +8,7 @@ interface ProductListProps {
 }
 
 const ProductList = ({ products, comments = [], isLoading = false }: ProductListProps) => {
-  if (isLoading) {
-    return (
-      <div className="py-12 text-center">
-        <div className="animate-pulse text-zinc-500 text-sm">Loading products...</div>
-      </div>
-    );
-  }
-
-  if (products.length === 0) {
+  if (products.length === 0 && !isLoading) {
     return (
       <div className="py-12 text-center">
         <p className="text-zinc-500 text-sm">No products found</p>

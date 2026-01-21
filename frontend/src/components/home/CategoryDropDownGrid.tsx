@@ -1,7 +1,13 @@
-import {Monitor } from "lucide-react";
+import {Monitor, X } from "lucide-react";
 import iconMap from "../../utils/home/IconMap";
 import type { Category } from "../../mock/types";
 import { Link } from "react-router";
+
+interface CategoryDropDownGridProps {
+    category: Category
+    toggleCategory: any
+}
+
 /**
  @component
 
@@ -9,7 +15,7 @@ import { Link } from "react-router";
 
  @param {Category} category - the category object with all topics
  */
-const CategoryDropDownGrid = ({ category }: { category: Category }) => {
+const CategoryDropDownGrid = ({ category, toggleCategory }: CategoryDropDownGridProps) => {
   const IconComponent = iconMap[category.icon] || Monitor;
 
   return (
@@ -19,12 +25,20 @@ const CategoryDropDownGrid = ({ category }: { category: Category }) => {
           <IconComponent className="w-5 h-5 mr-2 text-zinc-400" />
           {category.name} topics
         </span>
-        <Link 
-            to={`/${category.slug}`}
-            className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
-        >
-            View all
-        </Link>
+        <div className="flex items-center space-x-2">
+            <Link 
+                to={`/${category.slug}`}
+                className="text-xs text-orange-400 hover:text-orange-500 transition-colors"
+            >
+                View all 
+            </Link>
+            <button                                                                                                                                                                           
+                className="text-zinc-400 hover:text-zinc-200 transition-colors p-1 rounded hover:bg-zinc-800/60"                                                                              
+                onClick={() => toggleCategory(category.id)}                                                                                                                                   
+            >                                                                                                                                                                                 
+                <X className="w-4 h-4" />                                                                                                                                                     
+            </button>               
+        </div>
       </section>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">

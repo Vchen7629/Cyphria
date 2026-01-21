@@ -63,7 +63,10 @@ const BrowseCateroriesGrid = () => {
                 })}
                 {row.some((category) => category.id === openCategoryId) && (
                     <div className="col-span-full">
-                        <CategoryDropDownGrid category={categories.find((c) => c.id === openCategoryId)!}/>
+                        <CategoryDropDownGrid 
+                            category={categories.find((c) => c.id === openCategoryId)!} 
+                            toggleCategory={toggleCategory}
+                        />
                     </div>
                 )}
             </Fragment>

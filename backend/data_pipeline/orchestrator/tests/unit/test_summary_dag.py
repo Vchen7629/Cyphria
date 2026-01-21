@@ -1,33 +1,33 @@
-from src.dags.product_category_pipelines import create_pipeline_dag
+from src.dags.product_summary import create_llm_summary_dag
 from src.config.settings import Settings
 
 settings = Settings()
 
 def test_dag_loads_with_correct_configs() -> None:
     """Dag should load with expected values"""
-    dag = create_pipeline_dag('GPU')
-    assert dag.dag_id == 'product_gpu_pipeline'
-    assert dag.schedule == '0 0 * * *'
+    dag = create_llm_summary_dag()
+
+    assert dag.dag_id == 'product_summary'
+    assert dag.schedule == '0 0 1 * *'
     assert dag.start_date == settings.START_DATE
     assert dag.catchup is False
-    assert sorted(dag.tags) == sorted(['pipeline', 'gpu'])
+    assert dag.tags == {'summary'}
     assert dag.max_active_runs == settings.MAX_ACTIVE_RUNS
 
 def test_loads_dag_tasks() -> None:
-    """Product category pipeline dag should load 3 tasks"""
-    dag = create_pipeline_dag('GPU')
+    """product summary dag should load 1 task"""
+    dag = create_llm_summary_dag()
 
     assert dag is not None
-    assert len(dag.tasks) == 3 # should be ingest, sentiment, llm
+    assert len(dag.tasks) == 2 # should be llm summary all time and 90 day
 
 def test_correct_dag_tasks() -> None:
-    """Product category pipeline dag should load the 3 expected tasks"""
-    dag = create_pipeline_dag('GPU')
+    """product summary dag should load 1 task"""
+    dag = create_llm_summary_dag()
 
     expected_tasks = sorted([                                                                               
-      "ingest_gpu_comments",                                                                        
-      "analyze_gpu_product_sentiments",                                                             
-      "generate_gpu_product_summaries"                                                              
+      "generate_product_summaries_all_time",                                                                        
+      "generate_product_summaries_90_day",                                                             
     ])                                                                                                      
                                                                                                             
     actual_tasks = sorted(task.task_id for task in dag.tasks)

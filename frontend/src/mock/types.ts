@@ -29,6 +29,7 @@ export interface ProductV3 {
   id: string;
   product_name: string;
   price_point: string;
+  time_window: string;
   rank: number;
   grade: Grade;
   mention_count: number;

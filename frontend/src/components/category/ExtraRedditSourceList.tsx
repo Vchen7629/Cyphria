@@ -22,7 +22,7 @@ const ExtraRedditSourceList = ({ subreddits, totalExtra }: ExtraRedditSourceProp
                 </span>
             </button>
             {showList && (
-                <ul className="flex flex-col space-y-2 absolute w-[140%] max-h-30 overflow-auto mt-2 left-[-20%] py-2 px-2 bg-zinc-800 rounded-lg text-zinc-400">
+                <ul className="flex flex-col space-y-2 absolute w-[140%] max-h-30 overflow-auto mt-2 left-[-20%] py-2 px-2 bg-zinc-800 rounded-lg text-zinc-400 z-50">
                     <span className="text-xs ml-2">+{totalExtra} extra sources</span>
                     {subreddits.map((subreddit: Subreddit) => (
                         <RedditSourcePill subreddit={subreddit}/>

@@ -3,7 +3,7 @@ import { CalendarCheck, ChevronRight, Dot } from "lucide-react";
 import type { ProductV3, Topic } from "../../mock/types";
 import { useMemo } from "react";
 import { getProductsByTopic } from "../../utils/product/GetProductsByTopic";
-import TopMentionedProductCard from "./topMentionedProductCard";
+import { getGradeColors } from "../../utils/product/GetColors";
 
 interface TopicCardProps {
   topic: Topic;
@@ -33,9 +33,18 @@ const TopicCard = ({ topic }: TopicCardProps) => {
           <span className="text-xs font-medium text-zinc-400">Most Discussed Products</span>
           <ul className="flex gap-2 mt-2">
             {products.length > 0 ? (
-              products.slice(0,3).map((product: ProductV3) => (
-                <TopMentionedProductCard key={product.id} product={product} />
-              ))
+              products.slice(0,3).map((product: ProductV3) => {
+                const gradeColors = getGradeColors(product.grade);
+                
+                return (
+                  <li className="flex items-center space-x-1 py-1.5 px-2.5 bg-zinc-900 border border-zinc-700 rounded-lg w-fit">
+                      <div className={`flex items-center justify-center w-7 h-5 rounded-lg border ${gradeColors.border} ${gradeColors.bg}`}>
+                          <span className="text-xs font-semibold">{product.grade}</span>
+                      </div>
+                      <div className="text-xs min-w-0 flex-1">{product.product_name}</div>
+                  </li>
+                )
+              })
             ) : (
               <div className="flex items-center space-x-1 py-1.5 px-2.5 bg-zinc-900 border border-zinc-700 rounded-lg w-fit">
                 <span className="text-xs text-zinc-400">No products found</span>

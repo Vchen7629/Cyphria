@@ -1,4 +1,5 @@
 import { Search } from "lucide-react"
+import { useParams } from "react-router";
 
 interface ProductSearchBarProps {
     query: string
@@ -7,13 +8,13 @@ interface ProductSearchBarProps {
 /**
     @component
 
-    @description - Searchbar component for filtering the products on the current product topic
-    page
+    @description - Searchbar component for filtering the products for current topic
 
     @param {string} query - the search query string
     @param {React.Dispatch<React.SetStateAction<string>>} setQuery - the setter to set the query on
  */
 const TopicProductSearchBar = ({ query, setQuery }: ProductSearchBarProps) => {
+    const { topic: TopicSlug } = useParams<{ topic: string }>();
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setQuery(e.target.value);
@@ -26,7 +27,7 @@ const TopicProductSearchBar = ({ query, setQuery }: ProductSearchBarProps) => {
                 type="text"
                 value={query}
                 onChange={handleChange}
-                placeholder="Search products from this topic..."
+                placeholder={`Search ${TopicSlug} products...`}
                 className="w-64 pl-9 pr-4 py-1.5 text-sm bg-zinc-900/50 border border-zinc-800 rounded-lg text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
             />
         </div>

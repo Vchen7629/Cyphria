@@ -13,7 +13,7 @@ const CategoryDropDownGrid = ({ category }: { category: Category }) => {
   const IconComponent = iconMap[category.icon] || Monitor;
 
   return (
-    <div className="p-4 rounded-lg border border-zinc-800 bg-zinc-700/20">
+    <div className="p-4 rounded-lg border border-zinc-800 bg-zinc-700/20 animate-fade-in-up">
       <section className="flex justify-between items-center mb-4">
         <span className="flex items-center text-sm text-zinc-400">
           <IconComponent className="w-5 h-5 mr-2 text-zinc-400" />

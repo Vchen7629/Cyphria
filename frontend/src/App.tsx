@@ -1,11 +1,9 @@
 import { lazy, useEffect } from "react"
 import { Routes, Route, useLocation } from "react-router"
 
-const Homepage = lazy(() => (import("./features/homepage/pages/homepage.tsx")))
-const SearchPage = lazy(() => (import("./features/topic/pages/topic-trends.tsx")))
-const CategoryTrendsPage = lazy(() => (import("./features/category/pages/categorytrendspage.tsx")))
-const SubredditStatisticsPage = lazy(() => (import("./features/subreddit/pages/subreddittrendspage.tsx")))
-const ComparisonPage = lazy(() => (import("./features/topic/pages/comparison.tsx")))
+const Homepage = lazy(() => (import("./pages/HomePage.tsx")))
+const CategoryPage = lazy(() => (import("./pages/CategoryPage.tsx")))
+const TopicPage = lazy(() => (import("./pages/TopicPage.tsx")))
 
 function App() {
   const location = useLocation();
@@ -17,11 +15,9 @@ function App() {
 
   return (
     <Routes>
-      <Route path="" element={<Homepage/>}/>
-      <Route path="/topic" element={<SearchPage/>}/>
-      <Route path="/subreddit" element={<SubredditStatisticsPage />}/>
-      <Route path="/category" element={<CategoryTrendsPage/>}/>
-      <Route path="/comparison" element={<ComparisonPage/>}/>
+      <Route path="" element={<Homepage />} />
+      <Route path="/:category" element={<CategoryPage />} />
+      <Route path="/:category/:topic" element={<TopicPage />} />
     </Routes>
   )
 }

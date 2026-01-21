@@ -58,52 +58,6 @@ export default {
   					opacity: '0'
   				}
   			},
-  			skFoldCube: {
-  				'0%, 10%': {
-  					transform: 'perspective(140px) rotateX(-180deg)',
-  					opacity: '0'
-  				},
-  				'25%, 75%': {
-  					transform: 'perspective(140px) rotateX(0deg)',
-  					opacity: '1'
-  				},
-  				'90%, 100%': {
-  					transform: 'perspective(140px) rotateY(180deg)',
-  					opacity: '0'
-  				}
-  			},
-  			marquee: {
-  				from: {
-  					transform: 'translateX(0)'
-  				},
-  				to: {
-  					transform: 'translateX(calc(-100% - var(--gap)))'
-  				}
-  			},
-  			'marquee-vertical': {
-  				from: {
-  					transform: 'translateY(0)'
-  				},
-  				to: {
-  					transform: 'translateY(calc(-100% - var(--gap)))'
-  				}
-  			},
-  			'accordion-down': {
-  				from: {
-  					height: '0'
-  				},
-  				to: {
-  					height: 'var(--radix-accordion-content-height)'
-  				}
-  			},
-  			'accordion-up': {
-  				from: {
-  					height: 'var(--radix-accordion-content-height)'
-  				},
-  				to: {
-  					height: '0'
-  				}
-  			},
   			'fade-in-up': {
   				'0%': {
   					opacity: '0',
@@ -113,16 +67,23 @@ export default {
   					opacity: '1',
   					transform: 'translateY(0)'
   				}
-  			}
+  			},
+			'fade-in-left': {                                                                                                                                                                      
+				'0%': {                                                                                                                                                                       
+					opacity: '0',
+					transform: 'translateX(-10px)'                                                                                                                                                              
+				},                                                                                                                                                                            
+				'100%': {                                                                                                                                                                     
+					opacity: '1',
+					transform: 'translateX(0)'                                                                                                                                                              
+				}                                                                                                                                                                             
+			}  
+
   		},
   		animation: {
-  			marquee: 'marquee var(--duration) infinite linear',
-  			'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
-  			skFoldCube: 'skFoldCube 2.4s infinite linear both',
-  			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out',
   			pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) forwards',
-  			'fade-in-up': 'fade-in-up 0.3s ease-out forwards'
+  			'fade-in-up': 'fade-in-up 0.3s ease-out forwards',
+			'fade-in-left': 'fade-in-left 0.3s ease-out forwards'
   		}
   	}
   },

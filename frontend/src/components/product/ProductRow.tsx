@@ -75,7 +75,7 @@ const ProductRow = ({ product, sentiment, comments = [] }: ProductRowProps) => {
         </div>
       </div>
       {isExpanded && (
-        <div className="px-4 pb-4 pt-2 space-y-4 border-t border-zinc-800/40 mt-3 ml-12">
+        <div className="px-4 pb-4 pt-2 space-y-4 border-t border-zinc-800/40 mt-3">
           <SentimentBar sentiment={defaultSentiment} />
           <TopComments comments={comments} />
         </div>

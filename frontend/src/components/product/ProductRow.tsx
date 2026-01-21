@@ -26,7 +26,7 @@ const ProductRow = ({ product, sentiment, comments = [] }: ProductRowProps) => {
   };
 
   return (
-    <li className="border-b bg-zinc-700/20 border-zinc-800/40 last:border-0">
+    <li className="border-b bg-zinc-700/20 border-zinc-800/40 animate-fade-in-up  last:border-0">
       <div className="w-full py-4 px-4 flex items-start gap-4 text-left hover:bg-zinc-900/20 transition-colors">
         <ProductRankingDetailsBadge 
           rank={product.rank}

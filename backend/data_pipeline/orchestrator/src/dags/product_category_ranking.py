@@ -84,7 +84,7 @@ def create_ranking_dag(category: str) -> DAG:
             max_retry_delay=settings.MAX_RETRY_DELAY
         )
 
-        [product_ranking_all_time, product_ranking_90_days]
+        product_ranking_all_time >> product_ranking_90_days
 
     return dag
 

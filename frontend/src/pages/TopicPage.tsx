@@ -12,8 +12,9 @@ import ExtraRedditSourceList from "../components/category/ExtraRedditSourceList"
 import { Clock } from "lucide-react";
 import { getProductsByTopic } from "../utils/product/GetProductsByTopic";
 import ProductSearchBar from "../components/product/SearchBar";
-import { FilterByBadge, FilterByPricePoint, FilterBySearchTerm } from "../utils/product/productFilters";
+import { FilterByBadge, FilterByPricePoint, FilterBySearchTerm, FilterByTimeWindow } from "../utils/product/productFilters";
 import PriceFilterSwitch from "../components/product/PriceFilterSwitch";
+import TimeRangeSwitch from "../components/product/TimeRangeSwitch";
 
 const TopicPage = () => {
   const { category: categorySlug, topic: topicSlug } = useParams<{
@@ -25,6 +26,7 @@ const TopicPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("")
   const [selectedPrice, setSelectedPrice] = useState<'$' | '$$' | '$$$' | null>(null);
+  const [selectedTimeWindow, setSelectedTimeWindow] = useState<'90d' | 'All Time'>('All Time')
 
   const topicData = useMemo(() => {
     if (!categorySlug || !topicSlug) return undefined;
@@ -37,8 +39,9 @@ const TopicPage = () => {
     const productsList = [...products];
     const badgeFilteredList = FilterByBadge(activeFilter, productsList)
     const SearchFilteredList =  FilterBySearchTerm(searchTerm, badgeFilteredList)
-    return FilterByPricePoint(selectedPrice, SearchFilteredList)
-  }, [products, searchTerm, selectedPrice, activeFilter]);
+    const PricePointFilteredList = FilterByPricePoint(selectedPrice, SearchFilteredList)
+    return FilterByTimeWindow(selectedTimeWindow, PricePointFilteredList)
+  }, [products, searchTerm, selectedPrice, selectedTimeWindow, activeFilter]);
 
   const handleFilterChange = (filter: FilterType) => {
     setIsLoading(true);
@@ -67,6 +70,8 @@ const TopicPage = () => {
         <section className="mt-6 mb-8 space-y-2">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold text-zinc-100">Best {topic.name} based on reddit opinions </h1>
+            
+            <TimeRangeSwitch selectedTimeWindow={selectedTimeWindow} setSelectedTimeWindow={setSelectedTimeWindow}/>
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-sm text-zinc-400">Sources: </span>

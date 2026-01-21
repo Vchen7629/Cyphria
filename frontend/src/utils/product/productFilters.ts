@@ -41,7 +41,7 @@ export function FilterBySearchTerm(searchTerm: string, productsList: ProductV3[]
     }
 
     const searchLower = searchTerm.toLowerCase();
-    return productsList.filter((product) =>
+    return productsList.filter((product: ProductV3) =>
         product.product_name.toLowerCase().includes(searchLower)
     );
 } 
@@ -65,7 +65,27 @@ export function FilterByPricePoint(pricePoint: string | null, productsList: Prod
         return productsList;
     }
 
-    return productsList.filter((product) =>
+    return productsList.filter((product: ProductV3) =>
         product.price_point == pricePoint
     );
+}
+
+/** 
+    @function
+
+    @description - Filter an array of products based on the time_window of the product
+
+    @param {string} time_window - the time_window (90d or All Time) we are matching product time windows on
+    @param {ProductV3} productsList - the original array of products we are filtering on
+
+    @returns {ProductV3[]} - the filtered array of products
+*/
+export function FilterByTimeWindow(time_window: string, productsList: ProductV3[]) {
+    if (time_window.trim() == "All Time") {
+        return productsList;
+    } else {
+        return productsList.filter((product: ProductV3) =>
+            product.time_window == time_window
+        );
+    }
 }

@@ -5,8 +5,8 @@ import ProductRankingDetailsBadge from './RankingDetailsBadge'
 import ProductBadges from "./ProductBadges";
 import { Trophy } from "lucide-react";
 import { getRankColors } from "../../utils/product/GetColors";
-import SentimentBar from "./SentimentBar";
 import TopComments from "./TopComments";
+import SentimentBreakDown from "./SentimentBreakDown";
 
 
 interface ProductRowProps {
@@ -76,7 +76,7 @@ const ProductRow = ({ product, sentiment, comments = [] }: ProductRowProps) => {
       </div>
       {isExpanded && (
         <div className="px-4 pb-4 pt-2 space-y-4 border-t border-zinc-800/40 mt-3">
-          <SentimentBar sentiment={defaultSentiment} />
+          <SentimentBreakDown sentiment={defaultSentiment} />
           <TopComments comments={comments} />
         </div>
       )}

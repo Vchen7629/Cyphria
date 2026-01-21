@@ -8,7 +8,7 @@ import type { Sentiment } from "../../mock/types";
 
  @param {Sentiment} sentiment - The current product's sentiment metadata object
  */
-const SentimentBar = ({ sentiment }: { sentiment: Sentiment }) => {
+const SentimentBreakDown = ({ sentiment }: { sentiment: Sentiment }) => {
   const total = sentiment.positive_count + sentiment.neutral_count + sentiment.negative_count;
   if (total === 0) return null;
 
@@ -68,4 +68,4 @@ const SentimentBar = ({ sentiment }: { sentiment: Sentiment }) => {
   );
 }
 
-export default SentimentBar
+export default SentimentBreakDown

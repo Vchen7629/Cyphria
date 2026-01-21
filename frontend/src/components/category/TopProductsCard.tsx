@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import type { ProductV3 } from "../../mock/types";
 import { ChevronRight } from "lucide-react";
-import { getGradeColors } from "../../utils/product/GetGradeColors";
+import { getGradeColors } from "../../utils/product/GetColors";
 
 interface topProductProp {
     product: ProductV3;

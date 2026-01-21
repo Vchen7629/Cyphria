@@ -1,5 +1,5 @@
 import { ProductV3 } from "../../mock/types"
-import { getGradeColors } from "../../utils/product/GetGradeColors";
+import { getGradeColors } from "../../utils/product/GetColors";
 
 interface TopMentionProductProps {
     product: ProductV3

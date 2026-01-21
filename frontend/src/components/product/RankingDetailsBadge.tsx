@@ -1,5 +1,4 @@
-import { getGradeColors } from "../../utils/product/GetGradeColors";
-import { getRankColors } from "../../utils/product/getRankColors";
+import { getGradeColors, getRankColors } from "../../utils/product/GetColors";
 
 interface ProductRankBadgeProps {
   rank: number;

@@ -4,7 +4,7 @@ import type { ProductV3, Sentiment, Comment } from "../../mock/types";
 import ProductRankingDetailsBadge from './RankingDetailsBadge'
 import ProductBadges from "./ProductBadges";
 import { Trophy } from "lucide-react";
-import { getRankColors } from "../../utils/product/getRankColors";
+import { getRankColors } from "../../utils/product/GetColors";
 import SentimentBar from "./SentimentBar";
 import TopComments from "./TopComments";
 

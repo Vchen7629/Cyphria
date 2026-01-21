@@ -11,7 +11,7 @@ const TopComments = ({ comments }: TopCommentsProps) => {
   return (
     <div className="animate-fade-in-left">
       <section className="flex flex-col space-y-1 mb-3">
-        <span className="text-sm text-orange-400 font-semibold">Top comments from Reddit</span>
+        <span className="text-[13px] text-orange-400 font-semibold">Top comments from Reddit</span>
         <span className="text-xs text-zinc-500">Most upvoted comments from Reddit</span>
       </section>
       <ul className="space-y-2">

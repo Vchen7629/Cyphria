@@ -19,7 +19,7 @@ const SentimentBreakDown = ({ sentiment }: { sentiment: Sentiment }) => {
   return (
     <div className="space-y-2 animate-fade-in-up">
       <div className="flex justify-between text-xs">
-        <span className="text-zinc-500">Sentiment breakdown</span>
+        <span className="text-zinc-300 font-semibold text-[13px]">Sentiment breakdown</span>
         <div className="flex gap-4">
           <span className="text-emerald-400">{positive}% positive</span>
           <span className="text-zinc-400">{neutral}% neutral</span>

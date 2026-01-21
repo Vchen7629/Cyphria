@@ -15,7 +15,7 @@ const TopicCard = ({ topic }: TopicCardProps) => {
   return (
     <Link
       to={`/${topic.parentSlug}/${topic.slug}`}
-      className="group flex items-center justify-between p-4 rounded-lg border border-zinc-600/50 bg-zinc-800/30 hover:bg-zinc-800/30 hover:border-zinc-700/50 transition-colors"
+      className="group animate-fade-in-up duration-500 flex items-center justify-between p-4 rounded-lg border border-zinc-600/50 bg-zinc-800/30 hover:bg-zinc-800/30 hover:border-zinc-700/50 transition-colors"
     >
       <div className="flex flex-col space-y-2">
         <h3 className="text-sm font-medium text-zinc-200 group-hover:text-zinc-100 transition-colors">

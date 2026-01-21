@@ -9,9 +9,7 @@ const TopMentionedProductCard = ({ product }: TopMentionProductProps) => {
     const gradeColors = getGradeColors(product.grade);
 
     return (
-        <li
-            className="flex items-center space-x-1 py-1.5 px-2.5 bg-zinc-900 border border-zinc-700 rounded-lg w-fit"
-        >
+        <li className="flex items-center space-x-1 py-1.5 px-2.5 bg-zinc-900 border border-zinc-700 rounded-lg w-fit">
             <div className={`flex items-center justify-center w-7 h-5 rounded-lg border ${gradeColors.border} ${gradeColors.bg}`}>
                 <span className="text-xs font-semibold">{product.grade}</span>
             </div>

@@ -13,7 +13,7 @@ const TopProductsCard = ({ product }: topProductProp) => {
     return (
         <Link 
             to={`/${product.parentSlug}/${product.subcategory_slug}`} 
-            className="flex flex-col justify-center space-y-2 p-4 rounded-lg text-zinc-400 hover:text-zinc-500 border border-zinc-600/50 bg-zinc-700/20 hover:bg-zinc-800/30 hover:border-zinc-700/50 transition-colors"
+            className="flex flex-col animate-fade-in-up duration-500 justify-center space-y-2 p-4 rounded-lg text-zinc-400 hover:text-zinc-500 border border-zinc-600/50 bg-zinc-700/20 hover:bg-zinc-800/30 hover:border-zinc-700/50 transition-colors"
         >
             <section className="flex items-center space-x-2">
                 <div className={`flex items-center justify-center w-8 h-6 rounded-lg border ${gradeColors.border} ${gradeColors.bg}`}>

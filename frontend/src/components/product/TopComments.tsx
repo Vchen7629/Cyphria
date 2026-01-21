@@ -13,7 +13,7 @@ const TopComments = ({ comments }: TopCommentsProps) => {
       <span className="text-xs text-zinc-500 font-medium">Top comments from Reddit</span>
       <ul className="space-y-2">
         {comments.slice(0, 3).map((c) => (
-          <li key={c.id} className="text-sm text-zinc-400 leading-relaxed">
+          <li key={c.id} className="text-sm animate-fade-in-up text-zinc-400 leading-relaxed">
             <span className="text-zinc-500">"</span>
             {c.comment_text}
             <span className="text-zinc-500">"</span>

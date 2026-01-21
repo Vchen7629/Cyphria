@@ -12,7 +12,7 @@ const SentimentBar = ({ sentiment }: SentimentBarProps) => {
   const neutral = Math.round((sentiment.neutral_count / total) * 100);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 animate-fade-in-up">
       <div className="flex justify-between text-xs">
         <span className="text-zinc-500">Sentiment breakdown</span>
         <div className="flex gap-4">

@@ -1,8 +1,13 @@
 import MainLayout from "../components/layout/MainLayout";
-import { mockCategories, mockTopics } from "../mock/mockData";
-import TrendingTopics from "../components/home/TrendingTopics"
-import CategoryCardDropdownButton from "../components/home/CategoryCardDropdownButton";
+import { mockTopics } from "../mock/mockData";
+import TrendingTopicsList from "../components/home/TrendingTopicsList";
+import BrowseCateroriesGrid from "../components/home/BrowseCategoriesGrid";
 
+/**
+ @component
+
+ @description - Homepage component that displays on / route. 
+ */
 const HomePage = () => {
   return (
     <MainLayout>
@@ -19,14 +24,9 @@ const HomePage = () => {
         <div className="space-y-10 h-fit">
           <section>
             <h2 className="text-lg font-medium text-zinc-100">Browse Categories</h2>
-            <span className="text-sm font-light text-zinc-400"></span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-              {mockCategories.slice(0,6).map((category) => (
-                <CategoryCardDropdownButton key={category.id} category={category} />
-              ))}
-            </div>
+            <BrowseCateroriesGrid />
           </section>
-          <TrendingTopics topics={mockTopics} />
+          <TrendingTopicsList topics={mockTopics} />
         </div>
       </div>
     </MainLayout>

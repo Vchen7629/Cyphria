@@ -2,10 +2,10 @@ import { useMemo } from "react";
 import { useParams, Navigate, Link } from "react-router";
 import { ChevronRight } from "lucide-react";
 import MainLayout from "../components/layout/MainLayout";
-import TopicCard from "../components/category/TopicCard";
+import TopicCard from "../components/category/TopicCardList";
 import { getCategoryBySlug } from "../mock/mockData";
 import type {  Topic } from "../mock/types";
-import TopProductsGrid from "../components/category/topProductsGrid";
+import TopProductsGrid from "../components/category/TopProductsGrid";
 
 const CategoryPage = () => {
   const { category: categorySlug } = useParams<{ category: string }>();

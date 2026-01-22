@@ -46,6 +46,10 @@ class LLMSummaryWorker:
         product_name_list: list[str] = fetch_unique_products(db_conn, self.time_window)
 
         for product_name in product_name_list:
+            if self.cancel_requested:
+                self.logger.info(event_type="llm_summary run", message="Cancellation requested during fetch, stopping early")
+                break
+            
             top_comments: list[str] = fetch_top_comments_for_product(db_conn, product_name, self.time_window)
 
             if not top_comments:

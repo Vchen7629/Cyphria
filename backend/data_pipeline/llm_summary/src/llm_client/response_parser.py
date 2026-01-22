@@ -24,20 +24,27 @@ def parse_tldr(response: str, logger: StructuredLogger) -> str:
     tldr = response.strip().replace("**", "").replace("*", "")
 
     prefixes_to_remove = [
-        "TLDR:",
+        "Here's The TLDR",
         "TL;DR",
-        "Summary:",
-        "Here's The TLDR:",
-        "TLDR -"
+        "TLDR",
+        "Summary"
     ]
 
-    for prefix in prefixes_to_remove:
-        if tldr.upper().startswith(prefix.upper()):
-            tldr = tldr[len(prefix):].strip()
+    # Keep removing prefixes until no more matches are found
+    changed = True
+    while changed:
+        changed = False
+        for prefix in prefixes_to_remove:
+            if tldr.upper().startswith(prefix.upper()):
+                tldr = tldr[len(prefix):].lstrip(":;-").lstrip()
+                changed = True
+                break
 
-    if (tldr.startswith('"') and tldr.endswith('"')) or \
-       (tldr.startswith("'") and tldr.endswith("'")):
-        tldr = tldr[1:-1].strip()
+    if (tldr.startswith('"') or tldr.startswith("'")):
+        tldr = tldr[1:].strip()
+
+    if (tldr.endswith("'") or tldr.endswith('"')):
+        tldr = tldr[:-1].strip()
 
     # Log word count for monitoring, but don't fail
     word_count = len(tldr.split())

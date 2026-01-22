@@ -1,12 +1,7 @@
-import pytest
 from fastapi import FastAPI
-from unittest.mock import AsyncMock, MagicMock, patch
-import os                                                                        
-os.environ.setdefault("REDDIT_API_CLIENT_ID", "fake")                                                     
-os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "fake")                                                 
-os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "fake")                                                  
-os.environ.setdefault("REDDIT_ACCOUNT_PASSWORD", "fake")
+from unittest.mock import MagicMock, patch
 from src.core.lifespan import lifespan
+import pytest
 
 @pytest.mark.asyncio
 async def test_lifespan_closes_pool_on_db_health_check_failure() -> None:

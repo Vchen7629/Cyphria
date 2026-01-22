@@ -162,7 +162,7 @@ def single_comment() -> dict[str, Any]:
     }
 
 @pytest.fixture()
-def mock_openai_client() -> Any:
+def mock_openai_client() -> MagicMock:
     """Mock OpenAi client and response"""
     mock_client = MagicMock()
 
@@ -174,7 +174,7 @@ def mock_openai_client() -> Any:
     return mock_client
 
 @pytest.fixture
-def fastapi_client(db_pool: ConnectionPool, mock_openai_client: Any) -> Generator[FastAPITestClient, None, None]:
+def fastapi_client(db_pool: ConnectionPool, mock_openai_client: MagicMock) -> Generator[FastAPITestClient, None, None]:
     """Fastapi TestClient with mocked heavy dependencies"""
     test_app = FastAPI(lifespan=null_lifespan)
     test_app.include_router(base_router)
@@ -188,8 +188,8 @@ def fastapi_client(db_pool: ConnectionPool, mock_openai_client: Any) -> Generato
         yield FastAPITestClient(client=client, app=test_app)
 
 @pytest.fixture
-def create_sentiment_service(db_pool: ConnectionPool, mock_openai_client: Any) -> LLMSummaryWorker:
-    """Creates a Sentiment Service Instance fixture"""
+def create_llm_summary_service(db_pool: ConnectionPool, mock_openai_client: MagicMock) -> LLMSummaryWorker:
+    """Creates a llm_summary service Instance fixture"""
     return LLMSummaryWorker(
         logger=StructuredLogger(pod="sentiment_analysis"),
         time_window="all_time",

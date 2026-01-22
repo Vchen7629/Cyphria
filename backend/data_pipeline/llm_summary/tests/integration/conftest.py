@@ -147,18 +147,14 @@ def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, 
     
 
 @pytest.fixture
-def single_comment() -> dict[str, Any]:
+def single_product_sentiment() -> dict[str, Any]:
     """Fixture for single comment instance"""
     return {
         'comment_id': 'test_comment_1',
-        'post_id': 'test_post_1',
-        'comment_body': 'This is a test comment about RTX 4090',
-        'detected_products': ['rtx 4090'],
-        'subreddit': 'nvidia',
-        'author': 'test_user',
-        'score': 42,
+        'product_name': 'rtx 4090',
+        'category': 'GPU',
+        'sentiment_score': 0.98,
         'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
     }
 
 @pytest.fixture()

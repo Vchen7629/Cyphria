@@ -1,3 +1,4 @@
+from textwrap import dedent
 
 SYSTEM_PROMPT = """
 You are a product reviewer summarizing Reddit opinions about a product.                                                                                                                              
@@ -75,7 +76,8 @@ def build_user_prompt(product_name: str, comments: list[str]) -> str:
     negative_comments = comments[10:20]
     neutral_comments = comments[20:25]
 
-    prompt = f"""Product: {product_name}
+    prompt = dedent(f"""\
+        Product: {product_name}
         Top Positive Comments:
         {format_comments(positive_comments)}
 
@@ -86,6 +88,6 @@ def build_user_prompt(product_name: str, comments: list[str]) -> str:
         {format_comments(neutral_comments)}
 
         Generate a TLDR (8-16 words, conversational tone):
-    """
+    """)
 
     return prompt

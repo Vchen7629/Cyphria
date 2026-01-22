@@ -34,6 +34,7 @@ def fetch_unique_products(
     query = sql.SQL("""
         SELECT ps.product_name, COUNT(*) as comment_count
         FROM product_sentiment ps
+        {time_filter}
         GROUP BY ps.product_name
         HAVING COUNT(*) >= %(min_comments)s
         ORDER BY comment_count DESC

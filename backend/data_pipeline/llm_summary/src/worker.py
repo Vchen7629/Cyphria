@@ -66,6 +66,10 @@ class LLMSummaryWorker:
         Returns:
             A llm summary string, or empty string if generation fails
         """
+        if not product_name or not comments:
+            self.logger.warning(event_type="llm_summary run", message="No product name or comment list, skipping")
+            return ""
+
         user_prompt = build_user_prompt(product_name, comments)
 
         response = self.llm_client.responses.create(

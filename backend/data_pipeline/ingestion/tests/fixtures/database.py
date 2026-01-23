@@ -1,37 +1,26 @@
 from typing import Any
-from src.product_utils.normalizer_factory import NormalizerFactory
-from src.product_utils.detector_factory import DetectorFactory
-from src.core.logger import StructuredLogger
+from typing import Generator
+from datetime import datetime
+from datetime import timezone
 from unittest.mock import MagicMock
-import os
-os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
-os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
-os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "reddit_secret")
-os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "username")
-os.environ.setdefault("REDDIT_ACCOUNT_PASSWORD", "password")
-from src.worker import IngestionService
-from typing import Callable
+from psycopg_pool import ConnectionPool
+from testcontainers.postgres import PostgresContainer
 import pytest
 import psycopg
-from testcontainers.postgres import PostgresContainer
-from typing import Generator, NamedTuple
-from psycopg_pool import ConnectionPool
-from fastapi.testclient import TestClient
-from contextlib import asynccontextmanager
-from fastapi import FastAPI
-from src.api.routes import router as base_router
 
-
-class FastAPITestClient(NamedTuple):
-    client: TestClient
-    app: FastAPI
-
-
-@asynccontextmanager
-async def null_lifespan(_app: FastAPI) -> Any:
-    """No-op lifespan for testing - state is set by fixtures"""
-    yield
-
+@pytest.fixture()
+def mock_raw_comment() -> dict[str, Any]:
+    return {
+        'comment_id': 'test_comment_1',
+        'post_id': 'test_post_1',
+        'comment_body': 'This is a test comment about RTX 4090',
+        'detected_products': ['rtx 4090'],
+        'subreddit': 'nvidia',
+        'author': 'test_user',
+        'score': 42,
+        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+        'category': 'GPU'
+    }
 
 @pytest.fixture(scope="session")
 def postgres_container() -> Generator[PostgresContainer, None, None]:
@@ -123,40 +112,3 @@ def clean_db(db_pool: ConnectionPool) -> Generator[None, None, None]:
         conn.commit()
     
     yield
-
-@pytest.fixture
-def mock_reddit_client() -> MagicMock:
-    """Mock reddit client"""
-    client = MagicMock()
-    client.user.me.return_value = MagicMock(name="test_user")
-    return client
-
-@pytest.fixture
-def create_ingestion_service(db_pool: ConnectionPool, mock_reddit_client: MagicMock) -> IngestionService:
-    """Creates a Sentiment Service Instance fixture"""
-    return IngestionService(
-        reddit_client=mock_reddit_client,
-        db_pool=db_pool,
-        logger=StructuredLogger(pod="ingestion_service"),
-        category="GPU",
-        subreddits=["nvidia"],
-        detector=DetectorFactory.get_detector(category="GPU"),
-        normalizer=NormalizerFactory
-    )
-
-@pytest.fixture
-def fastapi_client(db_pool: ConnectionPool, mock_reddit_client: MagicMock) -> Generator[FastAPITestClient, None, None]:
-    """Fastapi TestClient with mocked heavy dependencies"""
-    test_app = FastAPI(lifespan=null_lifespan)
-    test_app.include_router(base_router)
-
-    test_app.state.db_pool = db_pool
-    test_app.state.reddit_client = mock_reddit_client
-    test_app.state.logger = StructuredLogger(pod="ingestion_service_test")
-    test_app.state.category = "GPU"
-    test_app.state.subreddits = ["nvidia"]
-    test_app.state.detector = DetectorFactory.get_detector("GPU")
-    test_app.state.normalizer = NormalizerFactory
-
-    with TestClient(test_app, raise_server_exceptions=False) as client:
-        yield FastAPITestClient(client=client, app=test_app)

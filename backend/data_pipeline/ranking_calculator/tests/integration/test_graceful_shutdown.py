@@ -2,7 +2,7 @@ from typing import Callable
 import pytest
 from testcontainers.postgres import PostgresContainer
 from typing import Any
-from src.worker import RankingCalculatorWorker
+from src.ranking_service import RankingCalculatorWorker
 from psycopg_pool.pool import ConnectionPool
 from unittest.mock import patch, MagicMock
 import signal

@@ -18,7 +18,7 @@ os.environ.setdefault("DB_NAME", "test_db")
 os.environ.setdefault("DB_USER", "test_user")
 os.environ.setdefault("DB_PASS", "test_pass")
 
-from src.worker import RankingCalculatorWorker
+from src.ranking_service import RankingCalculatorWorker
 
 @pytest.fixture(scope="session")
 def postgres_container() -> Generator[PostgresContainer, None, None]:

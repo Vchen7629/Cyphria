@@ -1,75 +1,43 @@
-from src.core.types import SentimentAggregate, ProductScore
-from src.db_utils.conn import create_connection_pool
-from src.db_utils.queries import fetch_aggregated_product_scores, batch_upsert_product_score
+from psycopg_pool import ConnectionPool
+from src.api.job_state import JobState
+from src.api.schemas import ProductScore
+from src.api.schemas import RankingResult
+from src.api.schemas import SentimentAggregate
+from src.db.queries import batch_upsert_product_score
+from src.db.queries import fetch_aggregated_product_scores
+from src.calculation_utils.grading import assign_ranks
+from src.calculation_utils.grading import assign_grades
+from src.calculation_utils.badge import assign_is_top_pick
+from src.calculation_utils.badge import assign_has_limited_data
+from src.calculation_utils.badge import assign_is_most_discussed
 from src.calculation_utils.bayesian import calculate_bayesian_scores
-from src.calculation_utils.grading import assign_grades, assign_ranks
-from src.calculation_utils.badge import assign_is_top_pick, assign_is_most_discussed, assign_has_limited_data
 from src.core.logger import StructuredLogger
 from src.core.settings_config import Settings
 from datetime import date
-import signal
 import numpy as np
 
-class RankingCalculatorWorker:
-    def __init__(self) -> None:
+class RankingService:
+    def __init__(
+        self, 
+        logger: StructuredLogger, 
+        db_pool: ConnectionPool,
+        category: str,
+        time_window: str
+    ) -> None:
         self.settings = Settings()
-        self.logger = StructuredLogger(pod="Ranking_Calculator")
-        self.shutdown_requested: bool = False
+        self.logger = logger
+        self.db_pool = db_pool
+        self.category = category
+        self.time_window = time_window
 
-        signal.signal(signal.SIGTERM, self._signal_handler)
-        signal.signal(signal.SIGINT, self._signal_handler)
-
-        self._db_conn_lifespan()
-        self.logger.info(event_type="ranking calculator startup", message="Worker init complete")
-    
-    def _db_conn_lifespan(self) -> None:
-        """
-        Method for handling database connection lifespan including creating connection pool,
-        and checking the health
-        """
-        self.logger.info(event_type="ranking calculator startup", message="Creating database connection pool")
-        self.db_pool = create_connection_pool()
-
-        # Perform health check for db connection on startup
-        self.logger.info(event_type="ranking calculator startup", message="Checking Database health...")
-        try:
-            with self.db_pool.connection() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute("SELECT 1")
-                    cursor.fetchone()
-                self.logger.info(event_type="ranking calculator startup", message="Database health check passed")
-        except Exception as e:
-            self.logger.error(event_type="ranking calculator startup", message=f"Database health check failed: {e}")
-            self.db_pool.close()
-            raise 
-
-    def _signal_handler(self, signum: int, _frame: object) -> None:
-        """
-        Signal handler for graceful shutdown
-
-        Args:
-            signum: Signal number
-            _frame: Current stack frame (unused but required by signal handler signature)
-        """
-        signal_name = signal.Signals(signum).name
-        self.logger.info(event_type="ranking calculator shutdown", message=f"Received {signal_name} signal, initiating graceful shutdown")
-        self.shutdown_requested = True
-
-    def _cleanup(self) -> None:
-        """Cleanup resources on shutdown"""
-        self.logger.info(event_type="ranking calculator shutdown", message="Cleaning up resources")
-
-        # Close database connection pool
-        self.db_pool.close()
-        self.logger.info(event_type="ranking calculator shutdown", message="Database connection pool closed")
-
-        self.logger.info(event_type="ranking calculator shutdown", message="Shutdown complete")
+        # cancellation flag, used to request graceful shutdown
+        self.cancel_requested = False
     
     def _build_product_ranking_object(
         self, 
         product_scores: list[SentimentAggregate],
         category: str,
-        window: str,
+        time_window: str,
         ranks: np.ndarray,
         grades: np.ndarray,
         bayesian_scores: np.ndarray,
@@ -84,7 +52,7 @@ class RankingCalculatorWorker:
         Args:
             product_scores: list of aggregated product sentiment scores 
             category: the category for the products
-            window: the time window, either "90d" or "all_time"
+            time_window: the time window, either "90d" or "all_time"
             ranks: Numpy array of rank numbers (1-indexed)
             grades: Numpy array of letter grade for the product (S, A+, A, etc)
             bayesian_scores: Numpy array of bayesian score floats
@@ -102,7 +70,7 @@ class RankingCalculatorWorker:
             ranking = ProductScore(
                 product_name=product.product_name,
                 category=category,
-                time_window=window,
+                time_window=time_window,
                 rank=int(ranks[i]),
                 grade=str(grades[i]),
                 bayesian_score=float(bayesian_scores[i]),
@@ -124,22 +92,22 @@ class RankingCalculatorWorker:
 
         return rankings
 
-    def _calculate_rankings_for_window(self, category: str, window: str) -> int:
+    def _calculate_rankings_for_window(self, category: str, time_window: str) -> int:
         """
         Process rankings for a single category/time window combination:
 
         Args:
             category: Product category like "GPU" or "Laptop"
-            window: Time window, "90d" or "all_time"
+            time_window: Time window, "90d" or "all_time"
 
         Returns:
             number of products processed
         """
         with self.db_pool.connection() as conn:
-            product_scores = fetch_aggregated_product_scores(conn, category, window)
+            product_scores = fetch_aggregated_product_scores(conn, category, time_window)
 
             if not product_scores:
-                self.logger.info(event_type="ranking calculation", message=f"No products found for {category}/{window}")
+                self.logger.info(event_type="ranking calculation", message=f"No products found for {category}/{time_window}")
                 return 0
             
             # to extract numpy arrays from pydantic models
@@ -149,7 +117,7 @@ class RankingCalculatorWorker:
             bayesian_scores = calculate_bayesian_scores(
                 avg_sentiments,
                 mention_counts,
-                min_mentions=self.settings.bayesian_params
+                min_mentions=self.settings.BAYESIAN_PARAMS
             )
 
             grades = assign_grades(bayesian_scores)
@@ -157,14 +125,14 @@ class RankingCalculatorWorker:
 
             is_top_pick = assign_is_top_pick(ranks)
             is_most_discussed = assign_is_most_discussed(mention_counts)
-            has_limited_data = assign_has_limited_data(mention_counts, self.settings.bayesian_params)
+            has_limited_data = assign_has_limited_data(mention_counts, self.settings.BAYESIAN_PARAMS)
 
             calculation_date = date.today()
 
             product_ranking_list = self._build_product_ranking_object(
                 product_scores, 
                 category,
-                window,
+                time_window,
                 ranks,
                 grades,
                 bayesian_scores,
@@ -182,20 +150,55 @@ class RankingCalculatorWorker:
 
             self.logger.info(
                 event_type="ranking calculation", 
-                message=f"Processed {len(product_ranking_list)} for {category}/{window}")
+                message=f"Processed {len(product_ranking_list)} for {category}/{time_window}")
             
             return len(product_ranking_list)
 
-    def run(self) -> None:
-        """Main worker loop"""
-        try:
-            res = self._calculate_rankings_for_window(self.settings.product_category, self.settings.time_windows)
-            print(res)
-        except Exception as e:
-            self.logger.error(event_type="ranking calculator worker", message=f"Error in worker loop: {e}")
-            raise
-        finally:
-            self._cleanup()
+    def _run_ranking_pipeline(self) -> RankingResult:
+        """
+        Main orchestrator function: fetch, process, and write to db for products
+        
+        Returns:
+            RankingResult with counts of posts/comments processed
+        """
+        products_processed = self._calculate_rankings_for_window(self.category, self.time_window)
 
-if __name__ == "__main__":
-    RankingCalculatorWorker().run()
+        return RankingResult(
+            products_processed=products_processed,
+            cancelled=self.cancel_requested
+        )
+    
+    def run_single_cycle(self, job_state: JobState) -> None:
+        """
+        Run one complete ranking cycle and update job state
+        runs in a background thread and handles all errors internally and updates the job state
+
+        Args:
+            job_state: JobState instance to update with progress/results
+
+        Raise:
+            Value error if not job state
+        """
+        # nested import to prevent circular dependency import errors
+        from src.api.signal_handler import run_state
+
+        if not job_state:
+            raise ValueError("Job state must be provided for the run single cycle")
+
+        try:
+            result = self._run_ranking_pipeline()
+
+            job_state.complete_job(result)
+
+            self.logger.info(
+                event_type="ranking_service run",
+                message=f"Ingestion completed: {result.products_processed} products processed"
+            )
+
+        except Exception as e:
+            self.logger.error(event_type="ranking_service run", message=f"Ranking failed: {str(e)}")
+            job_state.fail_job(str(e))
+        finally:
+            # Clean up run state after job completes or fails
+            run_state.run_in_progress = False
+            run_state.current_service = None

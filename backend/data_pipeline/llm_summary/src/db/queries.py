@@ -96,7 +96,7 @@ def fetch_top_comments_for_product(
                 ) AS rn
             FROM raw_comments rc
             JOIN product_sentiment ps ON rc.comment_id = ps.comment_id
-            WHERE ps.product_name = %(product_name)s
+            WHERE %(product_name)s = ANY(rc.detected_products)
             {time_filter}
         )
         SELECT comment_body

@@ -1,5 +1,13 @@
+from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime
+from enum import Enum
+
+class JobStatus(str, Enum):
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    CANCELLED = "cancelled"
 
 # Pydantic class for reddit comments
 class RedditComment(BaseModel):
@@ -12,12 +20,22 @@ class RedditComment(BaseModel):
     author: str
     post_id: str
 
+
 class IngestionResult(BaseModel):
     """Result of a ingestion airflow run"""
     posts_processed: int
     comments_processed: int
     comments_inserted: int
     cancelled: bool = False
+
+class CurrentJob(BaseModel):
+    """Currently running job state"""
+    status: JobStatus # "pending" | "running" | "completed" | "failed" | "cancelled"
+    category: str
+    started_at: datetime
+    completed_at: Optional[datetime] = None
+    result: Optional[IngestionResult] = None
+    error: Optional[str] = None
 
 class RunRequest(BaseModel):
     """Request to the /run endpoint"""
@@ -26,9 +44,7 @@ class RunRequest(BaseModel):
 
 class RunResponse(BaseModel):
     """Response from /run endpoint"""
-    status: str # "completed" | "cancelled" | "error"
-    result: IngestionResult | None = None
-    error: str | None = None
+    status: str # "started"
 
 class HealthResponse(BaseModel):
     """Response from /health endpoint"""

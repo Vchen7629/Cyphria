@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def calculate_bayesian_scores(
     avg_sentiments: np.ndarray,
     mention_counts: np.ndarray,

@@ -1,5 +1,5 @@
-import numpy as np
 from src.core.settings_config import Settings
+import numpy as np
 
 def assign_is_top_pick(ranks: np.ndarray) -> np.ndarray:
     """
@@ -42,6 +42,6 @@ def assign_has_limited_data(mention_counts: np.ndarray, threshold: int | None = 
     """
     if threshold is None:
         settings = Settings()
-        threshold = settings.bayesian_params
+        threshold = settings.BAYESIAN_PARAMS
 
     return mention_counts < threshold

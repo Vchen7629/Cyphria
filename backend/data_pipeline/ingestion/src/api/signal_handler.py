@@ -1,6 +1,6 @@
 # Track current run state
 from typing import Any
-from src.worker import IngestionService
+from src.ingestion_service import IngestionService
 import signal
 
 class RunState:

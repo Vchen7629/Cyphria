@@ -1,71 +1,74 @@
+from fastapi import Request
+from fastapi import HTTPException
+from fastapi.routing import APIRouter
+from concurrent.futures import ThreadPoolExecutor
+from src.api.job_state import JobState
+from src.api.signal_handler import run_state
 from src.product_utils.detector_factory import DetectorFactory
 from src.api.schemas import HealthResponse
-from fastapi.routing import APIRouter
-from src.api.schemas import RunResponse, RunRequest
-from src.worker import IngestionService
-from fastapi import Request, HTTPException
-from src.api.signal_handler import run_state
+from src.api.schemas import RunResponse
+from src.api.schemas import RunRequest
+from src.api.schemas import CurrentJob
+from src.ingestion_service import IngestionService
+import asyncio
 
 router = APIRouter()
 
+# global job state thats initialized in lifespan
+job_state: JobState = None
+
 @router.post("/run", response_model=RunResponse)
-def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
+async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
     """
-    Trigger an ingestion run.
-
-    This endpoint blocks until ingestion completes. For hourly scheduled runs,
-    Airflow should call this endpoint and wait for the response.
-
-    On SIGTERM/SIGINT, the running service will be gracefully cancelled
-    and remaining data will be saved before returning.
+    Trigger an ingestion run asynchronously
 
     Returns:
-        RunResponse containing the status and various metrics
+        RunResponse with job_id and status="started"
     """
     # lock to prevent duplicate calls to this endpoint from retriggering ingestion
-    if run_state.run_in_progress:
+    if job_state.is_running():
         raise HTTPException(
             status_code=409,
             detail="Ingestion already in progress"
         )
 
+    job_state.create_job(body.category)
+
+    detector = DetectorFactory.get_detector(body.category)
+
+    service = IngestionService(
+        reddit_client=request.app.state.reddit_client,
+        db_pool=request.app.state.db_pool,
+        logger=request.app.state.logger,
+        category=body.category,
+        subreddits=body.subreddits,
+        detector=detector,
+        normalizer=request.app.state.normalizer,
+    )
+
+    run_state.current_service = service
     run_state.run_in_progress = True
 
-    try:
-        detector = DetectorFactory.get_detector(body.category)
-        # Create service with injected dependencies
-        service = IngestionService(
-            reddit_client=request.app.state.reddit_client,
-            db_pool=request.app.state.db_pool,
-            logger=request.app.state.logger,
-            category=body.category,
-            subreddits=body.subreddits,
-            detector=detector,
-            normalizer=request.app.state.normalizer,
-        )
+    executor: ThreadPoolExecutor = request.app.state.executor
+    loop = asyncio.get_event_loop()
 
-        # Store reference so signal handler can request cancellation
-        run_state.current_service = service
+    # run worker in thread pool to prevent blocking the polling /status endpoint
+    loop.run_in_executor(executor, service.run_single_cycle, job_state)
 
-        result = service.run()
+    return RunResponse(status="started")
 
-        return RunResponse(
-            status="cancelled" if result.cancelled else "completed",
-            result=result,
-        )
-    except Exception as e:
-        request.app.state.logger.error(
-            event_type="ingestion",
-            message=f"Ingestion failed: {e}"
-        )
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
-    finally:
-        run_state.current_service = None
-        run_state.run_in_progress = False
+@router.get("/status", response_model=CurrentJob)
+async def get_job_status() -> CurrentJob:
+    """
+    Get status of a ingestion job
+    Airflow HttpSensor polls this endpoint until status is 'completed' or 'failed'
+    """
+    job = job_state.get_current_job()
 
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    return job
 
 @router.get("/health", response_model=HealthResponse)
 def health_check(request: Request) -> HealthResponse:

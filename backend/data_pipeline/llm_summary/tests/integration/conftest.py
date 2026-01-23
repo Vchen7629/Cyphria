@@ -144,17 +144,41 @@ def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, 
     yield pool
 
     pool.close()
-    
+
+@pytest.fixture
+def single_product_summary() -> dict[str, Any]:
+    """Fixture for single product summary row"""
+    return {
+        'product_name': 'rtx 4090',
+        'tldr': 'rtx 4090 tldr',
+        'time_window': 'all_time',
+        'model_used': 'chatgpt-5.2'
+    }    
 
 @pytest.fixture
 def single_product_sentiment() -> dict[str, Any]:
-    """Fixture for single comment instance"""
+    """Fixture for single comment row"""
     return {
         'comment_id': 'test_comment_1',
         'product_name': 'rtx 4090',
         'category': 'GPU',
         'sentiment_score': 0.98,
         'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+    }
+
+@pytest.fixture
+def single_raw_comment() -> dict[str, Any]:
+    """Fixture for single raw comment row"""
+    return {
+        'comment_id': 'test_comment_1',
+        'post_id': 'test_post_1',
+        'comment_body': 'This is a test comment about RTX 4090',
+        'detected_products': ['rtx 4090'],
+        'subreddit': 'nvidia',
+        'author': 'test_user',
+        'score': 42,
+        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+        'category': 'GPU'
     }
 
 @pytest.fixture()

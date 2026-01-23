@@ -152,12 +152,12 @@ def upsert_llm_summaries(
 
     query = """
         INSERT INTO product_summaries (
-            product_name, tldr, 
-            time_window, model_used
+            product_name, tldr,
+            time_window, model_used, generated_at
         )
         VALUES (
             %(product_name)s, %(tldr)s,
-            %(time_window)s, %(model_used)s
+            %(time_window)s, %(model_used)s, NOW()
         )
         ON CONFLICT (product_name, time_window)
         DO UPDATE SET

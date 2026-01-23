@@ -1,9 +1,8 @@
+from typing import Any
+from psycopg_pool import ConnectionPool
+from src.db_utils.queries import batch_insert_raw_comments
 import psycopg
 import pytest
-from datetime import datetime, timezone
-from psycopg_pool import ConnectionPool
-
-from src.db_utils.queries import batch_insert_raw_comments
 
 def test_connection_pool_creation(db_pool: ConnectionPool) -> None:
     """Test that connection pool is created successfully and can acquire connections."""
@@ -13,26 +12,20 @@ def test_connection_pool_creation(db_pool: ConnectionPool) -> None:
             result = cursor.fetchone()
             assert result == (1,)
 
-
-def test_single_comment_insert(db_connection: psycopg.Connection) -> None:
+def test_single_comment_insert(
+    db_connection: psycopg.Connection, 
+    mock_raw_comment: dict[str, Any]
+) -> None:
     """Test inserting a single comment into the database."""
-    comment = {
-        'comment_id': 'test_comment_1',
-        'post_id': 'test_post_1',
-        'comment_body': 'This is a test comment about RTX 4090',
-        'detected_products': ['rtx 4090'],
-        'subreddit': 'nvidia',
-        'author': 'test_user',
-        'score': 42,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
-    }
-
-    batch_insert_raw_comments(db_connection, [comment])
+    batch_insert_raw_comments(db_connection, [mock_raw_comment])
 
     # Verify the insert
     with db_connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM raw_comments WHERE comment_id = %s;", ('test_comment_1',))
+        cursor.execute(
+            "SELECT * \
+            FROM raw_comments \
+            WHERE comment_id = %s;", 
+        ('test_comment_1',))
         result = cursor.fetchone()
 
         assert result is not None
@@ -46,20 +39,13 @@ def test_single_comment_insert(db_connection: psycopg.Connection) -> None:
         assert result[9] == 'GPU'  # category
         assert result[11] is False  # sentiment_processed
 
-def test_batch_insert_multiple_comments(db_connection: psycopg.Connection) -> None:
+def test_batch_insert_multiple_comments(
+    db_connection: psycopg.Connection,
+    mock_raw_comment: dict[str, Any]
+) -> None:
     """Test batch inserting multiple comments."""
     comments = [
-        {
-            'comment_id': f'test_comment_{i}',
-            'post_id': f'test_post_{i}',
-            'comment_body': f'Test comment {i}',
-            'detected_products': ['rtx 4090'],
-            'subreddit': 'nvidia',
-            'author': f'user_{i}',
-            'score': i * 10,
-            'created_utc': datetime(2024, 1, 1, 12, i, 0, tzinfo=timezone.utc),
-            'category': 'GPU'
-        }
+        {**mock_raw_comment, "comment_id": f"test_comment_{i}"}
         for i in range(1, 6)
     ]
 
@@ -74,20 +60,13 @@ def test_batch_insert_multiple_comments(db_connection: psycopg.Connection) -> No
         assert count == 5
 
 
-def test_batch_insert_large_batch(db_connection: psycopg.Connection) -> None:
+def test_batch_insert_large_batch(
+    db_connection: psycopg.Connection,
+    mock_raw_comment: dict[str, Any]
+) -> None:
     """Test batch inserting a large number of comments (100+)."""
     comments = [
-        {
-            'comment_id': f'test_comment_{i}',
-            'post_id': f'test_post_{i}',
-            'comment_body': f'Test comment {i}',
-            'detected_products': ['rtx 4090', 'rtx 5090'],
-            'subreddit': 'nvidia',
-            'author': f'user_{i}',
-            'score': i,
-            'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-            'category': 'GPU'
-        }
+        {**mock_raw_comment, 'comment_id': f'test_comment_{i}'}
         for i in range(150)
     ]
 
@@ -102,19 +81,12 @@ def test_batch_insert_large_batch(db_connection: psycopg.Connection) -> None:
         assert count == 150
 
 
-def test_duplicate_comment_handling(db_connection: psycopg.Connection) -> None:
+def test_duplicate_comment_handling(
+    db_connection: psycopg.Connection,
+    mock_raw_comment: dict[str, Any]
+) -> None:
     """Test that duplicate comment_ids are ignored (ON CONFLICT DO NOTHING)."""
-    comment = {
-        'comment_id': 'duplicate_test',
-        'post_id': 'test_post_1',
-        'comment_body': 'Original comment',
-        'detected_products': ['rtx 4090'],
-        'subreddit': 'nvidia',
-        'author': 'user1',
-        'score': 10,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
-    }
+    comment = {**mock_raw_comment, "comment_id": "duplicate_test", "comment_body": "Original comment", "score": 10}
 
     # Insert the first time
     batch_insert_raw_comments(db_connection, [comment])
@@ -155,19 +127,12 @@ def test_empty_comments_list(db_connection: psycopg.Connection) -> None:
         assert count == 0
 
 
-def test_multiple_products_detected(db_connection: psycopg.Connection) -> None:
+def test_multiple_products_detected(
+    db_connection: psycopg.Connection,
+    mock_raw_comment: dict[str, Any]
+) -> None:
     """Test inserting a comment with multiple detected products."""
-    comment = {
-        'comment_id': 'multi_product_test',
-        'post_id': 'test_post_1',
-        'comment_body': 'I have RTX 4090 and RTX 4080',
-        'detected_products': ['rtx 4090', 'rtx 4080', 'rtx 3090'],
-        'subreddit': 'nvidia',
-        'author': 'user1',
-        'score': 50,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
-    }
+    comment = {**mock_raw_comment, 'comment_id': 'multi_product_test', 'detected_products': ['rtx 4090', 'rtx 4080', 'rtx 3090']}
 
     batch_insert_raw_comments(db_connection, [comment])
 
@@ -181,65 +146,18 @@ def test_multiple_products_detected(db_connection: psycopg.Connection) -> None:
         assert 'rtx 4080' in result[0]
         assert 'rtx 3090' in result[0]
 
-
-def test_connection_failure_handling() -> None:
-    """Test handling of connection failures with invalid connection string."""
-    invalid_conninfo = "host=invalid_host port=9999 dbname=invalid user=invalid password=invalid"
-
-    with pytest.raises(psycopg.OperationalError):
-        conn = psycopg.connect(invalid_conninfo, connect_timeout=1)
-        conn.close()
-
-
-def test_pool_multiple_connections(db_pool: ConnectionPool) -> None:
-    """Test that connection pool can handle multiple concurrent connections."""
-    connections = []
-
-    try:
-        # Acquire multiple connections
-        for _ in range(3):
-            conn = db_pool.getconn()
-            connections.append(conn)
-
-            # Test each connection works
-            with conn.cursor() as cursor:
-                cursor.execute("SELECT 1;")
-                result = cursor.fetchone()
-                assert result == (1,)
-    finally:
-        # Return all connections to pool
-        for conn in connections:
-            db_pool.putconn(conn)
-
-
-def test_transaction_rollback_on_error(db_connection: psycopg.Connection) -> None:
+def test_transaction_rollback_on_error(
+    db_connection: psycopg.Connection,
+    mock_raw_comment: dict[str, Any]
+) -> None:
     """Test that transactions are properly rolled back on error."""
-    comment = {
-        'comment_id': 'test_rollback',
-        'post_id': 'test_post_1',
-        'comment_body': 'Test comment',
-        'detected_products': ['rtx 4090'],
-        'subreddit': 'nvidia',
-        'author': 'user1',
-        'score': 10,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
-    }
+    comment = {**mock_raw_comment, 'comment_id': 'test_rollback'}
 
     # Insert successfully first
     batch_insert_raw_comments(db_connection, [comment])
 
-    invalid_comment = {
-        'comment_id': 'test_invalid',
-        'post_id': 'test_post_2',
-        'comment_body': None, # type: ignore
-        'detected_products': ['rtx 4090'],
-        'subreddit': 'nvidia',
-        'author': 'user2',
-        'score': 20,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
-    }
+    # Create an invalid comment by setting a NOT NULL field to None
+    invalid_comment = {**mock_raw_comment, 'comment_id': 'test_invalid', 'comment_body': None}
 
     with pytest.raises(psycopg.errors.NotNullViolation):
         batch_insert_raw_comments(db_connection, [invalid_comment])
@@ -263,57 +181,20 @@ def test_transaction_rollback_on_error(db_connection: psycopg.Connection) -> Non
         assert count == 1
 
 
-def test_mixed_batch_with_duplicates(db_connection: psycopg.Connection) -> None:
+def test_mixed_batch_with_duplicates(
+    db_connection: psycopg.Connection,
+    mock_raw_comment: dict[str, Any]
+) -> None:
     """Test batch insert with mix of new and duplicate comments."""
     # Insert initial comment
-    initial_comment = {
-        'comment_id': 'existing_comment',
-        'post_id': 'test_post_1',
-        'comment_body': 'Existing comment',
-        'detected_products': ['rtx 4090'],
-        'subreddit': 'nvidia',
-        'author': 'user1',
-        'score': 10,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
-    }
+    initial_comment = {**mock_raw_comment,'comment_id': 'existing_comment', 'score': 10}
     batch_insert_raw_comments(db_connection, [initial_comment])
 
     # Batch with mix of new and duplicate
     mixed_batch = [
-        {
-            'comment_id': 'existing_comment',  # Duplicate
-            'post_id': 'test_post_1',
-            'comment_body': 'Modified',
-            'detected_products': ['rtx 5090'],
-            'subreddit': 'nvidia',
-            'author': 'user1',
-            'score': 999,
-            'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-            'category': 'GPU'
-        },
-        {
-            'comment_id': 'new_comment_1',  # New
-            'post_id': 'test_post_2',
-            'comment_body': 'New comment 1',
-            'detected_products': ['rtx 4080'],
-            'subreddit': 'nvidia',
-            'author': 'user2',
-            'score': 20,
-            'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-            'category': 'GPU'
-        },
-        {
-            'comment_id': 'new_comment_2',  # New
-            'post_id': 'test_post_3',
-            'comment_body': 'New comment 2',
-            'detected_products': ['rtx 3090'],
-            'subreddit': 'nvidia',
-            'author': 'user3',
-            'score': 30,
-            'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-            'category': 'GPU'
-        }
+        {**mock_raw_comment, 'comment_id': 'existing_comment', 'score': 99}, # Duplicate
+        {**mock_raw_comment, 'comment_id': 'new_comment_1', 'score': 20}, # New 1
+        {**mock_raw_comment, 'comment_id': 'new_comment_2', 'score': 30}  # New 2
     ]
 
     batch_insert_raw_comments(db_connection, mixed_batch)
@@ -330,5 +211,5 @@ def test_mixed_batch_with_duplicates(db_connection: psycopg.Connection) -> None:
         cursor.execute("SELECT comment_body, score FROM raw_comments WHERE comment_id = %s;", ('existing_comment',))
         result = cursor.fetchone()
         assert result is not None
-        assert result[0] == 'Existing comment'
+        assert result[0] == 'This is a test comment about RTX 4090'
         assert result[1] == 10

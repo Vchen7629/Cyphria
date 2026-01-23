@@ -9,21 +9,20 @@ ENV_FILE = PROJECT_ROOT / ".env"
 class Settings(BaseSettings):
     """All of the worker configs live here"""
 
-    production_mode: bool = False
-    grade_thresholds: np.ndarray = np.array([0.95, 0.9, 0.85, 0.75, 0.7, 0.45, 0.1, -0.1, -0.3, -0.5])
-    grade_values: np.ndarray = np.array(["S", "A", "A-", "B-", "B", "C", "C-", "D", "D-", "F", "F-"])
+    PRODUCTION_MODE: bool = False
+    GRADE_THRESHOLDS: np.ndarray = np.array([0.95, 0.9, 0.85, 0.75, 0.7, 0.45, 0.1, -0.1, -0.3, -0.5])
+    GRADE_VALUES: np.ndarray = np.array(["S", "A", "A-", "B-", "B", "C", "C-", "D", "D-", "F", "F-"])
     
-    # --- Injected variables by airflow ---
-    product_category: str
-    time_windows: str # either 90d or all_time
-    bayesian_params: int # optional, minimum mentions threshold
+    # --- Injected params by airflow ---
+    FASTAPI_PORT: int = 8000    
+    BAYESIAN_PARAMS: int # optional, minimum mentions threshold
 
     # --- DB Settings --- 
-    db_host: str = "localhost"
-    db_port: int = 5432
-    db_name: str = "cyphria"
-    db_user: str = "postgres"
-    db_pass: str = ''
+    DB_HOST: str = "localhost"
+    DB_PORT: int = 5432
+    DB_NAME: str = "cyphria"
+    DB_USER: str = "postgres"
+    DB_PASS: str = ''
 
     @field_validator('product_category')
     @classmethod
@@ -46,7 +45,7 @@ class Settings(BaseSettings):
         return normalized
 
     model_config = SettingsConfigDict(
-        env_file=str(ENV_FILE) if not production_mode else None,
+        env_file=str(ENV_FILE) if not PRODUCTION_MODE else None,
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore"

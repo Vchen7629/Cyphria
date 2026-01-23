@@ -1,3 +1,4 @@
+from src.api.job_state import JobState
 from typing import Any
 from src.api.schemas import IngestionResult
 from src.product_utils.detector_factory import ProductDetectorWrapper
@@ -136,7 +137,7 @@ class IngestionService:
         with self.db_pool.connection() as conn:
             batch_insert_raw_comments(conn, comment_dicts, logger=self.logger)
 
-    def run(self) -> IngestionResult:
+    def _run_ingestion_pipeline(self) -> IngestionResult:
         """
         Main orchestrator function: fetch, process, and publish comments
         
@@ -153,7 +154,7 @@ class IngestionService:
         for post in all_posts:
             if self.cancel_requested:
                 self.logger.info(
-                    event_type="ingestion",
+                    event_type="ingestion_service run",
                     message="Cancellation requested, stopping at post level"
                 )
                 break
@@ -163,6 +164,10 @@ class IngestionService:
 
             for comment in comments:
                 if self.cancel_requested:
+                    self.logger.info(
+                        event_type="ingestion_service run",
+                        message="Cancellation requested, stopping at comment level"
+                    )
                     break
                 
                 processed_comment: RedditComment | None = self._process_comment(comment)
@@ -181,6 +186,7 @@ class IngestionService:
         if batch_comments:
             self._batch_insert_to_db(batch_comments)
             comments_inserted += len(batch_comments)
+            batch_comments = []
 
         return IngestionResult(
             posts_processed=posts_processed,
@@ -189,7 +195,37 @@ class IngestionService:
             cancelled=self.cancel_requested
         )
 
-if __name__ == "__main__":
-    pass
-    #for i in range(1):
-    #    IngestionService().run()
+    def run_single_cycle(self, job_state: JobState) -> None:
+        """
+        Run one complete ingestion cycle and update job state
+        runs in a background thread and handles all errors internally and updates the job state
+
+        Args:
+            job_state: JobState instance to update with progress/results
+
+        Raise:
+            Value error if not job state
+        """
+        # nested import to prevent circular dependency import errors
+        from src.api.signal_handler import run_state
+
+        if not job_state:
+            raise ValueError("Job state must be provided for the run single cycle")
+
+        try:
+            result = self._run_ingestion_pipeline()
+
+            job_state.complete_job(result)
+
+            self.logger.info(
+                event_type="ingestion_service run",
+                message=f"Ingestion completed: {result.posts_processed} posts, {result.comments_inserted} comments processed"
+            )
+
+        except Exception as e:
+            self.logger.error(event_type="ingestion_service run", message=f"Ingestion failed: {str(e)}")
+            job_state.fail_job(str(e))
+        finally:
+            # Clean up run state after job completes or fails
+            run_state.run_in_progress = False
+            run_state.current_service = None

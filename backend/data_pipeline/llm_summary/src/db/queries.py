@@ -18,6 +18,9 @@ def fetch_unique_products(
     Returns:
         a list of unique product names
     """ 
+    if not time_window:
+        return []
+
     normalized_time_window: str = time_window.lower().strip()
 
     if not normalized_time_window:
@@ -63,6 +66,9 @@ def fetch_top_comments_for_product(
     Returns:
         List of comment body strings (~25 comments total)
     """
+    if not product_name or not time_window:
+        return []
+
     normalized_time_window: str = time_window.lower().strip()
     normalized_product_name: str = product_name.strip()
 

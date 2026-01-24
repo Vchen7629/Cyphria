@@ -72,7 +72,7 @@ def create_llm_summary_dag() -> DAG:
             method='POST',
             headers={'Content-Type': 'application/json'},
             data=json.dumps({'time_windows': "90d"}),
-            response_check=lambda response: response.json()['status'] in ['completed', 'cancelled'],
+            response_check=lambda response: response.json()['status'] == "started",
             log_response=True,
             execution_timeout=settings.EXECUTION_TIMEOUT,
             on_failure_callback=on_task_failure,

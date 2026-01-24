@@ -1,6 +1,6 @@
 # Track current run state
 from typing import Any
-from src.worker import StartService
+from src.sentiment_service import StartService
 import signal
 
 class RunState:

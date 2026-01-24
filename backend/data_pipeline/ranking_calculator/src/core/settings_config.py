@@ -1,5 +1,4 @@
 from pathlib import Path
-from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 import numpy as np
 
@@ -23,26 +22,6 @@ class Settings(BaseSettings):
     DB_NAME: str = "cyphria"
     DB_USER: str = "postgres"
     DB_PASS: str = ''
-
-    @field_validator('product_category')
-    @classmethod
-    def validate_category(cls, v: str) -> str:
-        """
-        Validate and normalize the product_category field.
-        Converts to uppercase and checks against allowed categories.
-        Raises ValueError if invalid, causing the worker to crash on startup
-        so Airflow can detect the failure and retry.
-        """
-        ALLOWED_CATEGORIES = {"GPU", "LAPTOP", "HEADPHONE"}
-
-        normalized = v.upper().strip()
-
-        if normalized not in ALLOWED_CATEGORIES:
-            raise ValueError(
-                f"Invalid category: {v}. Allowed categories: {', '.join(sorted(ALLOWED_CATEGORIES))}"
-            )
-
-        return normalized
 
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE) if not PRODUCTION_MODE else None,

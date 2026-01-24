@@ -14,7 +14,7 @@ import asyncio
 router = APIRouter()
 
 # global job state thats initialized in lifespan
-job_state: JobState = None
+job_state: JobState | None = None
 
 @router.post("/run", response_model=RunResponse)
 async def trigger_ranking_calculation(request: Request, body: RunRequest) -> RunResponse:
@@ -23,12 +23,18 @@ async def trigger_ranking_calculation(request: Request, body: RunRequest) -> Run
 
     Returns:
         RunResponse with job_id and status="started"
+
+    Raises:
+        HttpException if no category/time_window/job_state
     """
     category: str = body.category
     time_window: str = body.time_window
     
     if not category.strip() or not time_window.strip():
         raise HTTPException(status_code=400, detail="Missing category or time_window in your request")
+    
+    if not job_state:
+        raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")  
 
     # lock to prevent duplicate calls to this endpoint from retriggering ranking
     if job_state.is_running():
@@ -60,9 +66,15 @@ async def trigger_ranking_calculation(request: Request, body: RunRequest) -> Run
 @router.get("/status", response_model=CurrentJob)
 async def get_job_status() -> CurrentJob:
     """
-    Get status of a ingestion job
+    Get status of a ranking job
     Airflow HttpSensor polls this endpoint until status is 'completed' or 'failed'
+    
+    Raises:
+        HTTPException if no job_state
     """
+    if not job_state:
+        raise HTTPException(status_code=400, detail="Missing job_state, cant check status")
+
     job = job_state.get_current_job()
 
     if not job:
@@ -78,7 +90,6 @@ def health_check(request: Request) -> HealthResponse:
     Checks database connectivity and Reddit client status.
     """
     db_ok = False
-    reddit_ok = False
 
     # Check database
     try:

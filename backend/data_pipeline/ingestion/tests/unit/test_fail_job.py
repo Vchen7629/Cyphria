@@ -19,28 +19,15 @@ def tests_marks_running_job_failed() -> None:
     assert current_job.completed_at is not None
     assert before <= current_job.completed_at <= after
 
-def test_none_error() -> None:
-    """ValueError should be raised if the error input param is None"""
+@pytest.mark.parametrize(argnames="error", argvalues=[None, "", "  "])
+def test_invalid_error_params(error: str | None) -> None:
+    """ValueError should be raised if the error input param is invalid (None, empty string, whitespace)"""
     job_state = JobState()
 
     with pytest.raises(ValueError, match="Error cannot be None or empty string"):
-        job_state.fail_job(error=None) # type: ignore
+        job_state.fail_job(error) # type: ignore
 
-def test_empty_string_error() -> None:
-    """ValueError should be raised if the error input param is an empty string"""
-    job_state = JobState()
-
-    with pytest.raises(ValueError, match="Error cannot be None or empty string"):
-        job_state.fail_job(error="")
-
-def test_invalid_whitespace_error() -> None:
-    """ValueError should be raised if the error input param is just whitespace"""
-    job_state = JobState()
-
-    with pytest.raises(ValueError, match="Error cannot be None or empty string"):
-        job_state.fail_job(error="  ")
-
-def test_valid_whitespace_error() -> None:
+def test_valid_whitespace() -> None:
     """If error is a string with whitespace, it should still work"""
     job_state = JobState()
     before = datetime.now(tz=timezone.utc)

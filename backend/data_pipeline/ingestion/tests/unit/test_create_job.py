@@ -35,19 +35,13 @@ def test_none_category_raises_error() -> None:
     with pytest.raises(ValueError, match="category cannot be None or empty string"):
         job_state.create_job(category=None) # type: ignore
 
-def test_empty_string_category_raises_error() -> None:
-    """ValueError should be raised for category with empty string"""
+@pytest.mark.parametrize(argnames="category", argvalues=[None, "", "  "])
+def test_invalid_category_raises_error(category: str | None) -> None:
+    """ValueError should be raised for invalid categories (None, empty string, whitespace)"""
     job_state = JobState()
 
     with pytest.raises(ValueError, match="category cannot be None or empty string"):
-        job_state.create_job(category="")
-
-def test_whitespace_only_category_raises_error() -> None:
-    """ValueError should be raised for whitespace-only category"""
-    job_state = JobState()
-
-    with pytest.raises(ValueError, match="category cannot be None or empty string"):
-        job_state.create_job(category="   ")
+        job_state.create_job(category) # type: ignore
 
 def test_category_with_whitespace() -> None:
     """Category string with whitespace should be valid"""

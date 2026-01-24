@@ -27,11 +27,11 @@ async def trigger_ranking_calculation(request: Request, body: RunRequest) -> Run
     Raises:
         HttpException if no category/time_window/job_state
     """
-    category: str = body.category
+    product_topic: str = body.product_topic
     time_window: str = body.time_window
     
-    if not category.strip() or not time_window.strip():
-        raise HTTPException(status_code=400, detail="Missing category or time_window in your request")
+    if not product_topic.strip() or not time_window.strip():
+        raise HTTPException(status_code=400, detail="Missing product_topic or time_window in your request")
     
     if not job_state:
         raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")  
@@ -43,12 +43,12 @@ async def trigger_ranking_calculation(request: Request, body: RunRequest) -> Run
             detail="Ranking already in progress"
         )
 
-    job_state.create_job(body.category)
+    job_state.create_job(product_topic)
 
     service = RankingService(
         db_pool=request.app.state.db_pool,
         logger=request.app.state.logger,
-        category=category,
+        product_topic=product_topic,
         time_window=time_window
     )
 

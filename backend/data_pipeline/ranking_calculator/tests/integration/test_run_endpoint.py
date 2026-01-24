@@ -15,7 +15,7 @@ def test_run_endpoint_success(fastapi_client: FastAPITestClient) -> None:
         )
         MockService.return_value = mock_instance
 
-        req_body = RunRequest(category="GPU", time_window="all_time")
+        req_body = RunRequest(product_topic="GPU", time_window="all_time")
 
         response = fastapi_client.client.post("/run", json=req_body.model_dump())
 
@@ -31,7 +31,7 @@ def test_call_run_endpoint_when_already_in_progress(fastapi_client: FastAPITestC
     job_state.create_job("GPU")
 
     try:
-        req_body = RunRequest(category="GPU", time_window="all_time")
+        req_body = RunRequest(product_topic="GPU", time_window="all_time")
 
         response = fastapi_client.client.post("/run", json=req_body.model_dump())
 

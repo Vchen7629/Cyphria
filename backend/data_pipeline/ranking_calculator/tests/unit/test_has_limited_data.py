@@ -1,10 +1,6 @@
 import numpy as np
 import os
-
-os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
-os.environ.setdefault("TIME_WINDOWS", "all_time")
 os.environ.setdefault("BAYESIAN_PARAMS", "10")
-
 from src.calculation_utils.badge import assign_has_limited_data
 
 def test_assigns_badge_unsorted_list() -> None:

@@ -32,7 +32,7 @@ def postgres_container() -> Generator[PostgresContainer, None, None]:
                         id SERIAL PRIMARY KEY,
                         comment_id VARCHAR(50) NOT NULL,
                         product_name VARCHAR(100) NOT NULL,
-                        category VARCHAR(100) NOT NULL,
+                        product_topic VARCHAR(100) NOT NULL,
                         sentiment_score FLOAT NOT NULL,
                         created_utc TIMESTAMPTZ NOT NULL,
 
@@ -42,7 +42,7 @@ def postgres_container() -> Generator[PostgresContainer, None, None]:
                     CREATE TABLE product_rankings (
                         id SERIAL PRIMARY KEY,
                         product_name VARCHAR(50) NOT NULL,
-                        category VARCHAR(100) NOT NULL,
+                        product_topic VARCHAR(100) NOT NULL,
                         time_window VARCHAR(20) NOT NULL,
 
                         rank INTEGER NOT NULL,

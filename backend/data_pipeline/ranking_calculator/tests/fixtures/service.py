@@ -28,7 +28,7 @@ def create_ranking_service(db_pool: ConnectionPool) -> RankingService:
     return RankingService(
         db_pool=db_pool,
         logger=StructuredLogger(pod="ranking_service"),
-        category="GPU",
+        product_topic="GPU",
         time_window="all_time"
     )
 
@@ -38,7 +38,7 @@ def mock_ranking_service() -> RankingService:
     return RankingService(
         db_pool=MagicMock(spec=ConnectionPool),
         logger=MagicMock(spec=StructuredLogger),
-        category="GPU",
+        product_topic="GPU",
         time_window="all_time"
     )
 
@@ -48,7 +48,7 @@ def single_sentiment_comment() -> dict[str, Any]:
     return {
         'comment_id': 'test_comment_1',
         'product_name': 'rtx 4090',
-        'category': 'GPU',
+        'product_topic': 'GPU',
         'sentiment_score': 0.89,
         'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
     }
@@ -58,7 +58,7 @@ def single_product_score_comment() -> ProductScore:
     """Fixture for single Product score Object"""
     return ProductScore(
         product_name="rtx 4090",
-        category="GPU",
+        product_topic="GPU",
         time_window="all_time",
         rank=1,
         grade="S",

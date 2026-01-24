@@ -31,7 +31,9 @@ def test_run_endpoint_success(fastapi_client: FastAPITestClient) -> None:
 def test_call_run_endpoint_when_already_in_progress(fastapi_client: FastAPITestClient) -> None:
     """Run endpoint should return 409 when run already in progress"""
     # Create a running job to trigger the 409 response
-    routes.job_state.create_job("GPU")
+    job_state = routes.job_state
+    assert job_state is not None
+    job_state.create_job("GPU")
 
     try:
         req_body = RunRequest(
@@ -45,7 +47,7 @@ def test_call_run_endpoint_when_already_in_progress(fastapi_client: FastAPITestC
         assert "already in progress" in response.json()["detail"]
     finally:
         # Clean up by completing the job
-        routes.job_state.complete_job(IngestionResult(
+        job_state.complete_job(IngestionResult(
             posts_processed=0,
             comments_processed=0,
             comments_inserted=0,

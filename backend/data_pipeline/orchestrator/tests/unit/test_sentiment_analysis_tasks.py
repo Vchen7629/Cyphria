@@ -1,8 +1,8 @@
 from airflow.providers.http.sensors.http import HttpSensor
 from airflow.providers.http.operators.http import HttpOperator
-from src.dags.product_category_sentiment_analysis import create_sentiment_analysis_dag
+from src.dags.product_topic_sentiment_analysis import create_sentiment_analysis_dag
 from src.config.settings import Settings
-from src.config.category_mappings import CategoryMappings
+from src.config.topic_mappings import ProductTopicMappings
 import json 
 
 settings = Settings()
@@ -20,8 +20,8 @@ def test_ingestion_task_correct_configs() -> None:
     assert ingest_task.headers == {"Content-Type": "application/json"}
 
     expected_api_params = json.dumps({
-        'category': "GPU",
-        'subreddits': CategoryMappings.CATEGORY_SUBREDDITS.get(
+        'product_topic': "GPU",
+        'subreddits': ProductTopicMappings.TOPIC_SUBREDDITS.get(
             "GPU", 
             ["nvidia", "radeon", "amd", "IntelArc", "buildapc", "gamingpc", "pcbuild", "hardware"]
         )
@@ -61,7 +61,7 @@ def test_sentiment_analysis_task_correct_configs() -> None:
     assert sentiment_analysis_task.method == "POST"
     assert sentiment_analysis_task.headers == {"Content-Type": "application/json"}
 
-    expected_api_params = json.dumps({'category': "GPU"})
+    expected_api_params = json.dumps({'product_topic': "GPU"})
     assert sentiment_analysis_task.data == expected_api_params
 
     assert sentiment_analysis_task.log_response is True

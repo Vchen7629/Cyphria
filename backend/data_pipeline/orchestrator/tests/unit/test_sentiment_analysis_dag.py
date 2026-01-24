@@ -1,4 +1,4 @@
-from src.dags.product_category_sentiment_analysis import create_sentiment_analysis_dag
+from src.dags.product_topic_sentiment_analysis import create_sentiment_analysis_dag
 from src.config.settings import Settings
 
 settings = Settings()

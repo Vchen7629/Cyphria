@@ -1,11 +1,11 @@
 from typing import Any
 from unittest.mock import patch
-from psycopg_pool.pool import ConnectionPool
-from src.worker import StartService
+from psycopg_pool import ConnectionPool
+from src.sentiment_service import SentimentService
 import time
 import threading
 
-def test_cancel_flag_stops_worker_loop(db_pool: ConnectionPool, create_sentiment_service: StartService) -> None:
+def test_cancel_flag_mid_batch(db_pool: ConnectionPool, create_sentiment_service: SentimentService) -> None:
     """Shutdown_requested flag should cause worker loop to exit properly"""
     with db_pool.connection() as conn:
         with conn.cursor() as cursor:
@@ -30,7 +30,7 @@ def test_cancel_flag_stops_worker_loop(db_pool: ConnectionPool, create_sentiment
     shutdown_thread = threading.Thread(target=trigger_shutdown, daemon=True)
     shutdown_thread.start()
 
-    service.run()
+    service._run_sentiment_pipeline()
 
     assert service.cancel_requested is True
 
@@ -43,7 +43,7 @@ def test_cancel_flag_stops_worker_loop(db_pool: ConnectionPool, create_sentiment
             assert count is not None
             assert count[0] > 0
 
-def test_no_data_loss_when_cancelled_between_batches(db_pool: ConnectionPool, create_sentiment_service: StartService) -> None:
+def test_no_data_loss_when_cancelled_between_batches(db_pool: ConnectionPool, create_sentiment_service: SentimentService) -> None:
     """Cancelling between batches shouln't cause data loss. All processed comments should be properly marked"""
     with db_pool.connection() as conn:
         with conn.cursor() as cursor:
@@ -73,7 +73,7 @@ def test_no_data_loss_when_cancelled_between_batches(db_pool: ConnectionPool, cr
         return result
 
     with patch.object(service, '_process_comments', side_effect=track_batches):
-        service.run()
+        service._run_sentiment_pipeline()
 
     with db_pool.connection() as conn:
         with conn.cursor() as cursor:
@@ -91,7 +91,7 @@ def test_no_data_loss_when_cancelled_between_batches(db_pool: ConnectionPool, cr
 
             assert processed_count[0] + unprocessed_count[0] == 250
 
-def test_current_batch_completes_before_cancelled(db_pool: ConnectionPool, create_sentiment_service: StartService) -> None:
+def test_current_batch_completes_before_cancelled(db_pool: ConnectionPool, create_sentiment_service: SentimentService) -> None:
     """When cancel is triggered, current batch should complete processing before the worker exits"""
     with db_pool.connection() as conn:
         with conn.cursor() as cursor:
@@ -116,7 +116,7 @@ def test_current_batch_completes_before_cancelled(db_pool: ConnectionPool, creat
 
     with patch.object(service, '_process_sentiment_and_write_to_db',
                         side_effect=trigger_shutdown_during_processing):
-        service.run()
+        service._run_sentiment_pipeline()
 
     # Verify that the batch completed despite shutdown being triggered mid-processing
     with db_pool.connection() as conn:

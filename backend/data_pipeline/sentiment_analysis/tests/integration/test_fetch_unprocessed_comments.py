@@ -1,8 +1,8 @@
 from typing import Any
-import psycopg
-from datetime import datetime, timezone
-
+from datetime import datetime
+from datetime import timezone
 from src.db_utils.queries import fetch_unprocessed_comments
+import psycopg
 
 def test_fetch_single_comment(db_connection: psycopg.Connection, single_comment: dict[str, Any]) -> None:
     """Fetching a single comment from the database should return it."""

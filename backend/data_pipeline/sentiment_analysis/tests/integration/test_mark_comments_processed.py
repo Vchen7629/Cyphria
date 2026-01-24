@@ -1,8 +1,8 @@
 from typing import Any
-import psycopg
-from datetime import datetime, timezone
-
+from datetime import datetime
+from datetime import timezone
 from src.db_utils.queries import mark_comments_processed
+import psycopg
 
 def test_mark_single_comment_processed(db_connection: psycopg.Connection, single_comment: dict[str, Any]) -> None:
     """Marking a valid comment id should work."""

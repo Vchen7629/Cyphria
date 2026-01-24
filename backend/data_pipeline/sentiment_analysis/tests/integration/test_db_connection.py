@@ -1,8 +1,8 @@
-from src.db_utils.queries import fetch_unprocessed_comments
 from typing import Any
+from psycopg_pool import ConnectionPool
+from src.db_utils.queries import fetch_unprocessed_comments
 import pytest
 import psycopg
-from psycopg_pool import ConnectionPool
 
 def test_connection_pool_creation(db_pool: ConnectionPool) -> None:
     """Connection pool should be created successfully and can acquire connections."""

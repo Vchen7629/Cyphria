@@ -1,4 +1,4 @@
-from src.dags.product_category_ranking import create_ranking_dag
+from src.dags.product_topic_ranking import create_ranking_dag
 from src.config.settings import Settings
 
 settings = Settings()

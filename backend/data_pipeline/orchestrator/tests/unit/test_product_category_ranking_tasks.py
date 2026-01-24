@@ -1,6 +1,6 @@
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
-from src.dags.product_category_ranking import create_ranking_dag
+from src.dags.product_topic_ranking import create_ranking_dag
 from src.config.settings import Settings
 import json 
 
@@ -19,7 +19,7 @@ def test_ranking_all_time_task_correct_configs() -> None:
     assert ranking_task.headers == {"Content-Type": "application/json"}
 
     expected_api_params = json.dumps({
-        'category': "GPU",
+        'product_topic': "GPU",
         'time_windows': "all_time",
         "bayesian_params": "30"
     })
@@ -60,7 +60,7 @@ def test_ranking_90_day_task_correct_configs() -> None:
     assert ranking_task.headers == {"Content-Type": "application/json"}
 
     expected_api_params = json.dumps({
-        'category': "GPU",
+        'product_topic': "GPU",
         'time_windows': "90d",
         "bayesian_params": "30"
     })

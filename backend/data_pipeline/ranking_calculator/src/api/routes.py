@@ -90,22 +90,9 @@ def health_check(request: Request) -> HealthResponse:
     except Exception:
         pass
 
-    # Check Reddit client (verify authentication)
-    try:
-        # This makes a lightweight API call to verify credentials
-        _ = request.app.state.reddit_client.user.me()
-        reddit_ok = True
-    except Exception:
-        pass
+    status = "healthy" if db_ok else "unhealthy"
 
-    status = "healthy" if (db_ok and reddit_ok) else "unhealthy"
-
-    return HealthResponse(
-        status=status,
-        db_connected=db_ok,
-        reddit_connected=reddit_ok,
-    )
-
+    return HealthResponse(status=status, db_connected=db_ok)
 
 @router.get("/ready")
 def readiness_check() -> dict[str, bool]:

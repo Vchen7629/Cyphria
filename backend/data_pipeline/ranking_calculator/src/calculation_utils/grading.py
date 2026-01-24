@@ -26,8 +26,8 @@ def assign_grades(bayesian_scores: np.ndarray) -> np.ndarray:
     """
     settings = Settings()
 
-    indicies = np.searchsorted(-settings.grade_thresholds, -bayesian_scores, side="left")
-    return settings.grade_values[indicies]
+    indicies = np.searchsorted(-settings.GRADE_THRESHOLDS, -bayesian_scores, side="left")
+    return settings.GRADE_VALUES[indicies]
 
 def assign_ranks(bayesian_scores: np.ndarray) -> np.ndarray:
     """

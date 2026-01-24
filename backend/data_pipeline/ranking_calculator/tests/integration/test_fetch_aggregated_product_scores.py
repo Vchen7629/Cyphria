@@ -1,8 +1,9 @@
-from datetime import timedelta
-from datetime import datetime, timezone
 from typing import Any
+from datetime import datetime
+from datetime import timezone
+from datetime import timedelta
+from src.db.queries import fetch_aggregated_product_scores
 import psycopg
-from src.db_utils.queries import fetch_aggregated_product_scores
 
 def test_fetch_single_comment_comment(db_connection: psycopg.Connection, single_sentiment_comment: dict[str, Any]) -> None:
     """Fetching a single comment from the database should return the correct values"""

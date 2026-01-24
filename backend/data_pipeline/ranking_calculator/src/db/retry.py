@@ -1,8 +1,11 @@
-import time
 from functools import wraps
-from typing import Any, Callable, TypeVar, Optional
-import psycopg
+from typing import Any
+from typing import TypeVar
+from typing import Optional
+from typing import Callable
 from src.core.logger import StructuredLogger
+import time
+import psycopg
 
 ReturnType = TypeVar('ReturnType')
 
@@ -41,7 +44,7 @@ def retry_with_backoff(
     """
     def decorator(func: Callable[..., ReturnType]) -> Callable[..., ReturnType]:
         @wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> ReturnType:
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             delay = initial_delay
 
             for attempt in range(max_retries + 1):

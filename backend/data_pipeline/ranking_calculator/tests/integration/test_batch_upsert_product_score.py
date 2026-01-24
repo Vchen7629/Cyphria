@@ -1,8 +1,8 @@
-from datetime import timedelta
 from datetime import timezone
-from src.core.types import ProductScore
-from src.db_utils.queries import batch_upsert_product_score
 from datetime import datetime
+from datetime import timedelta
+from src.api.schemas import ProductScore
+from src.db.queries import batch_upsert_product_score
 import psycopg
 import pytest
 

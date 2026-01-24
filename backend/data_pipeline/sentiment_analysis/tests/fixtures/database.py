@@ -1,38 +1,26 @@
-from src.core.logger import StructuredLogger
-from unittest.mock import patch
-from unittest.mock import MagicMock
-from testcontainers.postgres import PostgresContainer
 from typing import Any
-from typing import Callable
 from typing import Generator
-from typing import NamedTuple
-from psycopg_pool import ConnectionPool
 from datetime import datetime
 from datetime import timezone
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
-from contextlib import asynccontextmanager
-from src.worker import StartService
-from src.api.routes import router as base_router
-import os
-import time
+from psycopg_pool import ConnectionPool
+from testcontainers.postgres import PostgresContainer
 import pytest
 import psycopg
-os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
-os.environ.setdefault("DB_HOST", "localhost")
-os.environ.setdefault("DB_PORT", "5432")
-os.environ.setdefault("DB_NAME", "test_db")
-os.environ.setdefault("DB_USER", "test_user")
-os.environ.setdefault("DB_PASS", "test_pass")
 
-class FastAPITestClient(NamedTuple):
-    client: TestClient
-    app: FastAPI
-
-@asynccontextmanager
-async def null_lifespan(_app: FastAPI) -> Any:
-    """No-op lifespan for testing - state is set by fixtures"""
-    yield
+@pytest.fixture
+def single_comment() -> dict[str, Any]:
+    """Fixture for single comment instance"""
+    return {
+        'comment_id': 'test_comment_1',
+        'post_id': 'test_post_1',
+        'comment_body': 'This is a test comment about RTX 4090',
+        'detected_products': ['rtx 4090'],
+        'subreddit': 'nvidia',
+        'author': 'test_user',
+        'score': 42,
+        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+        'category': 'GPU'
+    }
 
 @pytest.fixture(scope="session")
 def postgres_container() -> Generator[PostgresContainer, None, None]:
@@ -85,7 +73,6 @@ def postgres_container() -> Generator[PostgresContainer, None, None]:
 
         yield postgres
 
-
 @pytest.fixture
 def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Connection, None, None]:
     """
@@ -106,7 +93,6 @@ def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Co
         if conn.info.transaction_status != psycopg.pq.TransactionStatus.IDLE:
             conn.rollback()
         conn.close()
-
 
 @pytest.fixture
 def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, None, None]:
@@ -133,57 +119,3 @@ def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, 
     yield pool
 
     pool.close()
-    
-
-@pytest.fixture
-def single_comment() -> dict[str, Any]:
-    """Fixture for single comment instance"""
-    return {
-        'comment_id': 'test_comment_1',
-        'post_id': 'test_post_1',
-        'comment_body': 'This is a test comment about RTX 4090',
-        'detected_products': ['rtx 4090'],
-        'subreddit': 'nvidia',
-        'author': 'test_user',
-        'score': 42,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
-    }
-
-@pytest.fixture
-def mock_absa() -> MagicMock:
-    """
-    Mock ABSA model that returns fixed sentiment scores.
-    Returns list of (None, sentiment_score) tuples matching input length.
-    """
-    mock = MagicMock()
-
-    def mock_sentiment_analysis(pairs: list[tuple[str, str]]) -> list[tuple[None, float]]:
-        time.sleep(0.5)
-        return [(None, 0.5) for _ in pairs]
-
-    mock.SentimentAnalysis.side_effect = mock_sentiment_analysis
-    return mock
-
-@pytest.fixture
-def fastapi_client(db_pool: ConnectionPool, mock_absa: MagicMock) -> Generator[FastAPITestClient, None, None]:
-    """Fastapi TestClient with mocked heavy dependencies"""
-    test_app = FastAPI(lifespan=null_lifespan)
-    test_app.include_router(base_router)
-
-    test_app.state.db_pool = db_pool
-    test_app.state.logger = StructuredLogger(pod="ingestion_service_test")
-    test_app.state.model = mock_absa
-
-    with TestClient(test_app, raise_server_exceptions=False) as client:
-        yield FastAPITestClient(client=client, app=test_app)
-
-@pytest.fixture
-def create_sentiment_service(db_pool: ConnectionPool, mock_absa: MagicMock) -> StartService:
-    """Creates a Sentiment Service Instance fixture"""
-    return StartService(
-        logger=StructuredLogger(pod="sentiment_analysis"),
-        category="GPU",
-        db_pool=db_pool,
-        model=mock_absa
-    )

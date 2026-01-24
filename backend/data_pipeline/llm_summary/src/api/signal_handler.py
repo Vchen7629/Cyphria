@@ -1,11 +1,11 @@
 # Track current run state
 from typing import Any
-from src.worker import LLMSummaryWorker
+from src.summary_service import LLMSummaryService
 import signal
 
 class RunState:
     """Mutable container"""
-    current_service: LLMSummaryWorker | None = None
+    current_service: LLMSummaryService | None = None
     run_in_progress = False
 
 run_state = RunState()

@@ -12,7 +12,7 @@ from src.core.logger import StructuredLogger
 from src.summary_service import LLMSummaryService
 
 @pytest.fixture
-def create_llm_summary_service(db_pool: ConnectionPool, mock_openai_client: MagicMock) -> LLMSummaryService:
+def create_summary_service(db_pool: ConnectionPool, mock_openai_client: MagicMock) -> LLMSummaryService:
     """Creates a llm_summary service Instance fixture"""
     return LLMSummaryService(
         logger=StructuredLogger(pod="sentiment_analysis"),

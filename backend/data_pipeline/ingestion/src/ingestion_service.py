@@ -1,20 +1,21 @@
-from src.api.job_state import JobState
 from typing import Any
-from src.api.schemas import IngestionResult
-from src.product_utils.detector_factory import ProductDetectorWrapper
-from psycopg_pool.pool import ConnectionPool
-from src.utils.fetch_post import fetch_post_delayed
-from src.utils.fetch_comments import fetch_comments
-from src.preprocessing.relevant_fields import extract_relevant_fields
-from src.preprocessing.url_remover import remove_url
-from src.preprocessing.demojify import demojify
-from src.preprocessing.is_valid_comment import is_valid_comment
-from src.api.schemas import RedditComment
-from src.preprocessing.check_english import detect_english
-from src.core.logger import StructuredLogger
-from src.db_utils.queries import batch_insert_raw_comments
-from praw.models import Submission, Comment
 from praw import Reddit
+from praw.models import Comment
+from praw.models import Submission
+from psycopg_pool.pool import ConnectionPool
+from src.api.job_state import JobState
+from src.api.schemas import RedditComment
+from src.api.schemas import IngestionResult
+from src.core.logger import StructuredLogger
+from src.utils.fetch_comments import fetch_comments
+from src.utils.fetch_post import fetch_post_delayed
+from src.db_utils.queries import batch_insert_raw_comments
+from src.preprocessing.demojify import demojify
+from src.preprocessing.url_remover import remove_url
+from src.preprocessing.check_english import detect_english
+from src.preprocessing.is_valid_comment import is_valid_comment
+from src.preprocessing.relevant_fields import extract_relevant_fields
+from src.product_utils.detector_factory import ProductDetectorWrapper
 import prawcore
 
 class IngestionService:
@@ -24,7 +25,7 @@ class IngestionService:
         reddit_client: Reddit,
         db_pool: ConnectionPool,
         logger: StructuredLogger,
-        category: str,
+        product_topic: str,
         subreddits: list[str],
         detector: ProductDetectorWrapper,
         normalizer: Any
@@ -32,7 +33,7 @@ class IngestionService:
         self.reddit_client = reddit_client
         self.db_pool = db_pool
         self.logger = logger
-        self.category = category
+        self.product_topic = product_topic
         self.subreddits = subreddits
         self.detector = detector
         self.normalizer = normalizer
@@ -88,7 +89,7 @@ class IngestionService:
             return None
         
         gpus_in_comment: list[str] = self.detector.extract_products(comment.body)
-        normalized_gpus: list[str] = self.normalizer.normalize(self.category, gpus_in_comment)
+        normalized_gpus: list[str] = self.normalizer.normalize(self.product_topic, gpus_in_comment)
 
         # extracting only relevant parts of the comment api res
         extracted: RedditComment = extract_relevant_fields(comment, normalized_gpus)
@@ -129,7 +130,7 @@ class IngestionService:
                 'author': comment.author,
                 'score': comment.score,
                 'created_utc': comment.timestamp,
-                'category': self.category
+                'product_topic': self.product_topic
             }
             for comment in comment_list
         ]

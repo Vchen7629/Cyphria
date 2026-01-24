@@ -1,7 +1,7 @@
 from typing import Any, Optional
-import psycopg
 from src.core.logger import StructuredLogger
 from src.db_utils.retry import retry_with_backoff
+import psycopg 
 
 def batch_insert_raw_comments(
     conn: psycopg.Connection,
@@ -23,7 +23,7 @@ def batch_insert_raw_comments(
             - author (str)
             - score (int)
             - created_utc (datetime)
-            - category (str)
+            - product_topic (str)
         logger: Optional StructuredLogger for logging retry failures
 
     Example:
@@ -37,7 +37,7 @@ def batch_insert_raw_comments(
                 'author': 'user123',
                 'score': 42,
                 'created_utc': datetime.now(),
-                'category': 'GPU'
+                'product_topic': 'GPU'
             }
         ]
         batch_insert_raw_comments(conn, comments, logger=my_logger)
@@ -50,10 +50,10 @@ def batch_insert_raw_comments(
         query = """
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
+                author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, FALSE
             )
             ON CONFLICT (comment_id) DO NOTHING;
         """

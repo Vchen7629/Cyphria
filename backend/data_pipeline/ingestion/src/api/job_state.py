@@ -10,22 +10,22 @@ class JobState:
         self._current_job: Optional[CurrentJob] = None
         self._lock = Lock()
 
-    def create_job(self, category: str) -> None:
+    def create_job(self, product_topic: str) -> None:
         """
         Create a new job
 
         Args:
-            category: category of current job we are ingesting for
+            product_topic: product topic of current job we are ingesting for
 
         Raises:
-            ValueError: if category is None or empty string
+            ValueError: if product topic is None or empty string
         """
-        if not category or category.strip() == "":
-            raise ValueError("category cannot be None or empty string")
+        if not product_topic or product_topic.strip() == "":
+            raise ValueError("product topic cannot be None or empty string")
 
         with self._lock:
             self._current_job = CurrentJob(
-                category=category,
+                product_topic=product_topic,
                 status=JobStatus.RUNNING,
                 started_at=datetime.now(tz=timezone.utc)
             )

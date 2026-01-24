@@ -31,7 +31,7 @@ def test_airflow_dags_loaded(k8s_core_api: CoreV1Api, test_namespace: str, airfl
         "product_gpu_ranking",
         "product_laptop_ranking",
         "product_headphone_ranking",
-        
+        "product_summary"
     ]
 
     for expected_dag in expected_dags:

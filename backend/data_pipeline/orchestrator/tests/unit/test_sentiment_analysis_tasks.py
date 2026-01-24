@@ -1,3 +1,4 @@
+from airflow.providers.http.sensors.http import HttpSensor
 from airflow.providers.http.operators.http import HttpOperator
 from src.dags.product_category_sentiment_analysis import create_sentiment_analysis_dag
 from src.config.settings import Settings
@@ -34,6 +35,21 @@ def test_ingestion_task_correct_configs() -> None:
     assert ingest_task.retry_exponential_backoff is True
     assert ingest_task.max_retry_delay == settings.MAX_RETRY_DELAY
 
+def test_wait_all_time_task_correct_configs() -> None:
+    """Test that wait task for all time is created correctly with the correct configs"""
+    dag = create_sentiment_analysis_dag("GPU")
+
+    wait_task = dag.get_task("wait_ingest_gpu_comments")
+
+    assert isinstance(wait_task, HttpSensor)
+    assert wait_task.task_id == "wait_ingest_gpu_comments"
+    assert wait_task.endpoint == "/status"
+    assert wait_task.method == "GET"
+    assert wait_task.timeout == settings.WAIT_TIMEOUT
+    assert wait_task.retries == settings.NUM_RETRIES
+    assert wait_task.retries == settings.NUM_RETRIES
+    assert wait_task.retry_delay == settings.RETRY_DELAY
+
 def test_sentiment_analysis_task_correct_configs() -> None:
     """Test that sentiment_analysis task is created correctly with the correct configs"""
     dag = create_sentiment_analysis_dag("GPU")    
@@ -55,11 +71,34 @@ def test_sentiment_analysis_task_correct_configs() -> None:
     assert sentiment_analysis_task.retry_exponential_backoff is True
     assert sentiment_analysis_task.max_retry_delay == settings.MAX_RETRY_DELAY
 
+def test_wait_90_day_task_correct_configs() -> None:
+    """Test that wait task for 90_day is created correctly with the correct configs"""
+    dag = create_sentiment_analysis_dag("GPU")
+
+    wait_task = dag.get_task("wait_analyze_gpu_product_sentiments")
+
+    assert isinstance(wait_task, HttpSensor)
+    assert wait_task.task_id == "wait_analyze_gpu_product_sentiments"
+    assert wait_task.endpoint == "/status"
+    assert wait_task.method == "GET"
+    assert wait_task.timeout == settings.WAIT_TIMEOUT
+    assert wait_task.retries == settings.NUM_RETRIES
+    assert wait_task.retries == settings.NUM_RETRIES
+    assert wait_task.retry_delay == settings.RETRY_DELAY
+
+
 def test_sentiment_task_dependencies() -> None:
     """Test that sentiment task depends on ingest task"""
     dag = create_sentiment_analysis_dag("GPU")
 
     ingest_task = dag.get_task("ingest_gpu_comments")
+    wait_ingest = dag.get_task("wait_ingest_gpu_comments")
+    # wait ingest depends on ingest being done
+    assert wait_ingest in ingest_task.downstream_list
     sentiment_task = dag.get_task("analyze_gpu_product_sentiments")
+    # sentiment depends on wait ingest being done
+    assert sentiment_task in wait_ingest.downstream_list
 
-    assert sentiment_task in ingest_task.downstream_list
+    wait_sentiment = dag.get_task("wait_analyze_gpu_product_sentiments")
+    # wait sentiment depends on sentiment being done
+    assert wait_sentiment in sentiment_task.downstream_list

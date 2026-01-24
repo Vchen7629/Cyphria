@@ -10,7 +10,7 @@ from kubernetes.client import CoreV1Api
 from kubernetes.client import V1Volume
 from kubernetes.client.exceptions import ApiException
 from kubernetes.stream import stream
-from tests.utils.pod_lifecycle import wait_for_pod_ready
+from tests.utils.kubernetes import wait_for_pod_ready
 import textwrap
 import time
 import json
@@ -56,12 +56,20 @@ def create_mock_service_script() -> str:
                     self.wfile.write(json.dumps({"error": "Internal Server Error"}).encode())
                     return
 
+                # POST /run returns "started", indicating async task has begun
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
                 self.end_headers()
-                self.wfile.write(json.dumps({"status": config["response_status"]}).encode())
+                self.wfile.write(json.dumps({"status": "started"}).encode())
 
             def do_GET(self):
+                if self.path == "/status":
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"status": config["response_status"]}).encode())
+                    return
+
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
                 self.end_headers()

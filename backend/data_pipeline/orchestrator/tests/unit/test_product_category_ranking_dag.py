@@ -15,19 +15,21 @@ def test_dag_loads_with_correct_configs() -> None:
     assert dag.max_active_runs == settings.MAX_ACTIVE_RUNS
 
 def test_loads_dag_tasks() -> None:
-    """Product category ranking dag should load 2 tasks"""
+    """Product category ranking dag should load 4 tasks"""
     dag = create_ranking_dag("GPU")
 
     assert dag is not None
-    assert len(dag.tasks) == 2 # should be 90d and all_time
+    assert len(dag.tasks) == 4 # should be 90d and all_time and two wait tasks
 
 def test_correct_dag_tasks() -> None:
-    """Product category ranking dag should load the 2 expected tasks"""
+    """Product category ranking dag should load the 4 expected tasks"""
     dag = create_ranking_dag("GPU")
 
     expected_tasks = sorted([                                                                               
-      "rank_gpu_products_all_time",                                                                        
-      "rank_gpu_products_90_day",                                                             
+        "rank_gpu_products_all_time",
+        "wait_rank_gpu_products_all_time",                                                                        
+        "rank_gpu_products_90_day",
+        "wait_rank_gpu_products_90_day",                                                                                                              
     ])                                                                                                      
                                                                                                             
     actual_tasks = sorted(task.task_id for task in dag.tasks)

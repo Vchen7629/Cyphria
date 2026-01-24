@@ -14,11 +14,11 @@ def test_dag_loads_with_correct_configs() -> None:
     assert dag.max_active_runs == settings.MAX_ACTIVE_RUNS
 
 def test_loads_dag_tasks() -> None:
-    """Product category sentiment analysis dag should load 2 tasks"""
+    """Product category sentiment analysis dag should load 4 tasks"""
     dag = create_sentiment_analysis_dag('GPU')
 
     assert dag is not None
-    assert len(dag.tasks) == 2 # should be ingest and sentiment analysis
+    assert len(dag.tasks) == 4 # should be ingest, sentiment analysis, and 2 wait tasks
 
 def test_correct_dag_tasks() -> None:
     """Product category sentiment analysis dag should load the 2 expected tasks"""
@@ -26,7 +26,9 @@ def test_correct_dag_tasks() -> None:
 
     expected_tasks = sorted([                                                                               
       "ingest_gpu_comments",                                                                        
-      "analyze_gpu_product_sentiments",                                                             
+      "analyze_gpu_product_sentiments",
+      "wait_ingest_gpu_comments",                                                                        
+      "wait_analyze_gpu_product_sentiments",                                                             
     ])                                                                                                      
                                                                                                             
     actual_tasks = sorted(task.task_id for task in dag.tasks)

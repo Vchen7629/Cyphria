@@ -15,19 +15,21 @@ def test_dag_loads_with_correct_configs() -> None:
     assert dag.max_active_runs == settings.MAX_ACTIVE_RUNS
 
 def test_loads_dag_tasks() -> None:
-    """product summary dag should load 1 task"""
+    """product summary dag should load 4 tasks"""
     dag = create_llm_summary_dag()
 
     assert dag is not None
-    assert len(dag.tasks) == 2 # should be llm summary all time and 90 day
+    assert len(dag.tasks) == 4 # should be llm summary all time, 90 day and wait tasks
 
 def test_correct_dag_tasks() -> None:
-    """product summary dag should load 1 task"""
+    """product summary dag should load 4 task"""
     dag = create_llm_summary_dag()
 
     expected_tasks = sorted([                                                                               
       "generate_product_summaries_all_time",                                                                        
-      "generate_product_summaries_90_day",                                                             
+      "generate_product_summaries_90_day",
+      "wait_generate_product_summaries_all_time",                                                                        
+      "wait_generate_product_summaries_90_day",                                                              
     ])                                                                                                      
                                                                                                             
     actual_tasks = sorted(task.task_id for task in dag.tasks)

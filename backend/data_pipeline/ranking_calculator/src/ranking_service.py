@@ -1,3 +1,5 @@
+from datetime import timezone
+from datetime import datetime
 from psycopg_pool import ConnectionPool
 from src.api.job_state import JobState
 from src.api.schemas import ProductScore
@@ -13,7 +15,6 @@ from src.calculation_utils.badge import assign_is_most_discussed
 from src.calculation_utils.bayesian import calculate_bayesian_scores
 from src.core.logger import StructuredLogger
 from src.core.settings_config import Settings
-from datetime import date
 import numpy as np
 
 class RankingService:
@@ -44,7 +45,7 @@ class RankingService:
         is_top_pick: np.ndarray,
         is_most_discussed: np.ndarray,
         has_limited_data: np.ndarray,
-        calculation_date: date
+        calculation_date: datetime
     ) -> list[ProductScore]:
         """
         Take in the params and build the ranking object for product for inserting to db
@@ -62,11 +63,23 @@ class RankingService:
             calculation_date: Timestamp when its processed
         
         Returns:
-            list of product score objects with metadata
+            list of product score objects with metadata, or empty array if missing params or cancelled
         """
+        if not all([product_scores, category, time_window, ranks, grades, bayesian_scores, is_top_pick, is_most_discussed, has_limited_data, calculation_date]):
+            self.logger.warning(event_type="ranking_service run", message="Missing a input param")
+            return []
+
+        if category.strip() == "" or time_window.strip() == "":
+            self.logger.warning(event_type="ranking_service run", message="Missing a category or time window")
+            return []
+            
         rankings: list[ProductScore] = []
 
         for i, product in enumerate(product_scores):
+            if self.cancel_requested:
+                self.logger.info(event_type="ranking_service run", message="Cancel requested, build product ranking object...")
+                return []
+
             ranking = ProductScore(
                 product_name=product.product_name,
                 category=category,
@@ -101,9 +114,17 @@ class RankingService:
             time_window: Time window, "90d" or "all_time"
 
         Returns:
-            number of products processed
+            number of products processed, or 0 if missing params
         """
+        if not category or not category.strip == "" or not time_window or not time_window.strip() == "":
+            self.logger.warning(event_type="ranking_service run", message="Missing category or time window")
+            return 0
+
         with self.db_pool.connection() as conn:
+            if self.cancel_requested:
+                self.logger.info(event_type="ranking_service run", message="Cancel requested, skipping fetch_aggregated...")
+                return 0
+
             product_scores = fetch_aggregated_product_scores(conn, category, time_window)
 
             if not product_scores:
@@ -127,7 +148,7 @@ class RankingService:
             is_most_discussed = assign_is_most_discussed(mention_counts)
             has_limited_data = assign_has_limited_data(mention_counts, self.settings.BAYESIAN_PARAMS)
 
-            calculation_date = date.today()
+            calculation_date = datetime.now(tz=timezone.utc)
 
             product_ranking_list = self._build_product_ranking_object(
                 product_scores, 

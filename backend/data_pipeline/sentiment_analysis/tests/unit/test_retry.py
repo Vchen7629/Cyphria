@@ -87,6 +87,6 @@ def test_logger_called_on_final_failure() -> None:
 
     assert mock_logger.error.call_count == 1
     call_args = mock_logger.error.call_args[1]
-    assert call_args['event_type'] == "Database Retry"
+    assert call_args['event_type'] == "sentiment_analysis database"
     assert "failed after 2 retries" in call_args['message']
     assert call_args['error_type'] == "DeadlockDetected"

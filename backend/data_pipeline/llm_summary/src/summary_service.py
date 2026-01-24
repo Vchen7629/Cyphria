@@ -4,6 +4,7 @@ from src.core.logger import StructuredLogger
 from src.db.queries import fetch_top_comments_for_product
 from src.db.queries import fetch_unique_products
 from src.db.queries import upsert_llm_summaries
+from src.api.job_state import JobState
 from src.api.schemas import SummaryResult
 from src.llm_client.prompts import SYSTEM_PROMPT
 from src.llm_client.prompts import build_user_prompt
@@ -12,7 +13,7 @@ from src.llm_client.response_parser import TLDRValidationError
 from src.llm_client.retry import retry_llm_api
 import psycopg
 
-class LLMSummaryWorker:
+class LLMSummaryService:
     def __init__(
         self, 
         time_window: str, 
@@ -108,7 +109,7 @@ class LLMSummaryWorker:
 
         return inserted
 
-    def run(self) -> SummaryResult:
+    def _run_summary_pipeline(self) -> SummaryResult:
         """Run the entire processing pipeline"""
         products_processed = 0
 
@@ -144,3 +145,38 @@ class LLMSummaryWorker:
             products_summarized=products_processed,
             cancelled=False
         )
+
+    def run_single_cycle(self, job_state: JobState) -> None:
+        """
+        Run one complete summary cycle and update job state
+        runs in a background thread and handles all errors internally and updates the job state
+
+        Args:
+            job_state: JobState instance to update with progress/results
+
+        Raise:
+            Value error if not job state
+        """
+        # nested import to prevent circular dependency import errors
+        from src.api.signal_handler import run_state
+
+        if not job_state:
+            raise ValueError("Job state must be provided for the run single cycle")
+
+        try:
+            result = self._run_summary_pipeline()
+
+            job_state.complete_job(result)
+
+            self.logger.info(
+                event_type="llm_summary run",
+                message=f"Ingestion completed: {result.products_summarized} products summarized"
+            )
+
+        except Exception as e:
+            self.logger.error(event_type="llm_summary run", message=f"Summary failed: {str(e)}")
+            job_state.fail_job(str(e))
+        finally:
+            # Clean up run state after job completes or fails
+            run_state.run_in_progress = False
+            run_state.current_service = None

@@ -1,5 +1,22 @@
-from pydantic import BaseModel
+from enum import Enum
+from typing import Optional
 from datetime import datetime
+from pydantic import BaseModel
+
+class JobStatus(str, Enum):
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    CANCELLED = "cancelled"
+
+class CurrentJob(BaseModel):
+    """Currently running job state"""
+    status: JobStatus # "pending" | "running" | "completed" | "failed" | "cancelled"
+    category: str
+    started_at: datetime
+    completed_at: Optional[datetime] = None
+    result: Optional[SentimentResult] = None
+    error: Optional[str] = None
 
 class UnprocessedComment(BaseModel):
     comment_id: str
@@ -27,9 +44,7 @@ class RunRequest(BaseModel):
 
 class RunResponse(BaseModel):
     """Response from /run endpoint"""
-    status: str # "completed" | "cancelled" | "error"
-    result: SentimentResult | None = None
-    error: str | None = None
+    status: str # "started"
 
 class HealthResponse(BaseModel):
     """Response from /health endpoint"""

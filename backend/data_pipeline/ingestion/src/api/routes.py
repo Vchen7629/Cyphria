@@ -15,7 +15,7 @@ import asyncio
 router = APIRouter()
 
 # global job state thats initialized in lifespan
-job_state: JobState = None
+job_state: JobState | None = None
 
 @router.post("/run", response_model=RunResponse)
 async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
@@ -24,8 +24,19 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
 
     Returns:
         RunResponse with job_id and status="started"
+
+    Raises:
+        HTTPException if no category or job state
     """
     # lock to prevent duplicate calls to this endpoint from retriggering ingestion
+    category: str = body.category
+
+    if not category or category.strip() == "":
+        raise HTTPException(status_code=400, detail="Missing category in the request")
+    
+    if not job_state:
+        raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")  
+    
     if job_state.is_running():
         raise HTTPException(
             status_code=409,
@@ -62,7 +73,13 @@ async def get_job_status() -> CurrentJob:
     """
     Get status of a ingestion job
     Airflow HttpSensor polls this endpoint until status is 'completed' or 'failed'
-    """
+    
+    Raises:
+        HTTPException if no job state
+    """    
+    if not job_state:
+        raise HTTPException(status_code=400, detail="Missing job_state, cant check status")  
+
     job = job_state.get_current_job()
 
     if not job:

@@ -1,3 +1,4 @@
+from typing import Any
 from psycopg_pool import ConnectionPool
 import psycopg
 import pytest
@@ -13,7 +14,7 @@ def test_connection_failure_handling() -> None:
 
 def test_pool_multiple_connections(db_pool: ConnectionPool) -> None:
     """Test that connection pool can handle multiple concurrent connections."""
-    connections = []
+    connections: list[Any] = []
 
     try:
         # Acquire multiple connections

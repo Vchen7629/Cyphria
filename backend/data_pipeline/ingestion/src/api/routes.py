@@ -29,10 +29,10 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
         HTTPException if no category or job state
     """
     # lock to prevent duplicate calls to this endpoint from retriggering ingestion
-    category: str = body.category
+    product_topic: str = body.product_topic
 
-    if not category or category.strip() == "":
-        raise HTTPException(status_code=400, detail="Missing category in the request")
+    if not product_topic or product_topic.strip() == "":
+        raise HTTPException(status_code=400, detail="Missing product_topic in the request")
     
     if not job_state:
         raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")  
@@ -43,15 +43,15 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
             detail="Ingestion already in progress"
         )
 
-    job_state.create_job(body.category)
+    job_state.create_job(body.product_topic)
 
-    detector = DetectorFactory.get_detector(body.category)
+    detector = DetectorFactory.get_detector(body.product_topic)
 
     service = IngestionService(
         reddit_client=request.app.state.reddit_client,
         db_pool=request.app.state.db_pool,
         logger=request.app.state.logger,
-        category=body.category,
+        product_topic=body.product_topic,
         subreddits=body.subreddits,
         detector=detector,
         normalizer=request.app.state.normalizer,

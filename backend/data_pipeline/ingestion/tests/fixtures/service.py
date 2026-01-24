@@ -8,7 +8,6 @@ from unittest.mock import MagicMock
 from testcontainers.postgres import PostgresContainer
 from psycopg_pool import ConnectionPool
 import os
-os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
 os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
 os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "reddit_secret")
 os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "username")
@@ -27,13 +26,16 @@ async def null_lifespan(_app: FastAPI) -> Any:
 @pytest.fixture
 def create_ingestion_service(db_pool: ConnectionPool, mock_reddit_client: MagicMock) -> IngestionService:
     """Creates a Sentiment Service Instance fixture"""
+    detector = DetectorFactory.get_detector(product_topic="GPU")
+    assert detector is not None, "GPU detector should not be None"
+
     return IngestionService(
         reddit_client=mock_reddit_client,
         db_pool=db_pool,
         logger=StructuredLogger(pod="ingestion_service"),
-        category="GPU",
+        product_topic="GPU",
         subreddits=["nvidia"],
-        detector=DetectorFactory.get_detector(category="GPU"),
+        detector=detector,
         normalizer=NormalizerFactory
     )
 
@@ -45,7 +47,7 @@ def mock_logger() -> MagicMock:
 @pytest.fixture
 def mock_detector() -> MagicMock:
     """Mocked product detector"""
-    return MagicMock(spec=DetectorFactory.get_detector(category="GPU"))
+    return MagicMock(spec=DetectorFactory.get_detector(product_topic="GPU"))
 
 @pytest.fixture
 def mock_normalizer() -> MagicMock:
@@ -59,9 +61,9 @@ def mock_ingestion_service(mock_reddit_client: MagicMock) -> IngestionService:
         reddit_client=mock_reddit_client,
         db_pool=MagicMock(spec=ConnectionPool),
         logger=MagicMock(spec=StructuredLogger),
-        category="GPU",
+        product_topic="GPU",
         subreddits=["nvidia"],
-        detector=MagicMock(spec=DetectorFactory.get_detector(category="GPU")),
+        detector=MagicMock(spec=DetectorFactory.get_detector(product_topic="GPU")),
         normalizer=MagicMock(spec=NormalizerFactory)
     )
 
@@ -84,13 +86,16 @@ def worker_with_test_db(postgres_container: PostgresContainer, mock_reddit_clien
             )
             mock_pool.return_value = test_pool
 
+            detector = DetectorFactory.get_detector("gpu")
+            assert detector is not None, "GPU detector should not be None"
+
             worker = IngestionService(
                 reddit_client=mock_reddit_client,
                 db_pool=test_pool,
                 logger=StructuredLogger(pod="ingestion_service"),
-                category="gpu",
+                product_topic="gpu",
                 subreddits=["nvidia"],
-                detector=DetectorFactory.get_detector("gpu"),
+                detector=detector,
                 normalizer=NormalizerFactory
             )
             yield worker

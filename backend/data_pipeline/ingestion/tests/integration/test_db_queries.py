@@ -36,7 +36,7 @@ def test_single_comment_insert(
         assert result[5] == 'nvidia'  # subreddit
         assert result[6] == 'test_user'  # author
         assert result[7] == 42  # score
-        assert result[9] == 'GPU'  # category
+        assert result[9] == 'GPU'  # product_topic
         assert result[11] is False  # sentiment_processed
 
 def test_batch_insert_multiple_comments(

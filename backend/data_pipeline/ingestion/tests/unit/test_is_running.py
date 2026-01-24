@@ -3,7 +3,7 @@ from src.api.job_state import JobState
 def test_check_running_job() -> None:
     """Calling is_running while a job is running should return True"""
     job_state = JobState()
-    job_state.create_job(category="GPU")
+    job_state.create_job(product_topic="GPU")
 
     assert job_state.is_running() == True
 

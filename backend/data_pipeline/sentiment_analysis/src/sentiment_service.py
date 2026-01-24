@@ -130,17 +130,11 @@ class SentimentService:
             comments_inserted += sentiments_inserted
             comments_updated += comments_processed
 
-            return SentimentResult(
-                comments_inserted=comments_inserted,
-                comments_updated=comments_updated,
-                cancelled=self.cancel_requested
-            )
-            
         return SentimentResult(
-                comments_inserted=comments_inserted,
-                comments_updated=comments_updated,
-                cancelled=self.cancel_requested
-            )
+            comments_inserted=comments_inserted,
+            comments_updated=comments_updated,
+            cancelled=self.cancel_requested
+        )
     
     def run_single_cycle(self, job_state: JobState) -> None:
         """

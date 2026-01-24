@@ -1,117 +1,24 @@
-from kubernetes.client import V1Container
-from kubernetes.client import V1PodSpec
+from pathlib import Path
+from typing import Generator
+from kubernetes.client import V1EnvVar
+from kubernetes.client import CoreV1Api
 from kubernetes.client import V1Pod
+from kubernetes.client import V1PodSpec
+from kubernetes.client import V1Container
 from kubernetes.client import V1ContainerPort
-from kubernetes.client import V1ConfigMap
 from kubernetes.client import V1Volume
 from kubernetes.client import V1VolumeMount
-from kubernetes.client import V1ConfigMapVolumeSource
-from kubernetes.client import V1EnvVar
-from kubernetes.client.exceptions import ApiException
 from kubernetes.client import V1ObjectMeta
-from kubernetes.client import V1Namespace
-from kubernetes.client import AppsV1Api
-from kubernetes.client import CoreV1Api
-from testcontainers.k3s import K3SContainer
-from kubernetes import client, config
-from pathlib import Path
-from tests.utils.mock_service import create_mock_service_pod
-from tests.utils.mock_service import create_mock_service_script
-from tests.utils.mock_service import configure_mock_service
-from tests.utils.pod_lifecycle import wait_for_pod_ready
-from tests.utils.pod_lifecycle import create_service_for_pod
-from typing import Generator
-import pytest
-import yaml
+from kubernetes.client import V1ConfigMap
+from kubernetes.client import V1ConfigMapVolumeSource
+from kubernetes.client.exceptions import ApiException
+from tests.utils.kubernetes import wait_for_pod_ready
+from tests.utils.kubernetes import create_service_for_pod
 import time
+import pytest
 
-TEST_NAMESPACE = "airflow-integration-test"
 DAGS_PATH = Path(__file__).parent.parent.parent / "src" / "dags"
-MOCK_SERVICE_IMAGE = "python:3.13-alpine"
 SRC_PATH = Path(__file__).parent.parent.parent / "src"
-
-@pytest.fixture(scope="session")
-def k3s_cluster() -> Generator[K3SContainer, None, None]:
-    """Spin up k3s cluster for testing"""
-    with K3SContainer(image="rancher/k3s:v1.31.6-k3s1", enable_cgroup_mount=False) as k3s:
-        kubeconfig = k3s.config_yaml()
-        config.load_kube_config_from_dict(yaml.safe_load(kubeconfig))
-        yield k3s
-    
-@pytest.fixture(scope="session")
-def k8s_core_api(k3s_cluster: K3SContainer) -> CoreV1Api:
-    """Return Kubernetes CoreV1Api client."""
-    return client.CoreV1Api()
-
-@pytest.fixture(scope="session")
-def k8s_apps_api(k3s_cluster: K3SContainer) -> AppsV1Api:
-    """Return Kubernetes AppsV1Api client."""
-    return client.AppsV1Api()
-
-@pytest.fixture(scope="session")
-def test_namespace(k8s_core_api: CoreV1Api) -> Generator[str, None, None]:
-    """Create and cleanup test namespace"""
-    namespace = V1Namespace(metadata=V1ObjectMeta(name=TEST_NAMESPACE))
-
-    try:
-        k8s_core_api.create_namespace(body=namespace)
-    except ApiException as e:
-        if e.status != 409: # Ignore if it already exists
-            raise
-    
-    yield TEST_NAMESPACE
-
-    # cleanup code
-    try:
-        k8s_core_api.delete_namespace(name=TEST_NAMESPACE)
-    except ApiException:
-        pass # ignore any cleanup errors
-
-@pytest.fixture(scope="session")
-def mock_service_configmap(k8s_core_api: CoreV1Api, test_namespace: str) -> Generator[str, None, None]:
-    """Create ConfigMap with mock service script"""
-    configmap = V1ConfigMap(
-        metadata=V1ObjectMeta(name="mock-service-script"),
-        data={"server.py": create_mock_service_script()}
-    )
-
-    try:
-        k8s_core_api.create_namespaced_config_map(
-            namespace=test_namespace, body=configmap
-        )
-    except ApiException as e:
-        if e.status != 409:
-            raise
-
-    yield "mock-service-script"
-
-@pytest.fixture(scope="session")
-def mock_services(k8s_core_api: CoreV1Api, test_namespace: str, mock_service_configmap: str) -> Generator[dict[str, int], None, None]:
-    """Deploy mock services for ingestion, sentiment, llm-summary, ranking"""
-    services = {
-        "ingestion-service": 8000,
-        "sentiment-analysis-service": 8000,
-        "llm-summary-service": 8000,
-        "ranking-service": 8000
-    }
-
-    for svc_name, port in services.items():
-        try:
-            create_mock_service_pod(
-                k8s_core_api,
-                test_namespace,
-                svc_name,
-                mock_service_configmap,
-            )
-            create_service_for_pod(k8s_core_api, test_namespace, svc_name, port)
-        except ApiException as e:
-            if e.status != 409:
-                raise
-    
-    for svc_name in services:
-        assert wait_for_pod_ready(k8s_core_api, test_namespace, svc_name), f"Pod {svc_name} failed to start"
-
-    yield services
 
 @pytest.fixture(scope="session")
 def airflow_dags_configmap(k8s_core_api: CoreV1Api, test_namespace: str) -> Generator[str, None, None]:
@@ -194,6 +101,7 @@ def airflow_src_init_configmap(k8s_core_api: CoreV1Api, test_namespace: str) -> 
             raise
 
     yield "airflow-src-init"
+
 
 @pytest.fixture(scope="session")
 def airflow_pod(
@@ -283,15 +191,3 @@ def airflow_pod(
     time.sleep(10)
 
     yield "airflow"
-
-@pytest.fixture(autouse=True)
-def reset_mock_services(k8s_core_api: CoreV1Api, test_namespace: str):
-    """Reset all mock services to default state after each test"""
-    MOCK_SERVICE_NAMES = ["ingestion-service", "sentiment-analysis-service", "llm-summary-service", "ranking-service"]
-
-    yield
-    for svc_name in MOCK_SERVICE_NAMES:
-        try:
-            configure_mock_service(k8s_core_api, test_namespace, svc_name)
-        except Exception:
-            pass

@@ -5,6 +5,16 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from src.api.schemas import CurrentJob
 
+def test_no_job_state(mock_fastapi: FastAPI) -> None:
+    """No job state should raise a httpexception"""
+    with patch("src.api.routes.job_state", None):
+        app = mock_fastapi
+
+        with TestClient(app) as client:
+            response = client.get("/status")
+            assert response.status_code == 400
+            assert response.json()["detail"] == "Missing job_state, cant fetch status"
+
 def test_no_current_job(mock_fastapi: FastAPI) -> None:
     """If not current job, it should raise 404 error"""
     # Create minimal FastAPI app with just the routes we need

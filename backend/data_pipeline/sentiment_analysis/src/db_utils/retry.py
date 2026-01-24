@@ -53,7 +53,7 @@ def retry_with_backoff(
                         # Final failure - log it
                         if logger:
                             logger.error(
-                                event_type="Database Retry",
+                                event_type="sentiment_analysis database",
                                 message=f"{func.__name__} failed after {max_retries} retries",
                                 error=str(e),
                                 error_type=type(e).__name__,
@@ -67,7 +67,7 @@ def retry_with_backoff(
                     # Non-retryable error - fail immediately
                     if logger:
                         logger.error(
-                            event_type="Database Error",
+                            event_type="sentiment_analysis database",
                             message=f"{func.__name__} failed with non-retryable error",
                             error=str(e),
                             error_type=type(e).__name__,

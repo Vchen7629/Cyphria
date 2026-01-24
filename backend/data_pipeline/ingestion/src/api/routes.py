@@ -1,6 +1,6 @@
 from fastapi import Request
+from fastapi import APIRouter
 from fastapi import HTTPException
-from fastapi.routing import APIRouter
 from concurrent.futures import ThreadPoolExecutor
 from src.api.job_state import JobState
 from src.api.signal_handler import run_state

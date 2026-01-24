@@ -56,12 +56,20 @@ def create_mock_service_script() -> str:
                     self.wfile.write(json.dumps({"error": "Internal Server Error"}).encode())
                     return
 
+                # POST /run returns "started", indicating async task has begun
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
                 self.end_headers()
-                self.wfile.write(json.dumps({"status": config["response_status"]}).encode())
+                self.wfile.write(json.dumps({"status": "started"}).encode())
 
             def do_GET(self):
+                if self.path == "/status":
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"status": config["response_status"]}).encode())
+                    return
+
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
                 self.end_headers()

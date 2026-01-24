@@ -8,14 +8,14 @@ import psycopg
 structured_logger = StructuredLogger(pod="idk")
 
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=structured_logger)
-def fetch_aggregated_product_scores(conn: psycopg.Connection, category: str, time_window: str) -> list[SentimentAggregate]:
+def fetch_aggregated_product_scores(conn: psycopg.Connection, product_topic: str, time_window: str) -> list[SentimentAggregate]:
     """
-    Fetch a list of aggregated sentiment scores for a category and time window.
-    Joins product sentiment with raw comments to filter by category
+    Fetch a list of aggregated sentiment scores for a product_topic and time window.
+    Joins product sentiment with raw comments to filter by product_topic
 
     Args:
         conn: psycopg3 database connection
-        category: the product category to filter by, like 'GPU' or 'Laptop'
+        product_topic: the product topic to filter by, like 'GPU' or 'Laptop'
         time_window: 90d or all_time
 
     Returns:
@@ -28,12 +28,12 @@ def fetch_aggregated_product_scores(conn: psycopg.Connection, category: str, tim
             - neutral_count: the amount of comments where the sentiment is neutral (-0.2 < sentiment < 0.2)
     """
     normalized_time_window: str = time_window.lower().strip()
-    normalized_category: str = category.strip().upper()
+    normalized_product_topic: str = product_topic.strip().upper()
 
     if not normalized_time_window:
         return []
 
-    if not normalized_category:
+    if not normalized_product_topic:
         return []
 
     if normalized_time_window == "all_time":
@@ -47,12 +47,12 @@ def fetch_aggregated_product_scores(conn: psycopg.Connection, category: str, tim
                 COUNT(*) FILTER (WHERE sentiment_score BETWEEN -0.2 AND 0.2) AS neutral_count,
                 ROUND(COUNT(*) FILTER (WHERE sentiment_score > 0.2) * 100.0 / COUNT(*))::INT AS approval_percentage
             FROM product_sentiment
-            WHERE category = %(category)s
+            WHERE product_topic = %(product_topic)s
             GROUP BY product_name
             HAVING COUNT(*) >= 1
             ORDER BY AVG(sentiment_score) DESC
         """
-        params = {"category": normalized_category}
+        params = {"product_topic": normalized_product_topic}
     else:
         query = """
             SELECT
@@ -64,13 +64,13 @@ def fetch_aggregated_product_scores(conn: psycopg.Connection, category: str, tim
                 COUNT(*) FILTER (WHERE sentiment_score BETWEEN -0.2 AND 0.2) AS neutral_count,
                 ROUND(COUNT(*) FILTER (WHERE sentiment_score > 0.2) * 100.0 / COUNT(*))::INT AS approval_percentage            
             FROM product_sentiment
-            WHERE category = %(category)s
+            WHERE product_topic = %(product_topic)s
               AND created_utc >= NOW() - %(time_window)s::INTERVAL
             GROUP BY product_name
             HAVING COUNT(*) >= 1
             ORDER BY AVG(sentiment_score) DESC
         """
-        params = {"category": normalized_category, "time_window": time_window}
+        params = {"product_topic": normalized_product_topic, "time_window": time_window}
 
     with conn.cursor(row_factory=dict_row) as cursor:
         cursor.execute(query, params)
@@ -87,7 +87,7 @@ def batch_upsert_product_score(conn: psycopg.Connection, scores: list[ProductSco
         conn: psycopg3 database connection
         scores: list of product scores calculated using baysian estimate formula:
             - product_name: name of the product
-            - category: the category of the product
+            - product_topic: the product_topic of the product
             - time_window: time window its calculated from, either 90d or all_time
             - rank: the ranking score 
             - grade: grade of the product, S, A+, A, A-, B+, etc
@@ -108,10 +108,10 @@ def batch_upsert_product_score(conn: psycopg.Connection, scores: list[ProductSco
 
     query = """
         INSERT INTO product_rankings (
-            product_name, category, time_window, rank, grade, bayesian_score, avg_sentiment, approval_percentage, mention_count,
+            product_name, product_topic, time_window, rank, grade, bayesian_score, avg_sentiment, approval_percentage, mention_count,
             positive_count, negative_count, neutral_count, is_top_pick, is_most_discussed, has_limited_data, calculation_date
         ) VALUES (
-            %(product_name)s, %(category)s, %(time_window)s, %(rank)s, %(grade)s, %(bayesian_score)s, %(avg_sentiment)s, %(approval_percentage)s, %(mention_count)s,
+            %(product_name)s, %(product_topic)s, %(time_window)s, %(rank)s, %(grade)s, %(bayesian_score)s, %(avg_sentiment)s, %(approval_percentage)s, %(mention_count)s,
             %(positive_count)s, %(negative_count)s, %(neutral_count)s, %(is_top_pick)s, %(is_most_discussed)s, %(has_limited_data)s, %(calculation_date)s
         )
         ON CONFLICT (product_name, time_window) 

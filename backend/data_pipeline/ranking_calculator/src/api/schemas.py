@@ -17,7 +17,7 @@ class RankingResult(BaseModel):
 class CurrentJob(BaseModel):
     """Currently running job state"""
     status: JobStatus # "pending" | "running" | "completed" | "failed" | "cancelled"
-    category: str
+    product_topic: str
     started_at: datetime
     completed_at: Optional[datetime] = None
     result: Optional[RankingResult] = None
@@ -25,7 +25,6 @@ class CurrentJob(BaseModel):
 
 class SentimentAggregate(BaseModel):
     """Aggregated sentiment data for a single product from product_sentiment table."""
-
     product_name: str
     avg_sentiment: float
     mention_count: int
@@ -37,7 +36,7 @@ class SentimentAggregate(BaseModel):
 class ProductScore(BaseModel):
     """Data model for product score row to be inserted into gold layer."""
     product_name: str
-    category: str
+    product_topic: str
     time_window: str  # "90d" or "all_time"
 
     # Ranking
@@ -65,7 +64,7 @@ class ProductScore(BaseModel):
 
 class RunRequest(BaseModel):
     """Request to the /run endpoint"""
-    category: str          # Category like "GPU" or "Laptop"
+    product_topic: str     # product_topic like "GPU" or "Laptop"
     time_window: str       # either "90d" or "all_time"
 
 class RunResponse(BaseModel):

@@ -22,13 +22,13 @@ class RankingService:
         self, 
         logger: StructuredLogger, 
         db_pool: ConnectionPool,
-        category: str,
+        product_topic: str,
         time_window: str
     ) -> None:
         self.settings = Settings()
         self.logger = logger
         self.db_pool = db_pool
-        self.category = category
+        self.product_topic = product_topic
         self.time_window = time_window
 
         # cancellation flag, used to request graceful shutdown
@@ -37,7 +37,7 @@ class RankingService:
     def _build_product_ranking_object(
         self, 
         product_scores: list[SentimentAggregate],
-        category: str,
+        product_topic: str,
         time_window: str,
         ranks: np.ndarray,
         grades: np.ndarray,
@@ -52,7 +52,7 @@ class RankingService:
 
         Args:
             product_scores: list of aggregated product sentiment scores 
-            category: the category for the products
+            product_topic: the product_topic for the products
             time_window: the time window, either "90d" or "all_time"
             ranks: Numpy array of rank numbers (1-indexed)
             grades: Numpy array of letter grade for the product (S, A+, A, etc)
@@ -65,12 +65,12 @@ class RankingService:
         Returns:
             list of product score objects with metadata, or empty array if missing params or cancelled
         """
-        if not all([product_scores, category, time_window, ranks, grades, bayesian_scores, is_top_pick, is_most_discussed, has_limited_data, calculation_date]):
+        if not all([product_scores, product_topic, time_window, ranks, grades, bayesian_scores, is_top_pick, is_most_discussed, has_limited_data, calculation_date]):
             self.logger.warning(event_type="ranking_service run", message="Missing a input param")
             return []
 
-        if category.strip() == "" or time_window.strip() == "":
-            self.logger.warning(event_type="ranking_service run", message="Missing a category or time window")
+        if product_topic.strip() == "" or time_window.strip() == "":
+            self.logger.warning(event_type="ranking_service run", message="Missing a product_topic or time window")
             return []
             
         rankings: list[ProductScore] = []
@@ -82,7 +82,7 @@ class RankingService:
 
             ranking = ProductScore(
                 product_name=product.product_name,
-                category=category,
+                product_topic=product_topic,
                 time_window=time_window,
                 rank=int(ranks[i]),
                 grade=str(grades[i]),
@@ -105,19 +105,19 @@ class RankingService:
 
         return rankings
 
-    def _calculate_rankings_for_window(self, category: str, time_window: str) -> int:
+    def _calculate_rankings_for_window(self, product_topic: str, time_window: str) -> int:
         """
-        Process rankings for a single category/time window combination:
+        Process rankings for a single topic/time window combination:
 
         Args:
-            category: Product category like "GPU" or "Laptop"
+            product_topic: Product topic like "GPU" or "Laptop"
             time_window: Time window, "90d" or "all_time"
 
         Returns:
             number of products processed, or 0 if missing params
         """
-        if not category or not category.strip == "" or not time_window or not time_window.strip() == "":
-            self.logger.warning(event_type="ranking_service run", message="Missing category or time window")
+        if not product_topic or not product_topic.strip == "" or not time_window or not time_window.strip() == "":
+            self.logger.warning(event_type="ranking_service run", message="Missing product_topic or time window")
             return 0
 
         with self.db_pool.connection() as conn:
@@ -125,10 +125,10 @@ class RankingService:
                 self.logger.info(event_type="ranking_service run", message="Cancel requested, skipping fetch_aggregated...")
                 return 0
 
-            product_scores = fetch_aggregated_product_scores(conn, category, time_window)
+            product_scores = fetch_aggregated_product_scores(conn, product_topic, time_window)
 
             if not product_scores:
-                self.logger.info(event_type="ranking calculation", message=f"No products found for {category}/{time_window}")
+                self.logger.info(event_type="ranking calculation", message=f"No products found for {product_topic}/{time_window}")
                 return 0
             
             # to extract numpy arrays from pydantic models
@@ -152,7 +152,7 @@ class RankingService:
 
             product_ranking_list = self._build_product_ranking_object(
                 product_scores, 
-                category,
+                product_topic,
                 time_window,
                 ranks,
                 grades,
@@ -171,7 +171,7 @@ class RankingService:
 
             self.logger.info(
                 event_type="ranking calculation", 
-                message=f"Processed {len(product_ranking_list)} for {category}/{time_window}")
+                message=f"Processed {len(product_ranking_list)} for {product_topic}/{time_window}")
             
             return len(product_ranking_list)
 
@@ -182,7 +182,7 @@ class RankingService:
         Returns:
             RankingResult with counts of posts/comments processed
         """
-        products_processed = self._calculate_rankings_for_window(self.category, self.time_window)
+        products_processed = self._calculate_rankings_for_window(self.product_topic, self.time_window)
 
         return RankingResult(
             products_processed=products_processed,

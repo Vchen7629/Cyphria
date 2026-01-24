@@ -8,7 +8,7 @@ def tests_marks_running_job_failed() -> None:
     """Calling fail job when a running job is active should mark it as failed"""
     job_state = JobState()
     before = datetime.now(tz=timezone.utc)
-    job_state.create_job(category="GPU")
+    job_state.create_job(product_topic="GPU")
     job_state.fail_job(error="some error")
     after = datetime.now(tz=timezone.utc)
 
@@ -31,7 +31,7 @@ def test_valid_whitespace() -> None:
     """If error is a string with whitespace, it should still work"""
     job_state = JobState()
     before = datetime.now(tz=timezone.utc)
-    job_state.create_job(category="  GPU  ")
+    job_state.create_job(product_topic="  GPU  ")
     job_state.fail_job(error="some error")
     after = datetime.now(tz=timezone.utc)
 

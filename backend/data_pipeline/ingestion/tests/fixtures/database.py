@@ -19,7 +19,7 @@ def mock_raw_comment() -> dict[str, Any]:
         'author': 'test_user',
         'score': 42,
         'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
+        'product_topic': 'GPU'
     }
 
 @pytest.fixture(scope="session")
@@ -46,7 +46,7 @@ def postgres_container() -> Generator[PostgresContainer, None, None]:
                         author VARCHAR(100),
                         score INT DEFAULT 0,
                         created_utc TIMESTAMPTZ NOT NULL,
-                        category VARCHAR(50) NOT NULL,
+                        product_topic VARCHAR(50) NOT NULL,
 
                         -- Processing tracking
                         ingested_at TIMESTAMPTZ DEFAULT NOW(),

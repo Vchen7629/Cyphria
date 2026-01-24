@@ -9,7 +9,6 @@ from concurrent.futures import ThreadPoolExecutor
 from tests.fixtures.service import null_lifespan
 from tests.utils.classes import FastAPITestClient
 import os
-os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
 os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
 os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "reddit_secret")
 os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "username")
@@ -47,8 +46,6 @@ def fastapi_client(db_pool: ConnectionPool, mock_reddit_client: MagicMock) -> Ge
     test_app.state.db_pool = db_pool
     test_app.state.reddit_client = mock_reddit_client
     test_app.state.logger = StructuredLogger(pod="ingestion_service_test")
-    test_app.state.category = "GPU"
-    test_app.state.subreddits = ["nvidia"]
     test_app.state.detector = DetectorFactory.get_detector("GPU")
     test_app.state.normalizer = NormalizerFactory
     test_app.state.executor = mock_executor

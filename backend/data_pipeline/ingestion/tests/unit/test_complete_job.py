@@ -9,7 +9,7 @@ def tests_marks_complete_running_job_complete() -> None:
     """Calling complete job when a running job is active should mark it as done"""
     job_state = JobState()
     before = datetime.now(tz=timezone.utc)
-    job_state.create_job(category="GPU")
+    job_state.create_job(product_topic="GPU")
 
     mock_result = IngestionResult(
         posts_processed=100,
@@ -31,7 +31,7 @@ def tests_marks_cancelled_running_job_complete() -> None:
     """Calling cancelled job when a running job is active should mark it as done"""
     job_state = JobState()
     before = datetime.now(tz=timezone.utc)
-    job_state.create_job(category="GPU")
+    job_state.create_job(product_topic="GPU")
 
     mock_result = IngestionResult(
         posts_processed=100,

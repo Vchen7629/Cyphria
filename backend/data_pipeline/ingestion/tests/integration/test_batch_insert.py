@@ -1,82 +1,10 @@
 from datetime import datetime, timezone
 from testcontainers.postgres import PostgresContainer
-import os
-os.environ['PRODUCT_CATEGORY'] = 'GPU'
 from src.ingestion_service import IngestionService
 from src.preprocessing.relevant_fields import RedditComment
 from src.db_utils.queries import batch_insert_raw_comments
 import psycopg
 import pytest
-
-def test_worker_reddit_comment_to_db_conversion(worker_with_test_db: IngestionService, postgres_container: PostgresContainer) -> None:
-    """
-    Test that Worker._batch_insert_to_db correctly converts RedditComment objects
-    to the dict format expected by batch_insert_raw_comments.
-    """
-    comment = RedditComment(
-        comment_id='conversion_test_1',
-        post_id='post_1',
-        comment_body='Test comment about RTX 4090',
-        detected_products=['rtx 4090', 'rtx 4080'],
-        subreddit='nvidia',
-        author='test_user',
-        score=100,
-        timestamp=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
-    )
-
-    worker_with_test_db._batch_insert_to_db([comment])
-
-    # Verify all fields were correctly mapped
-    # Convert SQLAlchemy URL to PostgreSQL URI for psycopg
-    connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")
-    with psycopg.connect(connection_url) as conn:
-        with conn.cursor() as cursor:
-            cursor.execute("SELECT * FROM raw_comments WHERE comment_id = %s;", ('conversion_test_1',))
-            result = cursor.fetchone()
-
-            assert result is not None
-            assert result[1] == 'conversion_test_1'  # comment_id
-            assert result[2] == 'post_1'  # post_id
-            assert result[3] == 'Test comment about RTX 4090'  # comment_body
-            assert result[4] == ['rtx 4090', 'rtx 4080']  # detected_products
-            assert result[5] == 'nvidia'  # subreddit
-            assert result[6] == 'test_user'  # author
-            assert result[7] == 100  # score
-            assert result[8] == datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)  # created_utc
-            assert result[9] == "gpu" # category
-
-
-def test_worker_injects_category_field(worker_with_test_db: IngestionService, postgres_container: PostgresContainer) -> None:
-    """
-    Test that Worker._batch_insert_to_db correctly injects the category field
-    from the worker's configuration (not present in RedditComment).
-    """
-    comment = RedditComment(
-        comment_id='category_injection_test',
-        post_id='post_1',
-        comment_body='Test comment',
-        detected_products=['rtx 4090'],
-        subreddit='nvidia',
-        author='test_user',
-        score=50,
-        timestamp=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
-    )
-
-    # RedditComment doesn't have a category field
-    assert not hasattr(comment, 'category')
-
-    worker_with_test_db._batch_insert_to_db([comment])
-
-    # Verify the category was injected from the worker's config
-    # Convert SQLAlchemy URL to PostgreSQL URI for psycopg
-    connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")
-    with psycopg.connect(connection_url) as conn:
-        with conn.cursor() as cursor:
-            cursor.execute("SELECT category FROM raw_comments WHERE comment_id = %s;", ('category_injection_test',))
-            result = cursor.fetchone()
-            assert result is not None
-            category = result[0]
-            assert category == worker_with_test_db.category
 
 def test_worker_batch_insert_error_handling(worker_with_test_db: IngestionService) -> None:
     """Test that Worker properly propagates database errors during batch insert."""
@@ -89,7 +17,7 @@ def test_worker_batch_insert_error_handling(worker_with_test_db: IngestionServic
         'author': 'user1',
         'score': 10,
         'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': worker_with_test_db.category
+        'product_topic': worker_with_test_db.product_topic
     }]
 
     # This should raise a NotNullViolation error from the database

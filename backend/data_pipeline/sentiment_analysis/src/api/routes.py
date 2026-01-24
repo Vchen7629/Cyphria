@@ -14,10 +14,10 @@ import asyncio
 router = APIRouter()
 
 # global job state thats initialized in lifespan
-job_state: JobState = None
+job_state: JobState | None = None
 
 @router.post("/run", response_model=RunResponse)
-def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunResponse: 
+async def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunResponse: 
     """
     Trigger an sentiment analysis run asynchronously
 
@@ -31,14 +31,18 @@ def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunRespons
     if not category or category.strip == "":
         raise HTTPException(status_code=400, detail="Missing category parameter")
 
+    if not job_state:
+        raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")
+
     # lock to prevent duplicate calls to this endpoint from retriggering ranking
     if job_state.is_running():
         raise HTTPException(
             status_code=409,
             detail="Ranking already in progress"
         )
-
-    job_state.create_job(body.category)
+    
+    if job_state:
+        job_state.create_job(body.category)
 
     service = SentimentService(
         logger = request.app.state.logger,
@@ -53,7 +57,8 @@ def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunRespons
     executor: ThreadPoolExecutor = request.app.state.executor
     loop = asyncio.get_event_loop()
 
-    loop.run_in_executor(executor, service.run_single_cycle, job_state)
+    if job_state:
+        loop.run_in_executor(executor, service.run_single_cycle, job_state)
 
     return RunResponse(status="started")
 
@@ -62,7 +67,16 @@ async def get_job_status() -> CurrentJob:
     """
     Get status of a ingestion job
     Airflow HttpSensor polls this endpoint until status is 'completed' or 'failed'
+
+    Returns:
+        the current job
+    
+    Raises:
+        HTTPException is job_state is none
     """
+    if not job_state:
+        raise HTTPException(status_code=400, detail="Missing job_state, cant fetch status")
+
     job = job_state.get_current_job()
 
     if not job:

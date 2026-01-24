@@ -3,6 +3,7 @@ Airflow DAG for fetching comments, doing sentiment analysis and generate product
 For all the product categories
 """
 from airflow.sdk import DAG
+from airflow.providers.http.sensors.http import HttpSensor
 from airflow.providers.http.operators.http import HttpOperator
 from src.config.category_mappings import CategoryMappings
 from src.config.settings import Settings
@@ -47,7 +48,7 @@ def create_sentiment_analysis_dag(category: str) -> DAG:
                 'category': category,
                 'subreddits': CategoryMappings.CATEGORY_SUBREDDITS.get(category, [])
             }),
-            response_check=lambda response: response.json()['status'] in ['completed', 'cancelled'],
+            response_check=lambda response: response.json()['status'] == "started",
             log_response=True,
             execution_timeout=settings.EXECUTION_TIMEOUT,
             on_failure_callback=on_task_failure,
@@ -56,6 +57,20 @@ def create_sentiment_analysis_dag(category: str) -> DAG:
             retry_exponential_backoff=True,
             max_retry_delay=settings.MAX_RETRY_DELAY
         )
+
+        # Wait for all_time task to finish by polling /status endpoint until its done
+        wait_raw_comment_ingest = HttpSensor(
+            task_id=f"wait_ingest_{category.lower()}_comments",
+            http_conn_id="ingestion_service",
+            endpoint="/status",
+            response_check=lambda response: response.json()['status'] in ["completed", "cancelled"],
+            poke_interval=settings.STATUS_POLL_INTERVAL,
+            timeout=settings.EXECUTION_TIMEOUT,
+            mode="reschedule", # Free up worker slot between pokes
+            on_failure_callback=on_task_failure,
+            retries=settings.NUM_RETRIES,
+            retry_delay=settings.RETRY_DELAY
+        ) 
 
         sentiment_analysis = HttpOperator(
             task_id=f'analyze_{category.lower()}_product_sentiments',
@@ -64,7 +79,7 @@ def create_sentiment_analysis_dag(category: str) -> DAG:
             method='POST',
             headers={'Content-Type': 'application/json'},
             data=json.dumps({'category': category}),
-            response_check=lambda response: response.json()['status'] in ['completed', 'cancelled'],
+            response_check=lambda response: response.json()['status'] == "started",
             log_response=True,
             execution_timeout=settings.EXECUTION_TIMEOUT,
             on_failure_callback=on_task_failure,
@@ -74,7 +89,21 @@ def create_sentiment_analysis_dag(category: str) -> DAG:
             max_retry_delay=settings.MAX_RETRY_DELAY
         )
 
-        reddit_raw_comment_ingest >> sentiment_analysis
+        # Wait for all_time task to finish by polling /status endpoint until its done
+        wait_sentiment_analysis = HttpSensor(
+            task_id=f"wait_analyze_{category.lower()}_product_sentiments",
+            http_conn_id="sentiment_analysis_service",
+            endpoint="/status",
+            response_check=lambda response: response.json()['status'] in ["completed", "cancelled"],
+            poke_interval=settings.STATUS_POLL_INTERVAL,
+            timeout=settings.EXECUTION_TIMEOUT,
+            mode="reschedule", # Free up worker slot between pokes
+            on_failure_callback=on_task_failure,
+            retries=settings.NUM_RETRIES,
+            retry_delay=settings.RETRY_DELAY
+        ) 
+
+        reddit_raw_comment_ingest >> wait_raw_comment_ingest >> sentiment_analysis >> wait_sentiment_analysis
 
     return dag
 

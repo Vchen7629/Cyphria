@@ -1,5 +1,6 @@
 import json
 from airflow.sdk import DAG
+from airflow.providers.http.sensors.http import HttpSensor
 from airflow.providers.http.operators.http import HttpOperator
 from src.config.settings import Settings
 from src.config.category_mappings import CategoryMappings
@@ -53,7 +54,7 @@ def create_ranking_dag(category: str) -> DAG:
                 'time_windows': "all_time",
                 'bayesian_params': "30"
             }),
-            response_check=lambda response: response.json()['status'] in ['completed', 'cancelled'],
+            response_check=lambda response: response.json()['status'] == "started",
             log_response=True,
             execution_timeout=settings.EXECUTION_TIMEOUT,
             on_failure_callback=on_task_failure,
@@ -62,6 +63,20 @@ def create_ranking_dag(category: str) -> DAG:
             retry_exponential_backoff=True,
             max_retry_delay=settings.MAX_RETRY_DELAY
         )
+        
+        # Wait for all_time task to finish by polling /status endpoint until its done
+        wait_all_time = HttpSensor(
+            task_id=f"wait_rank_{category.lower()}_products_all_time",
+            http_conn_id="product_ranking_service",
+            endpoint="/status",
+            response_check=lambda response: response.json()['status'] in ["completed", "cancelled"],
+            poke_interval=settings.STATUS_POLL_INTERVAL,
+            timeout=settings.WAIT_TIMEOUT,
+            mode="reschedule", # Free up worker slot between pokes
+            on_failure_callback=on_task_failure,
+            retries=settings.NUM_RETRIES,
+            retry_delay=settings.RETRY_DELAY
+        ) 
 
         product_ranking_90_days = HttpOperator(
             task_id=f'rank_{category.lower()}_products_90_day',
@@ -74,7 +89,7 @@ def create_ranking_dag(category: str) -> DAG:
                 'time_windows': "90d",
                 'bayesian_params': "30"
             }),
-            response_check=lambda response: response.json()['status'] in ['completed', 'cancelled'],
+            response_check=lambda response: response.json()['status'] == "started",
             log_response=True,
             execution_timeout=settings.EXECUTION_TIMEOUT,
             on_failure_callback=on_task_failure,
@@ -84,7 +99,22 @@ def create_ranking_dag(category: str) -> DAG:
             max_retry_delay=settings.MAX_RETRY_DELAY
         )
 
-        product_ranking_all_time >> product_ranking_90_days
+        # Wait for 90_day task to finish by polling /status endpoint until its done
+        # Lets airflow know if it failed or not
+        wait_90_day = HttpSensor(
+            task_id=f"wait_rank_{category.lower()}_products_90_day",
+            http_conn_id="product_ranking_service",
+            endpoint="/status",
+            response_check=lambda response: response.json()['status'] in ["completed", "cancelled"],
+            poke_interval=settings.STATUS_POLL_INTERVAL,
+            timeout=settings.WAIT_TIMEOUT,
+            mode="reschedule", # Free up worker slot between pokes
+            on_failure_callback=on_task_failure,
+            retries=settings.NUM_RETRIES,
+            retry_delay=settings.RETRY_DELAY
+        )
+
+        product_ranking_all_time >> wait_all_time >> product_ranking_90_days >> wait_90_day
 
     return dag
 

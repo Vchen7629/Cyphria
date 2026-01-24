@@ -16,19 +16,20 @@ class Settings(BaseSettings):
     # Airflow settings
     SEND_LOGS: bool = True
     MAX_ACTIVE_RUNS: int = 1 # Run only one at a time to prevent overlapping runs of same dag
+
+    # Dag settings
+    START_DATE: datetime = datetime(2024, 1, 1, 0, 0, tzinfo=timezone.utc)
     DATA_INGESTION_SVC_PORT: int = 8000
     SENTIMENT_ANALYSIS_SVC_PORT: int = 8000
     LLM_SUMMARY_SVC_PORT: int = 8000
     RANKING_SVC_PORT: int = 8000
-
-    # Dag settings
-    START_DATE: datetime = datetime(2024, 1, 1, 0, 0, tzinfo=timezone.utc)
-
+    STATUS_POLL_INTERVAL: int = 30 # poll status endpoint of services in each dag every 30 seconds
+    EXECUTION_TIMEOUT: timedelta = timedelta(hours=1) # dag times out after 1 hour
+    WAIT_TIMEOUT: int = 3600 # 1 hour
     # Error handling Settings
     NUM_RETRIES: int = 2
     RETRY_DELAY: timedelta = timedelta(minutes=5)
     MAX_RETRY_DELAY: timedelta = timedelta(minutes=30)
-    EXECUTION_TIMEOUT: timedelta = timedelta(hours=1) # Kill pod if running more than 1 hour
 
     @field_validator("EXECUTION_TIMEOUT", "RETRY_DELAY", "MAX_RETRY_DELAY", mode="before")
     @classmethod

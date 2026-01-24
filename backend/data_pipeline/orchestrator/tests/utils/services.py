@@ -10,7 +10,7 @@ from kubernetes.client import CoreV1Api
 from kubernetes.client import V1Volume
 from kubernetes.client.exceptions import ApiException
 from kubernetes.stream import stream
-from tests.utils.pod_lifecycle import wait_for_pod_ready
+from tests.utils.kubernetes import wait_for_pod_ready
 import textwrap
 import time
 import json

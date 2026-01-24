@@ -1,9 +1,5 @@
 import os
-
-os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
-os.environ.setdefault("TIME_WINDOWS", "all_time")
 os.environ.setdefault("BAYESIAN_PARAMS", "10")
-
 import numpy as np
 from src.calculation_utils.grading import assign_ranks
 

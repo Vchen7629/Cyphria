@@ -12,7 +12,7 @@ def test_upsert_one_product_score(db_connection: psycopg.Connection, single_prod
 
     with db_connection.cursor() as cursor:
         cursor.execute(
-            "SELECT product_name FROM product_rankings WHERE category = %s;",
+            "SELECT product_name FROM product_rankings WHERE product_topic = %s;",
             ("GPU",)
         )
         result = cursor.fetchone()
@@ -34,7 +34,7 @@ def test_upsert_updates_integer(db_connection: psycopg.Connection, single_produc
 
     with db_connection.cursor() as cursor:
         cursor.execute(
-            "SELECT COUNT(*) FROM product_rankings WHERE category = %s;",
+            "SELECT COUNT(*) FROM product_rankings WHERE product_topic = %s;",
             ("GPU",)
         )
         count = cursor.fetchone()
@@ -42,7 +42,7 @@ def test_upsert_updates_integer(db_connection: psycopg.Connection, single_produc
         assert count[0] == 1
 
         cursor.execute(
-            "SELECT mention_count FROM product_rankings WHERE category = %s;",
+            "SELECT mention_count FROM product_rankings WHERE product_topic = %s;",
             ("GPU",)
         )
         result = cursor.fetchone()
@@ -64,7 +64,7 @@ def test_upsert_updates_booleans(db_connection: psycopg.Connection, single_produ
 
     with db_connection.cursor() as cursor:
         cursor.execute(
-            "SELECT COUNT(*) FROM product_rankings WHERE category = %s;",
+            "SELECT COUNT(*) FROM product_rankings WHERE product_topic = %s;",
             ("GPU",)
         )
         count = cursor.fetchone()
@@ -72,7 +72,7 @@ def test_upsert_updates_booleans(db_connection: psycopg.Connection, single_produ
         assert count[0] == 1
 
         cursor.execute(
-            "SELECT is_top_pick, is_most_discussed, has_limited_data FROM product_rankings WHERE category = %s;",
+            "SELECT is_top_pick, is_most_discussed, has_limited_data FROM product_rankings WHERE product_topic = %s;",
             ("GPU",)
         )
         result = cursor.fetchone()
@@ -96,7 +96,7 @@ def test_upsert_updates_floats(db_connection: psycopg.Connection, single_product
 
     with db_connection.cursor() as cursor:
         cursor.execute(
-            "SELECT COUNT(*) FROM product_rankings WHERE category = %s;",
+            "SELECT COUNT(*) FROM product_rankings WHERE product_topic = %s;",
             ("GPU",)
         )
         count = cursor.fetchone()
@@ -104,7 +104,7 @@ def test_upsert_updates_floats(db_connection: psycopg.Connection, single_product
         assert count[0] == 1
 
         cursor.execute(
-            "SELECT bayesian_score, avg_sentiment FROM product_rankings WHERE category = %s;",
+            "SELECT bayesian_score, avg_sentiment FROM product_rankings WHERE product_topic = %s;",
             ("GPU",)
         )
         result = cursor.fetchone()
@@ -126,7 +126,7 @@ def test_upsert_updates_calculation_date(db_connection: psycopg.Connection, sing
 
     with db_connection.cursor() as cursor:
         cursor.execute(
-            "SELECT COUNT(*) FROM product_rankings WHERE category = %s;",
+            "SELECT COUNT(*) FROM product_rankings WHERE product_topic = %s;",
             ("GPU",)
         )
         count = cursor.fetchone()
@@ -134,7 +134,7 @@ def test_upsert_updates_calculation_date(db_connection: psycopg.Connection, sing
         assert count[0] == 1
 
         cursor.execute(
-            "SELECT calculation_date FROM product_rankings WHERE category = %s;",
+            "SELECT calculation_date FROM product_rankings WHERE product_topic = %s;",
             ("GPU",)
         )
         result = cursor.fetchone()
@@ -147,7 +147,7 @@ def test_empty_product_score_comment_list(db_connection: psycopg.Connection) -> 
 
     with db_connection.cursor() as cursor:
         cursor.execute(
-            "SELECT COUNT(*) FROM product_rankings WHERE category = %s;",
+            "SELECT COUNT(*) FROM product_rankings WHERE product_topic = %s;",
             ("GPU",)
         )
         count = cursor.fetchone()
@@ -165,7 +165,7 @@ def test_transaction_rollback_on_error(db_connection: psycopg.Connection, single
 
     invalid_comment = original_comment.model_copy()
     invalid_comment.product_name = None # type: ignore[assignment]: intentionally invalid for test
-    invalid_comment.category = "Animals"
+    invalid_comment.product_topic = "Animals"
     
     with pytest.raises(psycopg.errors.NotNullViolation):
         batch_upsert_product_score(db_connection, [invalid_comment])
@@ -173,12 +173,12 @@ def test_transaction_rollback_on_error(db_connection: psycopg.Connection, single
     db_connection.rollback()
 
     with db_connection.cursor() as cursor:
-        cursor.execute("SELECT COUNT(*) FROM product_rankings WHERE category = %s;", ("Animals",))
+        cursor.execute("SELECT COUNT(*) FROM product_rankings WHERE product_topic = %s;", ("Animals",))
         count = cursor.fetchone()
         assert count is not None
         assert count[0] == 0
 
-        cursor.execute("SELECT COUNT(*) FROM product_rankings WHERE category = %s;", ("GPU",))
+        cursor.execute("SELECT COUNT(*) FROM product_rankings WHERE product_topic = %s;", ("GPU",))
         count = cursor.fetchone()
         assert count is not None
         assert count[0] == 1
@@ -193,12 +193,12 @@ def test_same_product_name_with_different_time_windows(db_connection: psycopg.Co
     batch_upsert_product_score(db_connection, [all_time, ninety_day])
 
     with db_connection.cursor() as cursor:
-        cursor.execute("SELECT COUNT(*) FROM product_rankings WHERE category = %s;", ("GPU",))
+        cursor.execute("SELECT COUNT(*) FROM product_rankings WHERE product_topic = %s;", ("GPU",))
         count = cursor.fetchone()
         assert count is not None
         assert count[0] == 2
 
-        cursor.execute("SELECT time_window FROM product_rankings WHERE category = %s;", ("GPU",))
+        cursor.execute("SELECT time_window FROM product_rankings WHERE product_topic = %s;", ("GPU",))
         results = cursor.fetchall()
         assert results is not None
         assert results[0][0] == "all_time"
@@ -225,12 +225,12 @@ def test_mixed_batch_with_duplicates(db_connection: psycopg.Connection, single_p
     batch_upsert_product_score(db_connection, [original_comment, duplicate_one, duplicate_two, new_one, new_two])
 
     with db_connection.cursor() as cursor:
-        cursor.execute("SELECT COUNT(*) FROM product_rankings WHERE category = %s;", ("GPU",))
+        cursor.execute("SELECT COUNT(*) FROM product_rankings WHERE product_topic = %s;", ("GPU",))
         count = cursor.fetchone()
         assert count is not None
         assert count[0] == 3
 
-        cursor.execute("SELECT mention_count, product_name FROM product_rankings WHERE category = %s;", ("GPU",))
+        cursor.execute("SELECT mention_count, product_name FROM product_rankings WHERE product_topic = %s;", ("GPU",))
         results = cursor.fetchall()
         assert results is not None
         assert results[0] == (300, "rtx 4090") # last duplicate upserted and updated it to 300

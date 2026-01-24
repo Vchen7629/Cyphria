@@ -22,7 +22,7 @@ def test_connection_failure_handling() -> None:
 
 def test_pool_multiple_connections(db_pool: ConnectionPool) -> None:
     """Connection pool should handle multiple concurrent connections."""
-    connections = []
+    connections: list[Any] = []
 
     try:
         # Acquire multiple connections
@@ -45,7 +45,7 @@ def test_connection_pool_exhaustion(db_pool: ConnectionPool) -> None:
     Trying to get one more connection when connection 
     pool is exhausted should timeout
     """
-    connections = []
+    connections: list[Any] = []
     try:
         for _ in range(5):
             conn = db_pool.getconn(timeout=1)
@@ -62,9 +62,9 @@ def test_lost_connection_during_operation(db_connection: psycopg.Connection, sin
     with db_connection.cursor() as cursor:
         cursor.execute("""
             INSERT INTO product_sentiment (
-                comment_id, product_name, category, sentiment_score, created_utc
+                comment_id, product_name, product_topic, sentiment_score, created_utc
             ) VALUES (
-                %(comment_id)s, %(product_name)s, %(category)s, %(sentiment_score)s, %(created_utc)s
+                %(comment_id)s, %(product_name)s, %(product_topic)s, %(sentiment_score)s, %(created_utc)s
             )
         """, single_sentiment_comment)
 
@@ -74,5 +74,5 @@ def test_lost_connection_during_operation(db_connection: psycopg.Connection, sin
     db_connection.close()
 
     with pytest.raises(psycopg.OperationalError):
-        fetch_aggregated_product_scores(db_connection, category='GPU', time_window="all_time")
+        fetch_aggregated_product_scores(db_connection, product_topic='GPU', time_window="all_time")
 

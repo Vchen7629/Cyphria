@@ -16,7 +16,7 @@ MOCK_SENTIMENT_AGGREGATE = SentimentAggregate(
 )
 
 @pytest.mark.parametrize(
-    "product_scores,category,time_window,ranks,grades,bayesian_scores,is_top_pick,is_most_discussed,has_limited_data,calculation_date", [
+    "product_scores,product_topic,time_window,ranks,grades,bayesian_scores,is_top_pick,is_most_discussed,has_limited_data,calculation_date", [
     # None value tests
     (None, "GPU", "all_time", [1], ["S"], [1], [False], [False], [False], datetime.now(tz=timezone.utc)),
     ([MOCK_SENTIMENT_AGGREGATE], None, "all_time", [1], ["S"], [1], [False], [False], [False], datetime.now(tz=timezone.utc)),
@@ -48,7 +48,7 @@ MOCK_SENTIMENT_AGGREGATE = SentimentAggregate(
 def test_invalid_input_params(
     mock_ranking_service: RankingService,
     product_scores: list[SentimentAggregate] | None,
-    category: str | None,
+    product_topic: str | None,
     time_window: str | None,
     ranks: np.ndarray | None,
     grades: np.ndarray | None,
@@ -63,7 +63,7 @@ def test_invalid_input_params(
 
     result = RankingService._build_product_ranking_object(
         product_scores=product_scores,      # type: ignore
-        category=category,                  # type: ignore
+        product_topic=product_topic,        # type: ignore
         time_window=time_window,            # type: ignore
         ranks=ranks,                        # type: ignore
         grades=grades,                      # type: ignore
@@ -83,7 +83,7 @@ def test_cancel_flag_stops_processing(mock_ranking_service: RankingService) -> N
     
     result = service._build_product_ranking_object(
         product_scores=[MOCK_SENTIMENT_AGGREGATE],
-        category="GPU", 
+        product_topic="GPU", 
         time_window="all_time",
         ranks=np.array([2]),
         grades=np.array(["S"]),

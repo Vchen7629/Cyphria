@@ -61,7 +61,7 @@ def test_sentiment_analysis_task_correct_configs() -> None:
     assert sentiment_analysis_task.method == "POST"
     assert sentiment_analysis_task.headers == {"Content-Type": "application/json"}
 
-    expected_api_params = json.dumps({'category': "GPU"})
+    expected_api_params = json.dumps({'product_topic': "GPU"})
     assert sentiment_analysis_task.data == expected_api_params
 
     assert sentiment_analysis_task.log_response is True

@@ -1,5 +1,7 @@
-from src.product_utils.gpu_detector import GPUDetector
 from typing import Any
+from typing import Optional
+from src.core.logger import StructuredLogger
+from src.product_utils.gpu_detector import GPUDetector
 
 class ProductDetectorWrapper:
     """Wrapper that provides a universal interface for all product detectors"""
@@ -35,22 +37,27 @@ class ProductDetectorWrapper:
 class DetectorFactory:
     """Detector Factory that returns the appropriate detector based on the product category"""
     @staticmethod
-    def get_detector(category: str) -> ProductDetectorWrapper:
+    def get_detector(product_topic: str, logger: Optional[StructuredLogger] = None) -> Optional[ProductDetectorWrapper]:
         """
-        Get the appropriate detector for the given product category
+        Get the appropriate detector for the given product topic
         this detector is used for checking if the comment contains a mention
-        0f a product or how many products mentioned for the specified category
+        0f a product or how many products mentioned for the specified topic
 
         Args:
-            category: Product category, ie 'gpu', 'laptop', 'headphone'
+            product_topic: Product topic, ie 'gpu', 'laptop', 'headphone'
 
         Returns:
-            ProductDetectorWrapper with universal interface
+            ProductDetectorWrapper with universal interface or none if 
 
         Raises:
             ValueError: If category is not supported
         """
-        match category.lower().strip():
+        if not product_topic or product_topic.strip() == "":
+            if logger:
+                logger.error(event_type="ingestion_service run", message="Missing product topic, can't detect")
+            return None
+
+        match product_topic.lower().strip():
             case "gpu":
                 return ProductDetectorWrapper(
                     GPUDetector(),
@@ -59,5 +66,5 @@ class DetectorFactory:
                 )
             case _:
                 raise ValueError(
-                    f"Unsupported category: '{category}'. Supported: gpu"
+                    f"Unsupported product_topic: '{product_topic}'. Supported: gpu"
                 )

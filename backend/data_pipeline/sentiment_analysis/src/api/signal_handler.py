@@ -1,11 +1,11 @@
 # Track current run state
 from typing import Any
-from src.sentiment_service import StartService
+from src.sentiment_service import SentimentService
 import signal
 
 class RunState:
     """Mutable container"""
-    current_service: StartService | None = None
+    current_service: SentimentService | None = None
     run_in_progress = False
 
 run_state = RunState()

@@ -2,7 +2,7 @@ from fastapi import Request
 from fastapi import APIRouter
 from fastapi import HTTPException
 from concurrent.futures import ThreadPoolExecutor
-from src.sentiment_service import StartService
+from src.sentiment_service import SentimentService
 from src.api.job_state import JobState
 from src.api.schemas import CurrentJob
 from src.api.schemas import RunRequest
@@ -40,7 +40,7 @@ def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunRespons
 
     job_state.create_job(body.category)
 
-    service = StartService(
+    service = SentimentService(
         logger = request.app.state.logger,
         category = body.category,
         db_pool = request.app.state.db_pool,

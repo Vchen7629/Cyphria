@@ -3,6 +3,12 @@ from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel
 
+class SentimentResult(BaseModel):
+    """Result of a sentiment analysis airflow run"""
+    comments_inserted: int
+    comments_updated: int
+    cancelled: bool = False
+
 class JobStatus(str, Enum):
     RUNNING = "running"
     COMPLETED = "completed"
@@ -31,12 +37,6 @@ class ProductSentiment(BaseModel):
     category: str
     sentiment_score: float
     created_utc: datetime
-
-class SentimentResult(BaseModel):
-    """Result of a sentiment analysis airflow run"""
-    comments_inserted: int
-    comments_updated: int
-    cancelled: bool = False
 
 class RunRequest(BaseModel):
     """Request containing the category polling interval to the /run endpoint"""

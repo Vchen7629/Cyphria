@@ -11,7 +11,7 @@ from src.db_utils.queries import batch_insert_product_sentiment
 from src.preprocessing.extract_pairs import extract_pairs
 from src.preprocessing.sentiment_analysis import Aspect_Based_Sentiment_Analysis
 
-class StartService:
+class SentimentService:
     def __init__(
         self, 
         logger: StructuredLogger,

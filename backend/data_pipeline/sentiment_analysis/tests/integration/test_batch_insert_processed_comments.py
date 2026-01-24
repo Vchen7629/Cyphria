@@ -1,9 +1,9 @@
 import psycopg
 import pytest
-from datetime import datetime, timezone
-
-from src.db_utils.queries import batch_insert_product_sentiment
+from datetime import datetime
+from datetime import timezone
 from src.api.schemas import ProductSentiment
+from src.db_utils.queries import batch_insert_product_sentiment
 
 def test_single_sentiment_insert(db_connection: psycopg.Connection) -> None:
     """Inserting a single product sentiment into the database should be returned."""

@@ -2,7 +2,6 @@ import pytest
 from fastapi import FastAPI
 from unittest.mock import MagicMock, patch
 import os                                                                                                 
-os.environ.setdefault("PRODUCT_CATEGORY", "GPU")                                                          
 os.environ.setdefault("REDDIT_API_CLIENT_ID", "fake")                                                     
 os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "fake")                                                 
 os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "fake")                                                  

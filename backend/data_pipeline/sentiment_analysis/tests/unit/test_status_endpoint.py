@@ -37,7 +37,7 @@ def test_current_job_returns_successfully(mock_fastapi: FastAPI) -> None:
     with patch("src.api.routes.job_state") as mock_job_state:
         mock_job_state.get_current_job.return_value = CurrentJob(
             status="running",
-            category="GPU",
+            product_topic="GPU",
             started_at=datetime.now(tz=timezone.utc)
         )
 
@@ -47,6 +47,6 @@ def test_current_job_returns_successfully(mock_fastapi: FastAPI) -> None:
             response = client.get("/status")
             assert response.status_code == 200
             assert response.json()["status"] == "running"
-            assert response.json()["category"] == "GPU"
+            assert response.json()["product_topic"] == "GPU"
 
 

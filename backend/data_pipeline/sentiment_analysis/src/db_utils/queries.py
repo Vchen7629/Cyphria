@@ -8,21 +8,21 @@ from src.db_utils.retry import retry_with_backoff
 structured_logger = StructuredLogger(pod="idk")
 
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=structured_logger)
-def fetch_unprocessed_comments(conn: psycopg.Connection, category: str, batch_size: int = 100) -> list[UnprocessedComment]:
+def fetch_unprocessed_comments(conn: psycopg.Connection, product_topic: str, batch_size: int = 100) -> list[UnprocessedComment]:
     """
-    Fetch a batch of unprocessed comments for a category from the raw_comments table
+    Fetch a batch of unprocessed comments for a product_topic from the raw_comments table
     for further processing with this worker
 
     Args:
         conn: psycopg3 database connection
-        category: the product category we are fetching the comments for
+        product_topic: the product topic we are fetching the comments for
         batch_size: number of comments to fetch per batch
 
     Returns:
         list of dicts with the comment metadata:
             - comment_id
             - comment_body
-            - category
+            - product_topic
             - detected_products (array)
             - created_utc
     """
@@ -30,20 +30,20 @@ def fetch_unprocessed_comments(conn: psycopg.Connection, category: str, batch_si
         SELECT
             comment_id,
             comment_body,
-            category,
+            product_topic,
             detected_products,
             created_utc
         FROM raw_comments
         WHERE sentiment_processed = FALSE
-        AND UPPER(TRIM(category)) = UPPER(TRIM(%s))
+        AND UPPER(TRIM(product_topic)) = UPPER(TRIM(%s))
         ORDER BY created_utc ASC
         LIMIT %s
     """
 
-    normalized_category = category.strip().upper()
+    normalized_product_topic = product_topic.strip().upper()
 
     with conn.cursor(row_factory=dict_row) as cursor:
-        cursor.execute(query, (normalized_category, batch_size))
+        cursor.execute(query, (normalized_product_topic, batch_size))
         results = cursor.fetchall()
 
     return [UnprocessedComment.model_validate(row) for row in results]
@@ -58,7 +58,7 @@ def batch_insert_product_sentiment(conn: psycopg.Connection, sentiments: list[Pr
         comments: list of comment dictionaries with keys:
             - comment_id (str): ID of the source comment
             - product_name (str): normalized product name
-            - category (str): the category of the product
+            - product_topic (str): the product_topic of the product
             - sentiment_score (float): sentiment score from -1 to +1
             - created_utc (str): ISO UTC timestamp when comment was created
 
@@ -72,13 +72,13 @@ def batch_insert_product_sentiment(conn: psycopg.Connection, sentiments: list[Pr
         INSERT INTO product_sentiment (
             comment_id,
             product_name,
-            category,
+            product_topic,
             sentiment_score,
             created_utc
         ) VALUES (
             %(comment_id)s,
             %(product_name)s,
-            %(category)s,
+            %(product_topic)s,
             %(sentiment_score)s,
             %(created_utc)s
         )

@@ -15,12 +15,12 @@ class SentimentService:
     def __init__(
         self, 
         logger: StructuredLogger,
-        category: str, 
+        product_topic: str, 
         db_pool: ConnectionPool, 
         model: Aspect_Based_Sentiment_Analysis
     ) -> None:
         self.logger = logger
-        self.category = category
+        self.product_topic = product_topic
         self.db_pool = db_pool
         self.model = model
 
@@ -51,11 +51,11 @@ class SentimentService:
         sentiment_results = self.model.SentimentAnalysis(text_product_pairs)
 
         # use zip to preserve comment id ordering
-        for (comment_id, _, category, product_name, created_utc), (_, sentiment_score) in zip(enriched_pairs, sentiment_results):
+        for (comment_id, _, product_topic, product_name, created_utc), (_, sentiment_score) in zip(enriched_pairs, sentiment_results):
             product_sentiments.append(ProductSentiment(
                 comment_id=comment_id,
                 product_name=product_name,
-                category=category,
+                product_topic=product_topic,
                 sentiment_score=sentiment_score,
                 created_utc=created_utc
             ))
@@ -99,7 +99,7 @@ class SentimentService:
 
     def _run_sentiment_pipeline(self) -> SentimentResult:
         """
-        Main orchestrator method that polls for unprocessed comments for a category and processes them
+        Main orchestrator method that polls for unprocessed comments for a product_topic and processes them
         
         Returns
             SentimentResult with counts of posts/comments processed
@@ -111,13 +111,13 @@ class SentimentService:
 
         while not self.cancel_requested:
             with self.db_pool.connection() as conn:
-                comments = fetch_unprocessed_comments(conn, self.category, batch_size=200)
+                comments = fetch_unprocessed_comments(conn, self.product_topic, batch_size=200)
 
             # This stops the service from running once all comments are processed
             if not comments:
                 self.logger.info(
                     event_type="sentiment_analysis run",
-                    message=f"All comments processed for category {self.category}. Exiting"
+                    message=f"All comments processed for product_topic {self.product_topic}. Exiting"
                 )
                 break
 

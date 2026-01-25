@@ -20,6 +20,6 @@ def extract_pairs(unprocessed_comment: UnprocessedComment) -> list[tuple[str, st
         return []
 
     return [
-        (unprocessed_comment.comment_id, comment_text, unprocessed_comment.category, product, unprocessed_comment.created_utc)
+        (unprocessed_comment.comment_id, comment_text, unprocessed_comment.product_topic, product, unprocessed_comment.created_utc)
         for product in product_list
     ]

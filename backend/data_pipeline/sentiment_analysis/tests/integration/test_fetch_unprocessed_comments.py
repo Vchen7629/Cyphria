@@ -1,3 +1,4 @@
+import pytest
 from typing import Any
 from datetime import datetime
 from datetime import timezone
@@ -10,14 +11,14 @@ def test_fetch_single_comment(db_connection: psycopg.Connection, single_comment:
         cursor.execute("""
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
+                author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, FALSE
             )
         """, single_comment)
 
-    result = fetch_unprocessed_comments(db_connection, category='GPU' ,batch_size=1)
+    result = fetch_unprocessed_comments(db_connection, product_topic='GPU' ,batch_size=1)
 
     assert len(result) == 1
     assert result[0].comment_id == 'test_comment_1'
@@ -31,21 +32,21 @@ def test_fetch_no_unprocessed_comments(db_connection: psycopg.Connection, single
         cursor.execute("""
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
+                author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, TRUE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, TRUE
             )
         """, single_comment)
 
-    result = fetch_unprocessed_comments(db_connection, category='nvidia', batch_size=1)
+    result = fetch_unprocessed_comments(db_connection, product_topic='nvidia', batch_size=1)
 
     assert len(result) == 0
     assert result == []
 
 def test_fetch_empty_database(db_connection: psycopg.Connection) -> None:
     """Fetching from an empty database should return empty list"""
-    result = fetch_unprocessed_comments(db_connection, category='Any', batch_size=100)
+    result = fetch_unprocessed_comments(db_connection, product_topic='Any', batch_size=100)
 
     assert len(result) == 0
     assert result == []
@@ -62,7 +63,7 @@ def test_fetch_respects_batch_size(db_connection: psycopg.Connection) -> None:
             'author': 'test_user',
             'score': i,
             'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-            'category': 'GPU',
+            'product_topic': 'GPU',
         }
         for i in range(10)
     ]
@@ -72,16 +73,16 @@ def test_fetch_respects_batch_size(db_connection: psycopg.Connection) -> None:
             cursor.execute("""
                 INSERT INTO raw_comments (
                     comment_id, post_id, comment_body, detected_products, subreddit,
-                    author, score, created_utc, category, sentiment_processed
+                    author, score, created_utc, product_topic, sentiment_processed
                 ) VALUES (
                     %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                    %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
+                    %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, FALSE
                 )
             """, comment)
     
     db_connection.commit()
 
-    result = fetch_unprocessed_comments(db_connection, category='GPU', batch_size=5)
+    result = fetch_unprocessed_comments(db_connection, product_topic='GPU', batch_size=5)
 
     assert len(result) == 5
 
@@ -107,7 +108,7 @@ def test_fetch_orders_by_created_utc_asc(db_connection: psycopg.Connection) -> N
             cursor.execute("""
                 INSERT INTO raw_comments (
                     comment_id, post_id, comment_body, detected_products, subreddit,
-                    author, score, created_utc, category, sentiment_processed
+                    author, score, created_utc, product_topic, sentiment_processed
                 ) VALUES (
                     %(comment_id)s, 'post', 'body', ARRAY['product'], 'subreddit', 
                     'author', 1, %(created_utc)s, 'cat', FALSE
@@ -116,7 +117,7 @@ def test_fetch_orders_by_created_utc_asc(db_connection: psycopg.Connection) -> N
     
     db_connection.commit()
 
-    result = fetch_unprocessed_comments(db_connection, category='cat', batch_size=10)
+    result = fetch_unprocessed_comments(db_connection, product_topic='cat', batch_size=10)
 
     assert len(result) == 3
     assert result[0].comment_id == 'oldest'
@@ -137,7 +138,7 @@ def test_fetch_mixed_processed_unprocessed(db_connection: psycopg.Connection) ->
             cursor.execute("""                                                                        
                 INSERT INTO raw_comments (                                                            
                     comment_id, post_id, comment_body, detected_products,                             
-                    subreddit, author, score, created_utc, category, sentiment_processed              
+                    subreddit, author, score, created_utc, product_topic, sentiment_processed              
                 ) VALUES (                                                                            
                     %(comment_id)s, 'post', 'body', ARRAY['product'],                                 
                     'sub', 'author', 1, %(created_utc)s, 'cat', %(sentiment_processed)s               
@@ -150,7 +151,7 @@ def test_fetch_mixed_processed_unprocessed(db_connection: psycopg.Connection) ->
 
     db_connection.commit()      
 
-    result = fetch_unprocessed_comments(db_connection, category='cat', batch_size=10)
+    result = fetch_unprocessed_comments(db_connection, product_topic='cat', batch_size=10)
 
     assert len(result) == 2
     comment_ids = {r.comment_id for r in result}
@@ -167,23 +168,23 @@ def test_fetch_empty_detected_products(db_connection: psycopg.Connection) -> Non
         'author': 'user',
         'score': 5,
         'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'general'
+        'product_topic': 'general'
     }
 
     with db_connection.cursor() as cursor:
         cursor.execute("""
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
+                author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, FALSE
             )
         """, comment)
 
     db_connection.commit()
 
-    result = fetch_unprocessed_comments(db_connection, category='general', batch_size=10)
+    result = fetch_unprocessed_comments(db_connection, product_topic='general', batch_size=10)
 
     assert len(result) == 1
     assert result[0].comment_id == 'no_products'
@@ -200,23 +201,23 @@ def test_fetch_multiple_products(db_connection: psycopg.Connection) -> None:
         'author': 'user',
         'score': 5,
         'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'general'
+        'product_topic': 'general'
     }
 
     with db_connection.cursor() as cursor:
         cursor.execute("""
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
+                author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, FALSE
             )
         """, comment)
 
     db_connection.commit()
 
-    result = fetch_unprocessed_comments(db_connection, category='general', batch_size=10)
+    result = fetch_unprocessed_comments(db_connection, product_topic='general', batch_size=10)
 
     assert len(result) == 1
     assert result[0].comment_id == 'multi_products'
@@ -234,23 +235,23 @@ def test_fetch_special_characters_in_comment_body(db_connection: psycopg.Connect
         'author': 'user',
         'score': 50,
         'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
+        'product_topic': 'GPU'
     }
 
     with db_connection.cursor() as cursor:
         cursor.execute("""
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
+                author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, FALSE
             )
         """, comment)
 
     db_connection.commit()
 
-    result = fetch_unprocessed_comments(db_connection, category='GPU', batch_size=10)
+    result = fetch_unprocessed_comments(db_connection, product_topic='GPU', batch_size=10)
 
     assert len(result) == 1
     assert result[0].comment_id == 'special chars'
@@ -269,82 +270,66 @@ def test_fetch_very_long_comment_body(db_connection: psycopg.Connection) -> None
         'author': 'user',
         'score': 50,
         'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
+        'product_topic': 'GPU'
     }
 
     with db_connection.cursor() as cursor:
         cursor.execute("""
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
+                author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, FALSE
             )
         """, comment)
 
     db_connection.commit()
 
-    result = fetch_unprocessed_comments(db_connection, category='GPU', batch_size=10)
+    result = fetch_unprocessed_comments(db_connection, product_topic='GPU', batch_size=10)
 
     assert len(result) == 1
     assert result[0].comment_id == 'long comment'
     assert len(result[0].comment_body) > 29000
     assert 'RTX 4090 is mentioned here.' in result[0].comment_body
 
-def test_fetch_wrong_category(db_connection: psycopg.Connection, single_comment: dict[str, Any]) -> None:
-    """Fetching a category that doesnt exist shouldnt return anything"""
+def test_fetch_wrong_product_topic(db_connection: psycopg.Connection, single_comment: dict[str, Any]) -> None:
+    """Fetching a product_topic that doesnt exist shouldnt return anything"""
     with db_connection.cursor() as cursor:
         cursor.execute("""
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
+                author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, FALSE
             )
         """, single_comment)
 
-    result = fetch_unprocessed_comments(db_connection, category="thisdoesntexist", batch_size=10)
+    result = fetch_unprocessed_comments(db_connection, product_topic="thisdoesntexist", batch_size=10)
 
     assert len(result) == 0
     assert result == []
 
-def test_category_case_insensitive(db_connection: psycopg.Connection, single_comment: dict[str, Any]) -> None:
-    """Non matching case (mixed vs lower case) should still match for comment category"""
+@pytest.mark.parametrize(argnames="product_topic", argvalues=["gPu", "  gpu  "])
+def test_valid_product_topic_params(
+    product_topic: str,
+    db_connection: psycopg.Connection, 
+    single_comment: dict[str, Any]
+) -> None:
+    """Valid product topic params (case insensitive and whitespace) should still match"""
     with db_connection.cursor() as cursor:
         cursor.execute("""
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
+                author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, FALSE
             )
         """, single_comment)
 
-    result = fetch_unprocessed_comments(db_connection, category="gPu", batch_size=10)
-
-    assert len(result) == 1
-    assert result[0].comment_id == 'test_comment_1'
-    assert result[0].comment_body == 'This is a test comment about RTX 4090'
-    assert result[0].detected_products == ['rtx 4090']
-    assert result[0].created_utc == datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc) 
-
-def test_whitespace_in_category_param(db_connection: psycopg.Connection, single_comment: dict[str, Any]) -> None:
-    """Whitespace around the input category should be stripped and still match"""
-    with db_connection.cursor() as cursor:
-        cursor.execute("""
-            INSERT INTO raw_comments (
-                comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
-            ) VALUES (
-                %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
-            )
-        """, single_comment)
-
-    result = fetch_unprocessed_comments(db_connection, category="  gpu  ", batch_size=10)
+    result = fetch_unprocessed_comments(db_connection, product_topic, batch_size=10)
 
     assert len(result) == 1
     assert result[0].comment_id == 'test_comment_1'

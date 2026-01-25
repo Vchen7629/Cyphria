@@ -18,7 +18,7 @@ class JobStatus(str, Enum):
 class CurrentJob(BaseModel):
     """Currently running job state"""
     status: JobStatus # "pending" | "running" | "completed" | "failed" | "cancelled"
-    category: str
+    product_topic: str
     started_at: datetime
     completed_at: Optional[datetime] = None
     result: Optional[SentimentResult] = None
@@ -27,20 +27,20 @@ class CurrentJob(BaseModel):
 class UnprocessedComment(BaseModel):
     comment_id: str
     comment_body: str
-    category: str
+    product_topic: str
     detected_products: list[str]
     created_utc: datetime
 
 class ProductSentiment(BaseModel):
     comment_id: str
     product_name: str
-    category: str
+    product_topic: str
     sentiment_score: float
     created_utc: datetime
 
 class RunRequest(BaseModel):
-    """Request containing the category polling interval to the /run endpoint"""
-    category: str
+    """Request containing the product_topic polling interval to the /run endpoint"""
+    product_topic: str
 
 class RunResponse(BaseModel):
     """Response from /run endpoint"""

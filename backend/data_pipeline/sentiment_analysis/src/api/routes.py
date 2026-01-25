@@ -27,9 +27,9 @@ async def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunR
     Raises:
         HTTPException if category is missing or none
     """
-    category: str = body.category
-    if not category or category.strip == "":
-        raise HTTPException(status_code=400, detail="Missing category parameter")
+    product_topic: str = body.product_topic
+    if not product_topic or product_topic.strip == "":
+        raise HTTPException(status_code=400, detail="Missing product_topic parameter")
 
     if not job_state:
         raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")
@@ -42,11 +42,11 @@ async def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunR
         )
     
     if job_state:
-        job_state.create_job(body.category)
+        job_state.create_job(product_topic)
 
     service = SentimentService(
         logger = request.app.state.logger,
-        category = body.category,
+        category = product_topic,
         db_pool = request.app.state.db_pool,
         model = request.app.state.model
     )

@@ -22,7 +22,7 @@ def test_connection_failure_handling() -> None:
 
 def test_pool_multiple_connections(db_pool: ConnectionPool) -> None:
     """Connection pool should handle multiple concurrent connections."""
-    connections = []
+    connections: list[Any] = []
 
     try:
         # Acquire multiple connections
@@ -45,7 +45,7 @@ def test_connection_pool_exhaustion(db_pool: ConnectionPool) -> None:
     Trying to get one more connection when connection 
     pool is exhausted should timeout
     """
-    connections = []
+    connections: list[Any] = []
     try:
         for _ in range(5):
             conn = db_pool.getconn(timeout=1)
@@ -63,10 +63,10 @@ def test_lost_connection_during_operation(db_connection: psycopg.Connection, sin
         cursor.execute("""
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products,
-                subreddit, author, score, created_utc, category, sentiment_processed
+                subreddit, author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, FALSE
             )
         """, single_comment)
 
@@ -76,5 +76,5 @@ def test_lost_connection_during_operation(db_connection: psycopg.Connection, sin
     db_connection.close()
 
     with pytest.raises(psycopg.OperationalError):
-        fetch_unprocessed_comments(db_connection, category='GPU', batch_size=10)
+        fetch_unprocessed_comments(db_connection, product_topic='GPU', batch_size=10)
 

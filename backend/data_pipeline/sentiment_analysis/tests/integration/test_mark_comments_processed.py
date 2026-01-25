@@ -10,10 +10,10 @@ def test_mark_single_comment_processed(db_connection: psycopg.Connection, single
         cursor.execute("""
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
+                author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, FALSE
             )
         """, single_comment)
     
@@ -40,10 +40,10 @@ def test_mark_already_processed_comment(db_connection: psycopg.Connection, singl
         cursor.execute("""
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
+                author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, TRUE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, TRUE
             )
         """, single_comment)
     
@@ -70,10 +70,10 @@ def test_mark_non_existant_comment(db_connection: psycopg.Connection, single_com
         cursor.execute("""
             INSERT INTO raw_comments (
                 comment_id, post_id, comment_body, detected_products, subreddit,
-                author, score, created_utc, category, sentiment_processed
+                author, score, created_utc, product_topic, sentiment_processed
             ) VALUES (
                 %(comment_id)s, %(post_id)s, %(comment_body)s, %(detected_products)s, %(subreddit)s, 
-                %(author)s, %(score)s, %(created_utc)s, %(category)s, FALSE
+                %(author)s, %(score)s, %(created_utc)s, %(product_topic)s, FALSE
             )
         """, single_comment)
     
@@ -114,7 +114,7 @@ def test_mark_existing_non_existing_comment(db_connection: psycopg.Connection) -
             cursor.execute("""                                                                        
                 INSERT INTO raw_comments (                                                            
                     comment_id, post_id, comment_body, detected_products,                             
-                    subreddit, author, score, created_utc, category, sentiment_processed              
+                    subreddit, author, score, created_utc, product_topic, sentiment_processed              
                 ) VALUES (                                                                            
                     %(comment_id)s, 'post', 'body', ARRAY['product'],                                 
                     'sub', 'author', 1, %(created_utc)s, 'cat', FALSE               
@@ -162,7 +162,7 @@ def test_duplicate_comment_ids_in_input_list(db_connection: psycopg.Connection) 
             cursor.execute("""                                                                        
                 INSERT INTO raw_comments (                                                            
                     comment_id, post_id, comment_body, detected_products,                             
-                    subreddit, author, score, created_utc, category, sentiment_processed              
+                    subreddit, author, score, created_utc, product_topic, sentiment_processed              
                 ) VALUES (                                                                            
                     %(comment_id)s, 'post', 'body', ARRAY['product'],                                 
                     'sub', 'author', 1, %(created_utc)s, 'cat', FALSE               
@@ -209,7 +209,7 @@ def test_special_characters_in_comment_ids(db_connection: psycopg.Connection) ->
             cursor.execute("""
                 INSERT INTO raw_comments (
                     comment_id, post_id, comment_body, detected_products,
-                    subreddit, author, score, created_utc, category, sentiment_processed
+                    subreddit, author, score, created_utc, product_topic, sentiment_processed
                 ) VALUES (
                     %s, 'post', 'body', ARRAY['product'],
                     'sub', 'author', 1, %s, 'cat', FALSE

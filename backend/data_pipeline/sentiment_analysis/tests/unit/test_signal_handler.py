@@ -1,6 +1,5 @@
 from unittest.mock import MagicMock
 import os
-os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
 os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
 os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "reddit_secret")
 os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "username")

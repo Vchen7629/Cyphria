@@ -10,7 +10,7 @@ def test_single_sentiment_insert(db_connection: psycopg.Connection) -> None:
     sentiment = ProductSentiment(
         comment_id='test_comment_1',
         product_name='rtx 4090',
-        category="GPU",
+        product_topic="GPU",
         sentiment_score=0.85,
         created_utc='2024-01-01T12:00:00+00:00'
     )
@@ -22,7 +22,7 @@ def test_single_sentiment_insert(db_connection: psycopg.Connection) -> None:
     # Verify the insert
     with db_connection.cursor() as cursor:
         cursor.execute(
-            "SELECT comment_id, product_name, category, sentiment_score, created_utc FROM product_sentiment WHERE comment_id = %s;",
+            "SELECT comment_id, product_name, product_topic, sentiment_score, created_utc FROM product_sentiment WHERE comment_id = %s;",
             ('test_comment_1',)
         )
         result = cursor.fetchone()
@@ -30,7 +30,7 @@ def test_single_sentiment_insert(db_connection: psycopg.Connection) -> None:
         assert result is not None
         assert result[0] == 'test_comment_1'  # comment_id
         assert result[1] == 'rtx 4090'  # product_name
-        assert result[2] == 'GPU' # category
+        assert result[2] == 'GPU' # product_topic
         assert result[3] == 0.85  # sentiment_score
         assert result[4].isoformat() == '2024-01-01T12:00:00+00:00'  # created_utc
 
@@ -40,7 +40,7 @@ def test_batch_insert_large_batch(db_connection: psycopg.Connection) -> None:
         ProductSentiment(
             comment_id=f'test_comment_{i}',
             product_name='rtx 4090',
-            category="GPU",
+            product_topic="GPU",
             sentiment_score=0.5 + (i * 0.1),
             created_utc=datetime(2024, 1, 1, 12, 59, 0, tzinfo=timezone.utc)
         )
@@ -62,7 +62,7 @@ def test_duplicate_comment_handling(db_connection: psycopg.Connection) -> None:
     sentiment = ProductSentiment(
         comment_id='duplicate_id',
         product_name='rtx 4090',
-        category="GPU",
+        product_topic="GPU",
         sentiment_score=0.85,
         created_utc='2024-01-01T12:00:00+00:00'
     )
@@ -115,7 +115,7 @@ def test_transaction_rollback_on_error(db_connection: psycopg.Connection) -> Non
     sentiment = ProductSentiment(
         comment_id='success_1',
         product_name='rtx 4090',
-        category="GPU",
+        product_topic="GPU",
         sentiment_score=0.85,
         created_utc='2024-01-01T12:00:00+00:00'
     )
@@ -128,7 +128,7 @@ def test_transaction_rollback_on_error(db_connection: psycopg.Connection) -> Non
     invalid_sentiment = ProductSentiment.model_construct(
         comment_id='invalid',
         product_name='rtx 4090',
-        category="GPU",
+        product_topic="GPU",
         sentiment_score=None, # type: ignore
         created_utc='2024-01-01T12:00:00+00:00'
     )
@@ -159,7 +159,7 @@ def test_same_comment_id_with_different_product_names(db_connection: psycopg.Con
     initial = ProductSentiment(
         comment_id='initial',
         product_name='rtx 4090',
-        category="GPU",
+        product_topic="GPU",
         sentiment_score=0.85,
         created_utc='2024-01-01T12:00:00+00:00'
     )
@@ -170,14 +170,14 @@ def test_same_comment_id_with_different_product_names(db_connection: psycopg.Con
         ProductSentiment(
             comment_id='initial',
             product_name='rtx 5090',
-            category="GPU",
+            product_topic="GPU",
             sentiment_score=0.85,
             created_utc='2024-01-01T12:00:00+00:00'
         ),
         ProductSentiment(
             comment_id='initial',
             product_name='rtx 5070',
-            category="GPU",
+            product_topic="GPU",
             sentiment_score=0.85,
             created_utc='2024-01-01T12:00:00+00:00'
         )
@@ -198,7 +198,7 @@ def test_same_comment_id_with_different_product_names(db_connection: psycopg.Con
         assert count == 3
 
         cursor.execute(
-            "SELECT product_name, sentiment_score, category \
+            "SELECT product_name, sentiment_score, product_topic \
             FROM product_sentiment \
             WHERE comment_id = %s;"
         , ('initial',))
@@ -213,7 +213,7 @@ def test_mixed_batch_with_duplicates(db_connection: psycopg.Connection) -> None:
     initial_sentiment = ProductSentiment(
         comment_id='initial',
         product_name='rtx 4090',
-        category="GPU",
+        product_topic="GPU",
         sentiment_score=0.85,
         created_utc='2024-01-01T12:00:00+00:00'
     )
@@ -225,21 +225,21 @@ def test_mixed_batch_with_duplicates(db_connection: psycopg.Connection) -> None:
         ProductSentiment(
             comment_id='initial',
             product_name='rtx 4090',
-            category="GPU",
+            product_topic="GPU",
             sentiment_score=0.85,
             created_utc='2024-01-01T12:00:00+00:00'
         ),
         ProductSentiment(
             comment_id='new',
             product_name='rtx 4090',
-            category="GPU",
+            product_topic="GPU",
             sentiment_score=0.87,
             created_utc='2024-01-01T12:00:00+00:00'
         ),
         ProductSentiment(
             comment_id='new_2',
             product_name='rtx 5090',
-            category="GPU",
+            product_topic="GPU",
             sentiment_score=0.89,
             created_utc='2024-01-01T12:00:00+00:00'
         ),
@@ -257,7 +257,7 @@ def test_mixed_batch_with_duplicates(db_connection: psycopg.Connection) -> None:
 
         # Verify the duplicate kept original data
         cursor.execute(
-            "SELECT sentiment_score, category \
+            "SELECT sentiment_score, product_topic \
             FROM product_sentiment \
             WHERE (comment_id, product_name) = (%s, %s);"
         , ('initial', 'rtx 4090'))
@@ -273,21 +273,21 @@ def test_boundary_sentiment_scores(db_connection: psycopg.Connection) -> None:
         ProductSentiment(
             comment_id='negative',
             product_name='rtx 4090',
-            category="GPU",
+            product_topic="GPU",
             sentiment_score=-1.0,
             created_utc='2024-01-01T12:00:00+00:00'
         ),
         ProductSentiment(
             comment_id='middle',
             product_name='rtx 4090',
-            category="GPU",
+            product_topic="GPU",
             sentiment_score=0.0,
             created_utc='2024-01-01T12:00:00+00:00'
         ),
         ProductSentiment(
             comment_id='positive',
             product_name='rtx 4090',
-            category="GPU",
+            product_topic="GPU",
             sentiment_score=1.0,
             created_utc='2024-01-01T12:00:00+00:00'
         ),
@@ -303,7 +303,7 @@ def test_boundary_sentiment_scores(db_connection: psycopg.Connection) -> None:
         assert count == 3
 
         cursor.execute(
-            "SELECT comment_id, sentiment_score, category \
+            "SELECT comment_id, sentiment_score, product_topic \
             FROM product_sentiment \
             WHERE product_name = %s;"
         , ('rtx 4090',))

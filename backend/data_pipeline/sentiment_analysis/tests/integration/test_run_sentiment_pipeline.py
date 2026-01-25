@@ -13,7 +13,7 @@ def test_cancel_flag_mid_batch(db_pool: ConnectionPool, create_sentiment_service
                 cursor.execute("""
                     INSERT INTO raw_comments (
                         comment_id, post_id, comment_body, detected_products, subreddit,
-                        author, score, created_utc, category, sentiment_processed
+                        author, score, created_utc, product_topic, sentiment_processed
                     ) VALUES (
                         %s, 'p1', 'Test comment', ARRAY['product1'],
                         'test_sub', 'test_author', 10, NOW(), 'GPU', FALSE
@@ -51,7 +51,7 @@ def test_no_data_loss_when_cancelled_between_batches(db_pool: ConnectionPool, cr
                 cursor.execute("""
                     INSERT INTO raw_comments (
                         comment_id, post_id, comment_body, detected_products, subreddit,
-                        author, score, created_utc, category, sentiment_processed
+                        author, score, created_utc, product_topic, sentiment_processed
                     ) VALUES (
                         %s, 'p1', 'Test comment', ARRAY['product1'],
                         'test_sub', 'test_author', 10, NOW(), 'GPU', FALSE
@@ -99,7 +99,7 @@ def test_current_batch_completes_before_cancelled(db_pool: ConnectionPool, creat
                 cursor.execute("""
                     INSERT INTO raw_comments (
                         comment_id, post_id, comment_body, detected_products, subreddit,
-                        author, score, created_utc, category, sentiment_processed
+                        author, score, created_utc, product_topic, sentiment_processed
                     ) VALUES (
                         %s, 'p1', 'Test comment', ARRAY['product1'],
                         'test_sub', 'test_author', 10, NOW(), 'GPU', FALSE

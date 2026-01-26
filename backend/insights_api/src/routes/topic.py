@@ -12,7 +12,6 @@ from src.core.logger import StructuredLogger
 from src.schemas.queries import FetchProductsResult
 from src.schemas.response import GetRankedProductsResponse
 from src.schemas.response import GetTopicTotalCommentsResponse
-from src.schemas.response import GetTopicTotalProductsRankedResponse
 from src.middleware.get_client_ip import get_client_ip
 from src.db_utils.pg_conn import get_session
 from src.db_utils.cache_conn import get_cache
@@ -26,11 +25,11 @@ settings = Settings()
 
 routes = APIRouter(prefix=f"/api/{settings.API_VERSION}")
 
-@routes.get(path="/topic/total_products_ranked", response_model=GetTopicTotalProductsRankedResponse)
+@routes.get(path="/topic/total_products_ranked")
 async def get_total_products_ranked(
     product_topic: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product topic to fetch ranked products for"),
     session: AsyncSession = Depends(get_session)
-) -> GetTopicTotalProductsRankedResponse:
+) -> int:
     """
     Fetches and returns the number of products ranked for the specified topic
     
@@ -39,7 +38,7 @@ async def get_total_products_ranked(
     """
     ranked_count: int = await fetch_total_products_ranked(session, product_topic)
     
-    return GetTopicTotalProductsRankedResponse(total_ranked=ranked_count)
+    return ranked_count
 
 @routes.get(path="/topic/total_comments", response_model=GetTopicTotalCommentsResponse)
 async def get_total_comments(

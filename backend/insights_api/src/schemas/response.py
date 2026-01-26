@@ -14,11 +14,6 @@ class GetTopicTopMentionProductResponse(BaseModel):
     """Api response for /api/v1/category/topic_most_mentioned_product"""
     products: list[TopMentionedProduct]
 
-
-class GetTopicTotalProductsRankedResponse(BaseModel):
-    """Api response for /api/v1/topic/total_products_ranked"""
-    total_ranked: int
-
 class GetTopicTotalCommentsResponse(BaseModel):
     """Api response for /api/v1/topic/total_comments"""
     total_comment: int

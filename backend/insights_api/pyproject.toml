@@ -10,6 +10,7 @@ dependencies = [
     "sqlalchemy[asyncio]>=2.0.43",
     "pydantic-settings>=2.12.0",
     "valkey[libvalkey]>=6.1.1",
+    "prometheus-fastapi-instrumentator>=7.1.0",
 ]
 
 [tool.pyrefly]

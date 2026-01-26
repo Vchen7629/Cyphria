@@ -52,6 +52,9 @@ def get_category_for_topic(product_topic: str) -> Optional[str]:
     Returns:
         Category name or None if product_topic not found
     """
+    if not product_topic:
+        return None
+
     return TOPIC_TO_CATEGORY.get(product_topic.strip().upper())
 
 def get_topics_for_category(category: str) -> list[str]:
@@ -64,4 +67,7 @@ def get_topics_for_category(category: str) -> list[str]:
     Returns:
         list of product_topic names, like ["GPU", "Laptop"] or empty list if not found
     """
+    if not category:
+        return []
+
     return CATEGORY_TO_TOPICS.get(category.strip().lower(), [])

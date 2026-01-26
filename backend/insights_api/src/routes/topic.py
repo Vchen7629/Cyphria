@@ -93,9 +93,12 @@ async def get_ranked_products_list(
     if not ranked_products:
         raise HTTPException(status_code=404, detail=f"No products fetched for the topic: {product_topic}")
 
+    # Convert FetchProductsResult to RankedProduct
+    products = [RankedProduct(**product.model_dump()) for product in ranked_products]
+
 <<<<<<< HEAD
 <<<<<<< HEAD
-    api_response = GetRankedProductsResponse(products=ranked_products)
+    api_response = GetRankedProductsResponse(products=products)
 =======
     # Convert FetchProductsResult to RankedProduct
     products = [RankedProduct(**product.model_dump()) for product in ranked_products]

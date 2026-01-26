@@ -19,6 +19,11 @@ class Settings(BaseSettings):
     DB_USER: str = "postgres"
     DB_PASS: str = ''
 
+    # --- Valkey (Caching) Settings ---
+    CACHE_HOST: str = "localhost"
+    CACHE_PORT: int = 6379
+    MAX_CONNECTIONS: int = 10
+
     # Database connection string
     @property
     def database_url(self) -> str:

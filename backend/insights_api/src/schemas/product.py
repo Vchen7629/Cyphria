@@ -1,22 +1,26 @@
 from pydantic import BaseModel
 
-class RankedProduct(BaseModel):
-    """Single ranked product fetched from the /api/v1/categories/{category}/products endpoint"""
+class CategoryTopMentionedProduct(BaseModel):
+    """Single top ranked topic fetched from /api/v1/category/top_mentioned_products endpoint"""
     product_name: str
     grade: str
-    bayesian_score: float
     mention_count: int
-    approval_percentage: int
-    is_top_pick: bool
-    is_most_discussed: bool
-    has_limited_data: bool
+    topic_name: str
+
+class TopMentionedProduct(BaseModel):
+    """Single top ranked topic fetched from /api/v1/category/topic_topic_mentioned_products endpoint"""
+    product_name: str
+    grade: str
 
 class ViewMoreProduct(BaseModel):
     """Single product metadata fetched from /api/v1/products/view_more"""
-    positive_count: int
-    neutral_count: int
-    negative_count: int
+    positive_sentiment_count: int
+    neutral_sentiment_count: int
+    negative_sentiment_count: int
 
-class ProductName(BaseModel):
-    """Single product name"""
+class SearchProduct(BaseModel):
+    """Single search product"""
     product_name: str
+    product_topic: str
+    grade: str
+    mention_count: int

@@ -47,11 +47,11 @@ async def get_sentiment_scores(
     product_sentiment_scores: Optional[FetchProductSentimentScores] = await fetch_product_sentiment_scores(session, product_name, time_window)
     if not product_sentiment_scores:
         raise HTTPException(
-            status_code=404, 
+            status_code=404,
             detail=f"Sentiment counts not found for product: {product_name} time_window: {time_window}"
         )
 
-    return GetViewMoreProductsMetadataResponse(product=product_sentiment_scores)
+    return GetViewMoreProductsMetadataResponse(product=product_sentiment_scores.model_dump())
 
 @routes.get(path="/product/top_comments", response_model=GetTopCommentsProductResponse)
 async def get_top_comments(
@@ -85,11 +85,13 @@ async def get_top_comments(
     top_comments: Optional[list[FetchTopRedditCommentsResult]] = await fetch_top_reddit_comments(session, product_name, time_window)
     if not top_comments:
         raise HTTPException(
-            status_code=404, 
+            status_code=404,
             detail=f"No reddit comments found for product: {product_name} and time_window: {time_window}"
         )
-    
-    api_response = GetTopCommentsProductResponse(top_comments=top_comments)
+
+    api_response = GetTopCommentsProductResponse(
+        top_comments=[comment.model_dump() for comment in top_comments]
+    )
 
     # update cache with the new or existing query
     if cache:

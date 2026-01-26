@@ -152,7 +152,7 @@ async def fetch_top_reddit_comments(
         SELECT
             comment_body AS comment_text,
             score,
-            'https://reddit.com/comments/' || comment_id AS link,
+            'https://reddit.com/comments/' || comment_id AS reddit_link,
             created_utc
         FROM raw_comments
         WHERE LOWER(:product_name) = ANY(SELECT LOWER(unnest(detected_products)))
@@ -179,9 +179,9 @@ async def fetch_top_reddit_comments(
 
     return [
         FetchTopRedditCommentsResult(
-            comment_body=row.comment_text,
+            comment_text=row.comment_text,
             score=row.score,
-            reddit_link=row.link,
+            reddit_link=row.reddit_link,
             created_utc=row.created_utc
         )
         for row in rows

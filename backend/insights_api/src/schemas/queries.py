@@ -16,7 +16,7 @@ class FetchProductSentimentScores(BaseModel):
 
 class FetchTopRedditCommentsResult(BaseModel):
     """Return value of fetch_top_reddit_comments query function"""
-    comment_body: str
+    comment_text: str
     score: int
     reddit_link: str
     created_utc: datetime

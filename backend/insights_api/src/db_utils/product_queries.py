@@ -6,7 +6,9 @@ from src.db_utils.retry import retry_with_backoff
 from src.schemas.queries import FetchProductSentimentScores
 from src.schemas.queries import FetchTopRedditCommentsResult
 from src.schemas.queries import FetchMatchingProductNameResult
+from src.middleware.metrics import db_query_duration
 from src.middleware.topic_category_mapping import get_category_for_topic
+import time
 
 logger = StructuredLogger(pod="insights_api")
 
@@ -38,6 +40,7 @@ async def fetch_matching_product_name(
         WHERE product_name ILIKE '%' || :query || '%' ESCAPE '\\'
     """)
 
+    start_time = time.perf_counter()
     total_products_result = await session.execute(total_products_query, {"query": escaped_query})
     total_products_count = total_products_result.scalar()
 
@@ -69,6 +72,12 @@ async def fetch_matching_product_name(
     ]
 
     total_pages = (total_products_count + per_page - 1) // per_page if total_products_count else 0
+    duration = time.perf_counter() - start_time
+    db_query_duration.labels(
+        query_type="get", 
+        operation="fetch_matching_product_name", 
+        table="product_rankings"
+    ).observe(duration)
 
     return FetchMatchingProductNameResult(
         product_list=products,
@@ -98,6 +107,7 @@ async def fetch_product_sentiment_scores(
         AND time_window = :time_window
     """)
 
+    start_time = time.perf_counter()
     result = await session.execute(
         query,
         {
@@ -109,6 +119,13 @@ async def fetch_product_sentiment_scores(
     if not row:
         return None
 
+    duration = time.perf_counter() - start_time
+    db_query_duration.labels(
+        query_type="get", 
+        operation="fetch_product_sentiment_scores", 
+        table="product_rankings"
+    ).observe(duration)
+    
     return FetchProductSentimentScores(
         positive_sentiment_count=row.positive_count,
         neutral_sentiment_count=row.neutral_count,
@@ -146,11 +163,19 @@ async def fetch_top_reddit_comments(
         base_query += " AND created_utc >= NOW() - INTERVAL '90 days'"
 
     base_query += " ORDER BY score DESC LIMIT 5;"
-
+    
+    start_time = time.perf_counter()
     result = await session.execute(text(base_query), {"product_name": product_name.strip()})
     rows = result.fetchall()
     if not rows:
         return None
+    
+    duration = time.perf_counter() - start_time
+    db_query_duration.labels(
+        query_type="get", 
+        operation="fetch_top_reddit_comments", 
+        table="raw_comments"
+    ).observe(duration)
 
     return [
         FetchTopRedditCommentsResult(

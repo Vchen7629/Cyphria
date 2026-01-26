@@ -3,8 +3,10 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db_utils.retry import retry_with_backoff
 from src.core.logger import StructuredLogger
+from src.middleware.metrics import db_query_duration
 from src.schemas.product import TopMentionedProduct
 from src.schemas.product import CategoryTopMentionedProduct
+import time
 
 logger = StructuredLogger(pod="insights_api")
 
@@ -31,12 +33,20 @@ async def fetch_top_mentioned_products(
         LIMIT 6
     """)
 
+    start_time = time.perf_counter()
     result = await session.execute(query, {"topic_list": category_topics})
     rows = result.fetchall()
 
     if not rows:
         logger.debug(event_type="insights_api run", message="top mention products not fetched")
         return None
+
+    duration = time.perf_counter() - start_time
+    db_query_duration.labels(
+        query_type="get", 
+        operation="fetch_category_top_mentioned_products", 
+        table="product_rankings"
+    ).observe(duration)
 
     return [
         CategoryTopMentionedProduct(
@@ -69,13 +79,20 @@ async def fetch_topic_top_mentioned_products(
         ORDER BY mention_count DESC
         LIMIT 3
     """)
-
+    
+    start_time = time.perf_counter()
     result = await session.execute(query, {"product_topic": product_topic})
     rows = result.fetchall()
 
     if not rows:
         logger.debug(event_type="insights_api run", message="top mention products not fetched")
         return None
+    duration = time.perf_counter() - start_time
+    db_query_duration.labels(
+        query_type="get", 
+        operation="fetch_category_topic_mentioned_products", 
+        table="product_rankings"
+    ).observe(duration)
 
     return [
         TopMentionedProduct(product_name=row.product_name, grade=row.grade)
@@ -100,6 +117,13 @@ async def fetch_total_products_count(session: AsyncSession, topic_list: list[str
         WHERE LOWER(product_topic) = ANY(:topic_list)
     """)
 
+    start_time = time.perf_counter()
     result = await session.execute(query, {"topic_list": topic_list})
+    duration = time.perf_counter() - start_time
+    db_query_duration.labels(
+        query_type="get", 
+        operation="fetch_category_total_products_count", 
+        table="product_rankings"
+    ).observe(duration)
 
     return result.scalar() or 0

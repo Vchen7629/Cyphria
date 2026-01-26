@@ -4,11 +4,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.logger import StructuredLogger
 from src.db_utils.retry import retry_with_backoff
 from src.schemas.queries import FetchProductsResult
+from src.middleware.metrics import db_query_duration
+import time
 
 logger = StructuredLogger(pod="insights_api")
 
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
-async def fetch_topic_total_products_ranked(session: AsyncSession, product_topic: str) -> int:
+async def fetch_total_products_ranked(session: AsyncSession, product_topic: str) -> int:
     """
     Fetch number of products ranked for a specific topic
 
@@ -25,7 +27,14 @@ async def fetch_topic_total_products_ranked(session: AsyncSession, product_topic
         WHERE LOWER(product_topic) = LOWER(:product_topic)
     """)
 
+    start_time = time.perf_counter()
     result = await session.execute(query, {"product_topic": product_topic.strip()})
+    duration = time.perf_counter() - start_time
+    db_query_duration.labels(
+        query_type="get", 
+        operation="fetch_topic_total_products_ranked", 
+        table="product_rankings"
+    ).observe(duration)
 
     return result.scalar() or 0
     
@@ -69,7 +78,14 @@ async def fetch_total_comments(session: AsyncSession, product_topic: str, time_w
         """)
         params = {"product_topic": normalized_product_topic, "time_window": normalized_time_window}
 
+    start_time = time.perf_counter()
     result = await session.execute(query, params)
+    duration = time.perf_counter() - start_time
+    db_query_duration.labels(
+        query_type="get", 
+        operation="fetch_topic_total_comments", 
+        table="raw_comments"
+    ).observe(duration)
     
     return result.scalar() or 0
 
@@ -99,6 +115,7 @@ async def fetch_products(
         ORDER BY rank ASC;
     """)
 
+    start_time = time.perf_counter()
     result = await session.execute(
         query,
         {
@@ -109,6 +126,13 @@ async def fetch_products(
     rows = result.fetchall()
     if not rows:
         return None
+
+    duration = time.perf_counter() - start_time
+    db_query_duration.labels(
+        query_type="get", 
+        operation="fetch_topic_products", 
+        table="product_rankings"
+    ).observe(duration)
 
     return [
         FetchProductsResult(

@@ -21,7 +21,7 @@ from src.db_utils.cache_commands import set_cache_value
 from src.db_utils.cache_commands import increment_trending_topic
 from src.db_utils.topic_queries import fetch_products
 from src.db_utils.topic_queries import fetch_total_comments
-from src.db_utils.topic_queries import fetch_topic_total_products_ranked
+from src.db_utils.topic_queries import fetch_total_products_ranked
 settings = Settings()
 
 routes = APIRouter(prefix=f"/api/{settings.API_VERSION}")
@@ -37,7 +37,7 @@ async def get_topic_total_products_ranked(
     Returns:
         a count number of the total products ranked for the topic
     """
-    ranked_count: int = await fetch_topic_total_products_ranked(session, product_topic)
+    ranked_count: int = await fetch_total_products_ranked(session, product_topic)
     
     return GetTopicTotalProductsRankedResponse(total_ranked=ranked_count)
 

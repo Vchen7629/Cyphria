@@ -40,14 +40,12 @@ async def get_total_products_ranked(
     
     return ranked_count
 
-@routes.get(path="/topic/total_comments", response_model=GetTopicTotalCommentsResponse)
+@routes.get(path="/topic/total_comments")
 async def get_total_comments(
-    request: Request,
     product_topic: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product topic to fetch ranked products for"),
     time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter, all_time or 90d"),
     session: AsyncSession = Depends(get_session),
-    cache: Valkey | None = Depends(get_cache)
-) -> GetTopicTotalCommentsResponse:
+) -> int:
     """
     Fetches and returns the number of comments that contribute to the 
     product score for the time window and topic
@@ -55,24 +53,9 @@ async def get_total_comments(
     Returns:
         the count number of the total comments for that product
     """
-    logger = request.app.state.logger
-    # cache should live for 30 mins (1800 seconds) since processing happens every 1 hour + processing time
-    cache_expiry_s: int = 1800
-    cache_key: str = f"topic:{product_topic}:total_comments:time_window:{time_window}"
-
-    # check cache before expensive db op
-    if cache:
-        cached_response = await get_cache_value(cache, cache_key, logger, GetTopicTotalCommentsResponse)
-        if cached_response:
-            return cached_response
-
     comment_count: int = await fetch_total_comments(session, product_topic, time_window)
-    api_response = GetTopicTotalCommentsResponse(total_comment=comment_count)
 
-    if cache:
-        await set_cache_value(cache, cache_key, api_response, cache_expiry_s, logger)
-
-    return api_response
+    return comment_count
 
 @routes.get(path="/topic/products", response_model=GetRankedProductsResponse)
 async def get_ranked_products_list(

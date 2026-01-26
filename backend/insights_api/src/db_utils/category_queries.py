@@ -81,3 +81,25 @@ async def fetch_topic_top_mentioned_products(
         TopMentionedProduct(product_name=row.product_name, grade=row.grade)
         for row in rows
     ]
+
+@retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
+async def fetch_total_products_count(session: AsyncSession, topic_list: list[str]) -> int:
+    """
+    Fetch number of products for the category
+
+    Args:
+        session: temporary db session created for this query
+        topic_list: the list of product_topics that match products
+
+    Returns:
+        the number of products ranked for that category
+    """
+    query = text("""
+        SELECT COUNT(*)
+        FROM product_rankings,
+        WHERE LOWER(product_topic) = ANY(:topic_list)
+    """)
+
+    result = await session.execute(query, {"topic_list": topic_list})
+
+    return result.scalar() or 0

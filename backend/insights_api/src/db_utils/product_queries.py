@@ -182,7 +182,7 @@ async def fetch_top_reddit_comments(
             comment_body=row.comment_text,
             score=row.score,
             reddit_link=row.link,
-            created_utc=row.reated_utc
+            created_utc=row.created_utc
         )
         for row in rows
     ]

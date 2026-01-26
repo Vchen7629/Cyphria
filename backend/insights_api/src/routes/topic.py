@@ -9,7 +9,6 @@ from valkey.asyncio import Valkey
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from src.core.settings import Settings
 from src.core.logger import StructuredLogger
-from src.schemas.product import RankedProduct
 from src.schemas.queries import FetchProductsResult
 from src.schemas.response import GetRankedProductsResponse
 from src.middleware.get_client_ip import get_client_ip
@@ -93,23 +92,7 @@ async def get_ranked_products_list(
     if not ranked_products:
         raise HTTPException(status_code=404, detail=f"No products fetched for the topic: {product_topic}")
 
-    # Convert FetchProductsResult to RankedProduct
-    products = [RankedProduct(**product.model_dump()) for product in ranked_products]
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-    api_response = GetRankedProductsResponse(products=products)
-=======
-    # Convert FetchProductsResult to RankedProduct
-    products = [RankedProduct(**product.model_dump()) for product in ranked_products]
-    api_response = GetRankedProductsResponse(products=products)
->>>>>>> 37c9b1d3cfcdd89e229f675fb05cc0d6021c6714
-=======
-    # Convert FetchProductsResult to RankedProduct
-    products = [RankedProduct(**product.model_dump()) for product in ranked_products]
-    api_response = GetRankedProductsResponse(products=products)
->>>>>>> 37c9b1d3cfcdd89e229f675fb05cc0d6021c6714
-
+    api_response = GetRankedProductsResponse(products=ranked_products)
     # try to update the cache with the ranked products and page view count
     if cache:
         await set_cache_value(

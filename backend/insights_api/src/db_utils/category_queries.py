@@ -27,7 +27,7 @@ async def fetch_top_mentioned_products(
     """
     query = text("""
         SELECT product_name, grade, mention_count, product_topic 
-        FROM product_rankings,
+        FROM product_rankings
         WHERE UPPER(product_topic) = ANY(:topic_list)
         ORDER BY mention_count DESC
         LIMIT 6
@@ -43,8 +43,8 @@ async def fetch_top_mentioned_products(
 
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
-        query_type="get", 
-        operation="fetch_category_top_mentioned_products", 
+        query_type="get",
+        query_name="fetch_category_top_mentioned_products",
         table="product_rankings"
     ).observe(duration)
 
@@ -53,7 +53,7 @@ async def fetch_top_mentioned_products(
             product_name=row.product_name,
             grade=row.grade,
             mention_count=row.mention_count,
-            topic_name=row.topic_name
+            topic_name=row.product_topic
         )
         for row in rows
     ]
@@ -74,7 +74,7 @@ async def fetch_topic_top_mentioned_products(
     """
     query = text("""
         SELECT product_name, grade
-        FROM product_rankings,
+        FROM product_rankings
         WHERE UPPER(product_topic) = :product_topic
         ORDER BY mention_count DESC
         LIMIT 3
@@ -89,8 +89,8 @@ async def fetch_topic_top_mentioned_products(
         return None
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
-        query_type="get", 
-        operation="fetch_category_topic_mentioned_products", 
+        query_type="get",
+        query_name="fetch_category_topic_mentioned_products",
         table="product_rankings"
     ).observe(duration)
 
@@ -113,7 +113,7 @@ async def fetch_total_products_count(session: AsyncSession, topic_list: list[str
     """
     query = text("""
         SELECT COUNT(*)
-        FROM product_rankings,
+        FROM product_rankings
         WHERE LOWER(product_topic) = ANY(:topic_list)
     """)
 
@@ -121,8 +121,8 @@ async def fetch_total_products_count(session: AsyncSession, topic_list: list[str
     result = await session.execute(query, {"topic_list": topic_list})
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
-        query_type="get", 
-        operation="fetch_category_total_products_count", 
+        query_type="get",
+        query_name="fetch_category_total_products_count",
         table="product_rankings"
     ).observe(duration)
 

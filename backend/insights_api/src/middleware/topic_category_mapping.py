@@ -33,13 +33,13 @@ TOPIC_TO_CATEGORY: dict[str, str] = {
 }
 
 CATEGORY_TO_TOPICS: dict[str, list[str]] = {
-    "audio": ["DAC", "EARBUD", "HEADPHONE", "SOUNDBAR"],
-    "computing": ["CPU", "GPU", "LAPTOP", "Mechanical Keyboard", "Monitor"],
-    "gaming": ["CONTROLLER", "GAMING HEADSET", "GAMING MICE"],
-    "home": ["AIR PURIFIER", "HUMIDIFIER", "ROBOT VACUUM"],
-    "mobile": ["SMARTPHONE", "TABLET"],
-    "photography": ["CAMERA", "LENSE", "TABLET"],
-    "wearable": ["SMARTWATCH", "WATCH"]
+    "audio": ["dac", "earbud", "headphone", "soundbar"],
+    "computing": ["cpu", "gpu", "laptop", "mechanical keyboard", "monitor"],
+    "gaming": ["controller", "gaming headset", "gaming mice"],
+    "home": ["air purifier", "humidifier", "robot vacuum"],
+    "mobile": ["smartphone", "tablet"],
+    "photography": ["camera", "lense", "tripod"],
+    "wearable": ["smartwatch", "watch"]
 }
 
 def get_category_for_topic(product_topic: str) -> Optional[str]:

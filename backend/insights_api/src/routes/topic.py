@@ -9,9 +9,9 @@ from valkey.asyncio import Valkey
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from src.core.settings import Settings
 from src.core.logger import StructuredLogger
+from src.schemas.product import RankedProduct
 from src.schemas.queries import FetchProductsResult
 from src.schemas.response import GetRankedProductsResponse
-from src.schemas.response import GetTopicTotalCommentsResponse
 from src.middleware.get_client_ip import get_client_ip
 from src.db_utils.pg_conn import get_session
 from src.db_utils.cache_conn import get_cache
@@ -92,7 +92,10 @@ async def get_ranked_products_list(
     ranked_products: Optional[list[FetchProductsResult]] = await fetch_products(session, product_topic, time_window)
     if not ranked_products:
         raise HTTPException(status_code=404, detail=f"No products fetched for the topic: {product_topic}")
-    api_response = GetRankedProductsResponse(products=ranked_products)
+
+    # Convert FetchProductsResult to RankedProduct
+    products = [RankedProduct(**product.model_dump()) for product in ranked_products]
+    api_response = GetRankedProductsResponse(products=products)
 
     # try to update the cache with the ranked products and page view count
     if cache:

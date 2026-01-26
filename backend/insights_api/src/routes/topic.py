@@ -28,7 +28,7 @@ routes = APIRouter(prefix=f"/api/{settings.API_VERSION}")
 
 @routes.get(path="/topic/total_products_ranked", response_model=GetTopicTotalProductsRankedResponse)
 async def get_topic_total_products_ranked(
-    product_topic: str = Query(..., description="Product topic to fetch ranked products for"),
+    product_topic: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product topic to fetch ranked products for"),
     session: AsyncSession = Depends(get_session)
 ) -> GetTopicTotalProductsRankedResponse:
     """
@@ -44,7 +44,7 @@ async def get_topic_total_products_ranked(
 @routes.get(path="/topic/total_comments", response_model=GetTopicTotalCommentsResponse)
 async def get_topic_total_comments(
     request: Request,
-    product_topic: str = Query(..., description="Product topic to fetch ranked products for"),
+    product_topic: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product topic to fetch ranked products for"),
     time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter, all_time or 90d"),
     session: AsyncSession = Depends(get_session),
     cache: Valkey | None = Depends(get_cache)
@@ -78,7 +78,7 @@ async def get_topic_total_comments(
 @routes.get(path="/topic/products", response_model=GetRankedProductsResponse)
 async def get_ranked_products_for_category(
     request: Request,
-    product_topic: str = Query(..., description="Product topic to fetch ranked products for"),
+    product_topic: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product topic to fetch ranked products for"),
     time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter, either 90d or all_time"),
     session: AsyncSession = Depends(get_session),
     cache: Valkey | None = Depends(get_cache),

@@ -5,7 +5,10 @@ from typing import Callable
 from datetime import datetime
 from pydantic import BaseModel
 from valkey.asyncio import Valkey
+from valkey.typing import ResponseT
 from src.core.logger import StructuredLogger
+from src.middleware.metrics import cache_operation_duration
+import time
 
 T = TypeVar('T', bound=BaseModel)
 
@@ -27,15 +30,17 @@ async def get_cache_value(
     Returns:
         the pydantic type class with api response or None if not found/error
     """
+    start_time = time.perf_counter()
+    cached_data: Optional[ResponseT] = None
     try:
-        cached = await cache.get(cache_key)
-        if cached:
-            return response_model.model_validate(cached)
-            
+        cached_data = await cache.get(cache_key)
+        return response_model.model_validate(cached_data) if cached_data else None
     except Exception as e:
        logger.warning(event_type="insights_api run", message=f"Cache read failed, falling back to db: {e}")
-
-    return None
+       return None
+    finally:
+        duration = time.perf_counter() - start_time
+        cache_operation_duration.labels(operation='get', hit=str(cached_data is not None)).observe(duration)
 
 async def set_cache_value(
     cache: Valkey,
@@ -56,15 +61,17 @@ async def set_cache_value(
         logger: StructuredLogger instance
         on_cache_write: Optional async callback for additional cache ops
     """
+    start_time = time.perf_counter()
     try:
         await cache.setex(cache_key, ttl_seconds, value.model_dump_json())
-
         # Execute optional side effect like updating trending sorted set
         if on_cache_write:
             await on_cache_write(cache)
-
     except Exception as e:
         logger.warning(event_type="insights_api run", message=f"Cache write failed for key {cache_key}: {e}")
+    finally:
+        duration = time.perf_counter() - start_time
+        cache_operation_duration.labels(operation='set', hit='true').observe(duration)
     
 def get_weekly_trending_key() -> str:
     """

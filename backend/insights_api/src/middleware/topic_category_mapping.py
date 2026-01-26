@@ -1,0 +1,67 @@
+
+from typing import Optional
+TOPIC_TO_CATEGORY: dict[str, str] = {
+    # Audio
+    "DAC": "Audio",
+    "EARBUD": "Audio",
+    "HEADPHONE": "Audio",
+    "SOUNDBAR": "Audio",
+    # Computing
+    "CPU": "Computing",
+    "GPU": "Computing",
+    "LAPTOP": "Computing",
+    "MECHANICAL KEYBOARD": "Computing",
+    "MONITOR": "Computing",
+    # Gaming
+    "CONTROLLER": "Gaming",
+    "GAMING HEADSET": "Gaming",
+    "GAMING MICE": "Gaming",
+    # Home
+    "AIR PURIFIER": "Home",
+    "HUMIDIFIER": "Home",
+    "ROBOT VACUUM": "Home",
+    # Mobile
+    "SMARTPHONE": "Mobile",
+    "TABLET": "Mobile",
+    # Photography
+    "CAMERA": "Photography",
+    "LENSE": "Photography",
+    "TRIPOD": "Photography",
+    # Wearables
+    "SMARTWATCH": "Wearable",
+    "WATCH": "Wearable"
+}
+
+CATEGORY_TO_TOPICS: dict[str, list[str]] = {
+    "audio": ["DAC", "EARBUD", "HEADPHONE", "SOUNDBAR"],
+    "computing": ["CPU", "GPU", "LAPTOP", "Mechanical Keyboard", "Monitor"],
+    "gaming": ["CONTROLLER", "GAMING HEADSET", "GAMING MICE"],
+    "home": ["AIR PURIFIER", "HUMIDIFIER", "ROBOT VACUUM"],
+    "mobile": ["SMARTPHONE", "TABLET"],
+    "photography": ["CAMERA", "LENSE", "TABLET"],
+    "wearable": ["SMARTWATCH", "WATCH"]
+}
+
+def get_category_for_topic(product_topic: str) -> Optional[str]:
+    """
+    Get the category name for a give product_topic
+
+    Args:
+        product_topic: the topic name, like "GPU", "Laptop"
+
+    Returns:
+        Category name or None if product_topic not found
+    """
+    return TOPIC_TO_CATEGORY.get(product_topic.strip().upper())
+
+def get_topics_for_category(category: str) -> list[str]:
+    """
+    Get all product_topics belonging to a category
+
+    Args:
+        category: the category name like "Computing"
+
+    Returns:
+        list of product_topic names, like ["GPU", "Laptop"] or empty list if not found
+    """
+    return CATEGORY_TO_TOPICS.get(category.strip().lower(), [])

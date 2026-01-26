@@ -75,7 +75,7 @@ async def fetch_matching_product_name(
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
         query_type="get", 
-        operation="fetch_matching_product_name", 
+        query_name="fetch_matching_product_name", 
         table="product_rankings"
     ).observe(duration)
 
@@ -121,8 +121,8 @@ async def fetch_product_sentiment_scores(
 
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
-        query_type="get", 
-        operation="fetch_product_sentiment_scores", 
+        query_type="get",
+        query_name="fetch_product_sentiment_scores",
         table="product_rankings"
     ).observe(duration)
     
@@ -173,7 +173,7 @@ async def fetch_top_reddit_comments(
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
         query_type="get", 
-        operation="fetch_top_reddit_comments", 
+        query_name="fetch_top_reddit_comments", 
         table="raw_comments"
     ).observe(duration)
 

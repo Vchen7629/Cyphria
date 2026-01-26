@@ -29,7 +29,7 @@ routes = APIRouter(prefix=f"/api/{settings.API_VERSION}")
 
 @routes.get(path="/product/sentiment_scores")
 async def get_sentiment_scores(
-    product_name: str = Query(..., description="Product name to fetch sentiment scores for"),
+    product_name: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product name to fetch sentiment scores for"),
     time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter, either 90d or all_time"),
     session: AsyncSession = Depends(get_session)
 ) -> GetViewMoreProductsMetadataResponse:
@@ -43,19 +43,20 @@ async def get_sentiment_scores(
     Raises:
         a 404 HTTPException if sentiment counts are not found for the product and time window
     """
-    product_metadata: Optional[FetchProductSentimentScores] = await fetch_product_sentiment_scores(session, product_name, time_window)
-    if not product_metadata:
+
+    product_sentiment_scores: Optional[FetchProductSentimentScores] = await fetch_product_sentiment_scores(session, product_name, time_window)
+    if not product_sentiment_scores:
         raise HTTPException(
             status_code=404, 
             detail=f"Sentiment counts not found for product: {product_name} time_window: {time_window}"
         )
 
-    return GetViewMoreProductsMetadataResponse(product=product_metadata)
+    return GetViewMoreProductsMetadataResponse(product=product_sentiment_scores)
 
 @routes.get(path="/product/top_comments", response_model=GetTopCommentsProductResponse)
 async def get_top_comments(
     request: Request,
-    product_name: str = Query(..., description="Product name to fetch top comments for"),
+    product_name: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product name to fetch top comments for"),
     time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter (e.g. 90d, 30d)"),
     session: AsyncSession = Depends(get_session),
     cache: Valkey | None = Depends(get_cache)
@@ -99,8 +100,8 @@ async def get_top_comments(
 @routes.get(path="/product/search", response_model=SearchProductResponse)
 async def get_product_by_name(
     request: Request,
-    query: str = Query(..., alias="q", min_length=1, description="the product name we are trying to find"),
-    current_page: int = Query(..., min_length=1, description="current api pagination page we are fetching results for"), 
+    query: str = Query(..., alias="q", min_length=1, pattern=r"^\S.*$", description="the product name we are trying to find"),
+    current_page: int = Query(..., ge=1, description="current api pagination page we are fetching results for"), 
     session: AsyncSession = Depends(get_session),
     cache: Valkey | None = Depends(get_cache),
 ) -> SearchProductResponse:

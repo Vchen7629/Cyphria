@@ -30,7 +30,7 @@ async def get_top_mentioned_products(
     request: Request,
     cache: Valkey | None = Depends(get_cache),
     session: AsyncSession = Depends(get_session),
-    category: str = Query(..., min_length=1, description="Product category to fetch top products for"),
+    category: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product category to fetch top products for"),
 ) -> GetCategoryTopMentionProductsResponse:
     """
     Fetches top 6 products with most mention count across all topics in the category
@@ -69,7 +69,7 @@ async def get_top_mentioned_products(
 @routes.get(path="/category/total_products_count")
 async def get_total_products_count(
     session: AsyncSession = Depends(get_session),
-    category: str = Query(..., min_length=1, description="Product category to fetch total product numbers for")
+    category: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product category to fetch total product numbers for")
 ) -> int:
     """
     Fetches the amount of products for the category
@@ -88,7 +88,7 @@ async def get_total_products_count(
 @routes.get(path="/category/topic_most_mentioned_product")
 async def get_top_mentioned_product_for_topic(
     session: AsyncSession = Depends(get_session),
-    product_topic: str = Query(..., min_length=1, description="Product topic to fetch top products for"),
+    product_topic: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product topic to fetch top products for"),
 ) -> GetTopicTopMentionProductResponse:
     """
     Fetches top 3 products with most mention count for specific topic when on the category page

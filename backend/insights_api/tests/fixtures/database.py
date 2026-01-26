@@ -1,5 +1,8 @@
+from typing import Any
 from typing import Generator
 from sqlalchemy import text
+from datetime import datetime
+from datetime import timezone
 from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import async_sessionmaker
@@ -85,20 +88,27 @@ async def setup_test_database(test_engine: AsyncEngine) -> AsyncGenerator[None, 
         await conn.execute(text("""
             CREATE TABLE IF NOT EXISTS product_rankings (
                 id SERIAL PRIMARY KEY,
-                product_name VARCHAR(100) NOT NULL,
+                product_name VARCHAR(50) NOT NULL,
                 product_topic VARCHAR(100) NOT NULL,
                 time_window VARCHAR(20) NOT NULL,
-                rank INT NOT NULL,
-                grade VARCHAR(2) NOT NULL,
-                bayesian_score FLOAT NOT NULL,
-                mention_count INT NOT NULL,
-                approval_percentage INT NOT NULL,
-                positive_count INT NOT NULL,
-                neutral_count INT NOT NULL,
-                negative_count INT NOT NULL,
+
+                rank INTEGER NOT NULL,
+                grade VARCHAR(5),
+
+                bayesian_score DOUBLE PRECISION NOT NULL,
+                avg_sentiment DOUBLE PRECISION NOT NULL,
+                approval_percentage INT,
+
+                mention_count INTEGER NOT NULL,
+                positive_count INTEGER,
+                negative_count INTEGER,
+                neutral_count INTEGER,
+
                 is_top_pick BOOLEAN DEFAULT FALSE,
                 is_most_discussed BOOLEAN DEFAULT FALSE,
                 has_limited_data BOOLEAN DEFAULT FALSE,
+
+                calculation_date DATE NOT NULL,
                 UNIQUE (product_name, time_window)
             )
         """))
@@ -120,47 +130,40 @@ async def clean_tables(
         await session.commit()
     yield
 
-@pytest_asyncio.fixture
-async def seed_product_rankings(
-    test_async_session: async_sessionmaker[AsyncSession],
-    clean_tables: None,
-    setup_test_database: None
-) -> AsyncGenerator[None, None]:
-    """Seed product_rankings table with test data."""
-    async with test_async_session() as session:
-        await session.execute(text("""
-            INSERT INTO product_rankings
-                (product_name, product_topic, time_window, rank, grade, bayesian_score,
-                 mention_count, approval_percentage, positive_count, neutral_count,
-                 negative_count, is_top_pick, is_most_discussed, has_limited_data)
-            VALUES
-                ('nvidia rtx 4090', 'GPU', '90d', 1, 'A', 9.5, 500, 95, 100, 10, 5, true, true, false),
-                ('nvidia rtx 4080', 'GPU', '90d', 2, 'A', 8.8, 300, 88, 80, 15, 10, false, false, false),
-                ('amd rx 7900 xtx', 'GPU', '90d', 3, 'B', 7.5, 200, 75, 60, 20, 15, false, false, false),
-                ('nvidia rtx 4090', 'GPU', 'all_time', 1, 'A', 9.2, 1000, 92, 200, 20, 10, true, true, false)
-        """))
-        await session.commit()
-    yield
+@pytest.fixture
+def single_product_ranking_row() -> dict[str, Any]:
+    """Single row in the product ranking table"""
+    return {
+        "product_name": "nvidia rtx 4080",
+        "product_topic": "GPU",
+        "time_window": "all_time",
+        "rank": 1,
+        "grade": "S",
+        "bayesian_score": 0.96,
+        "avg_sentiment": 0.96,
+        "approval_percentage": 100,
+        "mention_count": 100,
+        "positive_count": 100,
+        "negative_count": 0,
+        "neutral_count": 0,
+        "is_top_pick": True,
+        "is_most_discussed": False,
+        "has_limited_data": False,
+        "calculation_date": datetime.now(timezone.utc)
+    }
 
-
-@pytest_asyncio.fixture
-async def seed_raw_comments(
-    test_async_session: async_sessionmaker[AsyncSession],
-    clean_tables: None,
-    setup_test_database: None
-) -> AsyncGenerator[None, None]:
-    """Seed raw_comments table with test data."""
-    async with test_async_session() as session:
-        await session.execute(text("""
-            INSERT INTO raw_comments
-                (comment_id, post_id, comment_body, detected_products, subreddit,
-                 author, score, created_utc, product_topic, sentiment_processed)
-            VALUES
-                ('comment_1', 'post_1', 'The RTX 4090 is amazing for gaming!', ARRAY['nvidia rtx 4090'], 'nvidia', 'user1', 150, NOW() - INTERVAL '30 days', 'GPU', true),
-                ('comment_2', 'post_1', 'Great performance on the 4090', ARRAY['nvidia rtx 4090'], 'nvidia', 'user2', 100, NOW() - INTERVAL '60 days', 'GPU', true),
-                ('comment_3', 'post_2', 'The 4090 runs hot but worth it', ARRAY['nvidia rtx 4090'], 'buildapc', 'user3', 75, NOW() - INTERVAL '10 days', 'GPU', true),
-                ('comment_4', 'post_3', 'Old comment about 4090', ARRAY['nvidia rtx 4090'], 'nvidia', 'user4', 200, NOW() - INTERVAL '120 days', 'GPU', true),
-                ('comment_5', 'post_4', 'Unprocessed comment', ARRAY['nvidia rtx 4090'], 'nvidia', 'user5', 50, NOW() - INTERVAL '5 days', 'GPU', false)
-        """))
-        await session.commit()
-    yield
+@pytest.fixture
+def single_raw_comment() -> dict[str, Any]:
+    """Single row in the raw_comments table"""
+    return {
+        "comment_id": "comment_1",
+        "post_id": "post_1",
+        "comment_body": "The RTX 4090 is amazing for gaming!",
+        "detected_products": ['nvidia rtx 4090'],
+        'subreddit': 'nvidia',
+        'author': 'user1',
+        'score': 150,
+        'created_utc': datetime.now(timezone.utc),
+        'product_topic': 'GPU',
+        'sentiment_processed': True
+    }

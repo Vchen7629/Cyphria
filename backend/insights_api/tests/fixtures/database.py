@@ -1,42 +1,13 @@
-from sqlalchemy.ext.asyncio.engine import AsyncEngine
-from src.core.logger import StructuredLogger
-from src.db_utils.conn import get_session
-from src.routes.category import routes as category_router
-from src.routes.products import routes as product_router
-from testcontainers.postgres import PostgresContainer
-from typing import Any
-from typing import AsyncGenerator
 from typing import Generator
-from typing import NamedTuple
-from fastapi import FastAPI
-from httpx import AsyncClient
-from httpx import ASGITransport
-from contextlib import asynccontextmanager
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.ext.asyncio import async_sessionmaker
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
-import os
+from typing import AsyncGenerator
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio.engine import AsyncEngine
+from testcontainers.postgres import PostgresContainer
 import pytest
 import pytest_asyncio
-
-os.environ.setdefault("DB_HOST", "localhost")
-os.environ.setdefault("DB_PORT", "5432")
-os.environ.setdefault("DB_NAME", "test_db")
-os.environ.setdefault("DB_USER", "test_user")
-os.environ.setdefault("DB_PASS", "test_pass")
-
-
-class FastAPITestClient(NamedTuple):
-    client: AsyncClient
-    app: FastAPI
-
-
-@asynccontextmanager
-async def null_lifespan(_app: FastAPI) -> AsyncGenerator[Any, Any]:
-    """No-op lifespan for testing - state is set by fixtures"""
-    yield
-
 
 @pytest.fixture(scope="session")
 def postgres_container() -> Generator[PostgresContainer, None, None]:
@@ -79,7 +50,7 @@ async def test_async_session(test_engine: AsyncEngine) -> async_sessionmaker[Asy
     )
 
 
-@pytest_asyncio.fixture(scope="session", autouse=True)
+@pytest_asyncio.fixture(scope="session")
 async def setup_test_database(test_engine: AsyncEngine) -> AsyncGenerator[None, None]:
     """Set up the database schema once per test session."""
     async with test_engine.begin() as conn:
@@ -139,18 +110,21 @@ async def setup_test_database(test_engine: AsyncEngine) -> AsyncGenerator[None, 
 
 
 @pytest_asyncio.fixture
-async def clean_tables(test_async_session: async_sessionmaker[AsyncSession]) -> AsyncGenerator[None, None]:
+async def clean_tables(
+    test_async_session: async_sessionmaker[AsyncSession],
+    setup_test_database: None
+) -> AsyncGenerator[None, None]:
     """Clean up tables before each test to ensure isolation."""
     async with test_async_session() as session:
         await session.execute(text("TRUNCATE TABLE product_rankings, product_sentiment, raw_comments RESTART IDENTITY CASCADE;"))
         await session.commit()
     yield
 
-
 @pytest_asyncio.fixture
 async def seed_product_rankings(
     test_async_session: async_sessionmaker[AsyncSession],
-    clean_tables: None
+    clean_tables: None,
+    setup_test_database: None
 ) -> AsyncGenerator[None, None]:
     """Seed product_rankings table with test data."""
     async with test_async_session() as session:
@@ -172,7 +146,8 @@ async def seed_product_rankings(
 @pytest_asyncio.fixture
 async def seed_raw_comments(
     test_async_session: async_sessionmaker[AsyncSession],
-    clean_tables: None
+    clean_tables: None,
+    setup_test_database: None
 ) -> AsyncGenerator[None, None]:
     """Seed raw_comments table with test data."""
     async with test_async_session() as session:
@@ -189,31 +164,3 @@ async def seed_raw_comments(
         """))
         await session.commit()
     yield
-
-
-@pytest_asyncio.fixture
-async def fastapi_client(
-    test_async_session: async_sessionmaker[AsyncSession],
-    clean_tables: None
-) -> AsyncGenerator[FastAPITestClient, None]:
-    """FastAPI AsyncClient with test database session."""
-    test_app = FastAPI(lifespan=null_lifespan)
-    test_app.include_router(category_router)
-    test_app.include_router(product_router)
-
-    test_app.state.async_session = test_async_session
-    test_app.state.logger = StructuredLogger(pod="insights_api_test")
-
-    async def override_get_session() -> AsyncGenerator[AsyncSession, None]:
-        async with test_async_session() as session:
-            try:
-                yield session
-                await session.commit()
-            except Exception:
-                await session.rollback()
-                raise
-
-    test_app.dependency_overrides[get_session] = override_get_session
-
-    async with AsyncClient(transport=ASGITransport(app=test_app), base_url="http://test") as client:
-        yield FastAPITestClient(client=client, app=test_app)

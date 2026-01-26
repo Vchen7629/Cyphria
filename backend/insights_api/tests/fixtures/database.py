@@ -65,7 +65,7 @@ async def setup_test_database(test_engine: AsyncEngine) -> AsyncGenerator[None, 
                 author VARCHAR(100),
                 score INT DEFAULT 0,
                 created_utc TIMESTAMPTZ NOT NULL,
-                category VARCHAR(50) NOT NULL,
+                product_topic VARCHAR(50) NOT NULL,
                 ingested_at TIMESTAMPTZ DEFAULT NOW(),
                 sentiment_processed BOOLEAN DEFAULT FALSE,
                 CONSTRAINT chk_detected_products CHECK (array_length(detected_products, 1) > 0)
@@ -76,7 +76,7 @@ async def setup_test_database(test_engine: AsyncEngine) -> AsyncGenerator[None, 
                 id SERIAL PRIMARY KEY,
                 comment_id VARCHAR(50) NOT NULL,
                 product_name VARCHAR(100) NOT NULL,
-                category VARCHAR(100) NOT NULL,
+                product_topic VARCHAR(100) NOT NULL,
                 sentiment_score FLOAT NOT NULL,
                 created_utc TIMESTAMPTZ NOT NULL,
                 UNIQUE (comment_id, product_name)
@@ -86,7 +86,7 @@ async def setup_test_database(test_engine: AsyncEngine) -> AsyncGenerator[None, 
             CREATE TABLE IF NOT EXISTS product_rankings (
                 id SERIAL PRIMARY KEY,
                 product_name VARCHAR(100) NOT NULL,
-                category VARCHAR(100) NOT NULL,
+                product_topic VARCHAR(100) NOT NULL,
                 time_window VARCHAR(20) NOT NULL,
                 rank INT NOT NULL,
                 grade VARCHAR(2) NOT NULL,
@@ -130,7 +130,7 @@ async def seed_product_rankings(
     async with test_async_session() as session:
         await session.execute(text("""
             INSERT INTO product_rankings
-                (product_name, category, time_window, rank, grade, bayesian_score,
+                (product_name, product_topic, time_window, rank, grade, bayesian_score,
                  mention_count, approval_percentage, positive_count, neutral_count,
                  negative_count, is_top_pick, is_most_discussed, has_limited_data)
             VALUES
@@ -154,7 +154,7 @@ async def seed_raw_comments(
         await session.execute(text("""
             INSERT INTO raw_comments
                 (comment_id, post_id, comment_body, detected_products, subreddit,
-                 author, score, created_utc, category, sentiment_processed)
+                 author, score, created_utc, product_topic, sentiment_processed)
             VALUES
                 ('comment_1', 'post_1', 'The RTX 4090 is amazing for gaming!', ARRAY['nvidia rtx 4090'], 'nvidia', 'user1', 150, NOW() - INTERVAL '30 days', 'GPU', true),
                 ('comment_2', 'post_1', 'Great performance on the 4090', ARRAY['nvidia rtx 4090'], 'nvidia', 'user2', 100, NOW() - INTERVAL '60 days', 'GPU', true),

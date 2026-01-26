@@ -32,7 +32,7 @@ async def fetch_total_products_ranked(session: AsyncSession, product_topic: str)
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
         query_type="get", 
-        operation="fetch_topic_total_products_ranked", 
+        query_name="fetch_topic_total_products_ranked", 
         table="product_rankings"
     ).observe(duration)
 
@@ -83,7 +83,7 @@ async def fetch_total_comments(session: AsyncSession, product_topic: str, time_w
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
         query_type="get", 
-        operation="fetch_topic_total_comments", 
+        query_name="fetch_topic_total_comments", 
         table="raw_comments"
     ).observe(duration)
     
@@ -130,7 +130,7 @@ async def fetch_products(
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
         query_type="get", 
-        operation="fetch_topic_products", 
+        query_name="fetch_topic_products", 
         table="product_rankings"
     ).observe(duration)
 

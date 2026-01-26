@@ -5,6 +5,7 @@ from src.core.logger import StructuredLogger
 from src.db_utils.retry import retry_with_backoff
 from src.schemas.queries import FetchProductsResult
 from src.middleware.metrics import db_query_duration
+from datetime import datetime, timezone, timedelta
 import time
 
 logger = StructuredLogger(pod="insights_api")
@@ -63,20 +64,23 @@ async def fetch_total_comments(session: AsyncSession, product_topic: str, time_w
     if normalized_time_window == "all_time":
         query = text("""
             SELECT COUNT(*)
-            FROM raw_comments 
-            WHERE LOWER(product_topic) = %(product_topic)s
+            FROM raw_comments
+            WHERE LOWER(product_topic) = :product_topic
             AND sentiment_processed = TRUE;
         """)
         params = {"product_topic": normalized_product_topic}
     else:
+        days = int(normalized_time_window.replace("d", ""))
+        cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
+
         query = text("""
             SELECT COUNT(*)
-            FROM raw_comments 
-            WHERE LOWER(product_topic) = %(product_topic)s
+            FROM raw_comments
+            WHERE LOWER(product_topic) = :product_topic
             AND sentiment_processed = TRUE
-            AND created_utc >= NOW() - %(time_window)s::INTERVAL;
+            AND created_utc >= :cutoff_date;
         """)
-        params = {"product_topic": normalized_product_topic, "time_window": normalized_time_window}
+        params = {"product_topic": normalized_product_topic, "cutoff_date": cutoff_date}
 
     start_time = time.perf_counter()
     result = await session.execute(query, params)

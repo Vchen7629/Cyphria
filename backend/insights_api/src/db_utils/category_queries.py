@@ -1,0 +1,83 @@
+from typing import Optional
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+from src.db_utils.retry import retry_with_backoff
+from src.core.logger import StructuredLogger
+from src.schemas.product import TopMentionedProduct
+from src.schemas.product import CategoryTopMentionedProduct
+
+logger = StructuredLogger(pod="insights_api")
+
+@retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
+async def fetch_top_mentioned_products(
+    session: AsyncSession, category_topics: list[str]
+) -> Optional[list[CategoryTopMentionedProduct]]:
+    """
+    Fetch top 6 most mentioned products across all topics for a category from the database
+
+    Args:
+        session: temporary db session created for this query
+        category_topics: the list of product_topics belonging to the category like ["GPU", "Laptop"]
+
+    Returns:
+        list of top mentioned product containing name, mention count, letter grade, and topic its from
+        or none if no rows match
+    """
+    query = text("""
+        SELECT product_name, grade, mention_count, product_topic 
+        FROM product_rankings,
+        WHERE UPPER(product_topic) = ANY(:topic_list)
+        ORDER BY mention_count DESC
+        LIMIT 6
+    """)
+
+    result = await session.execute(query, {"topic_list": category_topics})
+    rows = result.fetchall()
+
+    if not rows:
+        logger.debug(event_type="insights_api run", message="top mention products not fetched")
+        return None
+
+    return [
+        CategoryTopMentionedProduct(
+            product_name=row.product_name,
+            grade=row.grade,
+            mention_count=row.mention_count,
+            topic_name=row.topic_name
+        )
+        for row in rows
+    ]
+
+@retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
+async def fetch_topic_top_mentioned_products(
+    session: AsyncSession, product_topic: list[str]
+) -> Optional[list[TopMentionedProduct]]:
+    """
+    Fetch top 3 most mentioned products across specific topics for a category from the database
+
+    Args:
+        session: temporary db session created for this query
+        product_topic: the product_topic  like "GPU", "Laptop"
+
+    Returns:
+        list of top mentioned 3 product containing name, and letter grade or none if no rows match
+    """
+    query = text("""
+        SELECT product_name, grade
+        FROM product_rankings,
+        WHERE UPPER(product_topic) = :product_topic
+        ORDER BY mention_count DESC
+        LIMIT 3
+    """)
+
+    result = await session.execute(query, {"product_topic": product_topic})
+    rows = result.fetchall()
+
+    if not rows:
+        logger.debug(event_type="insights_api run", message="top mention products not fetched")
+        return None
+
+    return [
+        TopMentionedProduct(product_name=row.product_name, grade=row.grade)
+        for row in rows
+    ]

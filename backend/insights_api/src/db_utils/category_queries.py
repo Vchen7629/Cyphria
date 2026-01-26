@@ -114,7 +114,7 @@ async def fetch_total_products_count(session: AsyncSession, topic_list: list[str
     query = text("""
         SELECT COUNT(*)
         FROM product_rankings
-        WHERE LOWER(product_topic) = ANY(:topic_list)
+        WHERE UPPER(product_topic) = ANY(:topic_list)
     """)
 
     start_time = time.perf_counter()

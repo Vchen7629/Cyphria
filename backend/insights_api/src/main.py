@@ -1,10 +1,11 @@
+from fastapi import FastAPI
 from src.core.settings import Settings
 from src.core.lifespan import lifespan
+from src.middleware.metrics import instrumentator
 from src.routes.home import routes as home_router
 from src.routes.topic import routes as topic_router
 from src.routes.products import routes as product_router
 from src.routes.category import routes as category_router
-from fastapi import FastAPI
 import uvicorn
 
 app = FastAPI(
@@ -13,6 +14,8 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan
 )
+
+instrumentator.instrument(app).expose(app, endpoint='/metrics')
 
 app.include_router(category_router)
 app.include_router(home_router)

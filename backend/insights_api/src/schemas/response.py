@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 from src.schemas.product import SearchProduct
-from src.schemas.product import RankedProduct
 from src.schemas.product import ViewMoreProduct
 from src.schemas.product import TopMentionedProduct
 from src.schemas.product import CategoryTopMentionedProduct
+from src.schemas.queries import FetchProductsResult
 from src.schemas.comment import top_comment
 
 class GetCategoryTopMentionProductsResponse(BaseModel):
@@ -20,7 +20,7 @@ class GetTopicTotalCommentsResponse(BaseModel):
 
 class GetRankedProductsResponse(BaseModel):
     """Api response for /api/v1/category/products endpoint"""
-    products: list[RankedProduct] | None
+    products: list[FetchProductsResult] | None
 
 class GetViewMoreProductsMetadataResponse(BaseModel):
     """Api response for /api/v1/products/{name}/details endpoint"""

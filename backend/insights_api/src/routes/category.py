@@ -12,13 +12,14 @@ from src.db_utils.pg_conn import get_session
 from src.db_utils.cache_conn import get_cache
 from src.db_utils.cache_commands import get_cache_value
 from src.db_utils.cache_commands import set_cache_value
+from src.db_utils.category_queries import fetch_total_products_count
 from src.db_utils.category_queries import fetch_top_mentioned_products
 from src.db_utils.category_queries import fetch_topic_top_mentioned_products
 from src.schemas.product import TopMentionedProduct
 from src.schemas.product import CategoryTopMentionedProduct
 from src.schemas.response import GetTopicTopMentionProductResponse
 from src.schemas.response import GetCategoryTopMentionProductsResponse
-from src.utils.topic_category_mapping import get_topics_for_category
+from src.middleware.topic_category_mapping import get_topics_for_category
 
 settings = Settings()
 
@@ -46,7 +47,7 @@ async def get_top_mentioned_products_for_category(
     cache_expiry_s: int = 1800
     cache_key: str = f"category:{category}:top_products"
 
-    category_topics: list[str] = get_topics_for_category(category) # Todo: investigate whether this blocking code will be an issue
+    category_topics: list[str] = get_topics_for_category(category)
     if not category_topics:
         raise HTTPException(status_code=404, detail=f"topics not found for category: {category}")
     # check cache for the top products for category first before calling db
@@ -65,6 +66,25 @@ async def get_top_mentioned_products_for_category(
     
     return api_response
 
+@routes.get(path="/category/total_products_count")
+async def get_total_products_count(
+    session: AsyncSession = Depends(get_session),
+    category: str = Query(..., min_length=1, description="Product category to fetch total product numbers for")
+) -> int:
+    """
+    Fetches the amount of products for the category
+
+    Returns:
+        the amount of products for the category
+    """
+    category_topics: list[str] = get_topics_for_category(category)
+    if not category_topics:
+        raise HTTPException(status_code=404, detail=f"topics not found for category: {category}")
+
+    product_count: int = await fetch_total_products_count(session, category_topics)
+
+    return product_count
+    
 @routes.get(path="/category/topic_most_mentioned_product")
 async def get_top_mentioned_product_for_topic(
     session: AsyncSession = Depends(get_session),

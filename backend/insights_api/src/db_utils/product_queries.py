@@ -6,7 +6,7 @@ from src.db_utils.retry import retry_with_backoff
 from src.schemas.queries import FetchProductSentimentScores
 from src.schemas.queries import FetchTopRedditCommentsResult
 from src.schemas.queries import FetchMatchingProductNameResult
-from src.utils.topic_category_mapping import get_category_for_topic
+from src.middleware.topic_category_mapping import get_category_for_topic
 
 logger = StructuredLogger(pod="insights_api")
 

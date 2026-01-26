@@ -1,7 +1,9 @@
 from src.core.settings import Settings
 from src.core.lifespan import lifespan
-from src.routes.category import routes as category_router
+from src.routes.home import routes as home_router
+from src.routes.topic import routes as topic_router
 from src.routes.products import routes as product_router
+from src.routes.category import routes as category_router
 from fastapi import FastAPI
 import uvicorn
 
@@ -13,7 +15,9 @@ app = FastAPI(
 )
 
 app.include_router(category_router)
+app.include_router(home_router)
 app.include_router(product_router)
+app.include_router(topic_router)
 
 settings = Settings()
 

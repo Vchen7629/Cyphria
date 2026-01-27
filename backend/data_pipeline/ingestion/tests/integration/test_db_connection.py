@@ -3,6 +3,7 @@ from psycopg_pool import ConnectionPool
 import psycopg
 import pytest
 
+
 def test_connection_failure_handling() -> None:
     """Test handling of connection failures with invalid connection string."""
     invalid_conninfo = "host=invalid_host port=9999 dbname=invalid user=invalid password=invalid"

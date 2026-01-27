@@ -2,6 +2,7 @@ import csv
 import os
 from datetime import datetime
 
+
 def ExportCSV(
     comment_id: str,
     comment_body: str,
@@ -10,7 +11,7 @@ def ExportCSV(
     timestamp: datetime,
     author: str,
     score: int,
-    post_id: str
+    post_id: str,
 ) -> None:
     header = [
         "comment_id",
@@ -20,7 +21,7 @@ def ExportCSV(
         "timestamp",
         "author",
         "score",
-        "post_id"
+        "post_id",
     ]
 
     data = [
@@ -28,7 +29,7 @@ def ExportCSV(
         comment_body,
         subreddit,
         detected_products,
-        timestamp,  
+        timestamp,
         author,
         score,
         post_id,

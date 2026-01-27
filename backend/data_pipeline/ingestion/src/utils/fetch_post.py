@@ -6,6 +6,7 @@ from prawcore.exceptions import Forbidden  # type: ignore
 from src.core.logger import StructuredLogger
 import praw  # type: ignore
 
+
 def fetch_post_delayed(
     reddit_client: praw.Reddit, subreddit: str, logger: StructuredLogger, delay_hours: int = 24
 ) -> list[Submission] | None:

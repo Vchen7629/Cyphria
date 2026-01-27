@@ -1,5 +1,6 @@
 import re
 
+
 def remove_url(comment_text: str) -> str:
     """
     Helper function to remove url from comment body text using regex

@@ -4,7 +4,10 @@ from praw.models import Submission
 from prawcore.exceptions import PrawcoreException  # type: ignore
 from src.core.logger import StructuredLogger
 
-def fetch_comments(post: Submission, logger: StructuredLogger, limit: int | None = None) -> list[Comment]:
+
+def fetch_comments(
+    post: Submission, logger: StructuredLogger, limit: int | None = None
+) -> list[Comment]:
     """
     Fetch all comments from a reddit post
 
@@ -16,8 +19,8 @@ def fetch_comments(post: Submission, logger: StructuredLogger, limit: int | None
 
     Returns:
         List of Comment objects
-    
-    
+
+
     """
     try:
         post.comments.replace_more(limit=limit)
@@ -27,7 +30,6 @@ def fetch_comments(post: Submission, logger: StructuredLogger, limit: int | None
         return cast(list[Comment], post.comments.list())
     except PrawcoreException as e:
         logger.error(
-            event_type="RedditApi",
-            message=f"Error fetching comments for post {post.id}: {e}"
+            event_type="RedditApi", message=f"Error fetching comments for post {post.id}: {e}"
         )
         return []

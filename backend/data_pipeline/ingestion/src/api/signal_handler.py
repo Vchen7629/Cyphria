@@ -3,12 +3,16 @@ from typing import Any
 from src.ingestion_service import IngestionService
 import signal
 
+
 class RunState:
     """Mutable container"""
+
     current_service: IngestionService | None = None
     run_in_progress = False
 
+
 run_state = RunState()
+
 
 def signal_handler(signum: int, _frame: Any) -> None:
     """
@@ -20,6 +24,7 @@ def signal_handler(signum: int, _frame: Any) -> None:
         # Log via app state logger if available
         print(f"Received {signal_name}, requesting graceful cancellation...")
         run_state.current_service.cancel_requested = True
+
 
 # Register signal handlers for graceful shutdown
 signal.signal(signal.SIGTERM, signal_handler)

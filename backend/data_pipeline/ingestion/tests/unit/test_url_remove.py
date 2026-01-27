@@ -35,4 +35,3 @@ def test_http() -> None:
     result = remove_url(text)
 
     assert result == "Come to  to see new deals!"
-

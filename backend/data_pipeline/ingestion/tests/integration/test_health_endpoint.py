@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 from tests.utils.classes import FastAPITestClient
 
+
 def test_health_endpoint_health_when_dependencies_ok(fastapi_client: FastAPITestClient) -> None:
     """Health endpoint should return healthy when all dependencies ok"""
     response = fastapi_client.client.get("/health")
@@ -9,6 +10,7 @@ def test_health_endpoint_health_when_dependencies_ok(fastapi_client: FastAPITest
     data = response.json()
     assert data["status"] == "healthy"
     assert data["db_connected"] is True
+
 
 def test_health_endpoint_unhealthy_db(fastapi_client: FastAPITestClient) -> None:
     """Health endpoint should return unhealthy when DB fails"""

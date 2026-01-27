@@ -3,13 +3,16 @@ import psycopg
 from unittest.mock import Mock, patch
 from src.db_utils.retry import retry_with_backoff
 
+
 def test_retry_succeeds_after_transient_error() -> None:
     """Test that function retries and succeeds after transient errors."""
-    mock_func = Mock(side_effect=[
-        psycopg.OperationalError("Connection lost"),
-        psycopg.OperationalError("Connection lost again"),
-        "success"
-    ])
+    mock_func = Mock(
+        side_effect=[
+            psycopg.OperationalError("Connection lost"),
+            psycopg.OperationalError("Connection lost again"),
+            "success",
+        ]
+    )
 
     @retry_with_backoff(max_retries=3, initial_delay=0.1)
     def test_func() -> Mock:
@@ -51,18 +54,20 @@ def test_non_retryable_error_fails_immediately() -> None:
 
 def test_exponential_backoff_timing() -> None:
     """Test that delays follow exponential backoff pattern and respect max_delay."""
-    mock_func = Mock(side_effect=[
-        psycopg.OperationalError("Error"),
-        psycopg.OperationalError("Error"),
-        psycopg.OperationalError("Error"),
-        "success"
-    ])
+    mock_func = Mock(
+        side_effect=[
+            psycopg.OperationalError("Error"),
+            psycopg.OperationalError("Error"),
+            psycopg.OperationalError("Error"),
+            "success",
+        ]
+    )
 
     @retry_with_backoff(max_retries=4, initial_delay=1.0, max_delay=5.0, backoff_multiplier=2.0)
     def test_func() -> Mock:
         return mock_func()
 
-    with patch('time.sleep') as mock_sleep:
+    with patch("time.sleep") as mock_sleep:
         result = test_func()
 
     assert result == "success"
@@ -87,6 +92,6 @@ def test_logger_called_on_final_failure() -> None:
 
     assert mock_logger.error.call_count == 1
     call_args = mock_logger.error.call_args[1]
-    assert call_args['event_type'] == "Database Retry"
-    assert "failed after 2 retries" in call_args['message']
-    assert call_args['error_type'] == "DeadlockDetected"
+    assert call_args["event_type"] == "Database Retry"
+    assert "failed after 2 retries" in call_args["message"]
+    assert call_args["error_type"] == "DeadlockDetected"

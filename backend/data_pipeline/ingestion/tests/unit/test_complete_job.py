@@ -5,6 +5,7 @@ from src.api.schemas import JobStatus
 from src.api.job_state import JobState
 import pytest
 
+
 def tests_marks_complete_running_job_complete() -> None:
     """Calling complete job when a running job is active should mark it as done"""
     job_state = JobState()
@@ -12,10 +13,7 @@ def tests_marks_complete_running_job_complete() -> None:
     job_state.create_job(product_topic="GPU")
 
     mock_result = IngestionResult(
-        posts_processed=100,
-        comments_processed=250,
-        comments_inserted=250,
-        cancelled=False
+        posts_processed=100, comments_processed=250, comments_inserted=250, cancelled=False
     )
 
     job_state.complete_job(mock_result)
@@ -27,6 +25,7 @@ def tests_marks_complete_running_job_complete() -> None:
     assert current_job.completed_at is not None
     assert before <= current_job.completed_at <= after
 
+
 def tests_marks_cancelled_running_job_complete() -> None:
     """Calling cancelled job when a running job is active should mark it as done"""
     job_state = JobState()
@@ -34,10 +33,7 @@ def tests_marks_cancelled_running_job_complete() -> None:
     job_state.create_job(product_topic="GPU")
 
     mock_result = IngestionResult(
-        posts_processed=100,
-        comments_processed=250,
-        comments_inserted=250,
-        cancelled=True
+        posts_processed=100, comments_processed=250, comments_inserted=250, cancelled=True
     )
 
     job_state.complete_job(mock_result)
@@ -50,10 +46,10 @@ def tests_marks_cancelled_running_job_complete() -> None:
     assert current_job.completed_at is not None
     assert before <= current_job.completed_at <= after
 
+
 def test_missing_ingestion_result() -> None:
     """ValueError should be raised if no ingestion result is provided"""
     job_state = JobState()
 
     with pytest.raises(ValueError, match="No Ingestion result provided"):
-        job_state.complete_job(result=None) # type: ignore
-
+        job_state.complete_job(result=None)  # type: ignore

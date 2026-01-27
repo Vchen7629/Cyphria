@@ -17,6 +17,7 @@ router = APIRouter()
 # global job state thats initialized in lifespan
 job_state: JobState | None = None
 
+
 @router.post("/run", response_model=RunResponse)
 async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
     """
@@ -33,15 +34,12 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
 
     if not product_topic or product_topic.strip() == "":
         raise HTTPException(status_code=400, detail="Missing product_topic in the request")
-    
+
     if not job_state:
-        raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")  
-    
+        raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")
+
     if job_state.is_running():
-        raise HTTPException(
-            status_code=409,
-            detail="Ingestion already in progress"
-        )
+        raise HTTPException(status_code=409, detail="Ingestion already in progress")
 
     job_state.create_job(body.product_topic)
 
@@ -68,24 +66,26 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
 
     return RunResponse(status="started")
 
+
 @router.get("/status", response_model=CurrentJob)
 async def get_job_status() -> CurrentJob:
     """
     Get status of a ingestion job
     Airflow HttpSensor polls this endpoint until status is 'completed' or 'failed'
-    
+
     Raises:
         HTTPException if no job state
-    """    
+    """
     if not job_state:
-        raise HTTPException(status_code=400, detail="Missing job_state, cant check status")  
+        raise HTTPException(status_code=400, detail="Missing job_state, cant check status")
 
     job = job_state.get_current_job()
 
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
-    
+
     return job
+
 
 @router.get("/health", response_model=HealthResponse)
 def health_check(request: Request) -> HealthResponse:

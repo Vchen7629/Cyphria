@@ -1,6 +1,7 @@
 import emoji
 import re
 
+
 def demojify(comment_text: str) -> str:
     """
     Helper function for converting emoji characters into plain text

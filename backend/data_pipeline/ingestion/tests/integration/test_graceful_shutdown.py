@@ -5,10 +5,11 @@ from psycopg_pool import ConnectionPool
 from src.ingestion_service import IngestionService
 from src.preprocessing.relevant_fields import RedditComment
 
+
 def test_remaining_batch_saved_on_shutdown(
-    db_pool: ConnectionPool, 
+    db_pool: ConnectionPool,
     create_ingestion_service: IngestionService,
-    mock_reddit_comment: RedditComment
+    mock_reddit_comment: RedditComment,
 ) -> None:
     """Remaining comments in batch should be saved when shutdown occurs"""
     service = create_ingestion_service
@@ -26,9 +27,11 @@ def test_remaining_batch_saved_on_shutdown(
         )
         return reddit_comment
 
-    with patch.object(service, '_fetch_all_posts', return_value=[mock_post]), \
-         patch('src.ingestion_service.fetch_comments', return_value=mock_comments), \
-         patch.object(service, '_process_comment', side_effect=mock_process_comment):
+    with (
+        patch.object(service, "_fetch_all_posts", return_value=[mock_post]),
+        patch("src.ingestion_service.fetch_comments", return_value=mock_comments),
+        patch.object(service, "_process_comment", side_effect=mock_process_comment),
+    ):
         result = service._run_ingestion_pipeline()
 
     assert result.comments_inserted == 30
@@ -40,10 +43,11 @@ def test_remaining_batch_saved_on_shutdown(
             assert count is not None
             assert count[0] == 30
 
+
 def test_shutdown_after_batch_insert_no_duplicate_save(
-    db_pool: ConnectionPool, 
+    db_pool: ConnectionPool,
     create_ingestion_service: IngestionService,
-    mock_reddit_comment: RedditComment
+    mock_reddit_comment: RedditComment,
 ) -> None:
     """When shutdown occurs right after a batch insert, no duplicate data should be saved"""
     service = create_ingestion_service
@@ -59,17 +63,17 @@ def test_shutdown_after_batch_insert_no_duplicate_save(
         service.cancel_requested = True
 
     def mock_process_comment(comment: Any) -> RedditComment | None:
-        reddit_comment = mock_reddit_comment.model_copy(
-            update={"comment_id": comment.id}
-        )
+        reddit_comment = mock_reddit_comment.model_copy(update={"comment_id": comment.id})
         return reddit_comment
 
-    with patch.object(service, '_fetch_all_posts', return_value=[mock_post]), \
-         patch('src.ingestion_service.fetch_comments', return_value=mock_comments), \
-         patch.object(service, '_process_comment', side_effect=mock_process_comment), \
-         patch.object(service, '_batch_insert_to_db', side_effect=batch_insert_then_shutdown):
+    with (
+        patch.object(service, "_fetch_all_posts", return_value=[mock_post]),
+        patch("src.ingestion_service.fetch_comments", return_value=mock_comments),
+        patch.object(service, "_process_comment", side_effect=mock_process_comment),
+        patch.object(service, "_batch_insert_to_db", side_effect=batch_insert_then_shutdown),
+    ):
         result = service._run_ingestion_pipeline()
-    
+
     assert result.comments_inserted == 100
 
     with db_pool.connection() as conn:

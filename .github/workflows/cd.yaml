@@ -1,14 +1,13 @@
 name: CD workflow
 
-on: 
-  push:
-    branches:
-      - main
+on:
   workflow_run:
     workflows:
       - Tagging workflow
     types:
       - completed
+    branches:
+      - main
 
 permissions:
   packages: write

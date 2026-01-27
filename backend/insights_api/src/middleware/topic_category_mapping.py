@@ -1,5 +1,5 @@
-
 from typing import Optional
+
 TOPIC_TO_CATEGORY: dict[str, str] = {
     # Audio
     "DAC": "Audio",
@@ -29,7 +29,7 @@ TOPIC_TO_CATEGORY: dict[str, str] = {
     "TRIPOD": "Photography",
     # Wearables
     "SMARTWATCH": "Wearable",
-    "WATCH": "Wearable"
+    "WATCH": "Wearable",
 }
 
 CATEGORY_TO_TOPICS: dict[str, list[str]] = {
@@ -39,8 +39,9 @@ CATEGORY_TO_TOPICS: dict[str, list[str]] = {
     "home": ["AIR PURIFIER", "HUMIDIFIER", "ROBOT VACUUM"],
     "mobile": ["SMARTPHONE", "TABLET"],
     "photography": ["CAMERA", "LENSE", "TRIPOD"],
-    "wearable": ["SMARTWATCH", "WATCH"]
+    "wearable": ["SMARTWATCH", "WATCH"],
 }
+
 
 def get_category_for_topic(product_topic: str) -> Optional[str]:
     """
@@ -56,6 +57,7 @@ def get_category_for_topic(product_topic: str) -> Optional[str]:
         return None
 
     return TOPIC_TO_CATEGORY.get(product_topic.strip().upper())
+
 
 def get_topics_for_category(category: str) -> list[str]:
     """

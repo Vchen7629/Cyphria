@@ -10,12 +10,13 @@ from src.core.logger import StructuredLogger
 from src.middleware.metrics import cache_operation_duration
 import time
 
-T = TypeVar('T', bound=BaseModel)
+T = TypeVar("T", bound=BaseModel)
+
 
 async def get_cache_value(
-    cache: Valkey, 
-    cache_key: str, 
-    logger: StructuredLogger, 
+    cache: Valkey,
+    cache_key: str,
+    logger: StructuredLogger,
     response_model: type[T],
 ) -> Optional[T]:
     """
@@ -26,7 +27,7 @@ async def get_cache_value(
         cache_key: the key in the cache with the values we are trying to fetch
         logger: StructuredLogger for logging
         response_model: pydantic type class we are returning as a api response
-    
+
     Returns:
         the pydantic type class with api response or None if not found/error
     """
@@ -36,11 +37,17 @@ async def get_cache_value(
         cached_data = await cache.get(cache_key)
         return response_model.model_validate(cached_data) if cached_data else None
     except Exception as e:
-       logger.warning(event_type="insights_api run", message=f"Cache read failed, falling back to db: {e}")
-       return None
+        logger.warning(
+            event_type="insights_api run",
+            message=f"Cache read failed, falling back to db: {e}",
+        )
+        return None
     finally:
         duration = time.perf_counter() - start_time
-        cache_operation_duration.labels(operation='get', hit=str(cached_data is not None)).observe(duration)
+        cache_operation_duration.labels(
+            operation="get", hit=str(cached_data is not None)
+        ).observe(duration)
+
 
 async def set_cache_value(
     cache: Valkey,
@@ -48,7 +55,7 @@ async def set_cache_value(
     value: BaseModel,
     ttl_seconds: int,
     logger: StructuredLogger,
-    on_cache_write: Optional[Callable[[Valkey], Any]] = None
+    on_cache_write: Optional[Callable[[Valkey], Any]] = None,
 ) -> None:
     """
     Set value in cache (Valkey) with optional side effects
@@ -68,11 +75,15 @@ async def set_cache_value(
         if on_cache_write:
             await on_cache_write(cache)
     except Exception as e:
-        logger.warning(event_type="insights_api run", message=f"Cache write failed for key {cache_key}: {e}")
+        logger.warning(
+            event_type="insights_api run",
+            message=f"Cache write failed for key {cache_key}: {e}",
+        )
     finally:
         duration = time.perf_counter() - start_time
-        cache_operation_duration.labels(operation='set', hit='true').observe(duration)
-    
+        cache_operation_duration.labels(operation="set", hit="true").observe(duration)
+
+
 def get_weekly_trending_key() -> str:
     """
     Generate weekly trending key that auto-resets each week
@@ -81,19 +92,20 @@ def get_weekly_trending_key() -> str:
         key like "trending:topics:2026-W04"
     """
     week_info = datetime.now().isocalendar()
-    
+
     return f"trending:topics:{week_info[0]}-W{week_info[1]}"
 
+
 async def increment_trending_topic(
-    cache: Valkey, 
-    topic: str, 
+    cache: Valkey,
+    topic: str,
     client_ip: str,
-    weekly_ttl: int = 604800 # 7 days represented in seconds
+    weekly_ttl: int = 604800,  # 7 days represented in seconds
 ) -> None:
     """
     Increment topic view count in weekly trending sorted set
     only increments if ip is different, prevents refresh spam
-    
+
     Args:
         cache: cache (Valkey) client connection
         topic: topic name to increment
@@ -108,4 +120,3 @@ async def increment_trending_topic(
         trending_key = get_weekly_trending_key()
         await cache.zincrby(trending_key, 1, topic)
         await cache.expire(trending_key, weekly_ttl)
-

@@ -12,17 +12,16 @@ DATABASE_URL = settings.database_url
 engine: AsyncEngine = create_async_engine(
     url=DATABASE_URL,
     pool_size=10,
-    max_overflow=20, 
-    pool_pre_ping=True, # health check connections before use
-    pool_recycle=3600 # recycle connections after 1 hour
+    max_overflow=20,
+    pool_pre_ping=True,  # health check connections before use
+    pool_recycle=3600,  # recycle connections after 1 hour
 )
 
 # session factory
 async_session = async_sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False
+    bind=engine, class_=AsyncSession, expire_on_commit=False
 )
+
 
 # creates a short lived session from the sessionmaker factory
 # used per request

@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from unittest.mock import AsyncMock, MagicMock, patch
 from src.core.lifespan import lifespan
 
+
 @pytest.mark.asyncio
 async def test_lifespan_closes_pool_on_db_health_check_failure() -> None:
     """Pool should be closed if database health check fails during startup"""
@@ -33,8 +34,10 @@ async def test_lifespan_success() -> None:
 
     mock_async_session = MagicMock()
 
-    with patch("src.core.lifespan.engine", mock_engine), \
-         patch("src.core.lifespan.async_session", mock_async_session):
+    with (
+        patch("src.core.lifespan.engine", mock_engine),
+        patch("src.core.lifespan.async_session", mock_async_session),
+    ):
         app = FastAPI()
 
         async with lifespan(app):

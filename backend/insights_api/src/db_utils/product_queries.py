@@ -12,6 +12,7 @@ import time
 
 logger = StructuredLogger(pod="insights_api")
 
+
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
 async def fetch_matching_product_name(
     session: AsyncSession, query: str, page: int = 1
@@ -31,7 +32,7 @@ async def fetch_matching_product_name(
     """
     # Escape SQL LIKE/ILIKE wildcards to treat them as literal characters
     escaped_query = query.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
-    per_page: int = 6 # results per page
+    per_page: int = 6  # results per page
 
     # get total product count for later use
     total_products_query = text("""
@@ -41,13 +42,15 @@ async def fetch_matching_product_name(
     """)
 
     start_time = time.perf_counter()
-    total_products_result = await session.execute(total_products_query, {"query": escaped_query})
+    total_products_result = await session.execute(
+        total_products_query, {"query": escaped_query}
+    )
     total_products_count = total_products_result.scalar()
 
     if total_products_count == 0:
         return None
 
-    fetch_matching_products_query = text(f"""
+    fetch_matching_products_query = text("""
         SELECT product_name, product_topic, grade, mention_count
         FROM product_rankings
         WHERE product_name ILIKE '%' || :query || '%' ESCAPE '\\'
@@ -61,29 +64,33 @@ async def fetch_matching_product_name(
 
     offset = (page - 1) * per_page
     result = await session.execute(
-        fetch_matching_products_query, 
-        {"query": query, "limit": per_page, "offset": offset}
+        fetch_matching_products_query,
+        {"query": query, "limit": per_page, "offset": offset},
     )
     rows = result.fetchall()
     # Map topic to category using in-memory lookup
     products: list[dict[str, str | int]] = [
-        {**row._asdict(), "category": get_category_for_topic(row.product_topic) or "unknown"}
+        {
+            **row._asdict(),
+            "category": get_category_for_topic(row.product_topic) or "unknown",
+        }
         for row in rows
     ]
 
-    total_pages = (total_products_count + per_page - 1) // per_page if total_products_count else 0
+    total_pages = (
+        (total_products_count + per_page - 1) // per_page if total_products_count else 0
+    )
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
-        query_type="get", 
-        query_name="fetch_matching_product_name", 
-        table="product_rankings"
+        query_type="get",
+        query_name="fetch_matching_product_name",
+        table="product_rankings",
     ).observe(duration)
 
     return FetchMatchingProductNameResult(
-        product_list=products,
-        current_page=page,
-        total_pages=total_pages
+        product_list=products, current_page=page, total_pages=total_pages
     )
+
 
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
 async def fetch_product_sentiment_scores(
@@ -109,11 +116,7 @@ async def fetch_product_sentiment_scores(
 
     start_time = time.perf_counter()
     result = await session.execute(
-        query,
-        {
-            "product_name": product_name.strip(),
-            "time_window": time_window
-        }
+        query, {"product_name": product_name.strip(), "time_window": time_window}
     )
     row = result.fetchone()
     if not row:
@@ -123,14 +126,15 @@ async def fetch_product_sentiment_scores(
     db_query_duration.labels(
         query_type="get",
         query_name="fetch_product_sentiment_scores",
-        table="product_rankings"
+        table="product_rankings",
     ).observe(duration)
-    
+
     return FetchProductSentimentScores(
         positive_sentiment_count=row.positive_count,
         neutral_sentiment_count=row.neutral_count,
-        negative_sentiment_count=row.negative_count
+        negative_sentiment_count=row.negative_count,
     )
+
 
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
 async def fetch_top_reddit_comments(
@@ -163,18 +167,18 @@ async def fetch_top_reddit_comments(
         base_query += " AND created_utc >= NOW() - INTERVAL '90 days'"
 
     base_query += " ORDER BY score DESC LIMIT 5;"
-    
+
     start_time = time.perf_counter()
-    result = await session.execute(text(base_query), {"product_name": product_name.strip()})
+    result = await session.execute(
+        text(base_query), {"product_name": product_name.strip()}
+    )
     rows = result.fetchall()
     if not rows:
         return None
-    
+
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
-        query_type="get", 
-        query_name="fetch_top_reddit_comments", 
-        table="raw_comments"
+        query_type="get", query_name="fetch_top_reddit_comments", table="raw_comments"
     ).observe(duration)
 
     return [
@@ -182,7 +186,7 @@ async def fetch_top_reddit_comments(
             comment_text=row.comment_text,
             score=row.score,
             reddit_link=row.reddit_link,
-            created_utc=row.created_utc
+            created_utc=row.created_utc,
         )
         for row in rows
     ]

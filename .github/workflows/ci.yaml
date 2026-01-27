@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - ci-test
+
+permissions:
+  contents: write
+
 jobs:
     path-filter:
       runs-on: ubuntu-latest

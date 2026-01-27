@@ -114,21 +114,21 @@ jobs:
 
             - name: Install the project
               run: uv sync --locked --all-extras --dev
-              working-directory: backend/data_pipeline/data_ingestion
+              working-directory: backend/data_pipeline/ingestion
             
             - name: Run Linter and Formatting
               run: |
                 uv run ruff check .
                 uv run ruff format --check
-              working-directory: backend/data_pipeline/data_ingestion
+              working-directory: backend/data_pipeline/ingestion
             
             - name: Run Type Checking
               run: uv run pyrefly check
-              working-directory: backend/data_pipeline/data_ingestion
+              working-directory: backend/data_pipeline/ingestion
             
             - name: Run Unit/Integration Tests
               run: uv run pytest tests
-              working-directory: backend/data_pipeline/data_ingestion
+              working-directory: backend/data_pipeline/ingestion
 
     llm-summary-ci:
         needs: path-filter

@@ -18,8 +18,10 @@ from src.preprocessing.relevant_fields import extract_relevant_fields
 from src.product_utils.detector_factory import ProductDetectorWrapper
 import prawcore
 
+
 class IngestionService:
     """Ingestion service that processes Reddit Comments and filters for valid comments"""
+
     def __init__(
         self,
         reddit_client: Reddit,
@@ -28,7 +30,7 @@ class IngestionService:
         product_topic: str,
         subreddits: list[str],
         detector: ProductDetectorWrapper,
-        normalizer: Any
+        normalizer: Any,
     ) -> None:
         self.reddit_client = reddit_client
         self.db_pool = db_pool
@@ -40,7 +42,7 @@ class IngestionService:
 
         # cancellation flag, used to request graceful shutdown
         self.cancel_requested = False
-    
+
     def _fetch_all_posts(self) -> list[Submission]:
         """
         Fetch posts from all configured subreddits with per-subreddit error handling
@@ -58,12 +60,11 @@ class IngestionService:
             except prawcore.exceptions.ServerError as e:
                 self.logger.error(
                     event_type="Subreddit Fetch",
-                    message=f"Reddit API server error for r/{subreddit}: {e}"
+                    message=f"Reddit API server error for r/{subreddit}: {e}",
                 )
             except Exception as e:
                 self.logger.error(
-                    event_type="Subreddit Fetch",
-                    message=f"Failed to fetch from r/{subreddit}: {e}"
+                    event_type="Subreddit Fetch", message=f"Failed to fetch from r/{subreddit}: {e}"
                 )
                 # python will automatically continue the loop if the exception as thrown
 
@@ -83,11 +84,11 @@ class IngestionService:
         """
         if not is_valid_comment(comment):
             return None
-        
+
         # if the comment doesnt contain a gpu name or number we should skip it
         if not self.detector.contains_product(comment.body):
             return None
-        
+
         gpus_in_comment: list[str] = self.detector.extract_products(comment.body)
         normalized_gpus: list[str] = self.normalizer.normalize(self.product_topic, gpus_in_comment)
 
@@ -99,7 +100,7 @@ class IngestionService:
         lang: str | None = detect_english(url_removed)
         if lang != "en":  # If the post is non-english skip it
             return None
-        
+
         return RedditComment(
             comment_id=extracted.comment_id,
             comment_body=demojified,
@@ -108,12 +109,12 @@ class IngestionService:
             timestamp=extracted.timestamp,
             score=extracted.score,
             author=extracted.author,
-            post_id=extracted.post_id
+            post_id=extracted.post_id,
         )
 
     def _batch_insert_to_db(self, comment_list: list[RedditComment]) -> None:
         """
-        Method for taking in a batch of valid comments, converting it into a dict, 
+        Method for taking in a batch of valid comments, converting it into a dict,
         and batch writing to PG table
 
         Args:
@@ -122,15 +123,15 @@ class IngestionService:
         # Convert to dict format expected by batch_insert
         comment_dicts = [
             {
-                'comment_id': comment.comment_id,
-                'post_id': comment.post_id,
-                'comment_body': comment.comment_body,
-                'detected_products': comment.detected_products,
-                'subreddit': comment.subreddit,
-                'author': comment.author,
-                'score': comment.score,
-                'created_utc': comment.timestamp,
-                'product_topic': self.product_topic
+                "comment_id": comment.comment_id,
+                "post_id": comment.post_id,
+                "comment_body": comment.comment_body,
+                "detected_products": comment.detected_products,
+                "subreddit": comment.subreddit,
+                "author": comment.author,
+                "score": comment.score,
+                "created_utc": comment.timestamp,
+                "product_topic": self.product_topic,
             }
             for comment in comment_list
         ]
@@ -141,7 +142,7 @@ class IngestionService:
     def _run_ingestion_pipeline(self) -> IngestionResult:
         """
         Main orchestrator function: fetch, process, and publish comments
-        
+
         Returns:
             IngestionResult with counts of posts/comments processed
         """
@@ -156,7 +157,7 @@ class IngestionService:
             if self.cancel_requested:
                 self.logger.info(
                     event_type="ingestion_service run",
-                    message="Cancellation requested, stopping at post level"
+                    message="Cancellation requested, stopping at post level",
                 )
                 break
 
@@ -167,10 +168,10 @@ class IngestionService:
                 if self.cancel_requested:
                     self.logger.info(
                         event_type="ingestion_service run",
-                        message="Cancellation requested, stopping at comment level"
+                        message="Cancellation requested, stopping at comment level",
                     )
                     break
-                
+
                 processed_comment: RedditComment | None = self._process_comment(comment)
                 comments_processed += 1
                 if not processed_comment:
@@ -193,7 +194,7 @@ class IngestionService:
             posts_processed=posts_processed,
             comments_processed=comments_processed,
             comments_inserted=comments_inserted,
-            cancelled=self.cancel_requested
+            cancelled=self.cancel_requested,
         )
 
     def run_single_cycle(self, job_state: JobState) -> None:
@@ -220,11 +221,13 @@ class IngestionService:
 
             self.logger.info(
                 event_type="ingestion_service run",
-                message=f"Ingestion completed: {result.posts_processed} posts, {result.comments_inserted} comments processed"
+                message=f"Ingestion completed: {result.posts_processed} posts, {result.comments_inserted} comments processed",
             )
 
         except Exception as e:
-            self.logger.error(event_type="ingestion_service run", message=f"Ingestion failed: {str(e)}")
+            self.logger.error(
+                event_type="ingestion_service run", message=f"Ingestion failed: {str(e)}"
+            )
             job_state.fail_job(str(e))
         finally:
             # Clean up run state after job completes or fails

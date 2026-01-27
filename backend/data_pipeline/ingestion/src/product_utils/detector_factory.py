@@ -3,13 +3,15 @@ from typing import Optional
 from src.core.logger import StructuredLogger
 from src.product_utils.gpu_detector import GPUDetector
 
+
 class ProductDetectorWrapper:
     """Wrapper that provides a universal interface for all product detectors"""
+
     def __init__(self, detector: Any, contains_method: str, extract_method: str) -> None:
         self._detector = detector
         self._contains_method = contains_method
         self._extract_method = extract_method
-    
+
     def contains_product(self, text: str) -> bool:
         """
         Universal method to check if text contains any product mention
@@ -28,16 +30,20 @@ class ProductDetectorWrapper:
 
         Args:
             text: Comment text to check if it contains any products
-        
+
         Returns:
             A list of product names
         """
         return getattr(self._detector, self._extract_method)(text)
 
+
 class DetectorFactory:
     """Detector Factory that returns the appropriate detector based on the product category"""
+
     @staticmethod
-    def get_detector(product_topic: str, logger: Optional[StructuredLogger] = None) -> Optional[ProductDetectorWrapper]:
+    def get_detector(
+        product_topic: str, logger: Optional[StructuredLogger] = None
+    ) -> Optional[ProductDetectorWrapper]:
         """
         Get the appropriate detector for the given product topic
         this detector is used for checking if the comment contains a mention
@@ -47,24 +53,23 @@ class DetectorFactory:
             product_topic: Product topic, ie 'gpu', 'laptop', 'headphone'
 
         Returns:
-            ProductDetectorWrapper with universal interface or none if 
+            ProductDetectorWrapper with universal interface or none if
 
         Raises:
             ValueError: If category is not supported
         """
         if not product_topic or product_topic.strip() == "":
             if logger:
-                logger.error(event_type="ingestion_service run", message="Missing product topic, can't detect")
+                logger.error(
+                    event_type="ingestion_service run",
+                    message="Missing product topic, can't detect",
+                )
             return None
 
         match product_topic.lower().strip():
             case "gpu":
                 return ProductDetectorWrapper(
-                    GPUDetector(),
-                    contains_method='contains_gpu',
-                    extract_method='extract_gpus'
+                    GPUDetector(), contains_method="contains_gpu", extract_method="extract_gpus"
                 )
             case _:
-                raise ValueError(
-                    f"Unsupported product_topic: '{product_topic}'. Supported: gpu"
-                )
+                raise ValueError(f"Unsupported product_topic: '{product_topic}'. Supported: gpu")

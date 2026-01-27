@@ -2,11 +2,12 @@ from datetime import datetime, timezone
 from praw.models import Comment
 from src.api.schemas import RedditComment
 
+
 def extract_relevant_fields(comment: Comment, detected_products: list[str]) -> RedditComment:
     """
     Extract relevant data fields from reddit comment to
     reduce amount of data being sent to data pipeline
-    
+
     Args:
         comment: PRAW reddit comment object containing all data fields
         detected_products: List of product strings found in the comment text

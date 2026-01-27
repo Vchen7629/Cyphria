@@ -3,6 +3,7 @@ from src.ingestion_service import IngestionService
 from src.api.schemas import JobStatus, IngestionResult
 from unittest.mock import patch
 
+
 def test_successful_run_updates_job_state(create_ingestion_service: IngestionService) -> None:
     """Successful run_single_cycle should complete job with result"""
     job_state = JobState()
@@ -10,14 +11,13 @@ def test_successful_run_updates_job_state(create_ingestion_service: IngestionSer
 
     # Mock pipeline to return a successful result
     mock_result = IngestionResult(
-        posts_processed=10,
-        comments_processed=50,
-        comments_inserted=30,
-        cancelled=False
+        posts_processed=10, comments_processed=50, comments_inserted=30, cancelled=False
     )
 
-    with patch.object(create_ingestion_service, '_run_ingestion_pipeline', return_value=mock_result):
-        with patch('src.api.signal_handler.run_state') as mock_run_state:
+    with patch.object(
+        create_ingestion_service, "_run_ingestion_pipeline", return_value=mock_result
+    ):
+        with patch("src.api.signal_handler.run_state") as mock_run_state:
             create_ingestion_service.run_single_cycle(job_state)
 
             # Verify job state updated correctly
@@ -32,6 +32,7 @@ def test_successful_run_updates_job_state(create_ingestion_service: IngestionSer
             assert not mock_run_state.run_in_progress
             assert mock_run_state.current_service is None
 
+
 def test_cancelled_run_marks_job_cancelled(create_ingestion_service: IngestionService) -> None:
     """Cancelled run should mark job as CANCELLED in job_state"""
     job_state = JobState()
@@ -39,14 +40,13 @@ def test_cancelled_run_marks_job_cancelled(create_ingestion_service: IngestionSe
 
     # Mock pipeline to return cancelled result
     mock_result = IngestionResult(
-        posts_processed=5,
-        comments_processed=20,
-        comments_inserted=10,
-        cancelled=True
+        posts_processed=5, comments_processed=20, comments_inserted=10, cancelled=True
     )
 
-    with patch.object(create_ingestion_service, '_run_ingestion_pipeline', return_value=mock_result):
-        with patch('src.api.signal_handler.run_state') as mock_run_state:
+    with patch.object(
+        create_ingestion_service, "_run_ingestion_pipeline", return_value=mock_result
+    ):
+        with patch("src.api.signal_handler.run_state") as mock_run_state:
             create_ingestion_service.run_single_cycle(job_state)
 
             # Verify job marked as cancelled
@@ -68,8 +68,10 @@ def test_exception_in_pipeline_fails_job(create_ingestion_service: IngestionServ
 
     error_msg = "Database connection timeout"
 
-    with patch.object(create_ingestion_service, '_run_ingestion_pipeline', side_effect=Exception(error_msg)):
-        with patch('src.api.signal_handler.run_state') as mock_run_state:
+    with patch.object(
+        create_ingestion_service, "_run_ingestion_pipeline", side_effect=Exception(error_msg)
+    ):
+        with patch("src.api.signal_handler.run_state") as mock_run_state:
             create_ingestion_service.run_single_cycle(job_state)
 
             # Verify job marked as failed with error
@@ -84,13 +86,16 @@ def test_exception_in_pipeline_fails_job(create_ingestion_service: IngestionServ
             assert mock_run_state.run_in_progress is False
             assert mock_run_state.current_service is None
 
+
 def test_run_state_cleanup_in_finally_block(create_ingestion_service: IngestionService) -> None:
     """run_state should be cleaned up in finally block even on exception"""
     job_state = JobState()
     job_state.create_job("GPU")
 
-    with patch.object(create_ingestion_service, '_run_ingestion_pipeline', side_effect=RuntimeError("Test error")):
-        with patch('src.api.signal_handler.run_state') as mock_run_state:
+    with patch.object(
+        create_ingestion_service, "_run_ingestion_pipeline", side_effect=RuntimeError("Test error")
+    ):
+        with patch("src.api.signal_handler.run_state") as mock_run_state:
             # Set initial state
             mock_run_state.run_in_progress = True
             mock_run_state.current_service = create_ingestion_service
@@ -108,24 +113,24 @@ def test_logger_info_called_on_success(create_ingestion_service: IngestionServic
     job_state.create_job("GPU")
 
     mock_result = IngestionResult(
-        posts_processed=10,
-        comments_processed=50,
-        comments_inserted=30,
-        cancelled=False
+        posts_processed=10, comments_processed=50, comments_inserted=30, cancelled=False
     )
 
-    with patch.object(create_ingestion_service, '_run_ingestion_pipeline', return_value=mock_result):
-        with patch('src.api.signal_handler.run_state'):
-            with patch.object(create_ingestion_service.logger, 'info') as mock_logger_info:
+    with patch.object(
+        create_ingestion_service, "_run_ingestion_pipeline", return_value=mock_result
+    ):
+        with patch("src.api.signal_handler.run_state"):
+            with patch.object(create_ingestion_service.logger, "info") as mock_logger_info:
                 create_ingestion_service.run_single_cycle(job_state)
 
                 # Verify logger.info called with success message
                 mock_logger_info.assert_called_once()
                 call_kwargs = mock_logger_info.call_args[1]
-                assert call_kwargs['event_type'] == "ingestion_service run"
-                assert "completed" in call_kwargs['message'].lower()
-                assert str(mock_result.posts_processed) in call_kwargs['message']
-                assert str(mock_result.comments_inserted) in call_kwargs['message']
+                assert call_kwargs["event_type"] == "ingestion_service run"
+                assert "completed" in call_kwargs["message"].lower()
+                assert str(mock_result.posts_processed) in call_kwargs["message"]
+                assert str(mock_result.comments_inserted) in call_kwargs["message"]
+
 
 def test_zero_results_completes_successfully(create_ingestion_service: IngestionService) -> None:
     """Pipeline with zero results should still complete successfully"""
@@ -133,14 +138,13 @@ def test_zero_results_completes_successfully(create_ingestion_service: Ingestion
     job_state.create_job("GPU")
 
     mock_result = IngestionResult(
-        posts_processed=0,
-        comments_processed=0,
-        comments_inserted=0,
-        cancelled=False
+        posts_processed=0, comments_processed=0, comments_inserted=0, cancelled=False
     )
 
-    with patch.object(create_ingestion_service, '_run_ingestion_pipeline', return_value=mock_result):
-        with patch('src.api.signal_handler.run_state'):
+    with patch.object(
+        create_ingestion_service, "_run_ingestion_pipeline", return_value=mock_result
+    ):
+        with patch("src.api.signal_handler.run_state"):
             create_ingestion_service.run_single_cycle(job_state)
 
             current_job = job_state.get_current_job()
@@ -156,15 +160,17 @@ def test_multiple_exception_types_all_handled(create_ingestion_service: Ingestio
         TypeError("Type error"),
         RuntimeError("Runtime error"),
         KeyError("Missing key"),
-        ConnectionError("Connection failed")
+        ConnectionError("Connection failed"),
     ]
 
     for exception in exception_types:
         job_state = JobState()
         job_state.create_job("GPU")
 
-        with patch.object(create_ingestion_service, '_run_ingestion_pipeline', side_effect=exception):
-            with patch('src.api.signal_handler.run_state'):
+        with patch.object(
+            create_ingestion_service, "_run_ingestion_pipeline", side_effect=exception
+        ):
+            with patch("src.api.signal_handler.run_state"):
                 create_ingestion_service.run_single_cycle(job_state)
 
                 current_job = job_state.get_current_job()

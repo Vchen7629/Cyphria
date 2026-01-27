@@ -4,12 +4,14 @@ from unittest.mock import MagicMock
 from src.api.schemas import RedditComment
 import pytest
 
+
 @pytest.fixture
 def mock_reddit_client() -> MagicMock:
     """Mock reddit client"""
     client = MagicMock()
     client.user.me.return_value = MagicMock(name="test_user")
     return client
+
 
 @pytest.fixture
 def mock_reddit_comment() -> RedditComment:
@@ -22,5 +24,5 @@ def mock_reddit_comment() -> RedditComment:
         subreddit="nvidia",
         author="test_user",
         score=10,
-        timestamp=datetime.now(timezone.utc)
+        timestamp=datetime.now(timezone.utc),
     )

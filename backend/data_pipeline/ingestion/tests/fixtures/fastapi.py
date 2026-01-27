@@ -9,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from tests.fixtures.service import null_lifespan
 from tests.utils.classes import FastAPITestClient
 import os
+
 os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
 os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "reddit_secret")
 os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "username")
@@ -21,8 +22,11 @@ from src.product_utils.detector_factory import DetectorFactory
 from src.product_utils.normalizer_factory import NormalizerFactory
 import pytest
 
+
 @pytest.fixture
-def fastapi_client(db_pool: ConnectionPool, mock_reddit_client: MagicMock) -> Generator[FastAPITestClient, None, None]:
+def fastapi_client(
+    db_pool: ConnectionPool, mock_reddit_client: MagicMock
+) -> Generator[FastAPITestClient, None, None]:
     """Fastapi TestClient with mocked heavy dependencies for integration tests"""
     test_app = FastAPI(lifespan=null_lifespan)
     test_app.include_router(base_router)
@@ -54,6 +58,7 @@ def fastapi_client(db_pool: ConnectionPool, mock_reddit_client: MagicMock) -> Ge
 
     with TestClient(test_app, raise_server_exceptions=False) as client:
         yield FastAPITestClient(client=client, app=test_app)
+
 
 @pytest.fixture(scope="session")
 def mock_fastapi() -> FastAPI:

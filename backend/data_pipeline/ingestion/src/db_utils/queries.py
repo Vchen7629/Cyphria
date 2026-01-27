@@ -1,7 +1,8 @@
 from typing import Any, Optional
 from src.core.logger import StructuredLogger
 from src.db_utils.retry import retry_with_backoff
-import psycopg 
+import psycopg
+
 
 def batch_insert_raw_comments(
     conn: psycopg.Connection,

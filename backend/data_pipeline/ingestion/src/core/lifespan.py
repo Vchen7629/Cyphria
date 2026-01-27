@@ -13,6 +13,7 @@ from fastapi import FastAPI
 
 settings = Settings()
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     """
@@ -25,7 +26,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info(event_type="data_ingestion startup", message="Creating database connection pool")
     db_pool = create_connection_pool()
 
-    # Check database health before proceeding, exit if database non responsive 
+    # Check database health before proceeding, exit if database non responsive
     try:
         with db_pool.connection() as conn:
             with conn.cursor() as cursor:
@@ -33,17 +34,19 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
                 cursor.fetchone()
             logger.info(event_type="data_ingestion startup", message="Database health check passed")
     except Exception as e:
-        logger.error(event_type="data_ingestion startup", message=f"Database health check failed: {e}")
+        logger.error(
+            event_type="data_ingestion startup", message=f"Database health check failed: {e}"
+        )
         db_pool.close()
-        raise 
-    
+        raise
+
     logger.info(event_type="data_ingestion startup", message="Creating Reddit Client")
     reddit_client = createRedditClient()
 
     normalizer = NormalizerFactory
 
     executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="ingestion_service")
-    
+
     job_state_instance = JobState()
 
     # Store these values in app state for dependency injection

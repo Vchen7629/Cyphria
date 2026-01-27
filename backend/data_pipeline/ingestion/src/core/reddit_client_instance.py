@@ -3,6 +3,7 @@ from src.core.settings_config import Settings
 
 settings: Settings = Settings()
 
+
 def createRedditClient() -> praw.Reddit:
     """
     Creates an instance of reddit client required for praw

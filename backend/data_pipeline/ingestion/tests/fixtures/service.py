@@ -7,6 +7,7 @@ from unittest.mock import patch
 from testcontainers.postgres import PostgresContainer
 from psycopg_pool import ConnectionPool
 import os
+
 os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
 os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "reddit_secret")
 os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "username")
@@ -17,13 +18,17 @@ from src.product_utils.detector_factory import DetectorFactory
 from src.product_utils.normalizer_factory import NormalizerFactory
 import pytest
 
+
 @asynccontextmanager
 async def null_lifespan(_app: FastAPI) -> Any:
     """No-op lifespan for testing - state is set by fixtures"""
     yield
 
+
 @pytest.fixture
-def create_ingestion_service(db_pool: ConnectionPool, mock_reddit_client: MagicMock) -> IngestionService:
+def create_ingestion_service(
+    db_pool: ConnectionPool, mock_reddit_client: MagicMock
+) -> IngestionService:
     """Creates a Sentiment Service Instance fixture"""
     detector = DetectorFactory.get_detector(product_topic="GPU")
     assert detector is not None, "GPU detector should not be None"
@@ -35,23 +40,27 @@ def create_ingestion_service(db_pool: ConnectionPool, mock_reddit_client: MagicM
         product_topic="GPU",
         subreddits=["nvidia"],
         detector=detector,
-        normalizer=NormalizerFactory
+        normalizer=NormalizerFactory,
     )
+
 
 @pytest.fixture
 def mock_logger() -> MagicMock:
     """Mocked structured logger"""
     return MagicMock(spec=StructuredLogger)
 
+
 @pytest.fixture
 def mock_detector() -> MagicMock:
     """Mocked product detector"""
     return MagicMock(spec=DetectorFactory.get_detector(product_topic="GPU"))
 
+
 @pytest.fixture
 def mock_normalizer() -> MagicMock:
     """Mocked normalizer"""
     return MagicMock()
+
 
 @pytest.fixture
 def mock_ingestion_service(mock_reddit_client: MagicMock) -> IngestionService:
@@ -63,26 +72,26 @@ def mock_ingestion_service(mock_reddit_client: MagicMock) -> IngestionService:
         product_topic="GPU",
         subreddits=["nvidia"],
         detector=MagicMock(spec=DetectorFactory.get_detector(product_topic="GPU")),
-        normalizer=MagicMock(spec=NormalizerFactory)
+        normalizer=MagicMock(spec=NormalizerFactory),
     )
 
+
 @pytest.fixture
-def worker_with_test_db(postgres_container: PostgresContainer, mock_reddit_client: MagicMock) -> Generator[IngestionService, None, None]:
+def worker_with_test_db(
+    postgres_container: PostgresContainer, mock_reddit_client: MagicMock
+) -> Generator[IngestionService, None, None]:
     """
     Create a Worker instance configured to use the test database.
     Patches the connection pool to use the test container.
     """
-    with patch('src.core.reddit_client_instance.createRedditClient', return_value=mock_reddit_client) as mock_reddit_client:
-        with patch('src.db_utils.conn.create_connection_pool') as mock_pool:
+    with patch(
+        "src.core.reddit_client_instance.createRedditClient", return_value=mock_reddit_client
+    ) as mock_reddit_client:
+        with patch("src.db_utils.conn.create_connection_pool") as mock_pool:
             # Create a real connection pool to the test database
             # Convert SQLAlchemy URL to PostgreSQL URI for psycopg
             connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")
-            test_pool = ConnectionPool(
-                conninfo=connection_url,
-                min_size=1,
-                max_size=5,
-                open=True
-            )
+            test_pool = ConnectionPool(conninfo=connection_url, min_size=1, max_size=5, open=True)
             mock_pool.return_value = test_pool
 
             detector = DetectorFactory.get_detector("gpu")
@@ -95,7 +104,7 @@ def worker_with_test_db(postgres_container: PostgresContainer, mock_reddit_clien
                 product_topic="gpu",
                 subreddits=["nvidia"],
                 detector=detector,
-                normalizer=NormalizerFactory
+                normalizer=NormalizerFactory,
             )
             yield worker
 

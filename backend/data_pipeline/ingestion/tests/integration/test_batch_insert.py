@@ -6,26 +6,32 @@ from src.db_utils.queries import batch_insert_raw_comments
 import psycopg
 import pytest
 
+
 def test_worker_batch_insert_error_handling(worker_with_test_db: IngestionService) -> None:
     """Test that Worker properly propagates database errors during batch insert."""
-    invalid_data = [{
-        'comment_id': 'invalid_test',
-        'post_id': 'post_1',
-        'comment_body': None, # type: ignore
-        'detected_products': ['rtx 4090'],
-        'subreddit': 'nvidia',
-        'author': 'user1',
-        'score': 10,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'product_topic': worker_with_test_db.product_topic
-    }]
+    invalid_data = [
+        {
+            "comment_id": "invalid_test",
+            "post_id": "post_1",
+            "comment_body": None,  # type: ignore
+            "detected_products": ["rtx 4090"],
+            "subreddit": "nvidia",
+            "author": "user1",
+            "score": 10,
+            "created_utc": datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+            "product_topic": worker_with_test_db.product_topic,
+        }
+    ]
 
     # This should raise a NotNullViolation error from the database
     with pytest.raises(psycopg.errors.NotNullViolation):
         with worker_with_test_db.db_pool.connection() as conn:
             batch_insert_raw_comments(conn, invalid_data)
 
-def test_worker_batch_insert_with_connection_pool_multiple_batches(worker_with_test_db: IngestionService, postgres_container: PostgresContainer) -> None:
+
+def test_worker_batch_insert_with_connection_pool_multiple_batches(
+    worker_with_test_db: IngestionService, postgres_container: PostgresContainer
+) -> None:
     """
     Test that Worker can handle multiple sequential batch inserts using the connection pool.
     This simulates the actual worker flow where batches are inserted as they fill up.
@@ -33,14 +39,14 @@ def test_worker_batch_insert_with_connection_pool_multiple_batches(worker_with_t
     # First batch
     batch1 = [
         RedditComment(
-            comment_id=f'batch1_{i}',
-            post_id=f'post_{i}',
-            comment_body=f'Batch 1 comment {i}',
-            detected_products=['rtx 4090'],
-            subreddit='nvidia',
-            author=f'user_{i}',
+            comment_id=f"batch1_{i}",
+            post_id=f"post_{i}",
+            comment_body=f"Batch 1 comment {i}",
+            detected_products=["rtx 4090"],
+            subreddit="nvidia",
+            author=f"user_{i}",
             score=i,
-            timestamp=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+            timestamp=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
         )
         for i in range(5)
     ]
@@ -48,14 +54,14 @@ def test_worker_batch_insert_with_connection_pool_multiple_batches(worker_with_t
     # Second batch
     batch2 = [
         RedditComment(
-            comment_id=f'batch2_{i}',
-            post_id=f'post_{i}',
-            comment_body=f'Batch 2 comment {i}',
-            detected_products=['rtx 4080'],
-            subreddit='nvidia',
-            author=f'user_{i}',
+            comment_id=f"batch2_{i}",
+            post_id=f"post_{i}",
+            comment_body=f"Batch 2 comment {i}",
+            detected_products=["rtx 4080"],
+            subreddit="nvidia",
+            author=f"user_{i}",
             score=i,
-            timestamp=datetime(2024, 1, 1, 13, 0, 0, tzinfo=timezone.utc)
+            timestamp=datetime(2024, 1, 1, 13, 0, 0, tzinfo=timezone.utc),
         )
         for i in range(5)
     ]

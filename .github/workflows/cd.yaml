@@ -1,14 +1,14 @@
 name: CD workflow
 
 on: 
-    schedule: 
-        - cron: '59 11 * * *'
-    push:
-        branches:
-          - main
-        paths:
-          - 'frontend/**'
-          - 'backend/**'
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows:
+      - Tagging workflow
+    types:
+      - completed
 
 permissions:
   packages: write
@@ -18,28 +18,29 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
         frontend: ${{ steps.changes.outputs.frontend }}
-        category_classification: ${{ steps.changes.outputs.category_classification }}
+        insights_api: ${{ steps.changes.outputs.insights_api }}
         data_ingestion: ${{ steps.changes.outputs.data_ingestion }}
+        llm_summary: ${{ steps.changes.outputs.llm_summary }}
+        ranking_calculator: ${{ steps.changes.outputs.ranking_calculator }}
         sentiment_analysis: ${{ steps.changes.outputs.sentiment_analysis }}
-        topic_classification: ${{ steps.changes.outputs.topic_classification }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: |
-            category_classification:
-              - 'backend/data_processing/category_classification/**'
-            data_ingestion:
-              - 'backend/data_processing/data_ingestion/**'
-            post_embeddings:
-              - 'backend/data_processing/post_embeddings/**'
-            sentiment_analysis:
-              - 'backend/data_processing/sentiment_analysis/**'
-            topic_classification
-              - 'backend/data_processing/topic_classification/**'
             frontend:
               - 'frontend/**'
+            insights_api:
+              - 'backend/insights_api/**'
+            data_ingestion:
+              - 'backend/data_pipeline/ingestion/**'
+            llm_summary:
+              - 'backend/data_pipeline/llm_summary/**'
+            ranking_calculator:
+              - 'backend/data_pipeline/ranking_calculator/**'
+            sentiment_analysis:
+              - 'backend/data_processing/sentiment_analysis/**'
 
   frontend-cd:
     needs: path-filter
@@ -48,32 +49,94 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+        with:
+          fetch-depth: 0
+
+      - name: Get latest frontend tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag --list "frontend-*" --sort=-v:refname | head -n 1)
+          echo "tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+          echo "Using tag: ${LATEST_TAG}"
+
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3 
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3 
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: ghcr.io/vchen7629/cyphria-frontend:latest
+          tags: |
+            ghcr.io/vchen7629/cyphria-frontend:${{ github.sha }}
+            ghcr.io/vchen7629/cyphria-frontend:${{ steps.get_tag.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-frontend:latest
   
-  category-classification-cd:
+  insights-api-cd:
     needs: path-filter
-    if: ${{ needs.path-filter.outputs.backend. == 'true' }}
+    if: ${{ needs.path-filter.outputs.insights_api == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest insights api tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag --list "insights_api-*" --sort=-v:refname | head -n 1)
+          echo "tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+          echo "Using tag: ${LATEST_TAG}"
+ 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3 # v3.0.0
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3 # v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend/insights_api
+          file: ./backend/insights_api/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/vchen7629/cyphria-insights-api:${{ github.sha }}
+            ghcr.io/vchen7629/cyphria-insights-api:${{ steps.get_tag.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-insights-api:latest
+
+  data-ingestion-cd:
+    needs: path-filter
+    if: ${{ needs.path-filter.outputs.data_ingestion == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest data ingestion tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag --list "data_ingestion-*" --sort=-v:refname | head -n 1)
+          echo "tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+          echo "Using tag: ${LATEST_TAG}"
           
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3 # v3.0.0
@@ -88,8 +151,127 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./backend/data_processing/category_classification
-          file: ./backend/data_processing/category_classification/Dockerfile
+          context: ./backend/data_pipeline/ingestion
+          file: ./backend/data_pipeline/ingestion/Dockerfile
           push: true
-          tags: ghcr.io/vchen7629/cyphria-category-classifier:latest
+          tags: |
+            ghcr.io/vchen7629/cyphria-data-ingestion:${{ steps.get_tag.outputs.tag}}
+            ghcr.io/vchen7629/cyphria-data-ingestion:${{ github.sha }}
+            ghcr.io/vchen7629/cyphria-data-ingestion:latest
 
+  llm-summary-cd:
+    needs: path-filter
+    if: ${{ needs.path-filter.outputs.llm_summary == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest llm summary tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag --list "llm_summary-*" --sort=-v:refname | head -n 1)
+          echo "tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+          echo "Using tag: ${LATEST_TAG}"
+          
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3 # v3.0.0
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3 # v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend/data_pipeline/llm_summary
+          file: ./backend/data_pipeline/llm_summary/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/vchen7629/cyphria-llm-summary:${{ steps.get_tag.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-llm-summary:${{ github.sha }}
+            ghcr.io/vchen7629/cyphria-llm-summary:latest
+
+  ranking-calculator-cd:
+    needs: path-filter
+    if: ${{ needs.path-filter.outputs.ranking_calculator == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest ranking calculator tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag --list "ranking_calculator-*" --sort=-v:refname | head -n 1)
+          echo "tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+          echo "Using tag: ${LATEST_TAG}"
+          
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3 # v3.0.0
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3 # v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend/data_pipeline/ranking_calculator
+          file: ./backend/data_pipeline/ranking_calculator/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ steps.get_tag.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ github.sha }}
+            ghcr.io/vchen7629/cyphria-ranking-calculator:latest
+
+  sentiment-analysis-cd:
+    needs: path-filter
+    if: ${{ needs.path-filter.outputs.sentiment_analysis == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest sentiment analysis tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag --list "sentiment_analysis-*" --sort=-v:refname | head -n 1)
+          echo "tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+          echo "Using tag: ${LATEST_TAG}"
+          
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3 # v3.0.0
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3 # v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend/data_pipeline/sentiment_analysis
+          file: ./backend/data_pipeline/sentiment_analysis/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ steps.get_tag.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ github.sha }}
+            ghcr.io/vchen7629/cyphria-sentiment_analysis:latest

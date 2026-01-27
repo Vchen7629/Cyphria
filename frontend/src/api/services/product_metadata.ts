@@ -1,6 +1,7 @@
 
 import { AxiosError } from 'axios'
 import { insights_api } from '../client/basePath'
+import { SearchResultProps, SentimentScoresResultProps, TopCommentsResultProps } from '../../types/product'
 
 interface ProductProps {
     product_name: string
@@ -19,7 +20,7 @@ interface SearchProps {
  */
 export const ProductMetadataService = {
     // fetch the positive, neutral, negative sentiment score amount for specified product and time window
-    sentiment_scores: async({ product_name, time_window }: ProductProps) => {
+    sentiment_scores: async({ product_name, time_window }: ProductProps): Promise<SentimentScoresResultProps> => {
         try {
             const response = await insights_api.get(`/api/v1/product/sentiment_scores?product_name=${product_name}&time_window=${time_window}`)
             
@@ -38,7 +39,7 @@ export const ProductMetadataService = {
         }
     },
     // fetch the top 5 comments based on reddit score for the specified product and time window
-    top_comments: async({ product_name, time_window }: ProductProps) => {
+    top_comments: async({ product_name, time_window }: ProductProps): Promise<TopCommentsResultProps[]> => {
         try {
             const response = await insights_api.get(`/api/v1/product/top_comments?product_name=${product_name}&time_window=${time_window}`)
         
@@ -57,7 +58,7 @@ export const ProductMetadataService = {
         }
     },
     // fetch a list of products matching the search query
-    search_products: async({ query, current_page }: SearchProps) => {
+    search_products: async({ query, current_page }: SearchProps): Promise<SearchResultProps> => {
         try {
             const response = await insights_api.get(`/api/v1/product/search?q=${query}&current_page=${current_page}`)
         

@@ -1,50 +1,46 @@
 name: CD workflow
 
 on:
-  workflow_run:
-    workflows:
-      - CI + Tagging Workflow
-    types:
-      - completed
-    branches:
-      - main
+  push:
+    tags:
+      - 'frontend-*'
+      - 'insights_api-*'
+      - 'data_ingestion-*'
+      - 'llm_summary-*'
+      - 'ranking_calculator-*'
+      - 'sentiment_analysis-*'
 
 permissions:
   packages: write
 
 jobs:
+  determine-service:
+    runs-on: ubuntu-latest
+    outputs:
+      service: ${{ steps.parse.outputs.service }}
+      tag: ${{ steps.parse.outputs.tag }}
+    steps:
+      - name: Parse tag to determine service
+        id: parse
+        run: |
+          TAG_NAME="${GITHUB_REF#refs/tags/}"
+          SERVICE="${TAG_NAME%%-*}"
+          echo "service=$SERVICE" >> $GITHUB_OUTPUT
+          echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "Deploying service: $SERVICE with tag: $TAG_NAME"
+
   frontend-cd:
+    needs: determine-service
+    if: needs.determine-service.outputs.service == 'frontend'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.workflow_run.head_sha }}
-
-      - name: Check for frontend version tag
-        id: get_tag
-        run: |
-          git fetch --tags
-
-          # Get all frontend tags pointing to current commit
-          TAG=$(git tag --points-at HEAD | grep "^frontend-" || echo "")
-
-          if [ -z "$TAG" ]; then
-            echo "No frontend tag for this commit, skipping"
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "Found frontend tag: $TAG"
-            echo "tag=$TAG" >> $GITHUB_OUTPUT
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
 
       - name: Set up Docker Buildx
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -52,7 +48,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
@@ -60,40 +55,21 @@ jobs:
           push: true
           tags: |
             ghcr.io/vchen7629/cyphria-frontend:${{ github.sha }}
-            ghcr.io/vchen7629/cyphria-frontend:${{ steps.get_tag.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-frontend:${{ needs.determine-service.outputs.tag }}
             ghcr.io/vchen7629/cyphria-frontend:latest
-  
+
   insights-api-cd:
+    needs: determine-service
+    if: needs.determine-service.outputs.service == 'insights_api'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.workflow_run.head_sha }}
 
-      - name: Check for insights-api version tag
-        id: get_tag
-        run: |
-          git fetch --tags
-
-          TAG=$(git tag --points-at HEAD | grep "^insights_api-" || echo "")
-
-          if [ -z "$TAG" ]; then
-            echo "No insights-api tag for this commit, skipping"
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "Found insights-api tag: $TAG"
-            echo "tag=$TAG" >> $GITHUB_OUTPUT
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
- 
       - name: Set up Docker Buildx
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -101,7 +77,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/build-push-action@v5
         with:
           context: ./backend/insights_api
@@ -109,40 +84,21 @@ jobs:
           push: true
           tags: |
             ghcr.io/vchen7629/cyphria-insights-api:${{ github.sha }}
-            ghcr.io/vchen7629/cyphria-insights-api:${{ steps.get_tag.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-insights-api:${{ needs.determine-service.outputs.tag }}
             ghcr.io/vchen7629/cyphria-insights-api:latest
 
   data-ingestion-cd:
+    needs: determine-service
+    if: needs.determine-service.outputs.service == 'data_ingestion'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.workflow_run.head_sha }}
-
-      - name: Check for data-ingestion version tag
-        id: get_tag
-        run: |
-          git fetch --tags
-
-          TAG=$(git tag --points-at HEAD | grep "^data_ingestion-" || echo "")
-
-          if [ -z "$TAG" ]; then
-            echo "No data-ingestion tag for this commit, skipping"
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "Found data-ingestion tag: $TAG"
-            echo "tag=$TAG" >> $GITHUB_OUTPUT
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
 
       - name: Set up Docker Buildx
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -150,48 +106,28 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/build-push-action@v5
         with:
           context: ./backend/data_pipeline/ingestion
           file: ./backend/data_pipeline/ingestion/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-data-ingestion:${{ steps.get_tag.outputs.tag }}
             ghcr.io/vchen7629/cyphria-data-ingestion:${{ github.sha }}
+            ghcr.io/vchen7629/cyphria-data-ingestion:${{ needs.determine-service.outputs.tag }}
             ghcr.io/vchen7629/cyphria-data-ingestion:latest
 
   llm-summary-cd:
+    needs: determine-service
+    if: needs.determine-service.outputs.service == 'llm_summary'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.workflow_run.head_sha }}
-
-      - name: Check for llm-summary version tag
-        id: get_tag
-        run: |
-          git fetch --tags
-
-          TAG=$(git tag --points-at HEAD | grep "^llm_summary-" || echo "")
-
-          if [ -z "$TAG" ]; then
-            echo "No llm-summary tag for this commit, skipping"
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "Found llm-summary tag: $TAG"
-            echo "tag=$TAG" >> $GITHUB_OUTPUT
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
 
       - name: Set up Docker Buildx
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -199,48 +135,28 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/build-push-action@v5
         with:
           context: ./backend/data_pipeline/llm_summary
           file: ./backend/data_pipeline/llm_summary/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-llm-summary:${{ steps.get_tag.outputs.tag }}
             ghcr.io/vchen7629/cyphria-llm-summary:${{ github.sha }}
+            ghcr.io/vchen7629/cyphria-llm-summary:${{ needs.determine-service.outputs.tag }}
             ghcr.io/vchen7629/cyphria-llm-summary:latest
 
   ranking-calculator-cd:
+    needs: determine-service
+    if: needs.determine-service.outputs.service == 'ranking_calculator'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.workflow_run.head_sha }}
-
-      - name: Check for ranking-calculator version tag
-        id: get_tag
-        run: |
-          git fetch --tags
-
-          TAG=$(git tag --points-at HEAD | grep "^ranking_calculator-" || echo "")
-
-          if [ -z "$TAG" ]; then
-            echo "No ranking-calculator tag for this commit, skipping"
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "Found ranking-calculator tag: $TAG"
-            echo "tag=$TAG" >> $GITHUB_OUTPUT
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
 
       - name: Set up Docker Buildx
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -248,48 +164,28 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/build-push-action@v5
         with:
           context: ./backend/data_pipeline/ranking_calculator
           file: ./backend/data_pipeline/ranking_calculator/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ steps.get_tag.outputs.tag }}
             ghcr.io/vchen7629/cyphria-ranking-calculator:${{ github.sha }}
+            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ needs.determine-service.outputs.tag }}
             ghcr.io/vchen7629/cyphria-ranking-calculator:latest
 
   sentiment-analysis-cd:
+    needs: determine-service
+    if: needs.determine-service.outputs.service == 'sentiment_analysis'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.workflow_run.head_sha }}
-
-      - name: Check for sentiment-analysis version tag
-        id: get_tag
-        run: |
-          git fetch --tags
-
-          TAG=$(git tag --points-at HEAD | grep "^sentiment_analysis-" || echo "")
-
-          if [ -z "$TAG" ]; then
-            echo "No sentiment-analysis tag for this commit, skipping"
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "Found sentiment-analysis tag: $TAG"
-            echo "tag=$TAG" >> $GITHUB_OUTPUT
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
 
       - name: Set up Docker Buildx
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -297,13 +193,12 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
-        if: steps.get_tag.outputs.skip != 'true'
         uses: docker/build-push-action@v5
         with:
           context: ./backend/data_pipeline/sentiment_analysis
           file: ./backend/data_pipeline/sentiment_analysis/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ steps.get_tag.outputs.tag }}
             ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ github.sha }}
+            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ needs.determine-service.outputs.tag }}
             ghcr.io/vchen7629/cyphria-sentiment_analysis:latest

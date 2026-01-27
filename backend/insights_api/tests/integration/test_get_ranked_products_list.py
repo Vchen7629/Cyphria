@@ -16,16 +16,16 @@ async def test_fetches_correct_time_window(
 ) -> None:
     """It should only fetch the correct products for the time_window specified"""
     products = [
-        {**single_product_ranking_row, "product_name": f"product_1", "product_topic": "GPU", "time_window": "all_time", "rank": 1},
-        {**single_product_ranking_row, "product_name": f"product_2", "product_topic": "GPU", "time_window": "all_time", "rank": 2},
-        {**single_product_ranking_row, "product_name": f"product_3", "product_topic": "GPU", "time_window": "all_time", "rank": 3},
-        {**single_product_ranking_row, "product_name": f"product_4", "product_topic": "GPU", "time_window": "all_time", "rank": 4},
-        {**single_product_ranking_row, "product_name": f"product_5", "product_topic": "GPU", "time_window": "all_time", "rank": 5},
-        {**single_product_ranking_row, "product_name": f"product_1", "product_topic": "GPU", "time_window": "90d", "rank": 1},
-        {**single_product_ranking_row, "product_name": f"product_2", "product_topic": "GPU", "time_window": "90d", "rank": 2},
-        {**single_product_ranking_row, "product_name": f"product_3", "product_topic": "GPU", "time_window": "90d", "rank": 3},
-        {**single_product_ranking_row, "product_name": f"product_4", "product_topic": "GPU", "time_window": "90d", "rank": 4},
-        {**single_product_ranking_row, "product_name": f"product_5", "product_topic": "GPU", "time_window": "90d", "rank": 5},
+        {**single_product_ranking_row, "product_name": "product_1", "product_topic": "GPU", "time_window": "all_time", "rank": 1},
+        {**single_product_ranking_row, "product_name": "product_2", "product_topic": "GPU", "time_window": "all_time", "rank": 2},
+        {**single_product_ranking_row, "product_name": "product_3", "product_topic": "GPU", "time_window": "all_time", "rank": 3},
+        {**single_product_ranking_row, "product_name": "product_4", "product_topic": "GPU", "time_window": "all_time", "rank": 4},
+        {**single_product_ranking_row, "product_name": "product_5", "product_topic": "GPU", "time_window": "all_time", "rank": 5},
+        {**single_product_ranking_row, "product_name": "product_1", "product_topic": "GPU", "time_window": "90d", "rank": 1},
+        {**single_product_ranking_row, "product_name": "product_2", "product_topic": "GPU", "time_window": "90d", "rank": 2},
+        {**single_product_ranking_row, "product_name": "product_3", "product_topic": "GPU", "time_window": "90d", "rank": 3},
+        {**single_product_ranking_row, "product_name": "product_4", "product_topic": "GPU", "time_window": "90d", "rank": 4},
+        {**single_product_ranking_row, "product_name": "product_5", "product_topic": "GPU", "time_window": "90d", "rank": 5},
     ]
 
     async with test_async_session() as session:
@@ -64,11 +64,11 @@ async def test_fetches_correct_product_topic(
 ) -> None:
     """It should only fetch the correct products for the product topic specified"""
     products = [
-        {**single_product_ranking_row, "product_name": f"product_1", "product_topic": "GPU", "time_window": "all_time", "rank": 1},
-        {**single_product_ranking_row, "product_name": f"product_2", "product_topic": "CPU", "time_window": "all_time", "rank": 2},
-        {**single_product_ranking_row, "product_name": f"product_3", "product_topic": "GPU", "time_window": "all_time", "rank": 3},
-        {**single_product_ranking_row, "product_name": f"product_4", "product_topic": "CPU", "time_window": "all_time", "rank": 4},
-        {**single_product_ranking_row, "product_name": f"product_5", "product_topic": "GPU", "time_window": "all_time", "rank": 5},
+        {**single_product_ranking_row, "product_name": "product_1", "product_topic": "GPU", "time_window": "all_time", "rank": 1},
+        {**single_product_ranking_row, "product_name": "product_2", "product_topic": "CPU", "time_window": "all_time", "rank": 2},
+        {**single_product_ranking_row, "product_name": "product_3", "product_topic": "GPU", "time_window": "all_time", "rank": 3},
+        {**single_product_ranking_row, "product_name": "product_4", "product_topic": "CPU", "time_window": "all_time", "rank": 4},
+        {**single_product_ranking_row, "product_name": "product_5", "product_topic": "GPU", "time_window": "all_time", "rank": 5},
     ]
 
     async with test_async_session() as session:
@@ -85,7 +85,7 @@ async def test_fetches_correct_product_topic(
                 """), product)
         await session.commit()
     
-    response = await fastapi_client.client.get(f"/api/v1/topic/products?product_topic=GPU&time_window=all_time")
+    response = await fastapi_client.client.get("/api/v1/topic/products?product_topic=GPU&time_window=all_time")
 
     assert response.status_code == 200
     product_data = response.json()

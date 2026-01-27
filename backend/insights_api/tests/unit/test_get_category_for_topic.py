@@ -9,8 +9,8 @@ def test_valid_input_topics(topic: str) -> None:
 @pytest.mark.parametrize(argnames="topic", argvalues=[None, "", "  "])
 def test_invalid_input_topics(topic: str | None) -> None:
     """Trying to fetch category for invalid topic (None, empty string, whitespace) should return None"""
-    assert get_category_for_topic(topic) == None # type: ignore
+    assert get_category_for_topic(topic) is None # type: ignore
 
 def test_non_existant_topic() -> None:
     """Trying to fetch category for a non existant topic should return None"""
-    assert get_category_for_topic("jaajaja") == None
+    assert get_category_for_topic("jaajaja") is None

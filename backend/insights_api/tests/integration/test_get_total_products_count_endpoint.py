@@ -14,9 +14,9 @@ async def test_fetch_products_in_same_category(
 ) -> None:
     """Should fetch the count of products in same category"""
     products = [
-        {**single_product_ranking_row, "product_name": f"product_gpu", "product_topic": "GPU", "mention_count": 100},
-        {**single_product_ranking_row, "product_name": f"product_cpu", "product_topic": "CPU", "mention_count": 70},
-        {**single_product_ranking_row, "product_name": f"product_photography", "product_topic": "tripod", "mention_count": 22},
+        {**single_product_ranking_row, "product_name": "product_gpu", "product_topic": "GPU", "mention_count": 100},
+        {**single_product_ranking_row, "product_name": "product_cpu", "product_topic": "CPU", "mention_count": 70},
+        {**single_product_ranking_row, "product_name": "product_photography", "product_topic": "tripod", "mention_count": 22},
     ]
 
     async with test_async_session() as session:
@@ -47,9 +47,9 @@ async def test_no_matching_products(
 ) -> None:
     """If no products match the input category, it should return 0"""
     products = [
-        {**single_product_ranking_row, "product_name": f"product_gpu", "product_topic": "GPU", "mention_count": 100},
-        {**single_product_ranking_row, "product_name": f"product_cpu", "product_topic": "CPU", "mention_count": 70},
-        {**single_product_ranking_row, "product_name": f"product_photography", "product_topic": "tripod", "mention_count": 22},
+        {**single_product_ranking_row, "product_name": "product_gpu", "product_topic": "GPU", "mention_count": 100},
+        {**single_product_ranking_row, "product_name": "product_cpu", "product_topic": "CPU", "mention_count": 70},
+        {**single_product_ranking_row, "product_name": "product_photography", "product_topic": "tripod", "mention_count": 22},
     ]
 
     async with test_async_session() as session:

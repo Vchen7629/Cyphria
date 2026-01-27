@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from unittest.mock import patch
 import pytest
 
 @pytest.mark.parametrize(argnames="product_topic", argvalues=[None,"", "  "])

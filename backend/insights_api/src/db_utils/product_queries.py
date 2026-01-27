@@ -47,7 +47,7 @@ async def fetch_matching_product_name(
     if total_products_count == 0:
         return None
 
-    fetch_matching_products_query = text(f"""
+    fetch_matching_products_query = text("""
         SELECT product_name, product_topic, grade, mention_count
         FROM product_rankings
         WHERE product_name ILIKE '%' || :query || '%' ESCAPE '\\'

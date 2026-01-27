@@ -14,11 +14,11 @@ async def test_fetch_top_3_products(
 ) -> None:
     """Should only fetch the top 3 products"""
     products = [
-        {**single_product_ranking_row, "product_name": f"product_1", "mention_count": 100},
-        {**single_product_ranking_row, "product_name": f"product_2", "mention_count": 70},
-        {**single_product_ranking_row, "product_name": f"product_3", "mention_count": 22},
-        {**single_product_ranking_row, "product_name": f"product_4", "mention_count": 999},
-        {**single_product_ranking_row, "product_name": f"product_5", "mention_count": 200},
+        {**single_product_ranking_row, "product_name": "product_1", "mention_count": 100},
+        {**single_product_ranking_row, "product_name": "product_2", "mention_count": 70},
+        {**single_product_ranking_row, "product_name": "product_3", "mention_count": 22},
+        {**single_product_ranking_row, "product_name": "product_4", "mention_count": 999},
+        {**single_product_ranking_row, "product_name": "product_5", "mention_count": 200},
     ]
 
     async with test_async_session() as session:
@@ -55,11 +55,11 @@ async def test_duplicate_mention_counts(
 ) -> None:
     """Should handle duplicate mention counts properly"""
     products = [
-        {**single_product_ranking_row, "product_name": f"product_1", "mention_count": 100},
-        {**single_product_ranking_row, "product_name": f"product_2", "mention_count": 100},
-        {**single_product_ranking_row, "product_name": f"product_3", "mention_count": 22},
-        {**single_product_ranking_row, "product_name": f"product_4", "mention_count": 999},
-        {**single_product_ranking_row, "product_name": f"product_5", "mention_count": 200},
+        {**single_product_ranking_row, "product_name": "product_1", "mention_count": 100},
+        {**single_product_ranking_row, "product_name": "product_2", "mention_count": 100},
+        {**single_product_ranking_row, "product_name": "product_3", "mention_count": 22},
+        {**single_product_ranking_row, "product_name": "product_4", "mention_count": 999},
+        {**single_product_ranking_row, "product_name": "product_5", "mention_count": 200},
     ]
 
     async with test_async_session() as session:
@@ -96,8 +96,8 @@ async def test_zero_mention_count(
 ) -> None:
     """Should return products even with 0 mention count"""
     products = [
-        {**single_product_ranking_row, "product_name": f"product_1", "mention_count": 100},
-        {**single_product_ranking_row, "product_name": f"product_2", "mention_count": 0},
+        {**single_product_ranking_row, "product_name": "product_1", "mention_count": 100},
+        {**single_product_ranking_row, "product_name": "product_2", "mention_count": 0},
     ]
 
     async with test_async_session() as session:

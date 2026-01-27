@@ -1,6 +1,7 @@
 
 import { AxiosError } from 'axios'
 import { insights_api } from '../client/basePath'
+import { TopMentionedProductForTopicResultProps, TopMentionedProductsResultProps } from '../../types/category'
 
 /**
  @component
@@ -9,7 +10,7 @@ import { insights_api } from '../client/basePath'
  */
 export const ProductCategoryService = {
     // fetch the top 3 products by mention count for the category
-    top_mentioned_products: async({ category }: { category: string }) => {
+    top_mentioned_products: async({ category }: { category: string }): Promise<TopMentionedProductsResultProps[]> => {
         try {
             const response = await insights_api.get(`/api/v1/category/top_mentioned_products?category=${category}`)
             
@@ -28,7 +29,7 @@ export const ProductCategoryService = {
         }
     },
     // fetch the amount of products for the specified category
-    total_products_count: async({ category }: { category: string }) => {
+    total_products_count: async({ category }: { category: string }): Promise<number> => {
         try {
             const response = await insights_api.get(`/api/v1/category/total_products_count?category=${category}`)
         
@@ -47,7 +48,7 @@ export const ProductCategoryService = {
         }
     },
     // fetch the top 3 products based on mention count for the individual product topic cards on category page
-    top_mentioned_product_for_topic: async({ product_topic }: { product_topic: string }) => {
+    top_mentioned_product_for_topic: async({ product_topic }: { product_topic: string }): Promise<TopMentionedProductForTopicResultProps[]> => {
         try {
             const response = await insights_api.get(`/api/v1/category/topic_most_mentioned_product?product_topic=${product_topic}`)
         

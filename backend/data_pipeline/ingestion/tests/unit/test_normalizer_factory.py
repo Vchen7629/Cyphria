@@ -9,8 +9,8 @@ def test_invalid_input_product_topic(product_topic: str | None) -> None:
     with patch("src.core.logger.StructuredLogger") as MockLogger:
         mock_logger_instance = MockLogger.return_value
         factory = NormalizerFactory.normalize(
-            product_topic, product_list=["hi"], logger=mock_logger_instance
-        )  # type: ignore
+            product_topic, product_list=["hi"], logger=mock_logger_instance  # type: ignore
+        )
 
         assert factory is None
         mock_logger_instance.error.assert_called_once()

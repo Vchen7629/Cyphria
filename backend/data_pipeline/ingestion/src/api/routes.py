@@ -44,6 +44,8 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
     job_state.create_job(body.product_topic)
 
     detector = DetectorFactory.get_detector(body.product_topic)
+    if not detector:
+        raise HTTPException(status_code=400, detail="Detector not available")
 
     service = IngestionService(
         reddit_client=request.app.state.reddit_client,

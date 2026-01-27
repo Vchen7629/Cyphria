@@ -69,7 +69,7 @@ jobs:
   
   category-classification-cd:
     needs: path-filter
-    if: ${{ needs.path-filter.outputs.backend. == 'true' }}
+    if: ${{ needs.path-filter.outputs.backend == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

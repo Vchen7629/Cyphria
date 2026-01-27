@@ -10,6 +10,7 @@ import time
 
 logger = StructuredLogger(pod="insights_api")
 
+
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
 async def fetch_total_products_ranked(session: AsyncSession, product_topic: str) -> int:
     """
@@ -32,15 +33,18 @@ async def fetch_total_products_ranked(session: AsyncSession, product_topic: str)
     result = await session.execute(query, {"product_topic": product_topic.strip()})
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
-        query_type="get", 
-        query_name="fetch_topic_total_products_ranked", 
-        table="product_rankings"
+        query_type="get",
+        query_name="fetch_topic_total_products_ranked",
+        table="product_rankings",
     ).observe(duration)
 
     return result.scalar() or 0
-    
+
+
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
-async def fetch_total_comments(session: AsyncSession, product_topic: str, time_window: str) -> int:
+async def fetch_total_comments(
+    session: AsyncSession, product_topic: str, time_window: str
+) -> int:
     """
     Fetch number of comments that contribute to product scores for this specific topic
 
@@ -51,7 +55,7 @@ async def fetch_total_comments(session: AsyncSession, product_topic: str, time_w
 
     Returns:
         the number of comments that contribute to product scores or 0 if none found
-    """    
+    """
     normalized_time_window: str = time_window.lower().strip()
     normalized_product_topic: str = product_topic.lower().strip()
 
@@ -60,7 +64,7 @@ async def fetch_total_comments(session: AsyncSession, product_topic: str, time_w
 
     if not normalized_product_topic or normalized_product_topic == "":
         return 0
-    
+
     if normalized_time_window == "all_time":
         query = text("""
             SELECT COUNT(*)
@@ -86,11 +90,9 @@ async def fetch_total_comments(session: AsyncSession, product_topic: str, time_w
     result = await session.execute(query, params)
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
-        query_type="get", 
-        query_name="fetch_topic_total_comments", 
-        table="raw_comments"
+        query_type="get", query_name="fetch_topic_total_comments", table="raw_comments"
     ).observe(duration)
-    
+
     return result.scalar() or 0
 
 
@@ -121,11 +123,7 @@ async def fetch_products(
 
     start_time = time.perf_counter()
     result = await session.execute(
-        query,
-        {
-            "product_topic": product_topic.strip(),
-            "time_window": time_window
-        }
+        query, {"product_topic": product_topic.strip(), "time_window": time_window}
     )
     rows = result.fetchall()
     if not rows:
@@ -133,9 +131,7 @@ async def fetch_products(
 
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
-        query_type="get", 
-        query_name="fetch_topic_products", 
-        table="product_rankings"
+        query_type="get", query_name="fetch_topic_products", table="product_rankings"
     ).observe(duration)
 
     return [
@@ -147,7 +143,7 @@ async def fetch_products(
             approval_percentage=row.approval_percentage,
             is_top_pick=row.is_top_pick,
             is_most_discussed=row.is_most_discussed,
-            has_limited_data=row.has_limited_data
+            has_limited_data=row.has_limited_data,
         )
         for row in rows
     ]

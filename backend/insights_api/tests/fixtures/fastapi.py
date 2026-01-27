@@ -16,15 +16,16 @@ from src.routes.category import routes as category_router
 import pytest_asyncio
 import pytest
 
+
 @asynccontextmanager
 async def null_lifespan(_app: FastAPI) -> AsyncGenerator[Any, Any]:
     """No-op lifespan for testing - state is set by fixtures"""
     yield
 
+
 @pytest_asyncio.fixture
 async def fastapi_client(
-    test_async_session: async_sessionmaker[AsyncSession],
-    clean_tables: None
+    test_async_session: async_sessionmaker[AsyncSession], clean_tables: None
 ) -> AsyncGenerator[FastAPITestClient, None]:
     """FastAPI AsyncClient with test database session."""
 
@@ -48,8 +49,11 @@ async def fastapi_client(
 
     test_app.dependency_overrides[get_session] = override_get_session
 
-    async with AsyncClient(transport=ASGITransport(app=test_app), base_url="http://test") as client:
+    async with AsyncClient(
+        transport=ASGITransport(app=test_app), base_url="http://test"
+    ) as client:
         yield FastAPITestClient(client=client, app=test_app)
+
 
 @pytest.fixture(scope="function")
 def mock_fastapi() -> FastAPI:

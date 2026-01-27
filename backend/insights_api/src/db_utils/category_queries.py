@@ -10,6 +10,7 @@ import time
 
 logger = StructuredLogger(pod="insights_api")
 
+
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
 async def fetch_top_mentioned_products(
     session: AsyncSession, category_topics: list[str]
@@ -38,14 +39,16 @@ async def fetch_top_mentioned_products(
     rows = result.fetchall()
 
     if not rows:
-        logger.debug(event_type="insights_api run", message="top mention products not fetched")
+        logger.debug(
+            event_type="insights_api run", message="top mention products not fetched"
+        )
         return None
 
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
         query_type="get",
         query_name="fetch_category_top_mentioned_products",
-        table="product_rankings"
+        table="product_rankings",
     ).observe(duration)
 
     return [
@@ -53,10 +56,11 @@ async def fetch_top_mentioned_products(
             product_name=row.product_name,
             grade=row.grade,
             mention_count=row.mention_count,
-            topic_name=row.product_topic
+            topic_name=row.product_topic,
         )
         for row in rows
     ]
+
 
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
 async def fetch_topic_top_mentioned_products(
@@ -79,19 +83,21 @@ async def fetch_topic_top_mentioned_products(
         ORDER BY mention_count DESC
         LIMIT 3
     """)
-    
+
     start_time = time.perf_counter()
     result = await session.execute(query, {"product_topic": product_topic})
     rows = result.fetchall()
 
     if not rows:
-        logger.debug(event_type="insights_api run", message="top mention products not fetched")
+        logger.debug(
+            event_type="insights_api run", message="top mention products not fetched"
+        )
         return None
     duration = time.perf_counter() - start_time
     db_query_duration.labels(
         query_type="get",
         query_name="fetch_category_topic_mentioned_products",
-        table="product_rankings"
+        table="product_rankings",
     ).observe(duration)
 
     return [
@@ -99,8 +105,11 @@ async def fetch_topic_top_mentioned_products(
         for row in rows
     ]
 
+
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=logger)
-async def fetch_total_products_count(session: AsyncSession, topic_list: list[str]) -> int:
+async def fetch_total_products_count(
+    session: AsyncSession, topic_list: list[str]
+) -> int:
     """
     Fetch number of products for the category
 
@@ -123,7 +132,7 @@ async def fetch_total_products_count(session: AsyncSession, topic_list: list[str
     db_query_duration.labels(
         query_type="get",
         query_name="fetch_category_total_products_count",
-        table="product_rankings"
+        table="product_rankings",
     ).observe(duration)
 
     return result.scalar() or 0

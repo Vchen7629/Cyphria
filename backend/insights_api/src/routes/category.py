@@ -25,12 +25,21 @@ settings = Settings()
 
 routes = APIRouter(prefix=f"/api/{settings.API_VERSION}", tags=["Production"])
 
-@routes.get(path="/category/top_mentioned_products", response_model=GetCategoryTopMentionProductsResponse)
+
+@routes.get(
+    path="/category/top_mentioned_products",
+    response_model=GetCategoryTopMentionProductsResponse,
+)
 async def get_top_mentioned_products(
     request: Request,
     cache: Valkey | None = Depends(get_cache),
     session: AsyncSession = Depends(get_session),
-    category: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product category to fetch top products for"),
+    category: str = Query(
+        ...,
+        min_length=1,
+        pattern=r"^\S.*$",
+        description="Product category to fetch top products for",
+    ),
 ) -> GetCategoryTopMentionProductsResponse:
     """
     Fetches top 6 products with most mention count across all topics in the category
@@ -49,27 +58,41 @@ async def get_top_mentioned_products(
 
     category_topics: list[str] = get_topics_for_category(category)
     if not category_topics:
-        raise HTTPException(status_code=404, detail=f"topics not found for category: {category}")
+        raise HTTPException(
+            status_code=404, detail=f"topics not found for category: {category}"
+        )
     # check cache for the top products for category first before calling db
     if cache:
-        cached_response = await get_cache_value(cache, cache_key, logger, GetCategoryTopMentionProductsResponse)
+        cached_response = await get_cache_value(
+            cache, cache_key, logger, GetCategoryTopMentionProductsResponse
+        )
         if cached_response:
             return cached_response
 
-    top_products: Optional[list[CategoryTopMentionedProduct]] = await fetch_top_mentioned_products(session, category_topics)
+    top_products: Optional[
+        list[CategoryTopMentionedProduct]
+    ] = await fetch_top_mentioned_products(session, category_topics)
     if not top_products:
-        raise HTTPException(status_code=404, detail=f"top products not found for category: {category}")
+        raise HTTPException(
+            status_code=404, detail=f"top products not found for category: {category}"
+        )
     api_response = GetCategoryTopMentionProductsResponse(products=top_products)
     # If we have cache available, try to cache result
     if cache:
         await set_cache_value(cache, cache_key, api_response, cache_expiry_s, logger)
-    
+
     return api_response
+
 
 @routes.get(path="/category/total_products_count")
 async def get_total_products_count(
     session: AsyncSession = Depends(get_session),
-    category: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product category to fetch total product numbers for")
+    category: str = Query(
+        ...,
+        min_length=1,
+        pattern=r"^\S.*$",
+        description="Product category to fetch total product numbers for",
+    ),
 ) -> int:
     """
     Fetches the amount of products for the category
@@ -79,28 +102,41 @@ async def get_total_products_count(
     """
     category_topics: list[str] = get_topics_for_category(category)
     if not category_topics:
-        raise HTTPException(status_code=404, detail=f"topics not found for category: {category}")
+        raise HTTPException(
+            status_code=404, detail=f"topics not found for category: {category}"
+        )
 
     product_count: int = await fetch_total_products_count(session, category_topics)
 
     return product_count
-    
+
+
 @routes.get(path="/category/topic_most_mentioned_product")
 async def get_top_mentioned_product_for_topic(
     session: AsyncSession = Depends(get_session),
-    product_topic: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product topic to fetch top products for"),
+    product_topic: str = Query(
+        ...,
+        min_length=1,
+        pattern=r"^\S.*$",
+        description="Product topic to fetch top products for",
+    ),
 ) -> GetTopicTopMentionProductResponse:
     """
     Fetches top 3 products with most mention count for specific topic when on the category page
-    
+
     Returns:
         a list of product dicts containing the product name and letter grade
 
     Raises:
         a 404 exception if no top products are found for the topic
     """
-    top_products: Optional[list[TopMentionedProduct]] = await fetch_topic_top_mentioned_products(session, product_topic)
+    top_products: Optional[
+        list[TopMentionedProduct]
+    ] = await fetch_topic_top_mentioned_products(session, product_topic)
     if not top_products:
-        raise HTTPException(status_code=404, detail=f"top products not found for product_topic: {product_topic}")
-    
+        raise HTTPException(
+            status_code=404,
+            detail=f"top products not found for product_topic: {product_topic}",
+        )
+
     return GetTopicTopMentionProductResponse(products=top_products)

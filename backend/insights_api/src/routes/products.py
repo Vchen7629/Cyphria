@@ -27,11 +27,19 @@ settings = Settings()
 
 routes = APIRouter(prefix=f"/api/{settings.API_VERSION}")
 
+
 @routes.get(path="/product/sentiment_scores")
 async def get_sentiment_scores(
-    product_name: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product name to fetch sentiment scores for"),
-    time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter, either 90d or all_time"),
-    session: AsyncSession = Depends(get_session)
+    product_name: str = Query(
+        ...,
+        min_length=1,
+        pattern=r"^\S.*$",
+        description="Product name to fetch sentiment scores for",
+    ),
+    time_window: Literal["all_time", "90d"] = Query(
+        ..., description="Time window filter, either 90d or all_time"
+    ),
+    session: AsyncSession = Depends(get_session),
 ) -> GetViewMoreProductsMetadataResponse:
     """
     Called when the view more tab is clicked for a product, shows additional metadata like
@@ -44,22 +52,34 @@ async def get_sentiment_scores(
         a 404 HTTPException if sentiment counts are not found for the product and time window
     """
 
-    product_sentiment_scores: Optional[FetchProductSentimentScores] = await fetch_product_sentiment_scores(session, product_name, time_window)
+    product_sentiment_scores: Optional[
+        FetchProductSentimentScores
+    ] = await fetch_product_sentiment_scores(session, product_name, time_window)
     if not product_sentiment_scores:
         raise HTTPException(
             status_code=404,
-            detail=f"Sentiment counts not found for product: {product_name} time_window: {time_window}"
+            detail=f"Sentiment counts not found for product: {product_name} time_window: {time_window}",
         )
 
-    return GetViewMoreProductsMetadataResponse(product=product_sentiment_scores.model_dump())
+    return GetViewMoreProductsMetadataResponse(
+        product=product_sentiment_scores.model_dump()
+    )
+
 
 @routes.get(path="/product/top_comments", response_model=GetTopCommentsProductResponse)
 async def get_top_comments(
     request: Request,
-    product_name: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product name to fetch top comments for"),
-    time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter (e.g. 90d, 30d)"),
+    product_name: str = Query(
+        ...,
+        min_length=1,
+        pattern=r"^\S.*$",
+        description="Product name to fetch top comments for",
+    ),
+    time_window: Literal["all_time", "90d"] = Query(
+        ..., description="Time window filter (e.g. 90d, 30d)"
+    ),
     session: AsyncSession = Depends(get_session),
-    cache: Valkey | None = Depends(get_cache)
+    cache: Valkey | None = Depends(get_cache),
 ) -> GetTopCommentsProductResponse:
     """
     Get top comments for the specific product.
@@ -67,7 +87,7 @@ async def get_top_comments(
 
     Returns:
         a list of the top comments with the comment text, link, score, and created_utc timestamp
-    
+
     Raises:
         a 404 HTTPException if no reddit comments are found for the product and time window
     """
@@ -78,15 +98,19 @@ async def get_top_comments(
 
     # check cache first before expensive db call
     if cache:
-        cached_response = await get_cache_value(cache, cache_key, logger, GetTopCommentsProductResponse)
+        cached_response = await get_cache_value(
+            cache, cache_key, logger, GetTopCommentsProductResponse
+        )
         if cached_response:
             return cached_response
 
-    top_comments: Optional[list[FetchTopRedditCommentsResult]] = await fetch_top_reddit_comments(session, product_name, time_window)
+    top_comments: Optional[
+        list[FetchTopRedditCommentsResult]
+    ] = await fetch_top_reddit_comments(session, product_name, time_window)
     if not top_comments:
         raise HTTPException(
             status_code=404,
-            detail=f"No reddit comments found for product: {product_name} and time_window: {time_window}"
+            detail=f"No reddit comments found for product: {product_name} and time_window: {time_window}",
         )
 
     api_response = GetTopCommentsProductResponse(
@@ -99,49 +123,60 @@ async def get_top_comments(
 
     return api_response
 
+
 @routes.get(path="/product/search", response_model=SearchProductResponse)
 async def get_product_by_name(
     request: Request,
-    query: str = Query(..., alias="q", min_length=1, pattern=r"^\S.*$", description="the product name we are trying to find"),
-    current_page: int = Query(..., ge=1, description="current api pagination page we are fetching results for"), 
+    query: str = Query(
+        ...,
+        alias="q",
+        min_length=1,
+        pattern=r"^\S.*$",
+        description="the product name we are trying to find",
+    ),
+    current_page: int = Query(
+        ..., ge=1, description="current api pagination page we are fetching results for"
+    ),
     session: AsyncSession = Depends(get_session),
     cache: Valkey | None = Depends(get_cache),
 ) -> SearchProductResponse:
     """
     Search all matching product names with query, used in the header searchbar
     uses Valkey caching layer to improve search performance
-    
+
     Returns:
-        a list of matching products (product_name, product_topic, grade, mention_count, category), 
+        a list of matching products (product_name, product_topic, grade, mention_count, category),
         current page and total pages for pagination or an empty array if none found
     """
     logger: StructuredLogger = request.app.state.logger
-    search_cache_ttl_s: int = 600 # 10 minutes
+    search_cache_ttl_s: int = 600  # 10 minutes
     normalized_query: str = query.strip().lower()
     cache_key = f"search:{normalized_query}:page:{current_page}"
 
     # check cache if someone else already searched this term before hitting db
     if cache:
-        cached_response = await get_cache_value(cache, cache_key, logger, SearchProductResponse)
+        cached_response = await get_cache_value(
+            cache, cache_key, logger, SearchProductResponse
+        )
         if cached_response:
             return cached_response
 
-    paginated_search_res: Optional[FetchMatchingProductNameResult] = await fetch_matching_product_name(session, normalized_query, current_page)
+    paginated_search_res: Optional[
+        FetchMatchingProductNameResult
+    ] = await fetch_matching_product_name(session, normalized_query, current_page)
     if not paginated_search_res:
-        return SearchProductResponse(
-            products=[],
-            current_page=1,
-            total_pages=1
-        )
+        return SearchProductResponse(products=[], current_page=1, total_pages=1)
 
     api_response = SearchProductResponse(
         products=paginated_search_res.product_list,
         current_page=paginated_search_res.current_page,
-        total_pages=paginated_search_res.total_pages
+        total_pages=paginated_search_res.total_pages,
     )
 
     # update cache with search query
     if cache:
-        await set_cache_value(cache, cache_key, api_response, search_cache_ttl_s, logger)
+        await set_cache_value(
+            cache, cache_key, api_response, search_cache_ttl_s, logger
+        )
 
     return api_response

@@ -12,10 +12,10 @@ app = FastAPI(
     title="Ingestion Service",
     description="Reddit comment ingestion for product sentiment analysis",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
-instrumentator.instrument(app).expose(app, endpoint='/metrics')
+instrumentator.instrument(app).expose(app, endpoint="/metrics")
 
 app.include_router(category_router)
 app.include_router(home_router)

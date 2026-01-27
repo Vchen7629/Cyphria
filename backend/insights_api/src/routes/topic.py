@@ -20,33 +20,48 @@ from src.db_utils.cache_commands import increment_trending_topic
 from src.db_utils.topic_queries import fetch_products
 from src.db_utils.topic_queries import fetch_total_comments
 from src.db_utils.topic_queries import fetch_total_products_ranked
+
 settings = Settings()
 
 routes = APIRouter(prefix=f"/api/{settings.API_VERSION}")
 
+
 @routes.get(path="/topic/total_products_ranked")
 async def get_total_products_ranked(
-    product_topic: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product topic to fetch ranked products for"),
-    session: AsyncSession = Depends(get_session)
+    product_topic: str = Query(
+        ...,
+        min_length=1,
+        pattern=r"^\S.*$",
+        description="Product topic to fetch ranked products for",
+    ),
+    session: AsyncSession = Depends(get_session),
 ) -> int:
     """
     Fetches and returns the number of products ranked for the specified topic
-    
+
     Returns:
         a count number of the total products ranked for the topic
     """
     ranked_count: int = await fetch_total_products_ranked(session, product_topic)
-    
+
     return ranked_count
+
 
 @routes.get(path="/topic/total_comments")
 async def get_total_comments(
-    product_topic: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product topic to fetch ranked products for"),
-    time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter, all_time or 90d"),
+    product_topic: str = Query(
+        ...,
+        min_length=1,
+        pattern=r"^\S.*$",
+        description="Product topic to fetch ranked products for",
+    ),
+    time_window: Literal["all_time", "90d"] = Query(
+        ..., description="Time window filter, all_time or 90d"
+    ),
     session: AsyncSession = Depends(get_session),
 ) -> int:
     """
-    Fetches and returns the number of comments that contribute to the 
+    Fetches and returns the number of comments that contribute to the
     product score for the time window and topic
 
     Returns:
@@ -56,14 +71,22 @@ async def get_total_comments(
 
     return comment_count
 
+
 @routes.get(path="/topic/products", response_model=GetRankedProductsResponse)
 async def get_ranked_products_list(
     request: Request,
-    product_topic: str = Query(..., min_length=1, pattern=r"^\S.*$", description="Product topic to fetch ranked products for"),
-    time_window: Literal["all_time", "90d"] = Query(..., description="Time window filter, either 90d or all_time"),
+    product_topic: str = Query(
+        ...,
+        min_length=1,
+        pattern=r"^\S.*$",
+        description="Product topic to fetch ranked products for",
+    ),
+    time_window: Literal["all_time", "90d"] = Query(
+        ..., description="Time window filter, either 90d or all_time"
+    ),
     session: AsyncSession = Depends(get_session),
     cache: Valkey | None = Depends(get_cache),
-    client_ip: str = Depends(get_client_ip)
+    client_ip: str = Depends(get_client_ip),
 ) -> GetRankedProductsResponse:
     """
     Route that frontend calls to get ranked products for specified topic
@@ -79,18 +102,27 @@ async def get_ranked_products_list(
     """
     logger: StructuredLogger = request.app.state.logger
     # topic cache should live for 20 mins (1200 seconds) since processing happens every 30 mins + processing time
-    topic_cache_expiry_s: int = 1200 
+    topic_cache_expiry_s: int = 1200
     cache_key: str = f"topic:{product_topic}:top_products:time_window:{time_window}"
 
-    if cache: # check cache before checking database
-        cached_response = await get_cache_value(cache, cache_key, logger, GetRankedProductsResponse)
+    if cache:  # check cache before checking database
+        cached_response = await get_cache_value(
+            cache, cache_key, logger, GetRankedProductsResponse
+        )
         if cached_response:
-            await increment_trending_topic(cache, product_topic, client_ip) # increment the count by 1 for current topic
+            await increment_trending_topic(
+                cache, product_topic, client_ip
+            )  # increment the count by 1 for current topic
             return cached_response
-    
-    ranked_products: Optional[list[FetchProductsResult]] = await fetch_products(session, product_topic, time_window)
+
+    ranked_products: Optional[list[FetchProductsResult]] = await fetch_products(
+        session, product_topic, time_window
+    )
     if not ranked_products:
-        raise HTTPException(status_code=404, detail=f"No products fetched for the topic: {product_topic}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"No products fetched for the topic: {product_topic}",
+        )
 
     api_response = GetRankedProductsResponse(products=ranked_products)
     # try to update the cache with the ranked products and page view count
@@ -101,7 +133,9 @@ async def get_ranked_products_list(
             value=api_response,
             ttl_seconds=topic_cache_expiry_s,
             logger=logger,
-            on_cache_write=lambda cache: increment_trending_topic(cache, product_topic, client_ip)
+            on_cache_write=lambda cache: increment_trending_topic(
+                cache, product_topic, client_ip
+            ),
         )
 
     return api_response

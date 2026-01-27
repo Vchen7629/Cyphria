@@ -4,30 +4,31 @@ from sqlalchemy.exc import OperationalError, DBAPIError, InterfaceError
 from src.core.logger import StructuredLogger
 import asyncio
 
-ReturnType = TypeVar('ReturnType')
+ReturnType = TypeVar("ReturnType")
 
 # Transient errors that are safe to retry
 RETRYABLE_ERRORS = (
     OperationalError,  # Connection issues, timeouts
-    InterfaceError # Connection interface errors
+    InterfaceError,  # Connection interface errors
 )
 
 # PostgreSQL error codes for transient failures
 RETRYABLE_PG_CODES = {
-    "40001",  # serialization_failure                                                                   
-    "40P01",  # deadlock_detected                                                                       
-    "57P01",  # admin_shutdown                                                                          
-    "57P02",  # crash_shutdown                                                                          
-    "08000",  # connection_exception                                                                    
-    "08003",  # connection_does_not_exist                                                               
-    "08006",  # connection_failure 
+    "40001",  # serialization_failure
+    "40P01",  # deadlock_detected
+    "57P01",  # admin_shutdown
+    "57P02",  # crash_shutdown
+    "08000",  # connection_exception
+    "08003",  # connection_does_not_exist
+    "08006",  # connection_failure
 }
+
 
 def is_retryable_error(exc: Exception) -> bool:
     """Check if an exception is retryable"""
     if isinstance(exc, RETRYABLE_ERRORS):
         return True
-    
+
     if isinstance(exc, DBAPIError):
         orig = exc.orig
         if orig is not None and hasattr(orig, "sqlstate"):
@@ -42,7 +43,10 @@ def retry_with_backoff(
     max_delay: float = 30.0,
     backoff_multiplier: float = 2.0,
     logger: Optional[StructuredLogger] = None,
-) -> Callable[[Callable[..., Coroutine[Any, Any, ReturnType]]], Callable[..., Coroutine[Any, Any, ReturnType]]]:
+) -> Callable[
+    [Callable[..., Coroutine[Any, Any, ReturnType]]],
+    Callable[..., Coroutine[Any, Any, ReturnType]],
+]:
     """
     Decorator that retries a function with exponential backoff on transient database errors.
 
@@ -59,8 +63,9 @@ def retry_with_backoff(
             # Database operation that might fail transiently
             pass
     """
+
     def decorator(
-        func: Callable[..., Coroutine[Any, Any, ReturnType]]
+        func: Callable[..., Coroutine[Any, Any, ReturnType]],
     ) -> Callable[..., Coroutine[Any, Any, ReturnType]]:
         @wraps(func)
         async def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -91,13 +96,14 @@ def retry_with_backoff(
                             delay = min(delay * backoff_multiplier, max_delay)
                     else:
                         if logger:
-                            logger.error(                                                               
-                                event_type="Database Error",                                            
-                                message=f"{func.__name__} failed with non-retryable error",             
-                                error=str(e),                                                           
-                                error_type=type(e).__name__,                                            
-                            )                                                                           
-                        raise 
+                            logger.error(
+                                event_type="Database Error",
+                                message=f"{func.__name__} failed with non-retryable error",
+                                error=str(e),
+                                error_type=type(e).__name__,
+                            )
+                        raise
 
         return wrapper
+
     return decorator

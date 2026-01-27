@@ -12,12 +12,18 @@ settings = Settings()
 
 routes = APIRouter(prefix=f"/api/{settings.API_VERSION}", tags=["Production"])
 
+
 @routes.get(path="/home/trending/product_topics")
-async def get_trending_product_topics(cache: Valkey | None = Depends(get_cache)) -> TrendingTopicsResponse:
+async def get_trending_product_topics(
+    cache: Valkey | None = Depends(get_cache),
+) -> TrendingTopicsResponse:
     """Fetch the top 6 most viewed product topics based on views from users on the site"""
     if not cache:
-        raise HTTPException(status_code=503, detail="Feature requires cache service (currently unavailable)")
-    
+        raise HTTPException(
+            status_code=503,
+            detail="Feature requires cache service (currently unavailable)",
+        )
+
     try:
         # Get current week's trending topic cache key
         trending_key = get_weekly_trending_key()
@@ -26,7 +32,7 @@ async def get_trending_product_topics(cache: Valkey | None = Depends(get_cache))
 
         if not trending:
             return TrendingTopicsResponse(trending_topics=[])
-        
+
         # convert valkey result, [(b'GPU', 127.0), (b'Laptop', 89.0),...] to pydantic models
         return TrendingTopicsResponse(
             trending_topics=[

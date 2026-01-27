@@ -1,0 +1,239 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+      - ci-test
+jobs:
+    path-filter:
+      runs-on: ubuntu-latest
+      outputs:
+          frontend: ${{ steps.changes.outputs.frontend }}
+          insights_api: ${{ steps.changes.outputs.insights_api }}
+          data_ingestion: ${{ steps.changes.outputs.data_ingestion }}
+          llm_summary: ${{ steps.changes.outputs.llm_summary }}
+          ranking_calculator: ${{ steps.changes.outputs.ranking_calculator }}
+          sentiment_analysis: ${{ steps.changes.outputs.sentiment_analysis }}
+      steps:
+        - uses: actions/checkout@v4
+        - uses: dorny/paths-filter@v3
+          id: changes
+          with:
+            filters: |
+              frontend:
+                - 'frontend/**'
+              insights_api:
+                - 'backend/insights_api/**'
+              data_ingestion:
+                - 'backend/data_pipeline/ingestion/**'
+              llm_summary:
+                - 'backend/data_pipeline/llm_summary/**'
+              ranking_calculator:
+                - 'backend/data_pipeline/ranking_calculator/**'
+              sentiment_analysis:
+                - 'backend/data_processing/sentiment_analysis/**'
+    frontend-ci:
+      needs: path-filter
+      if: ${{ needs.path-filter.outputs.frontend == 'true' }}
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: setup node
+          uses: actions/setup-node@v5
+          with:
+            node-version: '>=23.6.1'
+        
+        - name: Install dependencies
+          working-directory: frontend
+          run: npm install --dev
+
+        - name: Run Linting 
+          working-directory: frontend
+          run: npm run lint
+        
+        - name: Run tests
+          working-directory: frontend
+          run: npm run test
+
+    insights-api-ci:
+        needs: path-filter
+        if: ${{ needs.path-filter.outputs.insights_api == 'true' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v6
+              with:
+                version: "0.8.19"
+            
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.13"
+
+            - name: Install the project
+              run: uv sync --locked --all-extras --dev
+              working-directory: backend/insights_api
+            
+            - name: Run Linter and Formatting
+              run: |
+                uv run ruff check .
+                uv run ruff format --check
+              working-directory: backend/insights_api
+            
+            - name: Run Type Checking
+              run: uv run pyrefly check
+              working-directory: backend/insights_api
+            
+            - name: Run Unit/Integration Tests
+              run: uv run pytest tests
+              working-directory: backend/insights_api
+
+    data-ingestion-ci:
+        needs: path-filter
+        if: ${{ needs.path-filter.outputs.data_ingestion == 'true' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v6
+              with:
+                version: "0.8.19"
+            
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.13"
+
+            - name: Install the project
+              run: uv sync --locked --all-extras --dev
+              working-directory: backend/data_pipeline/data_ingestion
+            
+            - name: Run Linter and Formatting
+              run: |
+                uv run ruff check .
+                uv run ruff format --check
+              working-directory: backend/data_pipeline/data_ingestion
+            
+            - name: Run Type Checking
+              run: uv run pyrefly check
+              working-directory: backend/data_pipeline/data_ingestion
+            
+            - name: Run Unit/Integration Tests
+              run: uv run pytest tests
+              working-directory: backend/data_pipeline/data_ingestion
+
+    llm-summary-ci:
+        needs: path-filter
+        if: ${{ needs.path-filter.outputs.llm_summary == 'true' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v6
+              with:
+                version: "0.8.19"
+            
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.13"
+
+            - name: Install the project
+              run: uv sync --locked --all-extras --dev
+              working-directory: backend/data_pipeline/llm_summary
+            
+            - name: Run Linter and Formatting
+              run: |
+                uv run ruff check .
+                uv run ruff format --check
+              working-directory: backend/data_pipeline/llm_summary
+            
+            - name: Run Type Checking
+              run: uv run pyrefly check
+              working-directory: backend/data_pipeline/llm_summary
+            
+            - name: Run Unit/Integration Tests
+              run: uv run pytest tests
+              working-directory: backend/data_pipeline/llm_summary
+
+    ranking-calculator-ci:
+        needs: path-filter
+        if: ${{ needs.path-filter.outputs.ranking_calculator == 'true' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v6
+              with:
+                version: "0.8.19"
+            
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.13"
+
+            - name: Install the project
+              run: uv sync --locked --all-extras --dev
+              working-directory: backend/data_pipeline/ranking_calculator
+            
+            - name: Run Linter and Formatting
+              run: |
+                uv run ruff check .
+                uv run ruff format --check
+              working-directory: backend/data_pipeline/ranking_calculator
+            
+            - name: Run Type Checking
+              run: uv run pyrefly check
+              working-directory: backend/data_pipeline/ranking_calculator
+            
+            - name: Run Unit/Integration Tests
+              run: uv run pytest tests
+              working-directory: backend/data_pipeline/ranking_calculator
+
+    sentiment-analysis-ci:
+        needs: path-filter
+        if: ${{ needs.path-filter.outputs.sentiment_analysis == 'true' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v6
+              with:
+                version: "0.8.19"
+            
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.13"
+
+            - name: Install the project
+              run: uv sync --locked --all-extras --dev
+              working-directory: backend/data_pipeline/sentiment_analysis
+            
+            - name: Run Linter and Formatting
+              run: |
+                uv run ruff check .
+                uv run ruff format --check
+              working-directory: backend/data_pipeline/sentiment_analysis
+            
+            - name: Run Type Checking
+              run: uv run pyrefly check
+              working-directory: backend/data_pipeline/sentiment_analysis
+            
+            - name: Run Unit/Integration Tests
+              run: uv run pytest tests
+              working-directory: backend/data_pipeline/sentiment_analysis

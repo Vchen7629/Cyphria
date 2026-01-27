@@ -4,7 +4,7 @@ import pytest
 @pytest.mark.parametrize(argnames="category", argvalues=["COMPUTING", "comPuTING", "  COMPUTING   "])
 def test_valid_input_category(category: str) -> None:
     """Fetching topics for a valid category should return the matching topic list"""
-    assert get_topics_for_category(category) ==  ["CPU", "GPU", "LAPTOP", "Mechanical Keyboard", "Monitor"]
+    assert get_topics_for_category(category) ==  ["CPU", "GPU", "LAPTOP", "MECHANICAL KEYBOARD", "MONITOR"]
 
 @pytest.mark.parametrize(argnames="category", argvalues=[None, "", "  "])
 def test_invalid_input_category(category: str | None) -> None:

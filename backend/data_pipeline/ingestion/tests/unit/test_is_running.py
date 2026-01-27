@@ -5,10 +5,10 @@ def test_check_running_job() -> None:
     job_state = JobState()
     job_state.create_job(product_topic="GPU")
 
-    assert job_state.is_running() == True
+    assert job_state.is_running()
 
 def test_check_not_running_job() -> None:
     """Calling is_running while a job is not running should return False"""
     job_state = JobState()
-    assert job_state.is_running() == False
+    assert not job_state.is_running()
 

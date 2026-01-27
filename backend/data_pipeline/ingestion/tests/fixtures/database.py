@@ -2,7 +2,6 @@ from typing import Any
 from typing import Generator
 from datetime import datetime
 from datetime import timezone
-from unittest.mock import MagicMock
 from psycopg_pool import ConnectionPool
 from testcontainers.postgres import PostgresContainer
 import pytest

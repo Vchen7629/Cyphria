@@ -4,7 +4,6 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from unittest.mock import MagicMock
 from unittest.mock import patch
-from unittest.mock import MagicMock
 from testcontainers.postgres import PostgresContainer
 from psycopg_pool import ConnectionPool
 import os

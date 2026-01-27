@@ -29,7 +29,7 @@ def test_successful_run_updates_job_state(create_ingestion_service: IngestionSer
             assert current_job.error is None
 
             # Verify run_state cleaned up
-            assert mock_run_state.run_in_progress == False
+            assert not mock_run_state.run_in_progress
             assert mock_run_state.current_service is None
 
 def test_cancelled_run_marks_job_cancelled(create_ingestion_service: IngestionService) -> None:
@@ -57,7 +57,7 @@ def test_cancelled_run_marks_job_cancelled(create_ingestion_service: IngestionSe
             assert current_job.completed_at is not None
 
             # Verify run_state cleaned up
-            assert mock_run_state.run_in_progress == False
+            assert not mock_run_state.run_in_progress
             assert mock_run_state.current_service is None
 
 
@@ -98,7 +98,7 @@ def test_run_state_cleanup_in_finally_block(create_ingestion_service: IngestionS
             create_ingestion_service.run_single_cycle(job_state)
 
             # Verify cleanup happened in finally block
-            assert mock_run_state.run_in_progress == False
+            assert not mock_run_state.run_in_progress
             assert mock_run_state.current_service is None
 
 

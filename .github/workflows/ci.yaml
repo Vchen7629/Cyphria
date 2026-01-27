@@ -71,13 +71,14 @@ jobs:
       steps:
         - uses: actions/checkout@v4
           with:
-            fetch-depth: 0 # gives it full history of commits to find the last tag
-          
+            fetch-depth: 0
+            token: ${{ secrets.CI_CD_PAT }}
+
         - name: Bump Frontend version
           id: tag_version
           uses: anothrNick/github-tag-action@v1
           env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.CI_CD_PAT }}
             DEFAULT_BUMP: patch
             INITIAL_VERSION: 1.0.0
             TAG_PREFIX: frontend-
@@ -134,7 +135,7 @@ jobs:
           id: tag_version
           uses: anothrNick/github-tag-action@v1
           env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.CI_CD_PAT }}
             DEFAULT_BUMP: patch
             INITIAL_VERSION: 1.0.0
             TAG_PREFIX: insights_api-
@@ -191,7 +192,7 @@ jobs:
           id: tag_version
           uses: anothrNick/github-tag-action@v1
           env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.CI_CD_PAT }}
             DEFAULT_BUMP: patch
             INITIAL_VERSION: 1.0.0
             TAG_PREFIX: data_ingestion-
@@ -248,7 +249,7 @@ jobs:
           id: tag_version
           uses: anothrNick/github-tag-action@v1
           env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.CI_CD_PAT }}
             DEFAULT_BUMP: patch
             INITIAL_VERSION: 1.0.0
             TAG_PREFIX: llm_summary-
@@ -305,7 +306,7 @@ jobs:
           id: tag_version
           uses: anothrNick/github-tag-action@v1
           env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.CI_CD_PAT }}
             DEFAULT_BUMP: patch
             INITIAL_VERSION: 1.0.0
             TAG_PREFIX: ranking_calculator-
@@ -362,7 +363,7 @@ jobs:
           id: tag_version
           uses: anothrNick/github-tag-action@v1
           env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.CI_CD_PAT }}
             DEFAULT_BUMP: patch
             INITIAL_VERSION: 1.0.0
             TAG_PREFIX: sentiment_analysis-

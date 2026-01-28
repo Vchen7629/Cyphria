@@ -15,7 +15,7 @@ def test_insert_single_product_summary(
         model_used="chatgpt-5.1"
     )
 
-    assert upsert_success == True
+    assert upsert_success
 
     with db_connection.cursor() as cursor:
         cursor.execute("SELECT tldr FROM product_summaries")
@@ -46,7 +46,7 @@ def test_upsert_single_product_summary(
         model_used="chatgpt-5.1"
     )
 
-    assert upsert_success == True
+    assert upsert_success
 
     with db_connection.cursor() as cursor:
         cursor.execute("SELECT tldr FROM product_summaries")
@@ -77,7 +77,7 @@ def test_different_time_windows(
         model_used="chatgpt-5.1"
     )
 
-    assert upsert_success == True
+    assert upsert_success
 
     with db_connection.cursor() as cursor:
         cursor.execute("SELECT tldr, time_window FROM product_summaries")

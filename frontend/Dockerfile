@@ -14,7 +14,7 @@ RUN npm run build
 #Server
 FROM node:23-alpine
 
-WORKDIR /app
+WORKDIR /app 
 
 COPY --from=build /app/dist ./build
 

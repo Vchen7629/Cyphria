@@ -5,6 +5,7 @@ from unittest.mock import patch
 from psycopg_pool import ConnectionPool
 from testcontainers.postgres import PostgresContainer
 import os
+
 os.environ.setdefault("BAYESIAN_PARAMS", "10")
 os.environ.setdefault("DB_HOST", "localhost")
 os.environ.setdefault("DB_PORT", "5432")
@@ -14,6 +15,7 @@ os.environ.setdefault("DB_PASS", "test_pass")
 from src.ranking_service import RankingService
 import pytest
 import psycopg
+
 
 @pytest.fixture(scope="session")
 def postgres_container() -> Generator[PostgresContainer, None, None]:
@@ -70,8 +72,11 @@ def postgres_container() -> Generator[PostgresContainer, None, None]:
 
         yield postgres
 
+
 @pytest.fixture
-def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Connection, None, None]:
+def db_connection(
+    postgres_container: PostgresContainer,
+) -> Generator[psycopg.Connection, None, None]:
     """
     Create a fresh database connection for each test.
     Cleans up tables before each test to ensure isolation.
@@ -81,7 +86,9 @@ def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Co
 
     # Cleanup BEFORE test to ensure clean state
     with conn.cursor() as cursor:
-        cursor.execute("TRUNCATE TABLE product_sentiment, product_rankings RESTART IDENTITY CASCADE;")
+        cursor.execute(
+            "TRUNCATE TABLE product_sentiment, product_rankings RESTART IDENTITY CASCADE;"
+        )
     conn.commit()
 
     yield conn
@@ -91,6 +98,7 @@ def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Co
             conn.rollback()
         conn.close()
 
+
 @pytest.fixture
 def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, None, None]:
     """
@@ -98,27 +106,27 @@ def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, 
     """
     # Convert SQLAlchemy URL to PostgreSQL URI for psycopg
     connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")
-    pool = ConnectionPool(
-        conninfo=connection_url,
-        min_size=1,
-        max_size=5,
-        open=True
-    )
+    pool = ConnectionPool(conninfo=connection_url, min_size=1, max_size=5, open=True)
     with pool.connection() as conn:
         # Rollback any failed transaction first
         if conn.info.transaction_status != psycopg.pq.TransactionStatus.IDLE:
             conn.rollback()
 
         with conn.cursor() as cursor:
-            cursor.execute("TRUNCATE TABLE product_sentiment, product_rankings RESTART IDENTITY CASCADE;")
+            cursor.execute(
+                "TRUNCATE TABLE product_sentiment, product_rankings RESTART IDENTITY CASCADE;"
+            )
         conn.commit()
-        
+
     yield pool
 
     pool.close()
 
+
 @pytest.fixture
-def mock_db_conn_lifespan(db_pool: ConnectionPool, create_ingestion_service: RankingService) -> Generator[Callable[[], Any], None, None]:
+def mock_db_conn_lifespan(
+    db_pool: ConnectionPool, create_ingestion_service: RankingService
+) -> Generator[Callable[[], Any], None, None]:
     """
     Factory fixture that creates a StartService with mocked heavy dependencies.
     Patches _db_conn_lifespan then injects the test db_pool
@@ -129,7 +137,8 @@ def mock_db_conn_lifespan(db_pool: ConnectionPool, create_ingestion_service: Ran
             worker.run()
     """
 
-    with patch.object(RankingService, '_db_conn_lifespan'):
+    with patch.object(RankingService, "_db_conn_lifespan"):
+
         def _create() -> RankingService:
             service = create_ingestion_service
             service.db_pool = db_pool

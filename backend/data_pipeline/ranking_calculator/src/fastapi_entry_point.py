@@ -7,7 +7,7 @@ app = FastAPI(
     title="Ingestion Service",
     description="Reddit comment ingestion for product sentiment analysis",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 app.include_router(base_router)
@@ -16,4 +16,5 @@ settings = Settings()
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=settings.FASTAPI_PORT)

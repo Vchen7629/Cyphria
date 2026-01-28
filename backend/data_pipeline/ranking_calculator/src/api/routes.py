@@ -16,6 +16,7 @@ router = APIRouter()
 # global job state thats initialized in lifespan
 job_state: JobState | None = None
 
+
 @router.post("/run", response_model=RunResponse)
 async def trigger_ranking_calculation(request: Request, body: RunRequest) -> RunResponse:
     """
@@ -29,19 +30,18 @@ async def trigger_ranking_calculation(request: Request, body: RunRequest) -> Run
     """
     product_topic: str = body.product_topic
     time_window: str = body.time_window
-    
+
     if not product_topic.strip() or not time_window.strip():
-        raise HTTPException(status_code=400, detail="Missing product_topic or time_window in your request")
-    
+        raise HTTPException(
+            status_code=400, detail="Missing product_topic or time_window in your request"
+        )
+
     if not job_state:
-        raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")  
+        raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")
 
     # lock to prevent duplicate calls to this endpoint from retriggering ranking
     if job_state.is_running():
-        raise HTTPException(
-            status_code=409,
-            detail="Ranking already in progress"
-        )
+        raise HTTPException(status_code=409, detail="Ranking already in progress")
 
     job_state.create_job(product_topic)
 
@@ -49,7 +49,7 @@ async def trigger_ranking_calculation(request: Request, body: RunRequest) -> Run
         db_pool=request.app.state.db_pool,
         logger=request.app.state.logger,
         product_topic=product_topic,
-        time_window=time_window
+        time_window=time_window,
     )
 
     run_state.current_service = service
@@ -63,12 +63,13 @@ async def trigger_ranking_calculation(request: Request, body: RunRequest) -> Run
 
     return RunResponse(status="started")
 
+
 @router.get("/status", response_model=CurrentJob)
 async def get_job_status() -> CurrentJob:
     """
     Get status of a ranking job
     Airflow HttpSensor polls this endpoint until status is 'completed' or 'failed'
-    
+
     Raises:
         HTTPException if no job_state
     """
@@ -79,8 +80,9 @@ async def get_job_status() -> CurrentJob:
 
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
-    
+
     return job
+
 
 @router.get("/health", response_model=HealthResponse)
 def health_check(request: Request) -> HealthResponse:
@@ -104,6 +106,7 @@ def health_check(request: Request) -> HealthResponse:
     status = "healthy" if db_ok else "unhealthy"
 
     return HealthResponse(status=status, db_connected=db_ok)
+
 
 @router.get("/ready")
 def readiness_check() -> dict[str, bool]:

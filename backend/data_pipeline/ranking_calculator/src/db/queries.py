@@ -7,8 +7,11 @@ import psycopg
 
 structured_logger = StructuredLogger(pod="idk")
 
+
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=structured_logger)
-def fetch_aggregated_product_scores(conn: psycopg.Connection, product_topic: str, time_window: str) -> list[SentimentAggregate]:
+def fetch_aggregated_product_scores(
+    conn: psycopg.Connection, product_topic: str, time_window: str
+) -> list[SentimentAggregate]:
     """
     Fetch a list of aggregated sentiment scores for a product_topic and time window.
     Joins product sentiment with raw comments to filter by product_topic
@@ -78,6 +81,7 @@ def fetch_aggregated_product_scores(conn: psycopg.Connection, product_topic: str
 
     return [SentimentAggregate.model_validate(row) for row in results]
 
+
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=structured_logger)
 def batch_upsert_product_score(conn: psycopg.Connection, scores: list[ProductScore]) -> None:
     """
@@ -89,7 +93,7 @@ def batch_upsert_product_score(conn: psycopg.Connection, scores: list[ProductSco
             - product_name: name of the product
             - product_topic: the product_topic of the product
             - time_window: time window its calculated from, either 90d or all_time
-            - rank: the ranking score 
+            - rank: the ranking score
             - grade: grade of the product, S, A+, A, A-, B+, etc
             - baysian_score: the number calculated using bayesian estimate formula
             - avg_sentiment: avg sentiment score of the product

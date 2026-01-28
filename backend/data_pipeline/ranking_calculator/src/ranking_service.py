@@ -17,13 +17,14 @@ from src.core.logger import StructuredLogger
 from src.core.settings_config import Settings
 import numpy as np
 
+
 class RankingService:
     def __init__(
-        self, 
-        logger: StructuredLogger, 
+        self,
+        logger: StructuredLogger,
         db_pool: ConnectionPool,
         product_topic: str,
-        time_window: str
+        time_window: str,
     ) -> None:
         self.settings = Settings()
         self.logger = logger
@@ -33,9 +34,9 @@ class RankingService:
 
         # cancellation flag, used to request graceful shutdown
         self.cancel_requested = False
-    
+
     def _build_product_ranking_object(
-        self, 
+        self,
         product_scores: list[SentimentAggregate],
         product_topic: str,
         time_window: str,
@@ -45,39 +46,57 @@ class RankingService:
         is_top_pick: np.ndarray,
         is_most_discussed: np.ndarray,
         has_limited_data: np.ndarray,
-        calculation_date: datetime
+        calculation_date: datetime,
     ) -> list[ProductScore]:
         """
         Take in the params and build the ranking object for product for inserting to db
 
         Args:
-            product_scores: list of aggregated product sentiment scores 
+            product_scores: list of aggregated product sentiment scores
             product_topic: the product_topic for the products
             time_window: the time window, either "90d" or "all_time"
             ranks: Numpy array of rank numbers (1-indexed)
             grades: Numpy array of letter grade for the product (S, A+, A, etc)
             bayesian_scores: Numpy array of bayesian score floats
             is_top_pick: Numpy array of bools (true if the product is top pick, false otherwise)
-            is_most_discussed: Numpy array of bools (true if the  product is most mentioned, false otherwise)        
+            is_most_discussed: Numpy array of bools (true if the  product is most mentioned, false otherwise)
             has_limited_data: Numpy array of bools (true if the mention count for product is below threshold, false otherwise)
             calculation_date: Timestamp when its processed
-        
+
         Returns:
             list of product score objects with metadata, or empty array if missing params or cancelled
         """
-        if not all([product_scores, product_topic, time_window, ranks, grades, bayesian_scores, is_top_pick, is_most_discussed, has_limited_data, calculation_date]):
+        if not all(
+            [
+                product_scores,
+                product_topic,
+                time_window,
+                ranks,
+                grades,
+                bayesian_scores,
+                is_top_pick,
+                is_most_discussed,
+                has_limited_data,
+                calculation_date,
+            ]
+        ):
             self.logger.warning(event_type="ranking_service run", message="Missing a input param")
             return []
 
         if product_topic.strip() == "" or time_window.strip() == "":
-            self.logger.warning(event_type="ranking_service run", message="Missing a product_topic or time window")
+            self.logger.warning(
+                event_type="ranking_service run", message="Missing a product_topic or time window"
+            )
             return []
-            
+
         rankings: list[ProductScore] = []
 
         for i, product in enumerate(product_scores):
             if self.cancel_requested:
-                self.logger.info(event_type="ranking_service run", message="Cancel requested, build product ranking object...")
+                self.logger.info(
+                    event_type="ranking_service run",
+                    message="Cancel requested, build product ranking object...",
+                )
                 return []
 
             ranking = ProductScore(
@@ -96,7 +115,7 @@ class RankingService:
                 is_top_pick=bool(is_top_pick[i]),
                 is_most_discussed=bool(is_most_discussed[i]),
                 has_limited_data=bool(has_limited_data[i]),
-                calculation_date=calculation_date
+                calculation_date=calculation_date,
             )
             rankings.append(ranking)
 
@@ -116,29 +135,40 @@ class RankingService:
         Returns:
             number of products processed, or 0 if missing params
         """
-        if not product_topic or not product_topic.strip == "" or not time_window or not time_window.strip() == "":
-            self.logger.warning(event_type="ranking_service run", message="Missing product_topic or time window")
+        if (
+            not product_topic
+            or not product_topic.strip == ""
+            or not time_window
+            or not time_window.strip() == ""
+        ):
+            self.logger.warning(
+                event_type="ranking_service run", message="Missing product_topic or time window"
+            )
             return 0
 
         with self.db_pool.connection() as conn:
             if self.cancel_requested:
-                self.logger.info(event_type="ranking_service run", message="Cancel requested, skipping fetch_aggregated...")
+                self.logger.info(
+                    event_type="ranking_service run",
+                    message="Cancel requested, skipping fetch_aggregated...",
+                )
                 return 0
 
             product_scores = fetch_aggregated_product_scores(conn, product_topic, time_window)
 
             if not product_scores:
-                self.logger.info(event_type="ranking calculation", message=f"No products found for {product_topic}/{time_window}")
+                self.logger.info(
+                    event_type="ranking calculation",
+                    message=f"No products found for {product_topic}/{time_window}",
+                )
                 return 0
-            
+
             # to extract numpy arrays from pydantic models
             avg_sentiments = np.array([p.avg_sentiment for p in product_scores])
             mention_counts = np.array([p.mention_count for p in product_scores])
 
             bayesian_scores = calculate_bayesian_scores(
-                avg_sentiments,
-                mention_counts,
-                min_mentions=self.settings.BAYESIAN_PARAMS
+                avg_sentiments, mention_counts, min_mentions=self.settings.BAYESIAN_PARAMS
             )
 
             grades = assign_grades(bayesian_scores)
@@ -146,12 +176,14 @@ class RankingService:
 
             is_top_pick = assign_is_top_pick(ranks)
             is_most_discussed = assign_is_most_discussed(mention_counts)
-            has_limited_data = assign_has_limited_data(mention_counts, self.settings.BAYESIAN_PARAMS)
+            has_limited_data = assign_has_limited_data(
+                mention_counts, self.settings.BAYESIAN_PARAMS
+            )
 
             calculation_date = datetime.now(tz=timezone.utc)
 
             product_ranking_list = self._build_product_ranking_object(
-                product_scores, 
+                product_scores,
                 product_topic,
                 time_window,
                 ranks,
@@ -160,35 +192,35 @@ class RankingService:
                 is_top_pick,
                 is_most_discussed,
                 has_limited_data,
-                calculation_date
+                calculation_date,
             )
 
             if not product_ranking_list:
                 return 0
-            
+
             batch_upsert_product_score(conn, product_ranking_list)
             conn.commit()
 
             self.logger.info(
-                event_type="ranking calculation", 
-                message=f"Processed {len(product_ranking_list)} for {product_topic}/{time_window}")
-            
+                event_type="ranking calculation",
+                message=f"Processed {len(product_ranking_list)} for {product_topic}/{time_window}",
+            )
+
             return len(product_ranking_list)
 
     def _run_ranking_pipeline(self) -> RankingResult:
         """
         Main orchestrator function: fetch, process, and write to db for products
-        
+
         Returns:
             RankingResult with counts of posts/comments processed
         """
-        products_processed = self._calculate_rankings_for_window(self.product_topic, self.time_window)
-
-        return RankingResult(
-            products_processed=products_processed,
-            cancelled=self.cancel_requested
+        products_processed = self._calculate_rankings_for_window(
+            self.product_topic, self.time_window
         )
-    
+
+        return RankingResult(products_processed=products_processed, cancelled=self.cancel_requested)
+
     def run_single_cycle(self, job_state: JobState) -> None:
         """
         Run one complete ranking cycle and update job state
@@ -213,7 +245,7 @@ class RankingService:
 
             self.logger.info(
                 event_type="ranking_service run",
-                message=f"Ingestion completed: {result.products_processed} products processed"
+                message=f"Ingestion completed: {result.products_processed} products processed",
             )
 
         except Exception as e:

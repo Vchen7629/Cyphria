@@ -8,6 +8,7 @@ from psycopg_pool import ConnectionPool
 from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
 import os
+
 os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
 os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
 os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "reddit_secret")
@@ -19,6 +20,7 @@ from src.api.job_state import JobState
 from src.core.logger import StructuredLogger
 from tests.types.fastapi import FastAPITestClient
 import pytest
+
 
 @pytest.fixture
 def fastapi_client(db_pool: ConnectionPool) -> Generator[FastAPITestClient, None, None]:
@@ -50,6 +52,7 @@ def fastapi_client(db_pool: ConnectionPool) -> Generator[FastAPITestClient, None
 
     with TestClient(test_app, raise_server_exceptions=False) as client:
         yield FastAPITestClient(client=client, app=test_app)
+
 
 @pytest.fixture(scope="session")
 def mock_fastapi() -> FastAPI:

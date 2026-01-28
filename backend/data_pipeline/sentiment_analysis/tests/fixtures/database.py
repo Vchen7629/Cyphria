@@ -7,20 +7,22 @@ from testcontainers.postgres import PostgresContainer
 import pytest
 import psycopg
 
+
 @pytest.fixture
 def single_comment() -> dict[str, Any]:
     """Fixture for single comment instance"""
     return {
-        'comment_id': 'test_comment_1',
-        'post_id': 'test_post_1',
-        'comment_body': 'This is a test comment about RTX 4090',
-        'detected_products': ['rtx 4090'],
-        'subreddit': 'nvidia',
-        'author': 'test_user',
-        'score': 42,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'product_topic': 'GPU'
+        "comment_id": "test_comment_1",
+        "post_id": "test_post_1",
+        "comment_body": "This is a test comment about RTX 4090",
+        "detected_products": ["rtx 4090"],
+        "subreddit": "nvidia",
+        "author": "test_user",
+        "score": 42,
+        "created_utc": datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+        "product_topic": "GPU",
     }
+
 
 @pytest.fixture(scope="session")
 def postgres_container() -> Generator[PostgresContainer, None, None]:
@@ -73,8 +75,11 @@ def postgres_container() -> Generator[PostgresContainer, None, None]:
 
         yield postgres
 
+
 @pytest.fixture
-def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Connection, None, None]:
+def db_connection(
+    postgres_container: PostgresContainer,
+) -> Generator[psycopg.Connection, None, None]:
     """
     Create a fresh database connection for each test.
     Cleans up tables before each test to ensure isolation.
@@ -94,6 +99,7 @@ def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Co
             conn.rollback()
         conn.close()
 
+
 @pytest.fixture
 def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, None, None]:
     """
@@ -101,21 +107,18 @@ def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, 
     """
     # Convert SQLAlchemy URL to PostgreSQL URI for psycopg
     connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")
-    pool = ConnectionPool(
-        conninfo=connection_url,
-        min_size=1,
-        max_size=5,
-        open=True
-    )
+    pool = ConnectionPool(conninfo=connection_url, min_size=1, max_size=5, open=True)
     with pool.connection() as conn:
         # Rollback any failed transaction first
         if conn.info.transaction_status != psycopg.pq.TransactionStatus.IDLE:
             conn.rollback()
 
         with conn.cursor() as cursor:
-            cursor.execute("TRUNCATE TABLE product_sentiment, raw_comments RESTART IDENTITY CASCADE;")
+            cursor.execute(
+                "TRUNCATE TABLE product_sentiment, raw_comments RESTART IDENTITY CASCADE;"
+            )
         conn.commit()
-        
+
     yield pool
 
     pool.close()

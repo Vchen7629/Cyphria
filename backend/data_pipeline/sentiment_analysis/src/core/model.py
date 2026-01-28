@@ -3,6 +3,7 @@ from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
 from typing import Tuple
 
+
 # yangheng/deberta-v3-base-absa-v1.1
 def sentiment_analysis_model(
     model_name: str,
@@ -25,8 +26,7 @@ def sentiment_analysis_model(
         return tokenizer, model
     except Exception as e:
         StructuredLogger(pod="sentiment_analysis").error(
-            event_type="sentiment_analysis startup", 
-            message=f"Error initializing models: {str(e)}"
+            event_type="sentiment_analysis startup", message=f"Error initializing models: {str(e)}"
         )
 
         raise RuntimeError(f"Failed to load model {model_name}") from e

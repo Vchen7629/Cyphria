@@ -1,27 +1,37 @@
-FROM python:3.11-slim
+FROM python:3.13-slim
 
+WORKDIR /app
+
+# create non-root user
 RUN groupadd -r appuser && useradd -r -g appuser appuser 
 
 ENV TRANSFORMERS_CACHE=/app/.cache/transformers
 ENV HF_HOME=/app/.cache/huggingface
 
-COPY requirements.txt .
+# install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-RUN python -m pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir --requirement requirements.txt
+COPY pyproject.toml uv.lock ./
+
+# For installing dependencies
+RUN uv sync --frozen --no-dev
 
 RUN mkdir -p /app/.cache && \
-    python -c "from transformers import AutoTokenizer, AutoModelForSequenceClassification; print('Downloading model and tokenizer'); \
+    uv run python -c "from transformers import AutoTokenizer, AutoModelForSequenceClassification; print('Downloading model and tokenizer'); \
     AutoTokenizer.from_pretrained('yangheng/deberta-v3-base-absa-v1.1'); \
     AutoModelForSequenceClassification.from_pretrained('yangheng/deberta-v3-base-absa-v1.1'); \
     print('Model downloaded.')"
 
-COPY --chown=appuser:appuser . .
-RUN chown -R appuser:appuser /app/.cache
-# Healthcheck to check to see if container fails
-HEALTHCHECK --interval=30s --timeout=10s --start-period=1m --retries=3 \
-  CMD pgrep -f "python main.py" > /dev/null || exit 1
+COPY src/ ./
+
+RUN chown -R appuser:appuser /app
 
 USER appuser
 
-ENTRYPOINT [ "python", "main.py" ]
+# Healthcheck to check to see if container fails
+HEALTHCHECK --interval=30s --timeout=10s --start-period=1m --retries=3 \
+  CMD pgrep -f "uvicorn" > /dev/null || exit 1
+
+EXPOSE 8000
+
+CMD ["uv", "run", "uvicorn", "src.fastapi_entry_point:app", "--host", "0.0.0.0", "--port", "8000"]

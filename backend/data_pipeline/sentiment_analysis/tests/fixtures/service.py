@@ -3,6 +3,7 @@ from psycopg_pool import ConnectionPool
 import time
 import pytest
 import os
+
 os.environ.setdefault("DB_HOST", "localhost")
 os.environ.setdefault("DB_PORT", "5432")
 os.environ.setdefault("DB_NAME", "test_db")
@@ -11,6 +12,7 @@ os.environ.setdefault("DB_PASS", "test_pass")
 from src.core.logger import StructuredLogger
 from src.sentiment_service import SentimentService
 from src.preprocessing.sentiment_analysis import Aspect_Based_Sentiment_Analysis
+
 
 @pytest.fixture
 def mock_absa() -> MagicMock:
@@ -27,6 +29,7 @@ def mock_absa() -> MagicMock:
     mock.SentimentAnalysis.side_effect = mock_sentiment_analysis
     return mock
 
+
 @pytest.fixture
 def create_sentiment_service(db_pool: ConnectionPool, mock_absa: MagicMock) -> SentimentService:
     """Creates a Sentiment Service Instance fixture"""
@@ -34,8 +37,9 @@ def create_sentiment_service(db_pool: ConnectionPool, mock_absa: MagicMock) -> S
         logger=StructuredLogger(pod="sentiment_analysis"),
         product_topic="GPU",
         db_pool=db_pool,
-        model=mock_absa
+        model=mock_absa,
     )
+
 
 @pytest.fixture
 def mock_sentiment_service() -> SentimentService:
@@ -44,5 +48,5 @@ def mock_sentiment_service() -> SentimentService:
         db_pool=MagicMock(spec=ConnectionPool),
         logger=MagicMock(spec=StructuredLogger),
         product_topic="GPU",
-        model=MagicMock(spec=Aspect_Based_Sentiment_Analysis)
+        model=MagicMock(spec=Aspect_Based_Sentiment_Analysis),
     )

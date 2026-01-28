@@ -8,7 +8,7 @@ app = FastAPI(
     title="Sentiment Analysis Service",
     description="Does Asba sentiment analysis for products in comments",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 app.include_router(base_router)

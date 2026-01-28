@@ -7,6 +7,7 @@ from src.core.logger import StructuredLogger
 import torch
 import torch.nn.functional as F
 
+
 class Aspect_Based_Sentiment_Analysis:
     def __init__(
         self,
@@ -15,7 +16,7 @@ class Aspect_Based_Sentiment_Analysis:
         executor: ThreadPoolExecutor,
         device: str = "cpu",
         model_batch_size: int = 64,
-        logger: Optional[StructuredLogger] = None
+        logger: Optional[StructuredLogger] = None,
     ) -> None:
         self.tokenizer = tokenizer
         self.model = model.to(device)
@@ -25,7 +26,7 @@ class Aspect_Based_Sentiment_Analysis:
         self.executor = executor
         self.logger = logger
 
-    def _inference(self, sentences, aspects, tokenizer, model, device): # type: ignore[no-untyped-def]
+    def _inference(self, sentences, aspects, tokenizer, model, device):  # type: ignore[no-untyped-def]
         tokens = tokenizer(
             sentences,
             aspects,
@@ -44,7 +45,7 @@ class Aspect_Based_Sentiment_Analysis:
         """
         Public method for running ABSA sentiment analysis. Does sentiment analysis of the sentiments
         of the comment torwards a product in the comment
-        
+
         Args:
             product_pairs: a list of product pair tuples (comment_text, product)
 
@@ -64,12 +65,7 @@ class Aspect_Based_Sentiment_Analysis:
             aspects = [x[1] for x in current_batch]
 
             future = self.executor.submit(
-                self._inference,
-                sentences,
-                aspects,
-                self.tokenizer,
-                self.model,
-                self.device
+                self._inference, sentences, aspects, self.tokenizer, self.model, self.device
             )
 
             try:
@@ -77,10 +73,10 @@ class Aspect_Based_Sentiment_Analysis:
             except TimeoutError:
                 if self.logger:
                     self.logger.warning(
-                        event_type="sentiment_analysis run", 
-                        message=f"ABSA inference timed out for batch starting at index {i} — skipping this batch"
+                        event_type="sentiment_analysis run",
+                        message=f"ABSA inference timed out for batch starting at index {i} — skipping this batch",
                     )
-                continue 
+                continue
 
             # Compute probabilities
             prob_batch = F.softmax(outputs.logits, dim=1)

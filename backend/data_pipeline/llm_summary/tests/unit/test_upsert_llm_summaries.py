@@ -27,7 +27,11 @@ def test_invalid_input_params(
 ) -> None:
     """Invalid input parameters (none or empty) should return false"""
     empty_product_name = upsert_llm_summaries(
-        mock_db_connection, product_name, tldr, time_window, model_used
-    )  # type: ignore
+        mock_db_connection,
+        product_name,  # type: ignore
+        tldr,  # type: ignore
+        time_window,  # type: ignore
+        model_used,  # type: ignore
+    )
 
     assert not empty_product_name

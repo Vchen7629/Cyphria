@@ -7,8 +7,11 @@ from src.db_utils.retry import retry_with_backoff
 
 structured_logger = StructuredLogger(pod="idk")
 
+
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=structured_logger)
-def fetch_unprocessed_comments(conn: psycopg.Connection, product_topic: str, batch_size: int = 100) -> list[UnprocessedComment]:
+def fetch_unprocessed_comments(
+    conn: psycopg.Connection, product_topic: str, batch_size: int = 100
+) -> list[UnprocessedComment]:
     """
     Fetch a batch of unprocessed comments for a product_topic from the raw_comments table
     for further processing with this worker
@@ -48,8 +51,11 @@ def fetch_unprocessed_comments(conn: psycopg.Connection, product_topic: str, bat
 
     return [UnprocessedComment.model_validate(row) for row in results]
 
+
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=structured_logger)
-def batch_insert_product_sentiment(conn: psycopg.Connection, sentiments: list[ProductSentiment]) -> int:
+def batch_insert_product_sentiment(
+    conn: psycopg.Connection, sentiments: list[ProductSentiment]
+) -> int:
     """
     Batch insert multiple processed product sentiments to the product sentiment table (silver layer).
 
@@ -90,6 +96,7 @@ def batch_insert_product_sentiment(conn: psycopg.Connection, sentiments: list[Pr
         rows_inserted = cursor.rowcount
 
     return rows_inserted
+
 
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=structured_logger)
 def mark_comments_processed(conn: psycopg.Connection, comment_ids: list[str]) -> int:

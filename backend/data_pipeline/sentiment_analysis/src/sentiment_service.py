@@ -11,13 +11,14 @@ from src.db_utils.queries import batch_insert_product_sentiment
 from src.preprocessing.extract_pairs import extract_pairs
 from src.preprocessing.sentiment_analysis import Aspect_Based_Sentiment_Analysis
 
+
 class SentimentService:
     def __init__(
-        self, 
+        self,
         logger: StructuredLogger,
-        product_topic: str, 
-        db_pool: ConnectionPool, 
-        model: Aspect_Based_Sentiment_Analysis
+        product_topic: str,
+        db_pool: ConnectionPool,
+        model: Aspect_Based_Sentiment_Analysis,
     ) -> None:
         self.logger = logger
         self.product_topic = product_topic
@@ -29,10 +30,10 @@ class SentimentService:
         self.cancel_requested = False
 
     def _process_sentiment_and_write_to_db(
-        self, 
+        self,
         text_product_pairs: list[tuple[str, str]],
         enriched_pairs: list[tuple[str, str, str, str, datetime]],
-        comment_ids: set[str]
+        comment_ids: set[str],
     ) -> tuple[int, int]:
         """
         Method for taking in a list of tuples (comment_text, product_name) and doing sentiment analysis
@@ -51,14 +52,18 @@ class SentimentService:
         sentiment_results = self.model.SentimentAnalysis(text_product_pairs)
 
         # use zip to preserve comment id ordering
-        for (comment_id, _, product_topic, product_name, created_utc), (_, sentiment_score) in zip(enriched_pairs, sentiment_results):
-            product_sentiments.append(ProductSentiment(
-                comment_id=comment_id,
-                product_name=product_name,
-                product_topic=product_topic,
-                sentiment_score=sentiment_score,
-                created_utc=created_utc
-            ))
+        for (comment_id, _, product_topic, product_name, created_utc), (_, sentiment_score) in zip(
+            enriched_pairs, sentiment_results
+        ):
+            product_sentiments.append(
+                ProductSentiment(
+                    comment_id=comment_id,
+                    product_name=product_name,
+                    product_topic=product_topic,
+                    sentiment_score=sentiment_score,
+                    created_utc=created_utc,
+                )
+            )
 
         with self.db_pool.connection() as conn:
             with conn.transaction():
@@ -90,22 +95,27 @@ class SentimentService:
             return 0, 0
 
         # absa sentiment analysis only needs text pairs
-        text_product_pairs = [(comment_text, product_name)
-                              for _, comment_text, _, product_name, _ in enriched_pairs]
-        
-        sentiments_inserted, comments_processed = self._process_sentiment_and_write_to_db(text_product_pairs, enriched_pairs, comment_ids)
-        
+        text_product_pairs = [
+            (comment_text, product_name) for _, comment_text, _, product_name, _ in enriched_pairs
+        ]
+
+        sentiments_inserted, comments_processed = self._process_sentiment_and_write_to_db(
+            text_product_pairs, enriched_pairs, comment_ids
+        )
+
         return sentiments_inserted, comments_processed
 
     def _run_sentiment_pipeline(self) -> SentimentResult:
         """
         Main orchestrator method that polls for unprocessed comments for a product_topic and processes them
-        
+
         Returns
             SentimentResult with counts of posts/comments processed
         """
-        self.logger.info(event_type="sentiment_analysis worker", message="Starting main worker loop")
-        
+        self.logger.info(
+            event_type="sentiment_analysis worker", message="Starting main worker loop"
+        )
+
         comments_inserted: int = 0
         comments_updated: int = 0
 
@@ -117,14 +127,14 @@ class SentimentService:
             if not comments:
                 self.logger.info(
                     event_type="sentiment_analysis run",
-                    message=f"All comments processed for product_topic {self.product_topic}. Exiting"
+                    message=f"All comments processed for product_topic {self.product_topic}. Exiting",
                 )
                 break
 
             sentiments_inserted, comments_processed = self._process_comments(comments)
             self.logger.info(
                 event_type="sentiment_analysis run",
-                message=f"Processed batch: {comments_inserted} sentiments inserted, {comments_updated} comments marked processed"
+                message=f"Processed batch: {comments_inserted} sentiments inserted, {comments_updated} comments marked processed",
             )
 
             comments_inserted += sentiments_inserted
@@ -133,9 +143,9 @@ class SentimentService:
         return SentimentResult(
             comments_inserted=comments_inserted,
             comments_updated=comments_updated,
-            cancelled=self.cancel_requested
+            cancelled=self.cancel_requested,
         )
-    
+
     def run_single_cycle(self, job_state: JobState) -> None:
         """
         Run one complete sentiment analysis cycle and update job state
@@ -162,14 +172,15 @@ class SentimentService:
                 event_type="sentiment_analysis run",
                 message=f"Ranking completed: \
                     {result.comments_inserted} comments inserted, \
-                    {result.comments_updated} comments updated"
+                    {result.comments_updated} comments updated",
             )
 
         except Exception as e:
-            self.logger.error(event_type="sentiment_analysis run", message=f"Sentiment analysis failed: {str(e)}")
+            self.logger.error(
+                event_type="sentiment_analysis run", message=f"Sentiment analysis failed: {str(e)}"
+            )
             job_state.fail_job(str(e))
         finally:
             # Clean up run state after job completes or fails
             run_state.run_in_progress = False
             run_state.current_service = None
-

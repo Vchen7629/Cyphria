@@ -3,8 +3,10 @@ import json
 from datetime import datetime
 from typing import Any
 
+
 class StructuredLogger:
     """Central Logging for this worker service"""
+
     def __init__(self, pod: str) -> None:
         self.pod_name = pod
 
@@ -43,7 +45,7 @@ class StructuredLogger:
     def info(self, event_type: str, message: str, **kwargs: Any) -> None:
         """
         Info log event
-        
+
         Args:
             event_type: the event type that triggered this
             message: log message describing the log
@@ -54,7 +56,7 @@ class StructuredLogger:
     def warning(self, event_type: str, message: str, **kwargs: Any) -> None:
         """
         Warning log event
-        
+
         Args:
             event_type: the event type that triggered this
             message: log message describing the log
@@ -65,7 +67,7 @@ class StructuredLogger:
     def error(self, event_type: str, message: str, **kwargs: Any) -> None:
         """
         error log event
-        
+
         Args:
             event_type: the event type that triggered this
             message: log message describing the log
@@ -76,7 +78,7 @@ class StructuredLogger:
     def debug(self, event_type: str, message: str, **kwargs: Any) -> None:
         """
         debug log event
-        
+
         Args:
             event_type: the event type that triggered this
             message: log message describing the log

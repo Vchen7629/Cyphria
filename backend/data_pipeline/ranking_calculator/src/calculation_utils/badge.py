@@ -1,6 +1,7 @@
 from src.core.settings_config import Settings
 import numpy as np
 
+
 def assign_is_top_pick(ranks: np.ndarray) -> np.ndarray:
     """
     Assign top pick batch to products with rank 1
@@ -13,13 +14,14 @@ def assign_is_top_pick(ranks: np.ndarray) -> np.ndarray:
     """
     return ranks == 1
 
+
 def assign_is_most_discussed(mention_counts: np.ndarray) -> np.ndarray:
     """
     Assign most discussed badge to products with highest mention count
 
     Args:
         mention_counts: Numpy array of mention counts
-    
+
     Returns:
         Numpy array of booleans (True for highest mention count)
     """
@@ -28,6 +30,7 @@ def assign_is_most_discussed(mention_counts: np.ndarray) -> np.ndarray:
 
     max_count = np.max(mention_counts)
     return mention_counts == max_count
+
 
 def assign_has_limited_data(mention_counts: np.ndarray, threshold: int | None = None) -> np.ndarray:
     """

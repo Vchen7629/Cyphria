@@ -12,21 +12,37 @@ def test_normal() -> None:
         comment_body="This is test post about cats and dogs",
         product_topic="Animal",
         detected_products=["cats", "dogs"],
-        created_utc=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc) 
+        created_utc=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
     )
 
     result = extract_pairs(unprocessed_comment)
 
     assert result == [
-        ("idk123", "This is test post about cats and dogs", "Animal", "cats", datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)),
-        ("idk123", "This is test post about cats and dogs", "Animal", "dogs", datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)),
+        (
+            "idk123",
+            "This is test post about cats and dogs",
+            "Animal",
+            "cats",
+            datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+        ),
+        (
+            "idk123",
+            "This is test post about cats and dogs",
+            "Animal",
+            "dogs",
+            datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+        ),
     ]
 
-@pytest.mark.parametrize(argnames="comment_body,detected_products", argvalues=[
-    ("", ["cats", "dogs"]), # no comment body
-    ("This is test post", []), # no detected products list
-    ("", []) # both no comment body and no detected products list
-])
+
+@pytest.mark.parametrize(
+    argnames="comment_body,detected_products",
+    argvalues=[
+        ("", ["cats", "dogs"]),  # no comment body
+        ("This is test post", []),  # no detected products list
+        ("", []),  # both no comment body and no detected products list
+    ],
+)
 def test_invalid_comment_params(comment_body: str, detected_products: list[str]) -> None:
     """No comment body in value edge case"""
     unprocessed_comment = UnprocessedComment(
@@ -34,7 +50,7 @@ def test_invalid_comment_params(comment_body: str, detected_products: list[str])
         comment_body=comment_body,
         product_topic="Animal",
         detected_products=detected_products,
-        created_utc=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc) 
+        created_utc=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
     )
 
     result = extract_pairs(unprocessed_comment)

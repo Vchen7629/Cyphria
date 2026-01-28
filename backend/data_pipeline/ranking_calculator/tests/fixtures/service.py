@@ -6,6 +6,7 @@ from unittest.mock import MagicMock
 from psycopg_pool import ConnectionPool
 from contextlib import asynccontextmanager
 import os
+
 os.environ.setdefault("BAYESIAN_PARAMS", "10")
 os.environ.setdefault("DB_HOST", "localhost")
 os.environ.setdefault("DB_PORT", "5432")
@@ -17,10 +18,12 @@ from src.core.logger import StructuredLogger
 from src.ranking_service import RankingService
 import pytest
 
+
 @asynccontextmanager
 async def null_lifespan(_app: FastAPI) -> Any:
     """No-op lifespan for testing - state is set by fixtures"""
     yield
+
 
 @pytest.fixture
 def create_ranking_service(db_pool: ConnectionPool) -> RankingService:
@@ -29,8 +32,9 @@ def create_ranking_service(db_pool: ConnectionPool) -> RankingService:
         db_pool=db_pool,
         logger=StructuredLogger(pod="ranking_service"),
         product_topic="GPU",
-        time_window="all_time"
+        time_window="all_time",
     )
+
 
 @pytest.fixture
 def mock_ranking_service() -> RankingService:
@@ -39,19 +43,21 @@ def mock_ranking_service() -> RankingService:
         db_pool=MagicMock(spec=ConnectionPool),
         logger=MagicMock(spec=StructuredLogger),
         product_topic="GPU",
-        time_window="all_time"
+        time_window="all_time",
     )
+
 
 @pytest.fixture
 def single_sentiment_comment() -> dict[str, Any]:
     """Fixture for single sentiment comment instance"""
     return {
-        'comment_id': 'test_comment_1',
-        'product_name': 'rtx 4090',
-        'product_topic': 'GPU',
-        'sentiment_score': 0.89,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+        "comment_id": "test_comment_1",
+        "product_name": "rtx 4090",
+        "product_topic": "GPU",
+        "sentiment_score": 0.89,
+        "created_utc": datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
     }
+
 
 @pytest.fixture
 def single_product_score_comment() -> ProductScore:
@@ -72,6 +78,5 @@ def single_product_score_comment() -> ProductScore:
         is_top_pick=True,
         is_most_discussed=False,
         has_limited_data=False,
-        calculation_date=datetime.now(timezone.utc)
+        calculation_date=datetime.now(timezone.utc),
     )
-

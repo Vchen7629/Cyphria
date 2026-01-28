@@ -5,9 +5,10 @@ from src.api.schemas import RunRequest
 from src.api.schemas import RankingResult
 from tests.types.fastapi import FastAPITestClient
 
+
 def test_run_endpoint_success(fastapi_client: FastAPITestClient) -> None:
     """Run endpoint should return status: started."""
-    with patch('src.api.routes.RankingService') as MockService:
+    with patch("src.api.routes.RankingService") as MockService:
         mock_instance = MagicMock()
         mock_instance.run.return_value = RankingResult(
             products_processed=10,
@@ -22,7 +23,8 @@ def test_run_endpoint_success(fastapi_client: FastAPITestClient) -> None:
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "started"
-        
+
+
 def test_call_run_endpoint_when_already_in_progress(fastapi_client: FastAPITestClient) -> None:
     """Run endpoint should return 409 when run already in progress"""
     # Create a running job to trigger the 409 response
@@ -39,7 +41,4 @@ def test_call_run_endpoint_when_already_in_progress(fastapi_client: FastAPITestC
         assert "already in progress" in response.json()["detail"]
     finally:
         # Clean up by completing the job
-        job_state.complete_job(RankingResult(
-            products_processed=10,
-            cancelled=False
-        ))
+        job_state.complete_job(RankingResult(products_processed=10, cancelled=False))

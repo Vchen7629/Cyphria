@@ -13,14 +13,15 @@ from src.llm_client.response_parser import TLDRValidationError
 from src.llm_client.retry import retry_llm_api
 import psycopg
 
+
 class LLMSummaryService:
     def __init__(
-        self, 
-        time_window: str, 
+        self,
+        time_window: str,
         llm_model_name: str,
         llm_client: OpenAI,
-        logger: StructuredLogger, 
-        db_pool: ConnectionPool
+        logger: StructuredLogger,
+        db_pool: ConnectionPool,
     ) -> None:
         self.time_window = time_window
         self.llm_model_name = llm_model_name
@@ -32,10 +33,12 @@ class LLMSummaryService:
         # This flag is set externally by signal_handler.py when SIGTERM/SIGINT is received
         self.cancel_requested = False
 
-    def _fetch_products_with_comments(self, db_conn: psycopg.Connection) -> list[tuple[str, list[str]]]:
+    def _fetch_products_with_comments(
+        self, db_conn: psycopg.Connection
+    ) -> list[tuple[str, list[str]]]:
         """
         Fetch all products and their top comments
-        
+
         Args:
             db_conn: psycopg database connection
 
@@ -48,16 +51,21 @@ class LLMSummaryService:
 
         for product_name in product_name_list:
             if self.cancel_requested:
-                self.logger.info(event_type="llm_summary run", message="Cancellation requested during fetch, stopping early")
+                self.logger.info(
+                    event_type="llm_summary run",
+                    message="Cancellation requested during fetch, stopping early",
+                )
                 break
-            
-            top_comments: list[str] = fetch_top_comments_for_product(db_conn, product_name, self.time_window)
+
+            top_comments: list[str] = fetch_top_comments_for_product(
+                db_conn, product_name, self.time_window
+            )
 
             if not top_comments:
                 continue
 
             result.append((product_name, top_comments))
-        
+
         return result
 
     def _generate_summary(self, product_name: str, comments: list[str]) -> str:
@@ -67,20 +75,20 @@ class LLMSummaryService:
         Args:
             product_name: the product we are generating summary for
             comments: the list of the products top comments based on their sentiment score
-        
+
         Returns:
             A llm summary string, or empty string if generation fails
         """
         if not product_name or not comments:
-            self.logger.warning(event_type="llm_summary run", message="No product name or comment list, skipping")
+            self.logger.warning(
+                event_type="llm_summary run", message="No product name or comment list, skipping"
+            )
             return ""
 
         user_prompt = build_user_prompt(product_name, comments)
 
         response = self.llm_client.responses.create(
-            model=self.llm_model_name,
-            instructions=SYSTEM_PROMPT,
-            input=user_prompt
+            model=self.llm_model_name, instructions=SYSTEM_PROMPT, input=user_prompt
         )
 
         response_text = response.output_text
@@ -89,7 +97,10 @@ class LLMSummaryService:
 
         tldr = parse_tldr(response_text, self.logger)
 
-        self.logger.info(event_type="llm_summary run", message=f"Generated TLDR for {product_name}, time window: {self.time_window}")
+        self.logger.info(
+            event_type="llm_summary run",
+            message=f"Generated TLDR for {product_name}, time window: {self.time_window}",
+        )
 
         return tldr
 
@@ -105,7 +116,9 @@ class LLMSummaryService:
         Returns:
             true if the insert is successful, false otherwise
         """
-        inserted: bool = upsert_llm_summaries(db_conn, product_name, summary, self.time_window, self.llm_model_name)
+        inserted: bool = upsert_llm_summaries(
+            db_conn, product_name, summary, self.time_window, self.llm_model_name
+        )
 
         return inserted
 
@@ -115,14 +128,20 @@ class LLMSummaryService:
 
         with self.db_pool.connection() as conn:
             products_list: list[tuple[str, list[str]]] = self._fetch_products_with_comments(conn)
-            self.logger.info("llm_summary run", message=f"fetched {len(products_list)} products, for {self.time_window} time window")
-            
+            self.logger.info(
+                "llm_summary run",
+                message=f"fetched {len(products_list)} products, for {self.time_window} time window",
+            )
+
             for product_name, comments in products_list:
                 try:
                     if self.cancel_requested:
-                        self.logger.info("llm_summary run", message=f"Cancellation requested, stopping. processed {products_processed} products")
+                        self.logger.info(
+                            "llm_summary run",
+                            message=f"Cancellation requested, stopping. processed {products_processed} products",
+                        )
                         break
-                    
+
                     # wrapping the generate summary here instead of over private method since it can't access self.logger
                     generate_with_retry = retry_llm_api(logger=self.logger)(
                         lambda: self._generate_summary(product_name, comments)
@@ -138,13 +157,13 @@ class LLMSummaryService:
 
                     products_processed += 1
                 except Exception as e:
-                    self.logger.error("llm_summary run", message=f"Unexpected error processing {product_name}, error={str(e)}")
+                    self.logger.error(
+                        "llm_summary run",
+                        message=f"Unexpected error processing {product_name}, error={str(e)}",
+                    )
                     continue
-            
-        return SummaryResult(
-            products_summarized=products_processed,
-            cancelled=False
-        )
+
+        return SummaryResult(products_summarized=products_processed, cancelled=False)
 
     def run_single_cycle(self, job_state: JobState) -> None:
         """
@@ -170,7 +189,7 @@ class LLMSummaryService:
 
             self.logger.info(
                 event_type="llm_summary run",
-                message=f"Ingestion completed: {result.products_summarized} products summarized"
+                message=f"Ingestion completed: {result.products_summarized} products summarized",
             )
 
         except Exception as e:

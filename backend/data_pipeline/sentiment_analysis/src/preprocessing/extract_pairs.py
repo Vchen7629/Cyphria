@@ -1,7 +1,10 @@
 from src.api.schemas import UnprocessedComment
 from datetime import datetime
 
-def extract_pairs(unprocessed_comment: UnprocessedComment) -> list[tuple[str, str, str, str, datetime]]:
+
+def extract_pairs(
+    unprocessed_comment: UnprocessedComment,
+) -> list[tuple[str, str, str, str, datetime]]:
     """
     Create enriched pairs from an unprocessed comment containing all metadata
     needed for sentiment analysis and database insertion.
@@ -20,6 +23,12 @@ def extract_pairs(unprocessed_comment: UnprocessedComment) -> list[tuple[str, st
         return []
 
     return [
-        (unprocessed_comment.comment_id, comment_text, unprocessed_comment.product_topic, product, unprocessed_comment.created_utc)
+        (
+            unprocessed_comment.comment_id,
+            comment_text,
+            unprocessed_comment.product_topic,
+            product,
+            unprocessed_comment.created_utc,
+        )
         for product in product_list
     ]

@@ -1,9 +1,8 @@
 import numpy as np
 
+
 def calculate_bayesian_scores(
-    avg_sentiments: np.ndarray,
-    mention_counts: np.ndarray,
-    min_mentions: int = 10
+    avg_sentiments: np.ndarray, mention_counts: np.ndarray, min_mentions: int = 10
 ) -> np.ndarray:
     """
     Calculate Bayesian weighted scores using the IMDB Top 250 formula.
@@ -17,7 +16,7 @@ def calculate_bayesian_scores(
         m  = Minimum mentions threshold
         C  = Mean sentiment across all products in category (weighted by mentions)
 
-    used to preventing manipulation from low-sample products since Products with 
+    used to preventing manipulation from low-sample products since Products with
     few mentions get pulled toward the category average,.
 
     Args:

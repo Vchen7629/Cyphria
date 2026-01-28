@@ -10,7 +10,7 @@ app = FastAPI(
     title="LLM summary service",
     description="Fastapi wrapper around LLM summary service so Airflow can call the /run endpoint to invoke the worker",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 app.include_router(base_router)

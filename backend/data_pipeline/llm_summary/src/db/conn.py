@@ -1,6 +1,7 @@
 from psycopg_pool import ConnectionPool
 from src.core.settings_config import Settings
 
+
 def create_connection_pool(min_size: int = 1, max_size: int = 10) -> ConnectionPool:
     """
     Create a PG connection pool using env variables
@@ -22,4 +23,4 @@ def create_connection_pool(min_size: int = 1, max_size: int = 10) -> ConnectionP
         f"password={settings.DB_PASS} "
     )
 
-    return ConnectionPool(conninfo=conninfo, min_size=min_size, max_size=max_size, open=True)     
+    return ConnectionPool(conninfo=conninfo, min_size=min_size, max_size=max_size, open=True)

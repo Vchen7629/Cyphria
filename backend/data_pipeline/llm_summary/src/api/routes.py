@@ -16,6 +16,7 @@ router = APIRouter()
 # global job state thats initialized in lifespan
 job_state: JobState | None = None
 
+
 @router.post("/run", response_model=RunResponse)
 async def trigger_llm_summarization(request: Request, body: RunRequest) -> RunResponse:
     """
@@ -30,16 +31,13 @@ async def trigger_llm_summarization(request: Request, body: RunRequest) -> RunRe
     time_window = body.time_window
     if not time_window or time_window.strip() == "":
         raise HTTPException(status_code=400, detail="Missing time_window in your request")
-    
+
     if not job_state:
-        raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")  
+        raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")
 
     # lock to prevent duplicate calls to this endpoint from retriggering ranking
     if job_state.is_running():
-        raise HTTPException(
-            status_code=409,
-            detail="Summary already in progress"
-        )
+        raise HTTPException(status_code=409, detail="Summary already in progress")
 
     job_state.create_job(time_window=time_window)
 
@@ -48,7 +46,7 @@ async def trigger_llm_summarization(request: Request, body: RunRequest) -> RunRe
         llm_client=request.app.state.llm_client,
         time_window=body.time_window,
         logger=request.app.state.logger,
-        db_pool=request.app.state.db_pool
+        db_pool=request.app.state.db_pool,
     )
 
     run_state.current_service = service
@@ -58,15 +56,16 @@ async def trigger_llm_summarization(request: Request, body: RunRequest) -> RunRe
     loop = asyncio.get_event_loop()
 
     loop.run_in_executor(executor, service.run_single_cycle, job_state)
-    
+
     return RunResponse(status="started")
+
 
 @router.get("/status", response_model=CurrentJob)
 async def get_job_status() -> CurrentJob:
     """
     Get status of a summary job
     Airflow HttpSensor polls this endpoint until status is 'completed' or 'failed'
-    
+
     Raises:
         HTTPException if no job_state
     """
@@ -77,12 +76,13 @@ async def get_job_status() -> CurrentJob:
 
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
-    
+
     return job
+
 
 @router.get("/health", response_model=HealthResponse)
 def health_check(request: Request) -> HealthResponse:
-    """ Health check endpoint for Kubernetes probes, Checks database connectivity"""
+    """Health check endpoint for Kubernetes probes, Checks database connectivity"""
     db_ok = False
 
     # Check database
@@ -95,10 +95,8 @@ def health_check(request: Request) -> HealthResponse:
     except Exception:
         pass
 
-    return HealthResponse(
-        status="healthy" if db_ok else "unhealthy",
-        db_connected=db_ok
-    ) 
+    return HealthResponse(status="healthy" if db_ok else "unhealthy", db_connected=db_ok)
+
 
 @router.get("/ready")
 def readiness_check() -> dict[str, bool]:

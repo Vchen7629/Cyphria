@@ -25,12 +25,11 @@ jobs:
         with:                                                                                                                          
           repository: vchen7629/kubernetes-cluster                                                                                     
           token: ${{ secrets.CI_CD_PAT }}                                                                                              
-          path: manifests                                                                                                            
                                                                                                                                          
       - name: Update frontend image tag in kustomization
         if: inputs.service == 'frontend'                                                                                         
         run: |                                                                                                                         
-          cd manifests/tenants/cyphria/${{ inputs.service }}/                                                            
+          cd manifests/tenants/cyphria/${{ inputs.service }}                                                            
           sed -i "s|newTag:.*|newTag: ${{ inputs.version }}|" kustomization.yaml
       
       - name: Update insights api image tag in kustomization
@@ -48,7 +47,7 @@ jobs:
       - name: Commit and push frontend changes
         if: inputs.service == 'frontend'                                                                                                                                                                                          
         run: |                                                                                                                         
-          cd k8s-manifests                                                                                                             
+          cd .                                                                                                             
           git config user.name "github-actions[bot]"                                                                                   
           git config user.email "github-actions[bot]@users.noreply.github.com"                                                         
           git add manifests/tenants/cyphria/frontend/kustomization.yaml                                                   
@@ -58,7 +57,7 @@ jobs:
       - name: Commit and push insights-api changes
         if: inputs.service == 'insights_api'                                                                                         
         run: |                                                                                                                         
-          cd k8s-manifests                                                                                                             
+          cd .                                                                                                            
           git config user.name "github-actions[bot]"                                                                                   
           git config user.email "github-actions[bot]@users.noreply.github.com"                                                         
           git add manifests/tenants/cyphria/${{ inputs.service }}/kustomization.yaml                                                   
@@ -68,7 +67,7 @@ jobs:
       - name: Commit and push data pipeline changes
         if: inputs.service != 'insights_api' && inputs.service != 'frontend'                                                                                         
         run: |                                                                                                                         
-          cd k8s-manifests                                                                                                             
+          cd .                                                                                                            
           git config user.name "github-actions[bot]"                                                                                   
           git config user.email "github-actions[bot]@users.noreply.github.com"                                                         
           git add manifests/tenants/cyphria/data_pipeline_${{ inputs.service }}_service/kustomization.yaml                                                   

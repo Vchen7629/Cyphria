@@ -1,65 +1,33 @@
-name: CD workflow
+name: CD Workflow
 
 on:
-  workflow_run:
-    workflows:
-      - CI + Tagging Workflow
-    types:
-      - completed
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      service:
+        description: 'Service to deploy'
+        required: true
+        type: string
+      version:
+        description: 'Version tag (e.g., frontend-1.0.1)'
+        required: true
+        type: string
+      sha:
+        description: 'Git commit SHA'
+        required: true
+        type: string
 
 permissions:
   packages: write
+  contents: read
 
 jobs:
-  get-tags:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    outputs:
-      frontend: ${{ steps.check.outputs.frontend }}
-      insights_api: ${{ steps.check.outputs.insights_api }}
-      data_ingestion: ${{ steps.check.outputs.data_ingestion }}
-      llm_summary: ${{ steps.check.outputs.llm_summary }}
-      ranking_calculator: ${{ steps.check.outputs.ranking_calculator }}
-      sentiment_analysis: ${{ steps.check.outputs.sentiment_analysis }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: main
-
-      - name: Fetch all tags
-        run: git fetch --tags --force
-
-      - name: Check which services have new tags
-        id: check
-        run: |
-          COMMIT_SHA="${{ github.event.workflow_run.head_sha }}"
-          echo "Checking for tags at commit: $COMMIT_SHA"
-
-          # Check each service
-          FRONTEND=$(git tag --points-at "$COMMIT_SHA" | grep "^frontend-" | head -1 || echo "")
-          INSIGHTS=$(git tag --points-at "$COMMIT_SHA" | grep "^insights_api-" | head -1 || echo "")
-          INGESTION=$(git tag --points-at "$COMMIT_SHA" | grep "^data_ingestion-" | head -1 || echo "")
-          LLM=$(git tag --points-at "$COMMIT_SHA" | grep "^llm_summary-" | head -1 || echo "")
-          RANKING=$(git tag --points-at "$COMMIT_SHA" | grep "^ranking_calculator-" | head -1 || echo "")
-          SENTIMENT=$(git tag --points-at "$COMMIT_SHA" | grep "^sentiment_analysis-" | head -1 || echo "")
-
-          echo "frontend=$FRONTEND" >> $GITHUB_OUTPUT
-          echo "insights_api=$INSIGHTS" >> $GITHUB_OUTPUT
-          echo "data_ingestion=$INGESTION" >> $GITHUB_OUTPUT
-          echo "llm_summary=$LLM" >> $GITHUB_OUTPUT
-          echo "ranking_calculator=$RANKING" >> $GITHUB_OUTPUT
-          echo "sentiment_analysis=$SENTIMENT" >> $GITHUB_OUTPUT
-
-  frontend-cd:
-    needs: get-tags
-    if: needs.get-tags.outputs.frontend != ''
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.sha }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -71,158 +39,74 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and push Frontend
+        if: inputs.service == 'frontend'
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-frontend:${{ github.event.workflow_run.head_sha }}
-            ghcr.io/vchen7629/cyphria-frontend:${{ needs.get-tags.outputs.frontend }}
+            ghcr.io/vchen7629/cyphria-frontend:${{ inputs.sha }}
+            ghcr.io/vchen7629/cyphria-frontend:${{ inputs.version }}
             ghcr.io/vchen7629/cyphria-frontend:latest
 
-  insights-api-cd:
-    needs: get-tags
-    if: needs.get-tags.outputs.insights_api != ''
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
+      - name: Build and push Insights API
+        if: inputs.service == 'insights_api'
         uses: docker/build-push-action@v5
         with:
           context: ./backend/insights_api
           file: ./backend/insights_api/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-insights-api:${{ github.event.workflow_run.head_sha }}
-            ghcr.io/vchen7629/cyphria-insights-api:${{ needs.get-tags.outputs.insights_api }}
+            ghcr.io/vchen7629/cyphria-insights-api:${{ inputs.sha }}
+            ghcr.io/vchen7629/cyphria-insights-api:${{ inputs.version }}
             ghcr.io/vchen7629/cyphria-insights-api:latest
 
-  data-ingestion-cd:
-    needs: get-tags
-    if: needs.get-tags.outputs.data_ingestion != ''
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
+      - name: Build and push Data Ingestion
+        if: inputs.service == 'data_ingestion'
         uses: docker/build-push-action@v5
         with:
           context: ./backend/data_pipeline/ingestion
           file: ./backend/data_pipeline/ingestion/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-data-ingestion:${{ github.event.workflow_run.head_sha }}
-            ghcr.io/vchen7629/cyphria-data-ingestion:${{ needs.get-tags.outputs.data_ingestion }}
+            ghcr.io/vchen7629/cyphria-data-ingestion:${{ inputs.sha }}
+            ghcr.io/vchen7629/cyphria-data-ingestion:${{ inputs.version }}
             ghcr.io/vchen7629/cyphria-data-ingestion:latest
 
-  llm-summary-cd:
-    needs: get-tags
-    if: needs.get-tags.outputs.llm_summary != ''
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
+      - name: Build and push LLM Summary
+        if: inputs.service == 'llm_summary'
         uses: docker/build-push-action@v5
         with:
           context: ./backend/data_pipeline/llm_summary
           file: ./backend/data_pipeline/llm_summary/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-llm-summary:${{ github.event.workflow_run.head_sha }}
-            ghcr.io/vchen7629/cyphria-llm-summary:${{ needs.get-tags.outputs.llm_summary }}
+            ghcr.io/vchen7629/cyphria-llm-summary:${{ inputs.sha }}
+            ghcr.io/vchen7629/cyphria-llm-summary:${{ inputs.version }}
             ghcr.io/vchen7629/cyphria-llm-summary:latest
 
-  ranking-calculator-cd:
-    needs: get-tags
-    if: needs.get-tags.outputs.ranking_calculator != ''
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
+      - name: Build and push Ranking Calculator
+        if: inputs.service == 'ranking_calculator'
         uses: docker/build-push-action@v5
         with:
           context: ./backend/data_pipeline/ranking_calculator
           file: ./backend/data_pipeline/ranking_calculator/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ github.event.workflow_run.head_sha }}
-            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ needs.get-tags.outputs.ranking_calculator }}
+            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ inputs.sha }}
+            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ inputs.version }}
             ghcr.io/vchen7629/cyphria-ranking-calculator:latest
 
-  sentiment-analysis-cd:
-    needs: get-tags
-    if: needs.get-tags.outputs.sentiment_analysis != ''
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
+      - name: Build and push Sentiment Analysis
+        if: inputs.service == 'sentiment_analysis'
         uses: docker/build-push-action@v5
         with:
           context: ./backend/data_pipeline/sentiment_analysis
           file: ./backend/data_pipeline/sentiment_analysis/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ github.event.workflow_run.head_sha }}
-            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ needs.get-tags.outputs.sentiment_analysis }}
+            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ inputs.sha }}
+            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ inputs.version }}
             ghcr.io/vchen7629/cyphria-sentiment_analysis:latest

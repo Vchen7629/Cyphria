@@ -7,7 +7,7 @@ from src.core.logger import StructuredLogger
 import time
 import psycopg
 
-ReturnType = TypeVar('ReturnType')
+ReturnType = TypeVar("ReturnType")
 
 # Transient errors that are safe to retry
 RETRYABLE_ERRORS = (
@@ -42,6 +42,7 @@ def retry_with_backoff(
             # Database operation that might fail transiently
             pass
     """
+
     def decorator(func: Callable[..., ReturnType]) -> Callable[..., ReturnType]:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -77,4 +78,5 @@ def retry_with_backoff(
                     raise
 
         return wrapper
+
     return decorator

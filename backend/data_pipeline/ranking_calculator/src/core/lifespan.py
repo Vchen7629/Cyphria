@@ -11,6 +11,7 @@ from src.db.conn import create_connection_pool
 
 settings = Settings()
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     """
@@ -23,20 +24,24 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info(event_type="ranking_service startup", message="Creating database connection pool")
     db_pool = create_connection_pool()
 
-    # Check database health before proceeding, exit if database non responsive 
+    # Check database health before proceeding, exit if database non responsive
     try:
         with db_pool.connection() as conn:
             with conn.cursor() as cursor:
                 cursor.execute("SELECT 1")
                 cursor.fetchone()
-            logger.info(event_type="ranking_service startup", message="Database health check passed")
+            logger.info(
+                event_type="ranking_service startup", message="Database health check passed"
+            )
     except Exception as e:
-        logger.error(event_type="ranking_service startup", message=f"Database health check failed: {e}")
+        logger.error(
+            event_type="ranking_service startup", message=f"Database health check failed: {e}"
+        )
         db_pool.close()
-        raise 
+        raise
 
     executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="ranking_service")
-    
+
     job_state_instance = JobState()
 
     # Store these values in app state for dependency injection

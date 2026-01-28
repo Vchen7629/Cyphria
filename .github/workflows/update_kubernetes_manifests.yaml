@@ -41,7 +41,7 @@ jobs:
       - name: Update data pipeline services image tag in kustomization
         if: inputs.service != 'insights_api' && inputs.service != 'frontend'                                                                                         
         run: |                                                                                                                         
-          cd manifests/tenants/cyphria/data_pipeline_${{ inputs.service }}_service/                                                            
+          cd manifests/tenants/cyphria/data_pipeline_${{ inputs.service }}/                                                            
           sed -i "s|newTag:.*|newTag: ${{ inputs.version }}|" kustomization.yaml
 
       - name: Commit and push frontend changes

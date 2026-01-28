@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useEffect, useMemo, useState } from "react"
 import { Category } from "../../mock/types"
 import { mockCategories } from "../../mock/mockData";
 import iconMap from "../../utils/home/IconMap";
@@ -14,7 +14,6 @@ const BrowseCateroriesGrid = () => {
     const [openCategoryId, setOpenCategoryId] = useState<string | null>(null);
     const [columnsPerRow, setColumnsPerRow] = useState<number>(3)
     const categories = mockCategories.slice(0, 6);
-    const browseCategoryRows: typeof categories[] = []; // Group categories into rows of 3
 
     // Detect screen size and update columns per row so its responsive
     useEffect(() => {
@@ -22,17 +21,21 @@ const BrowseCateroriesGrid = () => {
             if (window.innerWidth < 640) setColumnsPerRow(1); // sm window width breakpoint
             else if (window.innerWidth < 1024) setColumnsPerRow(2); // lg window width breakpoint
             else setColumnsPerRow(3)
-        } 
+        }
 
         updateColumns()
         window.addEventListener('resize', updateColumns)
         return () => window.removeEventListener('resize', updateColumns)
     }, [])
 
-    // populate the rows array with the current category items
-    for (let i = 0; i < categories.length; i += columnsPerRow) {
-        browseCategoryRows.push(categories.slice(i, i + columnsPerRow));
-    }
+    // Group categories into rows based on columnsPerRow
+    const browseCategoryRows = useMemo(() => {
+        const rows: typeof categories[] = [];
+        for (let i = 0; i < categories.length; i += columnsPerRow) {
+            rows.push(categories.slice(i, i + columnsPerRow));
+        }
+        return rows;
+    }, [categories, columnsPerRow])
 
     function toggleCategory(categoryId: string) {
         setOpenCategoryId(prev => prev === categoryId ? null : categoryId);

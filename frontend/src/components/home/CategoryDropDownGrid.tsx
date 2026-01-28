@@ -5,7 +5,7 @@ import { Link } from "react-router";
 
 interface CategoryDropDownGridProps {
     category: Category
-    toggleCategory: any
+    toggleCategory: (categoryId: string) => void
 }
 
 /**

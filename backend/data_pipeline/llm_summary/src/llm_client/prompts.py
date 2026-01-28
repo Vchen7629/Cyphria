@@ -39,6 +39,7 @@ Fitness:
                                                         
 """
 
+
 def format_comments(comment_list: list[str]) -> str:
     """
     Format list of comments into numbered list
@@ -51,11 +52,8 @@ def format_comments(comment_list: list[str]) -> str:
     """
     if not comment_list:
         return "None available"
-    
-    return "\n".join([
-        f"{i+1}. {comment}"
-        for i, comment in enumerate(comment_list)
-    ])
+
+    return "\n".join([f"{i + 1}. {comment}" for i, comment in enumerate(comment_list)])
 
 
 def build_user_prompt(product_name: str, comments: list[str]) -> str:
@@ -66,7 +64,7 @@ def build_user_prompt(product_name: str, comments: list[str]) -> str:
     Args:
         product_name: name of product
         comments: Ordered list of comments
-    
+
     Returns:
         Formatted user prompt string
     """

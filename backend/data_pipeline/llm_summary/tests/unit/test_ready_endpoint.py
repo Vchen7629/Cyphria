@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 from fastapi import FastAPI
 
+
 def test_ready_endpoint(mock_fastapi: FastAPI) -> None:
     """Readiness endpoint should always return ready."""
     app = mock_fastapi

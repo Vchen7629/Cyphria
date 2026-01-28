@@ -1,5 +1,6 @@
 from src.llm_client.prompts import build_user_prompt
 
+
 def test_no_negative_or_neutral_comments() -> None:
     """Negative and Neutral should have None available"""
     comments = [f"comment_{i}" for i in range(10)]
@@ -28,6 +29,7 @@ Generate a TLDR (8-16 words, conversational tone):
 """
 
     assert build_user_prompt(product_name, comments) == expected_result
+
 
 def test_all_comment_categories_filled() -> None:
     """All categories should be populated when we have 25 comments"""
@@ -71,6 +73,7 @@ Generate a TLDR (8-16 words, conversational tone):
 
     assert build_user_prompt(product_name, comments) == expected_result
 
+
 def test_extra_comments_ignored() -> None:
     """Comments beyond 25 should be ignored"""
     comments = [f"comment_{i}" for i in range(100)]
@@ -113,10 +116,11 @@ Generate a TLDR (8-16 words, conversational tone):
 
     assert build_user_prompt(product_name, comments) == expected_result
 
+
 def test_product_name_with_special_characters() -> None:
     """Should handle special characters in product name"""
     comments = ["comment_1", "comment_2"]
-    product_name = "Product's \"name\" & <Tags>"
+    product_name = 'Product\'s "name" & <Tags>'
 
     result = build_user_prompt(product_name, comments)
 

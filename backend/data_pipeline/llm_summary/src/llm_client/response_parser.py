@@ -1,8 +1,11 @@
 from src.core.logger import StructuredLogger
 
+
 class TLDRValidationError(Exception):
     """Raised when TLDR validation fails"""
+
     pass
+
 
 def parse_tldr(response: str, logger: StructuredLogger) -> str:
     """
@@ -23,12 +26,7 @@ def parse_tldr(response: str, logger: StructuredLogger) -> str:
 
     tldr = response.strip().replace("**", "").replace("*", "")
 
-    prefixes_to_remove = [
-        "Here's The TLDR",
-        "TL;DR",
-        "TLDR",
-        "Summary"
-    ]
+    prefixes_to_remove = ["Here's The TLDR", "TL;DR", "TLDR", "Summary"]
 
     # Keep removing prefixes until no more matches are found
     changed = True
@@ -36,19 +34,22 @@ def parse_tldr(response: str, logger: StructuredLogger) -> str:
         changed = False
         for prefix in prefixes_to_remove:
             if tldr.upper().startswith(prefix.upper()):
-                tldr = tldr[len(prefix):].lstrip(":;-").lstrip()
+                tldr = tldr[len(prefix) :].lstrip(":;-").lstrip()
                 changed = True
                 break
 
-    if (tldr.startswith('"') or tldr.startswith("'")):
+    if tldr.startswith('"') or tldr.startswith("'"):
         tldr = tldr[1:].strip()
 
-    if (tldr.endswith("'") or tldr.endswith('"')):
+    if tldr.endswith("'") or tldr.endswith('"'):
         tldr = tldr[:-1].strip()
 
     # Log word count for monitoring, but don't fail
     word_count = len(tldr.split())
     if word_count < 8 or word_count > 16:
-        logger.info(event_type="llm_summary run", message=f"TLDR word count outside 8-16 range ({word_count} words): {tldr}")
+        logger.info(
+            event_type="llm_summary run",
+            message=f"TLDR word count outside 8-16 range ({word_count} words): {tldr}",
+        )
 
     return tldr

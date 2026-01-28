@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 import pytest
 
+
 @pytest.fixture()
 def mock_openai_client() -> MagicMock:
     """Mock OpenAi client and response"""

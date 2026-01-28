@@ -2,10 +2,9 @@ from typing import Any
 import psycopg
 from psycopg import sql
 
+
 def fetch_unique_products(
-    db_conn: psycopg.Connection, 
-    time_window: str,
-    min_comments: int = 10
+    db_conn: psycopg.Connection, time_window: str, min_comments: int = 10
 ) -> list[str]:
     """
     Fetch unique product names that have sufficient comments for use for summarization
@@ -14,10 +13,10 @@ def fetch_unique_products(
         db_conn: psycopg database connection
         time_window: time window of comments to fetch, either 90d or all time
         min_comments: minimum amount of comments that the product needs to have
-    
+
     Returns:
         a list of unique product names
-    """ 
+    """
     if not time_window:
         return []
 
@@ -49,10 +48,9 @@ def fetch_unique_products(
 
     return [row[0] for row in rows]
 
+
 def fetch_top_comments_for_product(
-    db_conn: psycopg.Connection,
-    product_name: str,
-    time_window: str
+    db_conn: psycopg.Connection, product_name: str, time_window: str
 ) -> list[str]:
     """
     Fetch a list of top processed comments to send to the llm to summarize.
@@ -125,12 +123,9 @@ def fetch_top_comments_for_product(
 
     return [row[0] for row in rows]
 
+
 def upsert_llm_summaries(
-    db_conn: psycopg.Connection, 
-    product_name: str,
-    tldr: str,
-    time_window: str,
-    model_used: str
+    db_conn: psycopg.Connection, product_name: str, tldr: str, time_window: str, model_used: str
 ) -> bool:
     """
     Upsert a llm summary for a product and time window
@@ -169,7 +164,7 @@ def upsert_llm_summaries(
         "product_name": product_name,
         "tldr": tldr,
         "time_window": time_window,
-        "model_used": model_used
+        "model_used": model_used,
     }
 
     with db_conn.cursor() as cursor:

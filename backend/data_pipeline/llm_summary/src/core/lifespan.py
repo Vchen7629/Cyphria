@@ -12,6 +12,7 @@ from src.db.conn import create_connection_pool
 
 settings = Settings()
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     """Managed api lifecycle, resources created once at startup and cleanup up on shutdown"""
@@ -21,7 +22,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info(event_type="llm_summary startup", message="Creating database connection pool")
     db_pool = create_connection_pool()
 
-    # Check database health before proceeding, exit if database non responsive 
+    # Check database health before proceeding, exit if database non responsive
     try:
         with db_pool.connection() as conn:
             with conn.cursor() as cursor:
@@ -31,9 +32,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     except Exception as e:
         logger.error(event_type="llm_summary startup", message=f"Database health check failed: {e}")
         db_pool.close()
-        raise 
+        raise
 
-    executor: ThreadPoolExecutor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="summary_service")
+    executor: ThreadPoolExecutor = ThreadPoolExecutor(
+        max_workers=1, thread_name_prefix="summary_service"
+    )
     job_state_instance = JobState()
 
     llm_model_name = settings.LLM_MODEL

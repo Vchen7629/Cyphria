@@ -4,6 +4,7 @@ import pytest
 import psycopg
 from psycopg_pool import ConnectionPool
 
+
 def test_connection_pool_creation(db_pool: ConnectionPool) -> None:
     """Connection pool should be created successfully and can acquire connections."""
     with db_pool.connection() as conn:
@@ -12,6 +13,7 @@ def test_connection_pool_creation(db_pool: ConnectionPool) -> None:
             result = cursor.fetchone()
             assert result == (1,)
 
+
 def test_connection_failure_handling() -> None:
     """Connection failures with invalid connection string should be handled."""
     invalid_conninfo = "host=invalid_host port=9999 dbname=invalid user=invalid password=invalid"
@@ -19,6 +21,7 @@ def test_connection_failure_handling() -> None:
     with pytest.raises(psycopg.OperationalError):
         conn = psycopg.connect(invalid_conninfo, connect_timeout=1)
         conn.close()
+
 
 def test_pool_multiple_connections(db_pool: ConnectionPool) -> None:
     """Connection pool should handle multiple concurrent connections."""
@@ -40,9 +43,10 @@ def test_pool_multiple_connections(db_pool: ConnectionPool) -> None:
         for conn in connections:
             db_pool.putconn(conn)
 
+
 def test_connection_pool_exhaustion(db_pool: ConnectionPool) -> None:
     """
-    Trying to get one more connection when connection 
+    Trying to get one more connection when connection
     pool is exhausted should timeout
     """
     connections = []
@@ -50,23 +54,29 @@ def test_connection_pool_exhaustion(db_pool: ConnectionPool) -> None:
         for _ in range(5):
             conn = db_pool.getconn(timeout=1)
             connections.append(conn)
-        
+
         with pytest.raises(Exception):
             db_pool.getconn(timeout=1)
     finally:
         for conn in connections:
             db_pool.putconn(conn)
 
-def test_lost_connection_during_operation(db_connection: psycopg.Connection, single_product_sentiment: dict[str, Any]) -> None:
+
+def test_lost_connection_during_operation(
+    db_connection: psycopg.Connection, single_product_sentiment: dict[str, Any]
+) -> None:
     """Losing connection during a database operation should raise Operational Error"""
     with db_connection.cursor() as cursor:
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT INTO product_sentiment (
                 comment_id, product_name, category, sentiment_score, created_utc
             ) VALUES (
                 %(comment_id)s, %(product_name)s, %(category)s, %(sentiment_score)s, %(created_utc)s
             )
-        """, single_product_sentiment)
+        """,
+            single_product_sentiment,
+        )
 
     db_connection.commit()
 
@@ -74,5 +84,4 @@ def test_lost_connection_during_operation(db_connection: psycopg.Connection, sin
     db_connection.close()
 
     with pytest.raises(psycopg.OperationalError):
-        fetch_unique_products(db_connection, time_window='all_time')
-
+        fetch_unique_products(db_connection, time_window="all_time")

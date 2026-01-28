@@ -8,6 +8,7 @@ from testcontainers.postgres import PostgresContainer
 import pytest
 import psycopg
 
+
 @pytest.fixture(scope="session")
 def postgres_container() -> Generator[PostgresContainer, None, None]:
     """
@@ -70,8 +71,11 @@ def postgres_container() -> Generator[PostgresContainer, None, None]:
 
         yield postgres
 
+
 @pytest.fixture
-def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Connection, None, None]:
+def db_connection(
+    postgres_container: PostgresContainer,
+) -> Generator[psycopg.Connection, None, None]:
     """
     Create a fresh database connection for each test.
     Cleans up tables before each test to ensure isolation.
@@ -81,7 +85,9 @@ def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Co
 
     # Cleanup BEFORE test to ensure clean state
     with conn.cursor() as cursor:
-        cursor.execute("TRUNCATE TABLE product_sentiment, raw_comments, product_summaries RESTART IDENTITY CASCADE;")
+        cursor.execute(
+            "TRUNCATE TABLE product_sentiment, raw_comments, product_summaries RESTART IDENTITY CASCADE;"
+        )
     conn.commit()
 
     yield conn
@@ -91,6 +97,7 @@ def db_connection(postgres_container: PostgresContainer) -> Generator[psycopg.Co
             conn.rollback()
         conn.close()
 
+
 @pytest.fixture
 def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, None, None]:
     """
@@ -98,71 +105,73 @@ def db_pool(postgres_container: PostgresContainer) -> Generator[ConnectionPool, 
     """
     # Convert SQLAlchemy URL to PostgreSQL URI for psycopg
     connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")
-    pool = ConnectionPool(
-        conninfo=connection_url,
-        min_size=1,
-        max_size=5,
-        open=True
-    )
+    pool = ConnectionPool(conninfo=connection_url, min_size=1, max_size=5, open=True)
     with pool.connection() as conn:
         # Rollback any failed transaction first
         if conn.info.transaction_status != psycopg.pq.TransactionStatus.IDLE:
             conn.rollback()
 
         with conn.cursor() as cursor:
-            cursor.execute("TRUNCATE TABLE product_sentiment, raw_comments RESTART IDENTITY CASCADE;")
+            cursor.execute(
+                "TRUNCATE TABLE product_sentiment, raw_comments RESTART IDENTITY CASCADE;"
+            )
         conn.commit()
-        
+
     yield pool
 
     pool.close()
+
 
 @pytest.fixture
 def single_product_summary() -> dict[str, Any]:
     """Fixture for single product summary row"""
     return {
-        'product_name': 'rtx 4090',
-        'tldr': 'rtx 4090 tldr',
-        'time_window': 'all_time',
-        'model_used': 'chatgpt-5.2'
-    }    
+        "product_name": "rtx 4090",
+        "tldr": "rtx 4090 tldr",
+        "time_window": "all_time",
+        "model_used": "chatgpt-5.2",
+    }
+
 
 @pytest.fixture
 def single_product_sentiment() -> dict[str, Any]:
     """Fixture for single comment row"""
     return {
-        'comment_id': 'test_comment_1',
-        'product_name': 'rtx 4090',
-        'category': 'GPU',
-        'sentiment_score': 0.98,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+        "comment_id": "test_comment_1",
+        "product_name": "rtx 4090",
+        "category": "GPU",
+        "sentiment_score": 0.98,
+        "created_utc": datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
     }
+
 
 @pytest.fixture
 def single_raw_comment() -> dict[str, Any]:
     """Fixture for single raw comment row"""
     return {
-        'comment_id': 'test_comment_1',
-        'post_id': 'test_post_1',
-        'comment_body': 'This is a test comment about RTX 4090',
-        'detected_products': ['rtx 4090'],
-        'subreddit': 'nvidia',
-        'author': 'test_user',
-        'score': 42,
-        'created_utc': datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        'category': 'GPU'
+        "comment_id": "test_comment_1",
+        "post_id": "test_post_1",
+        "comment_body": "This is a test comment about RTX 4090",
+        "detected_products": ["rtx 4090"],
+        "subreddit": "nvidia",
+        "author": "test_user",
+        "score": 42,
+        "created_utc": datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+        "category": "GPU",
     }
+
 
 @pytest.fixture
 def mock_cursor() -> MagicMock:
     """Mock database cursor for unit tests."""
     cursor = MagicMock()
-    cursor.fetchall.return_value = [] # type: ignore
+    cursor.fetchall.return_value = []  # type: ignore
     cursor.fetchone.return_value = None
     cursor.execute.return_value = None
     cursor.__enter__.return_value = cursor
     cursor.__exit__.return_value = None
     return cursor
+
 
 @pytest.fixture
 def mock_db_connection(mock_cursor: MagicMock) -> Generator[MagicMock, None, None]:

@@ -16,8 +16,9 @@ router = APIRouter()
 # global job state thats initialized in lifespan
 job_state: JobState | None = None
 
+
 @router.post("/run", response_model=RunResponse)
-async def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunResponse: 
+async def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunResponse:
     """
     Trigger an sentiment analysis run asynchronously
 
@@ -36,19 +37,16 @@ async def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunR
 
     # lock to prevent duplicate calls to this endpoint from retriggering ranking
     if job_state.is_running():
-        raise HTTPException(
-            status_code=409,
-            detail="Ranking already in progress"
-        )
-    
+        raise HTTPException(status_code=409, detail="Ranking already in progress")
+
     if job_state:
         job_state.create_job(product_topic)
 
     service = SentimentService(
-        logger = request.app.state.logger,
-        category = product_topic,
-        db_pool = request.app.state.db_pool,
-        model = request.app.state.model
+        logger=request.app.state.logger,
+        product_topic=product_topic,
+        db_pool=request.app.state.db_pool,
+        model=request.app.state.model,
     )
 
     run_state.current_service = service
@@ -62,6 +60,7 @@ async def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunR
 
     return RunResponse(status="started")
 
+
 @router.get("/status", response_model=CurrentJob)
 async def get_job_status() -> CurrentJob:
     """
@@ -70,7 +69,7 @@ async def get_job_status() -> CurrentJob:
 
     Returns:
         the current job
-    
+
     Raises:
         HTTPException is job_state is none
     """
@@ -81,12 +80,13 @@ async def get_job_status() -> CurrentJob:
 
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
-    
+
     return job
+
 
 @router.get("/health", response_model=HealthResponse)
 def health_check(request: Request) -> HealthResponse:
-    """ Health check endpoint for Kubernetes probes, Checks database connectivity"""
+    """Health check endpoint for Kubernetes probes, Checks database connectivity"""
     db_ok = False
 
     # Check database
@@ -99,10 +99,8 @@ def health_check(request: Request) -> HealthResponse:
     except Exception:
         pass
 
-    return HealthResponse(
-        status="healthy" if db_ok else "unhealthy",
-        db_connected=db_ok
-    )
+    return HealthResponse(status="healthy" if db_ok else "unhealthy", db_connected=db_ok)
+
 
 @router.get("/ready")
 def readiness_check() -> dict[str, bool]:

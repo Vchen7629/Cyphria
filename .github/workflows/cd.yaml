@@ -7,6 +7,10 @@ on:
         description: 'Service to deploy'
         required: true
         type: string
+      folder:
+        description: folder the service is in
+        required: true
+        type: string
       version:
         description: 'Version tag (e.g., frontend-1.0.1)'
         required: true
@@ -38,75 +42,22 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Frontend
-        if: inputs.service == 'frontend'
+      
+      - name: Build and push Service
         uses: docker/build-push-action@v5
         with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
+          context: ./${{ inputs.folder }}
+          file: ./${{ inputs.folder }}/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-frontend:${{ inputs.sha }}
-            ghcr.io/vchen7629/cyphria-frontend:${{ inputs.version }}
-            ghcr.io/vchen7629/cyphria-frontend:latest
-
-      - name: Build and push Insights API
-        if: inputs.service == 'insights_api'
-        uses: docker/build-push-action@v5
-        with:
-          context: ./backend/insights_api
-          file: ./backend/insights_api/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/vchen7629/cyphria-insights-api:${{ inputs.sha }}
-            ghcr.io/vchen7629/cyphria-insights-api:${{ inputs.version }}
-            ghcr.io/vchen7629/cyphria-insights-api:latest
-
-      - name: Build and push Data Ingestion
-        if: inputs.service == 'data_ingestion'
-        uses: docker/build-push-action@v5
-        with:
-          context: ./backend/data_pipeline/ingestion
-          file: ./backend/data_pipeline/ingestion/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/vchen7629/cyphria-data-ingestion:${{ inputs.sha }}
-            ghcr.io/vchen7629/cyphria-data-ingestion:${{ inputs.version }}
-            ghcr.io/vchen7629/cyphria-data-ingestion:latest
-
-      - name: Build and push LLM Summary
-        if: inputs.service == 'llm_summary'
-        uses: docker/build-push-action@v5
-        with:
-          context: ./backend/data_pipeline/llm_summary
-          file: ./backend/data_pipeline/llm_summary/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/vchen7629/cyphria-llm-summary:${{ inputs.sha }}
-            ghcr.io/vchen7629/cyphria-llm-summary:${{ inputs.version }}
-            ghcr.io/vchen7629/cyphria-llm-summary:latest
-
-      - name: Build and push Ranking Calculator
-        if: inputs.service == 'ranking_calculator'
-        uses: docker/build-push-action@v5
-        with:
-          context: ./backend/data_pipeline/ranking_calculator
-          file: ./backend/data_pipeline/ranking_calculator/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ inputs.sha }}
-            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ inputs.version }}
-            ghcr.io/vchen7629/cyphria-ranking-calculator:latest
-
-      - name: Build and push Sentiment Analysis
-        if: inputs.service == 'sentiment_analysis'
-        uses: docker/build-push-action@v5
-        with:
-          context: ./backend/data_pipeline/sentiment_analysis
-          file: ./backend/data_pipeline/sentiment_analysis/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ inputs.sha }}
-            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ inputs.version }}
-            ghcr.io/vchen7629/cyphria-sentiment_analysis:latest
+            ghcr.io/vchen7629/cyphria-${{ inputs.service }}:${{ inputs.sha }}
+            ghcr.io/vchen7629/cyphria-${{ inputs.service }}:${{ inputs.version }}
+            ghcr.io/vchen7629/cyphria-${{ inputs.service }}:latest
+        
+      - name: Trigger update kubernetes manifests for Service
+        run: |
+          gh workflow run update_kubernetes_manifests.yaml \
+            -f service=${{ inputs.service }} \
+            -f version=${{ inputs.version }} \
+        env:
+          GH_TOKEN: ${{ secrets.CI_CD_PAT }}

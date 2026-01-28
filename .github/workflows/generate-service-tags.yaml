@@ -1,0 +1,58 @@
+name: Generate service tags workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        description: 'Service to deploy'
+        required: true
+        type: string
+      folder:
+        description: folder the service is in
+        required: true
+        type: string
+      sha:
+        description: 'Git commit SHA'
+        required: true
+        type: string
+
+permissions:
+  packages: write
+  contents: read
+
+jobs:
+  generate-and-push-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      new_tag: ${{ steps.tag_version.outputs.new_tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bump service version
+        id: tag_version
+        uses: anothrNick/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          INITIAL_VERSION: 1.0.0
+          TAG_PREFIX: ${{ inputs.service }}-
+
+  trigger-cd-for-service:
+    needs: [generate-and-push-tag]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Trigger CD for service
+        run: |
+          gh workflow run cd.yaml \
+            -f service=${{ inputs.service }} \
+            -f folder=${{ inputs.folder }} \
+            -f version=${{ needs.generate-and-push-tag.outputs.new_tag }} \
+            -f sha=${{ github.sha }}
+        env:
+          GH_TOKEN: ${{ secrets.CI_CD_PAT }}

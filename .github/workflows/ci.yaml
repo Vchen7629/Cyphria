@@ -61,32 +61,12 @@ jobs:
         - name: Run tests
           working-directory: frontend
           run: npm run test
-      
-    tag-frontend:
-      needs: [path-filter, frontend-ci]
-      if: ${{ needs.path-filter.outputs.frontend == 'true' }}
-      runs-on: ubuntu-latest
-      outputs:
-        new_tag: ${{ steps.tag_version.outputs.new_tag }}
-      steps:
-        - uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
-
-        - name: Bump Frontend version
-          id: tag_version
-          uses: anothrNick/github-tag-action@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            DEFAULT_BUMP: patch
-            INITIAL_VERSION: 1.0.0
-            TAG_PREFIX: frontend-
-
-        - name: Trigger CD for Frontend
+        
+        - name: Trigger generate service tags for Frontend
           run: |
-            gh workflow run cd.yaml \
+            gh workflow run generate-service-tags.yaml \
               -f service=frontend \
-              -f version=${{ steps.tag_version.outputs.new_tag }} \
+              -f folder=frontend \
               -f sha=${{ github.sha }}
           env:
             GH_TOKEN: ${{ secrets.CI_CD_PAT }}
@@ -96,71 +76,6 @@ jobs:
         if: ${{ needs.path-filter.outputs.insights_api == 'true' }}
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Install uv
-              uses: astral-sh/setup-uv@v6
-              with:
-                version: "0.8.19"
-            
-            - name: Set up Python
-              uses: actions/setup-python@v5
-              with:
-                python-version: "3.13"
-
-            - name: Install the project
-              run: uv sync --locked --all-extras --dev
-              working-directory: backend/insights_api
-            
-            - name: Run Linter and Formatting
-              run: |
-                uv run ruff check .
-                uv run ruff format --check
-              working-directory: backend/insights_api
-            
-            - name: Run Type Checking
-              run: uv run pyrefly check
-              working-directory: backend/insights_api
-            
-            - name: Run Unit/Integration Tests
-              run: uv run pytest tests
-              working-directory: backend/insights_api
-
-    tag-insights-api:
-      needs: [path-filter, insights-api-ci]
-      if: ${{ needs.path-filter.outputs.insights_api == 'true' }}
-      runs-on: ubuntu-latest
-      outputs:
-        new_tag: ${{ steps.tag_version.outputs.new_tag }}
-      steps:
-        - uses: actions/checkout@v4
-          with:
-            fetch-depth: 0 # gives it full history of commits to find the last tag
-
-        - name: Bump Insights Api version
-          id: tag_version
-          uses: anothrNick/github-tag-action@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            DEFAULT_BUMP: patch
-            INITIAL_VERSION: 1.0.0
-            TAG_PREFIX: insights_api-
-
-        - name: Trigger CD for Insights API
-          run: |
-            gh workflow run cd.yaml \
-              -f service=insights_api \
-              -f version=${{ steps.tag_version.outputs.new_tag }} \
-              -f sha=${{ github.sha }}
-          env:
-            GH_TOKEN: ${{ secrets.CI_CD_PAT }}
-
-    data-ingestion-ci:
-      needs: path-filter
-      if: ${{ needs.path-filter.outputs.data_ingestion == 'true' }}
-      runs-on: ubuntu-latest
-      steps:
           - name: Checkout repository
             uses: actions/checkout@v4
 
@@ -176,47 +91,72 @@ jobs:
 
           - name: Install the project
             run: uv sync --locked --all-extras --dev
-            working-directory: backend/data_pipeline/ingestion
+            working-directory: backend/insights_api
           
           - name: Run Linter and Formatting
             run: |
               uv run ruff check .
               uv run ruff format --check
-            working-directory: backend/data_pipeline/ingestion
+            working-directory: backend/insights_api
           
           - name: Run Type Checking
             run: uv run pyrefly check
-            working-directory: backend/data_pipeline/ingestion
+            working-directory: backend/insights_api
           
           - name: Run Unit/Integration Tests
             run: uv run pytest tests
-            working-directory: backend/data_pipeline/ingestion
+            working-directory: backend/insights_api
 
-    tag-data-ingestion:
-      needs: [path-filter, data-ingestion-ci]
+          - name: Trigger CD for Insights API
+            run: |
+              gh workflow run cd.yaml \
+                -f service=insights_api \
+                -f folder=backend/insights_api \
+                -f sha=${{ github.sha }}
+            env:
+              GH_TOKEN: ${{ secrets.CI_CD_PAT }}
+
+    data-ingestion-ci:
+      needs: path-filter
       if: ${{ needs.path-filter.outputs.data_ingestion == 'true' }}
       runs-on: ubuntu-latest
-      outputs:
-        new_tag: ${{ steps.tag_version.outputs.new_tag }}
       steps:
-        - uses: actions/checkout@v4
-          with:
-            fetch-depth: 0 # gives it full history of commits to find the last tag
+        - name: Checkout repository
+          uses: actions/checkout@v4
 
-        - name: Bump Data Ingestion version
-          id: tag_version
-          uses: anothrNick/github-tag-action@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            DEFAULT_BUMP: patch
-            INITIAL_VERSION: 1.0.0
-            TAG_PREFIX: data_ingestion-
+        - name: Install uv
+          uses: astral-sh/setup-uv@v6
+          with:
+            version: "0.8.19"
+        
+        - name: Set up Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: "3.13"
+
+        - name: Install the project
+          run: uv sync --locked --all-extras --dev
+          working-directory: backend/data_pipeline/ingestion
+        
+        - name: Run Linter and Formatting
+          run: |
+            uv run ruff check .
+            uv run ruff format --check
+          working-directory: backend/data_pipeline/ingestion
+        
+        - name: Run Type Checking
+          run: uv run pyrefly check
+          working-directory: backend/data_pipeline/ingestion
+        
+        - name: Run Unit/Integration Tests
+          run: uv run pytest tests
+          working-directory: backend/data_pipeline/ingestion
 
         - name: Trigger CD for Data Ingestion
           run: |
             gh workflow run cd.yaml \
-              -f service=data_ingestion \
-              -f version=${{ steps.tag_version.outputs.new_tag }} \
+              -f service=ingestion \
+              -f folder=backend/data_pipeline/ingestion \
               -f sha=${{ github.sha }}
           env:
             GH_TOKEN: ${{ secrets.CI_CD_PAT }}
@@ -257,161 +197,102 @@ jobs:
               run: uv run pytest tests
               working-directory: backend/data_pipeline/llm_summary
 
-    tag-llm-summary:
-      needs: [path-filter, llm-summary-ci]
-      if: ${{ needs.path-filter.outputs.llm_summary == 'true' }}
-      runs-on: ubuntu-latest
-      outputs:
-        new_tag: ${{ steps.tag_version.outputs.new_tag }}
-      steps:
-        - uses: actions/checkout@v4
-          with:
-            fetch-depth: 0 # gives it full history of commits to find the last tag
-
-        - name: Bump LLM Summary version
-          id: tag_version
-          uses: anothrNick/github-tag-action@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            DEFAULT_BUMP: patch
-            INITIAL_VERSION: 1.0.0
-            TAG_PREFIX: llm_summary-
-
-        - name: Trigger CD for LLM Summary
-          run: |
-            gh workflow run cd.yaml \
-              -f service=llm_summary \
-              -f version=${{ steps.tag_version.outputs.new_tag }} \
-              -f sha=${{ github.sha }}
-          env:
-            GH_TOKEN: ${{ secrets.CI_CD_PAT }}
+            - name: Trigger CD for LLM Summary
+              run: |
+                gh workflow run cd.yaml \
+                  -f service=llm_summary \
+                  -f folder=backend/data_pipeline/llm_summary \
+                  -f sha=${{ github.sha }}
+              env:
+                GH_TOKEN: ${{ secrets.CI_CD_PAT }}
 
     ranking-calculator-ci:
         needs: path-filter
         if: ${{ needs.path-filter.outputs.ranking_calculator == 'true' }}
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+          - name: Checkout repository
+            uses: actions/checkout@v4
 
-            - name: Install uv
-              uses: astral-sh/setup-uv@v6
-              with:
-                version: "0.8.19"
-            
-            - name: Set up Python
-              uses: actions/setup-python@v5
-              with:
-                python-version: "3.13"
+          - name: Install uv
+            uses: astral-sh/setup-uv@v6
+            with:
+              version: "0.8.19"
+          
+          - name: Set up Python
+            uses: actions/setup-python@v5
+            with:
+              python-version: "3.13"
 
-            - name: Install the project
-              run: uv sync --locked --all-extras --dev
-              working-directory: backend/data_pipeline/ranking_calculator
-            
-            - name: Run Linter and Formatting
-              run: |
-                uv run ruff check .
-                uv run ruff format --check
-              working-directory: backend/data_pipeline/ranking_calculator
-            
-            - name: Run Type Checking
-              run: uv run pyrefly check
-              working-directory: backend/data_pipeline/ranking_calculator
-            
-            - name: Run Unit/Integration Tests
-              run: uv run pytest tests
-              working-directory: backend/data_pipeline/ranking_calculator
-
-    tag-ranking-calculator:
-      needs: [path-filter, ranking-calculator-ci]
-      if: ${{ needs.path-filter.outputs.ranking_calculator == 'true' }}
-      runs-on: ubuntu-latest
-      outputs:
-        new_tag: ${{ steps.tag_version.outputs.new_tag }}
-      steps:
-        - uses: actions/checkout@v4
-          with:
-            fetch-depth: 0 # gives it full history of commits to find the last tag
-
-        - name: Bump Ranking Calculator version
-          id: tag_version
-          uses: anothrNick/github-tag-action@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            DEFAULT_BUMP: patch
-            INITIAL_VERSION: 1.0.0
-            TAG_PREFIX: ranking_calculator-
-
-        - name: Trigger CD for Ranking Calculator
-          run: |
-            gh workflow run cd.yaml \
-              -f service=ranking_calculator \
-              -f version=${{ steps.tag_version.outputs.new_tag }} \
-              -f sha=${{ github.sha }}
-          env:
-            GH_TOKEN: ${{ secrets.CI_CD_PAT }}
+          - name: Install the project
+            run: uv sync --locked --all-extras --dev
+            working-directory: backend/data_pipeline/ranking_calculator
+          
+          - name: Run Linter and Formatting
+            run: |
+              uv run ruff check .
+              uv run ruff format --check
+            working-directory: backend/data_pipeline/ranking_calculator
+          
+          - name: Run Type Checking
+            run: uv run pyrefly check
+            working-directory: backend/data_pipeline/ranking_calculator
+          
+          - name: Run Unit/Integration Tests
+            run: uv run pytest tests
+            working-directory: backend/data_pipeline/ranking_calculator
+          
+          - name: Trigger CD for Ranking Calculator
+            run: |
+              gh workflow run cd.yaml \
+                -f service=ranking_calculator \
+                -f folder=backend/data_pipeline/ranking_calculator \
+                -f version=${{ steps.tag_version.outputs.new_tag }} \
+                -f sha=${{ github.sha }}
+            env:
+              GH_TOKEN: ${{ secrets.CI_CD_PAT }}
 
     sentiment-analysis-ci:
         needs: path-filter
         if: ${{ needs.path-filter.outputs.sentiment_analysis == 'true' }}
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+          - name: Checkout repository
+            uses: actions/checkout@v4
 
-            - name: Install uv
-              uses: astral-sh/setup-uv@v6
-              with:
-                version: "0.8.19"
-            
-            - name: Set up Python
-              uses: actions/setup-python@v5
-              with:
-                python-version: "3.13"
+          - name: Install uv
+            uses: astral-sh/setup-uv@v6
+            with:
+              version: "0.8.19"
+          
+          - name: Set up Python
+            uses: actions/setup-python@v5
+            with:
+              python-version: "3.13"
 
-            - name: Install the project
-              run: uv sync --locked --all-extras --dev
-              working-directory: backend/data_pipeline/sentiment_analysis
-            
-            - name: Run Linter and Formatting
-              run: |
-                uv run ruff check .
-                uv run ruff format --check
-              working-directory: backend/data_pipeline/sentiment_analysis
-            
-            - name: Run Type Checking
-              run: uv run pyrefly check
-              working-directory: backend/data_pipeline/sentiment_analysis
-            
-            - name: Run Unit/Integration Tests
-              run: uv run pytest tests
-              working-directory: backend/data_pipeline/sentiment_analysis
-    
-    tag-sentiment-analysis:
-      needs: [path-filter, sentiment-analysis-ci]
-      if: ${{ needs.path-filter.outputs.sentiment_analysis == 'true' }}
-      runs-on: ubuntu-latest
-      outputs:
-        new_tag: ${{ steps.tag_version.outputs.new_tag }}
-      steps:
-        - uses: actions/checkout@v4
-          with:
-            fetch-depth: 0 # gives it full history of commits to find the last tag
+          - name: Install the project
+            run: uv sync --locked --all-extras --dev
+            working-directory: backend/data_pipeline/sentiment_analysis
+          
+          - name: Run Linter and Formatting
+            run: |
+              uv run ruff check .
+              uv run ruff format --check
+            working-directory: backend/data_pipeline/sentiment_analysis
+          
+          - name: Run Type Checking
+            run: uv run pyrefly check
+            working-directory: backend/data_pipeline/sentiment_analysis
+          
+          - name: Run Unit/Integration Tests
+            run: uv run pytest tests
+            working-directory: backend/data_pipeline/sentiment_analysis
 
-        - name: Bump Sentiment Analysis version
-          id: tag_version
-          uses: anothrNick/github-tag-action@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            DEFAULT_BUMP: patch
-            INITIAL_VERSION: 1.0.0
-            TAG_PREFIX: sentiment_analysis-
-
-        - name: Trigger CD for Sentiment Analysis
-          run: |
-            gh workflow run cd.yaml \
-              -f service=sentiment_analysis \
-              -f version=${{ steps.tag_version.outputs.new_tag }} \
-              -f sha=${{ github.sha }}
-          env:
-            GH_TOKEN: ${{ secrets.CI_CD_PAT }}
+          - name: Trigger CD for Sentiment Analysis
+            run: |
+              gh workflow run cd.yaml \
+                -f service=sentiment_analysis \
+                -f folder=backend/data_pipeline/sentiment_analysis \
+                -f sha=${{ github.sha }}
+            env:
+              GH_TOKEN: ${{ secrets.CI_CD_PAT }}

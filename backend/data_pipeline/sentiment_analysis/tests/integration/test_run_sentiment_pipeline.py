@@ -5,12 +5,16 @@ from src.sentiment_service import SentimentService
 import time
 import threading
 
-def test_cancel_flag_mid_batch(db_pool: ConnectionPool, create_sentiment_service: SentimentService) -> None:
+
+def test_cancel_flag_mid_batch(
+    db_pool: ConnectionPool, create_sentiment_service: SentimentService
+) -> None:
     """Shutdown_requested flag should cause worker loop to exit properly"""
     with db_pool.connection() as conn:
         with conn.cursor() as cursor:
             for i in range(100):
-                cursor.execute("""
+                cursor.execute(
+                    """
                     INSERT INTO raw_comments (
                         comment_id, post_id, comment_body, detected_products, subreddit,
                         author, score, created_utc, product_topic, sentiment_processed
@@ -18,13 +22,15 @@ def test_cancel_flag_mid_batch(db_pool: ConnectionPool, create_sentiment_service
                         %s, 'p1', 'Test comment', ARRAY['product1'],
                         'test_sub', 'test_author', 10, NOW(), 'GPU', FALSE
                     )
-                """, (f"c{i}",))
+                """,
+                    (f"c{i}",),
+                )
 
     service = create_sentiment_service
 
     # Use seperate thread to trigger cancel to prevent blocking
     def trigger_shutdown() -> None:
-        time.sleep(0.5) # short delay so worker can process at least one batch
+        time.sleep(0.5)  # short delay so worker can process at least one batch
         service.cancel_requested = True
 
     shutdown_thread = threading.Thread(target=trigger_shutdown, daemon=True)
@@ -43,12 +49,16 @@ def test_cancel_flag_mid_batch(db_pool: ConnectionPool, create_sentiment_service
             assert count is not None
             assert count[0] > 0
 
-def test_no_data_loss_when_cancelled_between_batches(db_pool: ConnectionPool, create_sentiment_service: SentimentService) -> None:
+
+def test_no_data_loss_when_cancelled_between_batches(
+    db_pool: ConnectionPool, create_sentiment_service: SentimentService
+) -> None:
     """Cancelling between batches shouln't cause data loss. All processed comments should be properly marked"""
     with db_pool.connection() as conn:
         with conn.cursor() as cursor:
             for i in range(250):
-                cursor.execute("""
+                cursor.execute(
+                    """
                     INSERT INTO raw_comments (
                         comment_id, post_id, comment_body, detected_products, subreddit,
                         author, score, created_utc, product_topic, sentiment_processed
@@ -56,7 +66,9 @@ def test_no_data_loss_when_cancelled_between_batches(db_pool: ConnectionPool, cr
                         %s, 'p1', 'Test comment', ARRAY['product1'],
                         'test_sub', 'test_author', 10, NOW(), 'GPU', FALSE
                     )
-                """, (f"c{i}",))
+                """,
+                    (f"c{i}",),
+                )
 
     service = create_sentiment_service
 
@@ -72,7 +84,7 @@ def test_no_data_loss_when_cancelled_between_batches(db_pool: ConnectionPool, cr
             service.cancel_requested = True
         return result
 
-    with patch.object(service, '_process_comments', side_effect=track_batches):
+    with patch.object(service, "_process_comments", side_effect=track_batches):
         service._run_sentiment_pipeline()
 
     with db_pool.connection() as conn:
@@ -91,12 +103,16 @@ def test_no_data_loss_when_cancelled_between_batches(db_pool: ConnectionPool, cr
 
             assert processed_count[0] + unprocessed_count[0] == 250
 
-def test_current_batch_completes_before_cancelled(db_pool: ConnectionPool, create_sentiment_service: SentimentService) -> None:
+
+def test_current_batch_completes_before_cancelled(
+    db_pool: ConnectionPool, create_sentiment_service: SentimentService
+) -> None:
     """When cancel is triggered, current batch should complete processing before the worker exits"""
     with db_pool.connection() as conn:
         with conn.cursor() as cursor:
             for i in range(3):
-                cursor.execute("""
+                cursor.execute(
+                    """
                     INSERT INTO raw_comments (
                         comment_id, post_id, comment_body, detected_products, subreddit,
                         author, score, created_utc, product_topic, sentiment_processed
@@ -104,8 +120,10 @@ def test_current_batch_completes_before_cancelled(db_pool: ConnectionPool, creat
                         %s, 'p1', 'Test comment', ARRAY['product1'],
                         'test_sub', 'test_author', 10, NOW(), 'GPU', FALSE
                     )
-                """, (f"c{i}",))
-    
+                """,
+                    (f"c{i}",),
+                )
+
     service = create_sentiment_service
 
     original_process = service._process_sentiment_and_write_to_db
@@ -114,8 +132,11 @@ def test_current_batch_completes_before_cancelled(db_pool: ConnectionPool, creat
         service.cancel_requested = True
         return original_process(*args, **kwargs)
 
-    with patch.object(service, '_process_sentiment_and_write_to_db',
-                        side_effect=trigger_shutdown_during_processing):
+    with patch.object(
+        service,
+        "_process_sentiment_and_write_to_db",
+        side_effect=trigger_shutdown_during_processing,
+    ):
         service._run_sentiment_pipeline()
 
     # Verify that the batch completed despite shutdown being triggered mid-processing

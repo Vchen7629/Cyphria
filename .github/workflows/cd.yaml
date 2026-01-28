@@ -1,37 +1,61 @@
 name: CD workflow
 
 on:
-  push:
-    tags:
-      - 'frontend-*'
-      - 'insights_api-*'
-      - 'data_ingestion-*'
-      - 'llm_summary-*'
-      - 'ranking_calculator-*'
-      - 'sentiment_analysis-*'
+  workflow_run:
+    workflows:
+      - CI + Tagging Workflow
+    types:
+      - completed
+    branches:
+      - main
 
 permissions:
   packages: write
 
 jobs:
-  determine-service:
+  get-tags:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     outputs:
-      service: ${{ steps.parse.outputs.service }}
-      tag: ${{ steps.parse.outputs.tag }}
+      frontend: ${{ steps.check.outputs.frontend }}
+      insights_api: ${{ steps.check.outputs.insights_api }}
+      data_ingestion: ${{ steps.check.outputs.data_ingestion }}
+      llm_summary: ${{ steps.check.outputs.llm_summary }}
+      ranking_calculator: ${{ steps.check.outputs.ranking_calculator }}
+      sentiment_analysis: ${{ steps.check.outputs.sentiment_analysis }}
     steps:
-      - name: Parse tag to determine service
-        id: parse
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Fetch all tags
+        run: git fetch --tags --force
+
+      - name: Check which services have new tags
+        id: check
         run: |
-          TAG_NAME="${GITHUB_REF#refs/tags/}"
-          SERVICE="${TAG_NAME%%-*}"
-          echo "service=$SERVICE" >> $GITHUB_OUTPUT
-          echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
-          echo "Deploying service: $SERVICE with tag: $TAG_NAME"
+          COMMIT_SHA="${{ github.event.workflow_run.head_sha }}"
+          echo "Checking for tags at commit: $COMMIT_SHA"
+
+          # Check each service
+          FRONTEND=$(git tag --points-at "$COMMIT_SHA" | grep "^frontend-" | head -1 || echo "")
+          INSIGHTS=$(git tag --points-at "$COMMIT_SHA" | grep "^insights_api-" | head -1 || echo "")
+          INGESTION=$(git tag --points-at "$COMMIT_SHA" | grep "^data_ingestion-" | head -1 || echo "")
+          LLM=$(git tag --points-at "$COMMIT_SHA" | grep "^llm_summary-" | head -1 || echo "")
+          RANKING=$(git tag --points-at "$COMMIT_SHA" | grep "^ranking_calculator-" | head -1 || echo "")
+          SENTIMENT=$(git tag --points-at "$COMMIT_SHA" | grep "^sentiment_analysis-" | head -1 || echo "")
+
+          echo "frontend=$FRONTEND" >> $GITHUB_OUTPUT
+          echo "insights_api=$INSIGHTS" >> $GITHUB_OUTPUT
+          echo "data_ingestion=$INGESTION" >> $GITHUB_OUTPUT
+          echo "llm_summary=$LLM" >> $GITHUB_OUTPUT
+          echo "ranking_calculator=$RANKING" >> $GITHUB_OUTPUT
+          echo "sentiment_analysis=$SENTIMENT" >> $GITHUB_OUTPUT
 
   frontend-cd:
-    needs: determine-service
-    if: needs.determine-service.outputs.service == 'frontend'
+    needs: get-tags
+    if: needs.get-tags.outputs.frontend != ''
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -54,13 +78,13 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-frontend:${{ github.sha }}
-            ghcr.io/vchen7629/cyphria-frontend:${{ needs.determine-service.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-frontend:${{ github.event.workflow_run.head_sha }}
+            ghcr.io/vchen7629/cyphria-frontend:${{ needs.get-tags.outputs.frontend }}
             ghcr.io/vchen7629/cyphria-frontend:latest
 
   insights-api-cd:
-    needs: determine-service
-    if: needs.determine-service.outputs.service == 'insights_api'
+    needs: get-tags
+    if: needs.get-tags.outputs.insights_api != ''
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -83,13 +107,13 @@ jobs:
           file: ./backend/insights_api/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-insights-api:${{ github.sha }}
-            ghcr.io/vchen7629/cyphria-insights-api:${{ needs.determine-service.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-insights-api:${{ github.event.workflow_run.head_sha }}
+            ghcr.io/vchen7629/cyphria-insights-api:${{ needs.get-tags.outputs.insights_api }}
             ghcr.io/vchen7629/cyphria-insights-api:latest
 
   data-ingestion-cd:
-    needs: determine-service
-    if: needs.determine-service.outputs.service == 'data_ingestion'
+    needs: get-tags
+    if: needs.get-tags.outputs.data_ingestion != ''
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -112,13 +136,13 @@ jobs:
           file: ./backend/data_pipeline/ingestion/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-data-ingestion:${{ github.sha }}
-            ghcr.io/vchen7629/cyphria-data-ingestion:${{ needs.determine-service.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-data-ingestion:${{ github.event.workflow_run.head_sha }}
+            ghcr.io/vchen7629/cyphria-data-ingestion:${{ needs.get-tags.outputs.data_ingestion }}
             ghcr.io/vchen7629/cyphria-data-ingestion:latest
 
   llm-summary-cd:
-    needs: determine-service
-    if: needs.determine-service.outputs.service == 'llm_summary'
+    needs: get-tags
+    if: needs.get-tags.outputs.llm_summary != ''
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -141,13 +165,13 @@ jobs:
           file: ./backend/data_pipeline/llm_summary/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-llm-summary:${{ github.sha }}
-            ghcr.io/vchen7629/cyphria-llm-summary:${{ needs.determine-service.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-llm-summary:${{ github.event.workflow_run.head_sha }}
+            ghcr.io/vchen7629/cyphria-llm-summary:${{ needs.get-tags.outputs.llm_summary }}
             ghcr.io/vchen7629/cyphria-llm-summary:latest
 
   ranking-calculator-cd:
-    needs: determine-service
-    if: needs.determine-service.outputs.service == 'ranking_calculator'
+    needs: get-tags
+    if: needs.get-tags.outputs.ranking_calculator != ''
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -170,13 +194,13 @@ jobs:
           file: ./backend/data_pipeline/ranking_calculator/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ github.sha }}
-            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ needs.determine-service.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ github.event.workflow_run.head_sha }}
+            ghcr.io/vchen7629/cyphria-ranking-calculator:${{ needs.get-tags.outputs.ranking_calculator }}
             ghcr.io/vchen7629/cyphria-ranking-calculator:latest
 
   sentiment-analysis-cd:
-    needs: determine-service
-    if: needs.determine-service.outputs.service == 'sentiment_analysis'
+    needs: get-tags
+    if: needs.get-tags.outputs.sentiment_analysis != ''
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -199,6 +223,6 @@ jobs:
           file: ./backend/data_pipeline/sentiment_analysis/Dockerfile
           push: true
           tags: |
-            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ github.sha }}
-            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ needs.determine-service.outputs.tag }}
+            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ github.event.workflow_run.head_sha }}
+            ghcr.io/vchen7629/cyphria-sentiment_analysis:${{ needs.get-tags.outputs.sentiment_analysis }}
             ghcr.io/vchen7629/cyphria-sentiment_analysis:latest

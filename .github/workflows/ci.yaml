@@ -73,6 +73,7 @@ jobs:
           with:
             fetch-depth: 0
             token: ${{ secrets.CI_CD_PAT }}
+            persist-credentials: true
 
         - name: Bump Frontend version
           id: tag_version
@@ -140,6 +141,7 @@ jobs:
           with:
             fetch-depth: 0 # gives it full history of commits to find the last tag
             token: ${{ secrets.CI_CD_PAT }}
+            persist-credentials: true
 
         - name: Bump Insights Api version
           id: tag_version
@@ -207,6 +209,7 @@ jobs:
           with:
             fetch-depth: 0 # gives it full history of commits to find the last tag
             token: ${{ secrets.CI_CD_PAT }}
+            persist-credentials: true
 
         - name: Bump Data Ingestion version
           id: tag_version
@@ -274,6 +277,7 @@ jobs:
           with:
             fetch-depth: 0 # gives it full history of commits to find the last tag
             token: ${{ secrets.CI_CD_PAT }}
+            persist-credentials: true
 
         - name: Bump LLM Summary version
           id: tag_version
@@ -341,6 +345,7 @@ jobs:
           with:
             fetch-depth: 0 # gives it full history of commits to find the last tag
             token: ${{ secrets.CI_CD_PAT }}
+            persist-credentials: true
 
         - name: Bump Ranking Calculator version
           id: tag_version
@@ -408,6 +413,7 @@ jobs:
           with:
             fetch-depth: 0 # gives it full history of commits to find the last tag
             token: ${{ secrets.CI_CD_PAT }}
+            persist-credentials: true
 
         - name: Bump Sentiment Analysis version
           id: tag_version

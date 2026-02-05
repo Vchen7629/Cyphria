@@ -12,7 +12,7 @@ def extract_subreddit_list(category: str) -> list[str]:
     Returns:
         a list containing unique subreddit strings
     """
-    topics = CATEGORYTOPIC.get(category, [])
+    topics = CATEGORYTOPIC.get(category.upper().strip(), [])
 
     subreddits = set()
     for topic in topics:

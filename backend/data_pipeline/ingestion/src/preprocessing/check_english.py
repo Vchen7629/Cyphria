@@ -6,9 +6,10 @@ from src.utils.validation import validate_string
 
 DetectorFactory.seed = 0  # detect language consistent
 
+
 def detect_english(text: str) -> Optional[str]:
     """
-    Checks the language of the text using langdetect. 
+    Checks the language of the text using langdetect.
 
     Args:
         text: the comment text we are checking language for

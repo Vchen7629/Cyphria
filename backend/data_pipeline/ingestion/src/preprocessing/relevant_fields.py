@@ -3,7 +3,9 @@ from praw.models import Comment
 from src.api.schemas import ProcessedRedditComment
 
 
-def extract_relevant_fields(comment: Comment, detected_products: list[str]) -> ProcessedRedditComment:
+def extract_relevant_fields(
+    comment: Comment, detected_products: list[str]
+) -> ProcessedRedditComment:
     """
     Extract relevant data fields from reddit comment to
     reduce amount of data being sent to data pipeline
@@ -30,5 +32,5 @@ def extract_relevant_fields(comment: Comment, detected_products: list[str]) -> P
         score=comment.score,
         author=comment.author.name,
         post_id=comment.link_id,
-        topic=""
+        topic="",
     )

@@ -18,7 +18,9 @@ def test_remaining_batch_saved_on_shutdown(
     mock_comments = [MagicMock(id=f"c_{i}") for i in range(50)]
     comments_processed = {"count": 0}
 
-    def mock_process_comment(_comment: Any, _detector: Any, _topic: Any) -> ProcessedRedditComment | None:
+    def mock_process_comment(
+        _comment: Any, _detector: Any, _topic: Any
+    ) -> ProcessedRedditComment | None:
         comments_processed["count"] += 1
         if comments_processed["count"] >= 30:
             service.cancel_requested = True
@@ -62,7 +64,9 @@ def test_shutdown_after_batch_insert_no_duplicate_save(
         original_batch_insert(comments)
         service.cancel_requested = True
 
-    def mock_process_comment(comment: Any, _detector: Any, _topic: Any) -> ProcessedRedditComment | None:
+    def mock_process_comment(
+        comment: Any, _detector: Any, _topic: Any
+    ) -> ProcessedRedditComment | None:
         reddit_comment = mock_reddit_comment.model_copy(update={"comment_id": comment.id})
         return reddit_comment
 

@@ -32,23 +32,28 @@ def test_optional_fields_initialized_to_none() -> None:
     assert current_job.result is None
     assert current_job.error is None
 
-@pytest.mark.parametrize(argnames="category,subreddit_list", argvalues=[
-    # category tests
-    (None, ["Nvidia", "AMD"]),
-    ("",  ["Nvidia", "AMD"]),
-    ("  ", ["Nvidia", "AMD"]),
 
-    # subreddit_list tests
-    ("Computing", None),
-    ("Computing", [])
-])
-def test_invalid_input_params_raises_error(category: Optional[str], subreddit_list: Optional[list[str]]) -> None:
+@pytest.mark.parametrize(
+    argnames="category,subreddit_list",
+    argvalues=[
+        # category tests
+        (None, ["Nvidia", "AMD"]),
+        ("", ["Nvidia", "AMD"]),
+        ("  ", ["Nvidia", "AMD"]),
+        # subreddit_list tests
+        ("Computing", None),
+        ("Computing", []),
+    ],
+)
+def test_invalid_input_params_raises_error(
+    category: Optional[str], subreddit_list: Optional[list[str]]
+) -> None:
     """ValueError should be raised for None category"""
     job_state = JobState()
 
     if not category or category.strip() == "":
         with pytest.raises(ValueError, match="Missing category"):
-            job_state.create_job(category, subreddit_list) # type: ignore
+            job_state.create_job(category, subreddit_list)  # type: ignore
     else:
         with pytest.raises(ValueError, match="Missing subreddit_list"):
-            job_state.create_job(category, subreddit_list) # type: ignore
+            job_state.create_job(category, subreddit_list)  # type: ignore

@@ -23,6 +23,7 @@ class ProcessedRedditComment(BaseModel):
     post_id: str
     topic: str
 
+
 class IngestionResult(BaseModel):
     """Result of a ingestion airflow run"""
 
@@ -48,12 +49,13 @@ class RunRequest(BaseModel):
     """Request to the /run endpoint"""
 
     category: str  # product category like "computing" or "mobile"]
-    topic_list: list[str] # the list of product topics for this category
+    topic_list: list[str]  # the list of product topics for this category
     subreddit_list: list[str]  # list of subreddits for this category
 
 
 class RunResponse(BaseModel):
     """Response from /run endpoint"""
+
     status: str  # "started"
 
 

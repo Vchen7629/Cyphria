@@ -51,7 +51,9 @@ def test_cancel_flag_stops_worker_at_comment_level(
     mock_comments = [MagicMock(id=f"c_{i}") for i in range(20)]
     comments_processed = {"count": 0}
 
-    def mock_process_comment(_comment: Any, _detector: Any, _topic: Any) -> ProcessedRedditComment | None:
+    def mock_process_comment(
+        _comment: Any, _detector: Any, _topic: Any
+    ) -> ProcessedRedditComment | None:
         comments_processed["count"] += 1
         if comments_processed["count"] >= 5:
             service.cancel_requested = True
@@ -198,7 +200,9 @@ def test_mixed_valid_invalid_comments(
     mock_post = MagicMock(id="test_post")
     mock_comments = [MagicMock(id=f"c_{i}") for i in range(10)]
 
-    def mock_process_comment(comment: Any, _detector: Any, _topic: Any) -> ProcessedRedditComment | None:
+    def mock_process_comment(
+        comment: Any, _detector: Any, _topic: Any
+    ) -> ProcessedRedditComment | None:
         comment_num = int(comment.id.split("_")[1])
         # Only even numbered comments are valid
         if comment_num % 2 == 0:
@@ -214,7 +218,9 @@ def test_mixed_valid_invalid_comments(
         result = service._run_ingestion_pipeline()
 
     assert result.posts_processed == 1
-    assert result.comments_processed == 5  # Only even numbered comments (0, 2, 4, 6, 8) are counted as processed
+    assert (
+        result.comments_processed == 5
+    )  # Only even numbered comments (0, 2, 4, 6, 8) are counted as processed
     assert result.comments_inserted == 5  # Only even numbered (0, 2, 4, 6, 8)
     assert result.cancelled is False
 

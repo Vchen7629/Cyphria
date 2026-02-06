@@ -20,7 +20,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     Managed api lifecycle, resources created once
     at startup and cleanup up on shutdown
     """
-    max_praw_connections: int = 7 # praw supports 10 max but using 5 to avoid rate limits
+    max_praw_connections: int = 7  # praw supports 10 max but using 5 to avoid rate limits
 
     logger = StructuredLogger(pod="data_ingestion")
     logger.info(event_type="data_ingestion startup", message="Initializing ingestion service")
@@ -47,8 +47,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
     normalizer = NormalizerFactory
 
-    main_processing_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="ingestion_service")
-    fetch_reddit_posts_executor = ThreadPoolExecutor(max_workers=max_praw_connections, thread_name_prefix="fetch_reddit")
+    main_processing_executor = ThreadPoolExecutor(
+        max_workers=1, thread_name_prefix="ingestion_service"
+    )
+    fetch_reddit_posts_executor = ThreadPoolExecutor(
+        max_workers=max_praw_connections, thread_name_prefix="fetch_reddit"
+    )
 
     job_state_instance = JobState()
 

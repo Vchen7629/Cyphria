@@ -4,6 +4,7 @@ from unittest.mock import MagicMock
 from src.api.schemas import ProcessedRedditComment
 import pytest
 
+
 @pytest.fixture
 def mock_reddit_client() -> MagicMock:
     """Mock reddit client"""
@@ -24,5 +25,5 @@ def mock_reddit_comment() -> ProcessedRedditComment:
         author="test_user",
         score=10,
         timestamp=datetime.now(timezone.utc),
-        topic="GPU"
+        topic="GPU",
     )

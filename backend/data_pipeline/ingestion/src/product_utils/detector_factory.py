@@ -59,7 +59,9 @@ class DetectorFactory:
         Raises:
             ValueError: If category is not supported
         """
-        if not validate_string(product_topic, "product_topic", logger, log_error=True, raise_on_error=False):
+        if not validate_string(
+            product_topic, "product_topic", logger, log_error=True, raise_on_error=False
+        ):
             return None
 
         match product_topic.lower().strip():

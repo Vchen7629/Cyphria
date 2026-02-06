@@ -2,6 +2,7 @@ from src.core.logger import StructuredLogger
 from fastapi import HTTPException
 from typing import Optional
 
+
 def validate_string(
     value: Optional[str],
     field_name: str,
@@ -9,7 +10,7 @@ def validate_string(
     raise_http: bool = False,
     log_error: bool = False,
     raise_on_error: bool = True,
-    status_code: int = 400
+    status_code: int = 400,
 ) -> bool:
     """
     Validate that a string is not None, empty or whitespace-only
@@ -39,6 +40,7 @@ def validate_string(
 
     return True
 
+
 def validate_list(
     value: Optional[list[str]],
     field_name: str,
@@ -46,7 +48,7 @@ def validate_list(
     raise_http: bool = False,
     log_error: bool = False,
     raise_on_error: bool = True,
-    status_code: int = 400
+    status_code: int = 400,
 ) -> bool:
     """
     Validate that a list is not None or empty
@@ -71,7 +73,7 @@ def validate_list(
             if raise_http:
                 raise HTTPException(status_code, error_msg)
             raise ValueError(error_msg)
-            
+
         return False
 
     return True

@@ -33,7 +33,7 @@ class IngestionService:
         subreddit_list: list[str],
         detector_list: list[ProductDetectorWrapper],
         normalizer: Any,
-        fetch_executor: ThreadPoolExecutor
+        fetch_executor: ThreadPoolExecutor,
     ) -> None:
         self.reddit_client = reddit_client
         self.db_pool = db_pool
@@ -58,12 +58,14 @@ class IngestionService:
 
         for subreddit in self.subreddit_list:
             futures = {
-                self.fetch_executor.submit(fetch_post_delayed, self.reddit_client, subreddit, self.logger): subreddit
+                self.fetch_executor.submit(
+                    fetch_post_delayed, self.reddit_client, subreddit, self.logger
+                ): subreddit
                 for subreddit in self.subreddit_list
             }
-            
+
             for future in as_completed(futures):
-                subreddit = futures[future] 
+                subreddit = futures[future]
                 try:
                     posts = future.result()
                     if posts:
@@ -75,13 +77,15 @@ class IngestionService:
                     )
                 except Exception as e:
                     self.logger.error(
-                        event_type="Subreddit Fetch", 
-                        message=f"Failed to fetch from r/{subreddit}: {e}"
+                        event_type="Subreddit Fetch",
+                        message=f"Failed to fetch from r/{subreddit}: {e}",
                     )
 
         return all_posts
 
-    def _process_comment(self, comment: Comment, detector: ProductDetectorWrapper, topic: str) -> ProcessedRedditComment | None:
+    def _process_comment(
+        self, comment: Comment, detector: ProductDetectorWrapper, topic: str
+    ) -> ProcessedRedditComment | None:
         """
         Extract, transform, and filter a comment
 
@@ -106,7 +110,9 @@ class IngestionService:
         normalized_product_name: list[str] = self.normalizer.normalize(topic, products_in_comment)
 
         # extracting only relevant parts of the comment api res
-        extracted: ProcessedRedditComment = extract_relevant_fields(comment, normalized_product_name)
+        extracted: ProcessedRedditComment = extract_relevant_fields(
+            comment, normalized_product_name
+        )
         url_removed: str = remove_url(extracted.comment_body)
         demojified: str = demojify(url_removed)
 
@@ -123,7 +129,7 @@ class IngestionService:
             score=extracted.score,
             author=extracted.author,
             post_id=extracted.post_id,
-            topic=topic
+            topic=topic,
         )
 
     def _batch_insert_to_db(self, comment_list: list[ProcessedRedditComment]) -> None:
@@ -194,7 +200,9 @@ class IngestionService:
                         )
                         break
 
-                    processed_comment: Optional[ProcessedRedditComment] = self._process_comment(comment, detector, topic)
+                    processed_comment: Optional[ProcessedRedditComment] = self._process_comment(
+                        comment, detector, topic
+                    )
                     if not processed_comment:
                         continue
 

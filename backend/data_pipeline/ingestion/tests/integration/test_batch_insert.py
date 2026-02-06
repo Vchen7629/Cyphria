@@ -47,7 +47,7 @@ def test_worker_batch_insert_with_connection_pool_multiple_batches(
             author=f"user_{i}",
             score=i,
             timestamp=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-            topic="gpu"
+            topic="gpu",
         )
         for i in range(5)
     ]
@@ -63,7 +63,7 @@ def test_worker_batch_insert_with_connection_pool_multiple_batches(
             author=f"user_{i}",
             score=i,
             timestamp=datetime(2024, 1, 1, 13, 0, 0, tzinfo=timezone.utc),
-            topic="gpu"
+            topic="gpu",
         )
         for i in range(5)
     ]

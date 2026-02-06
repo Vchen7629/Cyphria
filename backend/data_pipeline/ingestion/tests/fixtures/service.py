@@ -10,6 +10,7 @@ from src.product_utils.detector_factory import DetectorFactory
 from src.product_utils.normalizer_factory import NormalizerFactory
 import pytest
 
+
 @pytest.fixture
 def create_ingestion_service(
     db_pool: ConnectionPool, mock_reddit_client: MagicMock

@@ -64,7 +64,7 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
         subreddit_list=subreddit_list,
         detector_list=detector_list,
         normalizer=request.app.state.normalizer,
-        fetch_executor=request.app.state.fetch_reddit_posts_executor
+        fetch_executor=request.app.state.fetch_reddit_posts_executor,
     )
 
     run_state.current_service = service

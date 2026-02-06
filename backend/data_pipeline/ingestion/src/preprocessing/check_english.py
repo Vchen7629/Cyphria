@@ -1,13 +1,25 @@
-from langdetect import detect, LangDetectException, DetectorFactory  # type: ignore
+from typing import Optional
+from langdetect import detect
+from langdetect import DetectorFactory
+from langdetect import LangDetectException
+from src.utils.validation import validate_string
 
 DetectorFactory.seed = 0  # detect language consistent
 
+def detect_english(text: str) -> Optional[str]:
+    """
+    Checks the language of the text using langdetect. 
 
-# Python function to make sure only english posts get processed
-def detect_english(text: str) -> str | None:
+    Args:
+        text: the comment text we are checking language for
+
+    Returns:
+        the language of the detected text, or none if no text was supplied
+    """
+    if not validate_string(text, "text", raise_on_error=False):
+        return None
+
     try:
-        if not text.strip():
-            return None
         return detect(text)
     except LangDetectException:
         return None

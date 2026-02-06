@@ -9,7 +9,7 @@ def tests_marks_running_job_failed() -> None:
     """Calling fail job when a running job is active should mark it as failed"""
     job_state = JobState()
     before = datetime.now(tz=timezone.utc)
-    job_state.create_job(product_topic="GPU")
+    job_state.create_job(category="Computing", subreddit_list=["Nvidia", "AMD"])
     job_state.fail_job(error="some error")
     after = datetime.now(tz=timezone.utc)
 
@@ -26,7 +26,7 @@ def test_invalid_error_params(error: str | None) -> None:
     """ValueError should be raised if the error input param is invalid (None, empty string, whitespace)"""
     job_state = JobState()
 
-    with pytest.raises(ValueError, match="Error cannot be None or empty string"):
+    with pytest.raises(ValueError, match="Missing error"):
         job_state.fail_job(error)  # type: ignore
 
 
@@ -34,7 +34,7 @@ def test_valid_whitespace() -> None:
     """If error is a string with whitespace, it should still work"""
     job_state = JobState()
     before = datetime.now(tz=timezone.utc)
-    job_state.create_job(product_topic="  GPU  ")
+    job_state.create_job(category="Computing", subreddit_list=["Nvidia", "AMD"])
     job_state.fail_job(error="some error")
     after = datetime.now(tz=timezone.utc)
 

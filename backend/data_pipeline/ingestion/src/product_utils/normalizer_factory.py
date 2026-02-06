@@ -24,7 +24,7 @@ class NormalizerFactory:
         Raises:
             ValueError: If product_topic is not supported
         """
-        if not validate_string(product_topic, "product_topic", logger, log_error=True):
+        if not validate_string(product_topic, "product_topic", logger, log_error=True, raise_on_error=False):
             return None
 
         match product_topic.lower().strip():

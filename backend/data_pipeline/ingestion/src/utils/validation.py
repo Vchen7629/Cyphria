@@ -27,7 +27,7 @@ def validate_string(
         True if validation passes, False if validation fails and raise_on_error is False
     """
     if not value or not value.strip():
-        error_msg = f"Missing {field_name} in the request"
+        error_msg = f"Missing {field_name}"
         if log_error and logger:
             logger.error(event_type="ingestion_service run", message=error_msg)
         if raise_on_error:

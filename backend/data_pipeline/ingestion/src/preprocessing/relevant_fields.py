@@ -1,9 +1,9 @@
 from datetime import datetime, timezone
 from praw.models import Comment
-from src.api.schemas import RedditComment
+from src.api.schemas import ProcessedRedditComment
 
 
-def extract_relevant_fields(comment: Comment, detected_products: list[str]) -> RedditComment:
+def extract_relevant_fields(comment: Comment, detected_products: list[str]) -> ProcessedRedditComment:
     """
     Extract relevant data fields from reddit comment to
     reduce amount of data being sent to data pipeline
@@ -21,7 +21,7 @@ def extract_relevant_fields(comment: Comment, detected_products: list[str]) -> R
         author: the comment poster name
         post_id: id linking each comment to the parent reddit post
     """
-    return RedditComment(
+    return ProcessedRedditComment(
         comment_id=comment.id,
         comment_body=comment.body,
         subreddit=comment.subreddit.display_name,
@@ -30,4 +30,5 @@ def extract_relevant_fields(comment: Comment, detected_products: list[str]) -> R
         score=comment.score,
         author=comment.author.name,
         post_id=comment.link_id,
+        topic=""
     )

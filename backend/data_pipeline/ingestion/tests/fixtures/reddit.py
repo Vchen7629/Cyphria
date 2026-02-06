@@ -1,7 +1,7 @@
 from datetime import datetime
 from datetime import timezone
 from unittest.mock import MagicMock
-from src.api.schemas import RedditComment
+from src.api.schemas import ProcessedRedditComment
 import pytest
 
 
@@ -14,9 +14,9 @@ def mock_reddit_client() -> MagicMock:
 
 
 @pytest.fixture
-def mock_reddit_comment() -> RedditComment:
+def mock_reddit_comment() -> ProcessedRedditComment:
     """Mocks one reddit comment"""
-    return RedditComment(
+    return ProcessedRedditComment(
         comment_id="idk",
         post_id="test_post",
         comment_body="Test comment",
@@ -25,4 +25,5 @@ def mock_reddit_comment() -> RedditComment:
         author="test_user",
         score=10,
         timestamp=datetime.now(timezone.utc),
+        topic="GPU"
     )

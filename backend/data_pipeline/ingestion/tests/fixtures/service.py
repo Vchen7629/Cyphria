@@ -1,30 +1,14 @@
-from typing import Any
 from typing import Generator
-from fastapi import FastAPI
-from contextlib import asynccontextmanager
 from unittest.mock import MagicMock
 from unittest.mock import patch
 from testcontainers.postgres import PostgresContainer
 from psycopg_pool import ConnectionPool
 from concurrent.futures import ThreadPoolExecutor
-import os
-
-os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
-os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "reddit_secret")
-os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "username")
-os.environ.setdefault("REDDIT_ACCOUNT_PASSWORD", "password")
 from src.core.logger import StructuredLogger
 from src.ingestion_service import IngestionService
 from src.product_utils.detector_factory import DetectorFactory
 from src.product_utils.normalizer_factory import NormalizerFactory
 import pytest
-
-
-@asynccontextmanager
-async def null_lifespan(_app: FastAPI) -> Any:
-    """No-op lifespan for testing - state is set by fixtures"""
-    yield
-
 
 @pytest.fixture
 def create_ingestion_service(

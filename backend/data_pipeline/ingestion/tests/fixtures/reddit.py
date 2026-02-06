@@ -4,7 +4,6 @@ from unittest.mock import MagicMock
 from src.api.schemas import ProcessedRedditComment
 import pytest
 
-
 @pytest.fixture
 def mock_reddit_client() -> MagicMock:
     """Mock reddit client"""

@@ -51,7 +51,7 @@ def create_sentiment_analysis_dag(category: str, topic_list: list[str], subreddi
             method='POST',
             headers={'Content-Type': 'application/json'},
             data=json.dumps({
-                'topic_list': topic_list,
+                'category': category,
                 'subreddit_list': subreddit_list
             }),
             response_check=lambda response: response.json()['status'] == "started",

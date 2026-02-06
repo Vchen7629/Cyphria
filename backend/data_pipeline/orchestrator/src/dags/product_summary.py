@@ -1,7 +1,3 @@
-"""
-Airflow DAG for fetching comments, doing sentiment analysis and generate product summaries
-For all the product categories
-"""
 import json
 from airflow.sdk import DAG
 from airflow.providers.http.sensors.http import HttpSensor

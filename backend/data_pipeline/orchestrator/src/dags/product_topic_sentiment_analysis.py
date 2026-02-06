@@ -1,52 +1,58 @@
-"""
-Airflow DAG for fetching comments, doing sentiment analysis and generate product summaries
-For all the product categories
-"""
 from airflow.sdk import DAG
 from airflow.providers.http.sensors.http import HttpSensor
 from airflow.providers.http.operators.http import HttpOperator
-from src.config.topic_mappings import ProductTopicMappings
 from src.config.settings import Settings
 from src.utils.on_task_failure import on_task_failure
 import json
 
 settings = Settings()
 
-def create_sentiment_analysis_dag(product_topic: str) -> DAG:
+def create_sentiment_analysis_dag(category: str, topic_list: list[str], subreddit_list: list[str]) -> DAG:
     """
-    Create a sentiment analysis DAG for a specific product_topic.
-    
+    Create a sentiment analysis DAG for a specific category.
+
     Args:
-        product_topic: the product topic we are fetching for
+        category: the category we are fetching for
+        topic_list: the list of all product topics for the category
+        subreddit_list: list of unique subreddits to fetch comments from for the current category
 
     Returns:
-        a dag that have tasks that fetch/process comments for the specific product_topic
+        a dag that have tasks that fetch/process comments for the specific category
     """
+    from src.config.schedules import INGESTSCHEDULES
+
     dag = DAG(
-        dag_id=f"product_{product_topic.lower()}_sentiment_analysis",
-        schedule=ProductTopicMappings.TOPIC_SCHEDULES.get(product_topic),
+        dag_id=f"product_{category.lower().replace(' ', '_')}_sentiment_analysis",
+        schedule=INGESTSCHEDULES.get(category.upper()),
         start_date=settings.START_DATE,
         catchup=False,
-        tags=['sentiment_analysis', product_topic.lower()],
+        tags=['sentiment_analysis', category.lower().replace(' ', '_')],
         max_active_runs=settings.MAX_ACTIVE_RUNS,
-        doc_md="""
-        ## Sentiment analysis DAG
+        params={
+            'category': category,
+            'topics': topic_list,
+            'subreddits': subreddit_list
+        },
+        doc_md=f"""
+        ## Sentiment analysis DAG for {category}
         Ingests Reddit comments and runs sentiment analysis
         
+        **Topics:** {', '.join(topic_list)}
+        **Subreddits:** {', '.join(subreddit_list)}
         **Schedule:** Daily
         """
     )
 
     with dag:
         reddit_raw_comment_ingest = HttpOperator(
-            task_id=f'ingest_{product_topic.lower()}_comments',
+            task_id=f'ingest_{category.lower().replace(' ', '_')}_comments',
             http_conn_id='ingestion_service',
             endpoint='/run',
             method='POST',
             headers={'Content-Type': 'application/json'},
             data=json.dumps({
-                'product_topic': product_topic,
-                'subreddits': ProductTopicMappings.TOPIC_SUBREDDITS.get(product_topic, [])
+                'category': category,
+                'subreddit_list': subreddit_list
             }),
             response_check=lambda response: response.json()['status'] == "started",
             log_response=True,
@@ -60,7 +66,7 @@ def create_sentiment_analysis_dag(product_topic: str) -> DAG:
 
         # Wait for all_time task to finish by polling /status endpoint until its done
         wait_raw_comment_ingest = HttpSensor(
-            task_id=f"wait_ingest_{product_topic.lower()}_comments",
+            task_id=f"wait_ingest_{category.lower().replace(' ', '_')}_comments",
             http_conn_id="ingestion_service",
             endpoint="/status",
             response_check=lambda response: response.json()['status'] in ["completed", "cancelled"],
@@ -73,12 +79,12 @@ def create_sentiment_analysis_dag(product_topic: str) -> DAG:
         ) 
 
         sentiment_analysis = HttpOperator(
-            task_id=f'analyze_{product_topic.lower()}_product_sentiments',
+            task_id=f'analyze_{category.lower().replace(' ', '_')}_product_sentiments',
             http_conn_id='sentiment_analysis_service',
             endpoint='/run',
             method='POST',
             headers={'Content-Type': 'application/json'},
-            data=json.dumps({'product_topic': product_topic}),
+            data=json.dumps({'topic_list': topic_list}),
             response_check=lambda response: response.json()['status'] == "started",
             log_response=True,
             execution_timeout=settings.EXECUTION_TIMEOUT,
@@ -91,7 +97,7 @@ def create_sentiment_analysis_dag(product_topic: str) -> DAG:
 
         # Wait for all_time task to finish by polling /status endpoint until its done
         wait_sentiment_analysis = HttpSensor(
-            task_id=f"wait_analyze_{product_topic.lower()}_product_sentiments",
+            task_id=f"wait_analyze_{category.lower().replace(' ', '_')}_product_sentiments",
             http_conn_id="sentiment_analysis_service",
             endpoint="/status",
             response_check=lambda response: response.json()['status'] in ["completed", "cancelled"],
@@ -109,5 +115,14 @@ def create_sentiment_analysis_dag(product_topic: str) -> DAG:
 
 
 # Create DAGs at module level so Airflow can discover them
-for _topic in ProductTopicMappings.TOPICS:
-    globals()[f'product_{_topic.lower()}_sentiment_analysis'] = create_sentiment_analysis_dag(_topic)
+# Skip during test imports for faster test execution
+import sys
+if 'pytest' not in sys.modules:
+    from src.config.mappings import CATEGORYTOPIC
+    from src.utils.extract_subreddit_list import extract_subreddit_list
+
+    for _category in CATEGORYTOPIC:
+        topic_list = CATEGORYTOPIC.get(_category, [])
+        subreddit_list = extract_subreddit_list(_category)
+
+        globals()[f'product_{_category.lower().replace(" ", "_")}_sentiment_analysis'] = create_sentiment_analysis_dag(_category, topic_list, subreddit_list)

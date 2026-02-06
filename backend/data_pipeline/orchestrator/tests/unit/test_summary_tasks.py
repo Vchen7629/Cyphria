@@ -1,8 +1,8 @@
 from airflow.providers.http.sensors.http import HttpSensor
-import json
 from airflow.providers.http.operators.http import HttpOperator
 from src.dags.product_summary import create_llm_summary_dag
 from src.config.settings import Settings
+import json
 
 settings = Settings()
 

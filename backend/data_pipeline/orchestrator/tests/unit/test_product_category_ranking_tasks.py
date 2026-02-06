@@ -8,7 +8,7 @@ settings = Settings()
 
 def test_ranking_all_time_task_correct_configs() -> None:
     """Test that ranking task for all time is created correctly with the correct configs"""
-    dag = create_ranking_dag("GPU")
+    dag = create_ranking_dag("GPU", ["topic1", "topic2"])
 
     ranking_task = dag.get_task("rank_gpu_products_all_time")
 
@@ -19,7 +19,7 @@ def test_ranking_all_time_task_correct_configs() -> None:
     assert ranking_task.headers == {"Content-Type": "application/json"}
 
     expected_api_params = json.dumps({
-        'product_topic': "GPU",
+        'topic_list': ["topic1", "topic2"],
         'time_windows': "all_time",
         "bayesian_params": "30"
     })
@@ -34,7 +34,7 @@ def test_ranking_all_time_task_correct_configs() -> None:
 
 def test_wait_all_time_task_correct_configs() -> None:
     """Test that wait task for all time is created correctly with the correct configs"""
-    dag = create_ranking_dag("GPU")
+    dag = create_ranking_dag("GPU", ["topic1", "topic2"])
 
     wait_task = dag.get_task("wait_rank_gpu_products_all_time")
 
@@ -49,7 +49,7 @@ def test_wait_all_time_task_correct_configs() -> None:
 
 def test_ranking_90_day_task_correct_configs() -> None:
     """Test that ranking task for 90 days is created correctly with the correct configs"""
-    dag = create_ranking_dag("GPU")
+    dag = create_ranking_dag("GPU", ["topic1", "topic2"])
 
     ranking_task = dag.get_task("rank_gpu_products_90_day")
 
@@ -60,7 +60,7 @@ def test_ranking_90_day_task_correct_configs() -> None:
     assert ranking_task.headers == {"Content-Type": "application/json"}
 
     expected_api_params = json.dumps({
-        'product_topic': "GPU",
+        'topic_list': ["topic1", "topic2"],
         'time_windows': "90d",
         "bayesian_params": "30"
     })
@@ -74,7 +74,7 @@ def test_ranking_90_day_task_correct_configs() -> None:
 
 def test_wait_90_day_task_correct_configs() -> None:
     """Test that wait task for 90 day is created correctly with the correct configs"""
-    dag = create_ranking_dag("GPU")
+    dag = create_ranking_dag("GPU", ["topic1", "topic2"])
 
     wait_task = dag.get_task("wait_rank_gpu_products_90_day")
 
@@ -88,7 +88,7 @@ def test_wait_90_day_task_correct_configs() -> None:
 
 def test_task_dependencies() -> None:
     """Test that dag dependencies are correct"""
-    dag = create_ranking_dag("GPU")
+    dag = create_ranking_dag("GPU", ["topic1", "topic2"])
 
     all_time_task = dag.get_task("rank_gpu_products_all_time")
     wait_all_time = dag.get_task("wait_rank_gpu_products_all_time")

@@ -2,7 +2,6 @@ from airflow.providers.http.sensors.http import HttpSensor
 from airflow.providers.http.operators.http import HttpOperator
 from src.dags.product_topic_sentiment_analysis import create_sentiment_analysis_dag
 from src.config.settings import Settings
-from src.config.topic_mappings import ProductTopicMappings
 import json 
 
 settings = Settings()
@@ -10,7 +9,7 @@ settings = Settings()
 def test_ingestion_task_correct_configs() -> None:
     """Test that ingestion task is created correctly with the correct configs"""
     # since we're iterating through a list of categories, use the last category
-    dag = create_sentiment_analysis_dag("GPU")
+    dag = create_sentiment_analysis_dag("GPU", ['topic1', 'topic2'], ['subreddit1', 'subreddit2'])
     ingest_task = dag.get_task("ingest_gpu_comments")
 
     assert isinstance(ingest_task, HttpOperator)
@@ -20,11 +19,8 @@ def test_ingestion_task_correct_configs() -> None:
     assert ingest_task.headers == {"Content-Type": "application/json"}
 
     expected_api_params = json.dumps({
-        'product_topic': "GPU",
-        'subreddits': ProductTopicMappings.TOPIC_SUBREDDITS.get(
-            "GPU", 
-            ["nvidia", "radeon", "amd", "IntelArc", "buildapc", "gamingpc", "pcbuild", "hardware"]
-        )
+        'category': "GPU",
+        'subreddit_list': ["subreddit1", "subreddit2"]
     })
     assert ingest_task.data == expected_api_params
 
@@ -37,7 +33,7 @@ def test_ingestion_task_correct_configs() -> None:
 
 def test_wait_all_time_task_correct_configs() -> None:
     """Test that wait task for all time is created correctly with the correct configs"""
-    dag = create_sentiment_analysis_dag("GPU")
+    dag = create_sentiment_analysis_dag("GPU", ['topic1', 'topic2'], ['subreddit1', 'subreddit2'])
 
     wait_task = dag.get_task("wait_ingest_gpu_comments")
 
@@ -52,7 +48,7 @@ def test_wait_all_time_task_correct_configs() -> None:
 
 def test_sentiment_analysis_task_correct_configs() -> None:
     """Test that sentiment_analysis task is created correctly with the correct configs"""
-    dag = create_sentiment_analysis_dag("GPU")    
+    dag = create_sentiment_analysis_dag("GPU", ['topic1', 'topic2'], ['subreddit1', 'subreddit2'])    
     sentiment_analysis_task = dag.get_task("analyze_gpu_product_sentiments")
 
     assert isinstance(sentiment_analysis_task, HttpOperator)
@@ -61,7 +57,7 @@ def test_sentiment_analysis_task_correct_configs() -> None:
     assert sentiment_analysis_task.method == "POST"
     assert sentiment_analysis_task.headers == {"Content-Type": "application/json"}
 
-    expected_api_params = json.dumps({'product_topic': "GPU"})
+    expected_api_params = json.dumps({'topic_list': ['topic1', 'topic2']})
     assert sentiment_analysis_task.data == expected_api_params
 
     assert sentiment_analysis_task.log_response is True
@@ -73,7 +69,7 @@ def test_sentiment_analysis_task_correct_configs() -> None:
 
 def test_wait_90_day_task_correct_configs() -> None:
     """Test that wait task for 90_day is created correctly with the correct configs"""
-    dag = create_sentiment_analysis_dag("GPU")
+    dag = create_sentiment_analysis_dag("GPU", ['topic1', 'topic2'], ['subreddit1', 'subreddit2'])
 
     wait_task = dag.get_task("wait_analyze_gpu_product_sentiments")
 
@@ -89,7 +85,7 @@ def test_wait_90_day_task_correct_configs() -> None:
 
 def test_sentiment_task_dependencies() -> None:
     """Test that sentiment task depends on ingest task"""
-    dag = create_sentiment_analysis_dag("GPU")
+    dag = create_sentiment_analysis_dag("GPU", ['topic1', 'topic2'], ['subreddit1', 'subreddit2'])
 
     ingest_task = dag.get_task("ingest_gpu_comments")
     wait_ingest = dag.get_task("wait_ingest_gpu_comments")

@@ -36,7 +36,7 @@ class CurrentJob(BaseModel):
     """Currently running job state"""
 
     status: JobStatus  # "pending" | "running" | "completed" | "failed" | "cancelled"
-    product_topic: str
+    category: str
     started_at: datetime
     completed_at: Optional[datetime] = None
     result: Optional[IngestionResult] = None
@@ -46,8 +46,8 @@ class CurrentJob(BaseModel):
 class RunRequest(BaseModel):
     """Request to the /run endpoint"""
 
-    product_topic: str  # Product topic like "GPU" or "Laptop"
-    subreddits: list[str]  # list of subreddits for that category
+    category: str  # product category like "computing" or "mobile"
+    subreddit_list: list[str]  # list of subreddits for that category
 
 
 class RunResponse(BaseModel):

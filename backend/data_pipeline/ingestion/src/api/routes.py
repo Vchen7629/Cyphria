@@ -64,12 +64,13 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
         subreddit_list=subreddit_list,
         detector_list=detector_list,
         normalizer=request.app.state.normalizer,
+        fetch_executor=request.app.state.fetch_reddit_posts_executor
     )
 
     run_state.current_service = service
     run_state.run_in_progress = True
 
-    executor: ThreadPoolExecutor = request.app.state.executor
+    executor: ThreadPoolExecutor = request.app.state.main_processing_executor
     loop = asyncio.get_event_loop()
 
     # run worker in thread pool to prevent blocking the polling /status endpoint

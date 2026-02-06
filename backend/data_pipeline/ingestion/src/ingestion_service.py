@@ -33,6 +33,7 @@ class IngestionService:
         subreddit_list: list[str],
         detector_list: list[ProductDetectorWrapper],
         normalizer: Any,
+        fetch_executor: ThreadPoolExecutor
     ) -> None:
         self.reddit_client = reddit_client
         self.db_pool = db_pool
@@ -41,6 +42,7 @@ class IngestionService:
         self.subreddit_list = subreddit_list
         self.detector_list = detector_list
         self.normalizer = normalizer
+        self.fetch_executor = fetch_executor
 
         # cancellation flag, used to request graceful shutdown
         self.cancel_requested = False
@@ -55,20 +57,27 @@ class IngestionService:
         all_posts = []
 
         for subreddit in self.subreddit_list:
-            try:
-                posts = fetch_post_delayed(self.reddit_client, subreddit, self.logger)
-                if posts:
-                    all_posts.extend(posts)
-            except prawcore.exceptions.ServerError as e:
-                self.logger.error(
-                    event_type="Subreddit Fetch",
-                    message=f"Reddit API server error for r/{subreddit}: {e}",
-                )
-            except Exception as e:
-                self.logger.error(
-                    event_type="Subreddit Fetch", message=f"Failed to fetch from r/{subreddit}: {e}"
-                )
-                # python will automatically continue the loop if the exception as thrown
+            futures = {
+                self.fetch_executor.submit(fetch_post_delayed, self.reddit_client, subreddit, self.logger): subreddit
+                for subreddit in self.subreddit_list
+            }
+            
+            for future in as_completed(futures):
+                subreddit = futures[future] 
+                try:
+                    posts = future.result()
+                    if posts:
+                        all_posts.extend(posts)
+                except prawcore.exceptions.ServerError as e:
+                    self.logger.error(
+                        event_type="Subreddit Fetch",
+                        message=f"Reddit API server error for r/{subreddit}: {e}",
+                    )
+                except Exception as e:
+                    self.logger.error(
+                        event_type="Subreddit Fetch", 
+                        message=f"Failed to fetch from r/{subreddit}: {e}"
+                    )
 
         return all_posts
 

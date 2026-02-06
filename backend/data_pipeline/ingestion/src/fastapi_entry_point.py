@@ -5,7 +5,7 @@ from fastapi import FastAPI
 
 app = FastAPI(
     title="Ingestion Service",
-    description="Reddit comment ingestion for product sentiment analysis",
+    description="this service fetches comments from specified subreddits and writes relevant comments to the raw comments table for downstream processing",
     version="1.0.0",
     lifespan=lifespan,
 )

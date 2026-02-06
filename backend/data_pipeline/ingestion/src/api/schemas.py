@@ -11,8 +11,8 @@ class JobStatus(str, Enum):
     CANCELLED = "cancelled"
 
 
-# Pydantic class for reddit comments
-class RedditComment(BaseModel):
+# Pydantic class for processed reddit comments
+class ProcessedRedditComment(BaseModel):
     comment_id: str
     comment_body: str
     subreddit: str
@@ -21,7 +21,7 @@ class RedditComment(BaseModel):
     score: int
     author: str
     post_id: str
-
+    topic: str
 
 class IngestionResult(BaseModel):
     """Result of a ingestion airflow run"""

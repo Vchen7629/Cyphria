@@ -6,18 +6,12 @@ from unittest.mock import MagicMock
 from psycopg_pool import ConnectionPool
 from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
-from tests.fixtures.service import null_lifespan
-from tests.utils.classes import FastAPITestClient
-import os
-
-os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
-os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "reddit_secret")
-os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "username")
-os.environ.setdefault("REDDIT_ACCOUNT_PASSWORD", "password")
 from src.api import routes
-from src.api.routes import router as base_router
 from src.api.job_state import JobState
+from src.api.routes import router as base_router
 from src.core.logger import StructuredLogger
+from tests.utils.service import null_lifespan
+from tests.utils.classes import FastAPITestClient
 from src.product_utils.detector_factory import DetectorFactory
 from src.product_utils.normalizer_factory import NormalizerFactory
 import pytest
@@ -53,6 +47,8 @@ def fastapi_client(
     test_app.state.detector = DetectorFactory.get_detector("GPU")
     test_app.state.normalizer = NormalizerFactory
     test_app.state.executor = mock_executor
+    test_app.state.fetch_reddit_posts_executor = mock_executor
+    test_app.state.main_processing_executor = mock_executor
 
     routes.job_state = job_state_instance
 

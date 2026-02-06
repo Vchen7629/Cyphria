@@ -1,3 +1,4 @@
+from typing import Optional
 from datetime import datetime
 from datetime import timezone
 from src.api.schemas import JobStatus
@@ -9,20 +10,21 @@ def test_correct_values_set() -> None:
     """product_topic, status, and started_at should be correctly set in the self._current_job value"""
     job_state = JobState()
     before = datetime.now(tz=timezone.utc)
-    job_state.create_job(product_topic="GPU")
+    job_state.create_job(category="Computing", subreddit_list=["Nvidia", "AMD"])
     after = datetime.now(tz=timezone.utc)
 
     current_job = job_state.get_current_job()
     assert current_job is not None
-    assert current_job.product_topic == "GPU"
+    assert current_job.category == "Computing"
+    assert current_job.subreddit_list == ["Nvidia", "AMD"]
     assert current_job.status == JobStatus.RUNNING
     assert before <= current_job.started_at <= after
 
 
 def test_optional_fields_initialized_to_none() -> None:
-    """Creat job should set completed at, result and error to None"""
+    """Create job should set completed at, result and error to None"""
     job_state = JobState()
-    job_state.create_job(product_topic="GPU")
+    job_state.create_job(category="Computing", subreddit_list=["Nvidia", "AMD"])
 
     current_job = job_state.get_current_job()
     assert current_job is not None
@@ -30,29 +32,23 @@ def test_optional_fields_initialized_to_none() -> None:
     assert current_job.result is None
     assert current_job.error is None
 
+@pytest.mark.parametrize(argnames="category,subreddit_list", argvalues=[
+    # category tests
+    (None, ["Nvidia", "AMD"]),
+    ("",  ["Nvidia", "AMD"]),
+    ("  ", ["Nvidia", "AMD"]),
 
-def test_none_category_raises_error() -> None:
+    # subreddit_list tests
+    ("Computing", None),
+    ("Computing", [])
+])
+def test_invalid_input_params_raises_error(category: Optional[str], subreddit_list: Optional[list[str]]) -> None:
     """ValueError should be raised for None category"""
     job_state = JobState()
 
-    with pytest.raises(ValueError, match="product topic cannot be None or empty string"):
-        job_state.create_job(product_topic=None)  # type: ignore
-
-
-@pytest.mark.parametrize(argnames="product_topic", argvalues=[None, "", "  "])
-def test_invalid_category_raises_error(product_topic: str | None) -> None:
-    """ValueError should be raised for invalid categories (None, empty string, whitespace)"""
-    job_state = JobState()
-
-    with pytest.raises(ValueError, match="product topic cannot be None or empty string"):
-        job_state.create_job(product_topic)  # type: ignore
-
-
-def test_category_with_whitespace() -> None:
-    """product_topic string with whitespace should be valid"""
-    job_state = JobState()
-    job_state.create_job(product_topic="  GPU  ")
-
-    current_job = job_state.get_current_job()
-    assert current_job is not None
-    assert current_job.product_topic == "  GPU  "
+    if not category or category.strip() == "":
+        with pytest.raises(ValueError, match="Missing category"):
+            job_state.create_job(category, subreddit_list) # type: ignore
+    else:
+        with pytest.raises(ValueError, match="Missing subreddit_list"):
+            job_state.create_job(category, subreddit_list) # type: ignore

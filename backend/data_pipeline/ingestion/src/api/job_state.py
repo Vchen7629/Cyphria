@@ -1,3 +1,5 @@
+from src.utils.validation import validate_string
+from src.utils.validation import validate_list
 from threading import Lock
 from typing import Optional
 from datetime import datetime
@@ -12,22 +14,24 @@ class JobState:
         self._current_job: Optional[CurrentJob] = None
         self._lock = Lock()
 
-    def create_job(self, product_topic: str) -> None:
+    def create_job(self, category: str, subreddit_list: list[str]) -> None:
         """
         Create a new job
 
         Args:
-            product_topic: product topic of current job we are ingesting for
+            category: the current category we are processing for
+            subreddit_list: list of subreddits to fetch and process comments from
 
         Raises:
-            ValueError: if product topic is None or empty string
+            ValueError: if subreddit_list or category is none or category is an empty string
         """
-        if not product_topic or product_topic.strip() == "":
-            raise ValueError("product topic cannot be None or empty string")
+        validate_string(category, "category", raise_http=False)
+        validate_list(subreddit_list, "subreddit_list", raise_http=False)
 
         with self._lock:
             self._current_job = CurrentJob(
-                product_topic=product_topic,
+                category=category,
+                subreddit_list=subreddit_list,
                 status=JobStatus.RUNNING,
                 started_at=datetime.now(tz=timezone.utc),
             )
@@ -63,8 +67,7 @@ class JobState:
         Raises:
             ValueError: if error is None or empty string
         """
-        if not error or error.strip() == "":
-            raise ValueError("Error cannot be None or empty string")
+        validate_string(error, "error", raise_http=False)
 
         with self._lock:
             if self._current_job:

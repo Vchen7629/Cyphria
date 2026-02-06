@@ -10,7 +10,7 @@ def tests_marks_complete_running_job_complete() -> None:
     """Calling complete job when a running job is active should mark it as done"""
     job_state = JobState()
     before = datetime.now(tz=timezone.utc)
-    job_state.create_job(product_topic="GPU")
+    job_state.create_job(category="Computing", subreddit_list=["Nvidia", "AMD"])
 
     mock_result = IngestionResult(
         posts_processed=100, comments_processed=250, comments_inserted=250, cancelled=False
@@ -30,7 +30,7 @@ def tests_marks_cancelled_running_job_complete() -> None:
     """Calling cancelled job when a running job is active should mark it as done"""
     job_state = JobState()
     before = datetime.now(tz=timezone.utc)
-    job_state.create_job(product_topic="GPU")
+    job_state.create_job(category="Computing", subreddit_list=["Nvidia", "AMD"])
 
     mock_result = IngestionResult(
         posts_processed=100, comments_processed=250, comments_inserted=250, cancelled=True

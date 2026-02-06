@@ -11,8 +11,8 @@ class JobStatus(str, Enum):
     CANCELLED = "cancelled"
 
 
-# Pydantic class for reddit comments
-class RedditComment(BaseModel):
+# Pydantic class for processed reddit comments
+class ProcessedRedditComment(BaseModel):
     comment_id: str
     comment_body: str
     subreddit: str
@@ -21,7 +21,7 @@ class RedditComment(BaseModel):
     score: int
     author: str
     post_id: str
-
+    topic: str
 
 class IngestionResult(BaseModel):
     """Result of a ingestion airflow run"""
@@ -36,7 +36,8 @@ class CurrentJob(BaseModel):
     """Currently running job state"""
 
     status: JobStatus  # "pending" | "running" | "completed" | "failed" | "cancelled"
-    product_topic: str
+    category: str
+    subreddit_list: list[str]
     started_at: datetime
     completed_at: Optional[datetime] = None
     result: Optional[IngestionResult] = None
@@ -46,13 +47,13 @@ class CurrentJob(BaseModel):
 class RunRequest(BaseModel):
     """Request to the /run endpoint"""
 
-    product_topic: str  # Product topic like "GPU" or "Laptop"
-    subreddits: list[str]  # list of subreddits for that category
+    category: str  # product category like "computing" or "mobile"]
+    topic_list: list[str] # the list of product topics for this category
+    subreddit_list: list[str]  # list of subreddits for this category
 
 
 class RunResponse(BaseModel):
     """Response from /run endpoint"""
-
     status: str  # "started"
 
 

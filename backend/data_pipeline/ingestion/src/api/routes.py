@@ -4,12 +4,15 @@ from fastapi import HTTPException
 from concurrent.futures import ThreadPoolExecutor
 from src.api.job_state import JobState
 from src.api.signal_handler import run_state
-from src.product_utils.detector_factory import DetectorFactory
 from src.api.schemas import HealthResponse
 from src.api.schemas import RunResponse
 from src.api.schemas import RunRequest
 from src.api.schemas import CurrentJob
+from src.utils.validation import validate_list
+from src.utils.validation import validate_string
 from src.ingestion_service import IngestionService
+from src.product_utils.detector_factory import DetectorFactory
+from src.product_utils.detector_factory import ProductDetectorWrapper
 import asyncio
 
 router = APIRouter()
@@ -30,10 +33,13 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
         HTTPException if no category or job state
     """
     # lock to prevent duplicate calls to this endpoint from retriggering ingestion
-    product_topic: str = body.product_topic
+    category: str = body.category
+    topic_list: list[str] = body.topic_list
+    subreddit_list: list[str] = body.subreddit_list
 
-    if not product_topic or product_topic.strip() == "":
-        raise HTTPException(status_code=400, detail="Missing product_topic in the request")
+    validate_string(category, "category", raise_http=True)
+    validate_list(topic_list, "topic_list", raise_http=True)
+    validate_list(subreddit_list, "subreddit_list", raise_http=True)
 
     if not job_state:
         raise HTTPException(status_code=400, detail="Missing job_state, cant trigger run")
@@ -41,26 +47,30 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
     if job_state.is_running():
         raise HTTPException(status_code=409, detail="Ingestion already in progress")
 
-    job_state.create_job(body.product_topic)
+    job_state.create_job(body.category, subreddit_list)
 
-    detector = DetectorFactory.get_detector(body.product_topic)
-    if not detector:
-        raise HTTPException(status_code=400, detail="Detector not available")
+    detector_list: list[ProductDetectorWrapper] = []
+    for topic in topic_list:
+        detector = DetectorFactory.get_detector(topic)
+        if not detector:
+            raise HTTPException(status_code=400, detail="Detector not available")
+        detector_list.append(detector)
 
     service = IngestionService(
         reddit_client=request.app.state.reddit_client,
         db_pool=request.app.state.db_pool,
         logger=request.app.state.logger,
-        product_topic=body.product_topic,
-        subreddits=body.subreddits,
-        detector=detector,
+        topic_list=topic_list,
+        subreddit_list=subreddit_list,
+        detector_list=detector_list,
         normalizer=request.app.state.normalizer,
+        fetch_executor=request.app.state.fetch_reddit_posts_executor
     )
 
     run_state.current_service = service
     run_state.run_in_progress = True
 
-    executor: ThreadPoolExecutor = request.app.state.executor
+    executor: ThreadPoolExecutor = request.app.state.main_processing_executor
     loop = asyncio.get_event_loop()
 
     # run worker in thread pool to prevent blocking the polling /status endpoint

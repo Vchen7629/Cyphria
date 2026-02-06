@@ -3,13 +3,13 @@ from unittest.mock import patch
 from unittest.mock import MagicMock
 from psycopg_pool import ConnectionPool
 from src.ingestion_service import IngestionService
-from src.preprocessing.relevant_fields import RedditComment
+from src.preprocessing.relevant_fields import ProcessedRedditComment
 
 
 def test_remaining_batch_saved_on_shutdown(
     db_pool: ConnectionPool,
     create_ingestion_service: IngestionService,
-    mock_reddit_comment: RedditComment,
+    mock_reddit_comment: ProcessedRedditComment,
 ) -> None:
     """Remaining comments in batch should be saved when shutdown occurs"""
     service = create_ingestion_service
@@ -18,7 +18,7 @@ def test_remaining_batch_saved_on_shutdown(
     mock_comments = [MagicMock(id=f"c_{i}") for i in range(50)]
     comments_processed = {"count": 0}
 
-    def mock_process_comment(_comment: Any) -> RedditComment | None:
+    def mock_process_comment(_comment: Any, _detector: Any, _topic: Any) -> ProcessedRedditComment | None:
         comments_processed["count"] += 1
         if comments_processed["count"] >= 30:
             service.cancel_requested = True
@@ -47,7 +47,7 @@ def test_remaining_batch_saved_on_shutdown(
 def test_shutdown_after_batch_insert_no_duplicate_save(
     db_pool: ConnectionPool,
     create_ingestion_service: IngestionService,
-    mock_reddit_comment: RedditComment,
+    mock_reddit_comment: ProcessedRedditComment,
 ) -> None:
     """When shutdown occurs right after a batch insert, no duplicate data should be saved"""
     service = create_ingestion_service
@@ -58,11 +58,11 @@ def test_shutdown_after_batch_insert_no_duplicate_save(
 
     original_batch_insert = service._batch_insert_to_db
 
-    def batch_insert_then_shutdown(comments: list[RedditComment]) -> None:
+    def batch_insert_then_shutdown(comments: list[ProcessedRedditComment]) -> None:
         original_batch_insert(comments)
         service.cancel_requested = True
 
-    def mock_process_comment(comment: Any) -> RedditComment | None:
+    def mock_process_comment(comment: Any, _detector: Any, _topic: Any) -> ProcessedRedditComment | None:
         reddit_comment = mock_reddit_comment.model_copy(update={"comment_id": comment.id})
         return reddit_comment
 

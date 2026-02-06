@@ -9,7 +9,7 @@ def test_no_job_state(mock_fastapi: FastAPI) -> None:
     with patch("src.api.routes.job_state", None):
         app = mock_fastapi
 
-        req_body = RunRequest(product_topic="GPU", subreddits=["nvidia"])
+        req_body = RunRequest(category="Computing", topic_list=["GPU"], subreddit_list=["nvidia", "amd"])
 
         with TestClient(app) as client:
             response = client.post("/run", json=req_body.model_dump())

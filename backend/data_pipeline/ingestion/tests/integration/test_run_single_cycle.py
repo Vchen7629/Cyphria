@@ -7,7 +7,7 @@ from unittest.mock import patch
 def test_successful_run_updates_job_state(create_ingestion_service: IngestionService) -> None:
     """Successful run_single_cycle should complete job with result"""
     job_state = JobState()
-    job_state.create_job("GPU")
+    job_state.create_job(category="Computing", subreddit_list=["GPU"])
 
     # Mock pipeline to return a successful result
     mock_result = IngestionResult(
@@ -36,7 +36,7 @@ def test_successful_run_updates_job_state(create_ingestion_service: IngestionSer
 def test_cancelled_run_marks_job_cancelled(create_ingestion_service: IngestionService) -> None:
     """Cancelled run should mark job as CANCELLED in job_state"""
     job_state = JobState()
-    job_state.create_job("GPU")
+    job_state.create_job(category="Computing", subreddit_list=["GPU"])
 
     # Mock pipeline to return cancelled result
     mock_result = IngestionResult(
@@ -64,7 +64,7 @@ def test_cancelled_run_marks_job_cancelled(create_ingestion_service: IngestionSe
 def test_exception_in_pipeline_fails_job(create_ingestion_service: IngestionService) -> None:
     """Exception in pipeline should fail job with error message"""
     job_state = JobState()
-    job_state.create_job("GPU")
+    job_state.create_job(category="Computing", subreddit_list=["GPU"])
 
     error_msg = "Database connection timeout"
 
@@ -90,7 +90,7 @@ def test_exception_in_pipeline_fails_job(create_ingestion_service: IngestionServ
 def test_run_state_cleanup_in_finally_block(create_ingestion_service: IngestionService) -> None:
     """run_state should be cleaned up in finally block even on exception"""
     job_state = JobState()
-    job_state.create_job("GPU")
+    job_state.create_job(category="Computing", subreddit_list=["GPU"])
 
     with patch.object(
         create_ingestion_service, "_run_ingestion_pipeline", side_effect=RuntimeError("Test error")
@@ -110,7 +110,7 @@ def test_run_state_cleanup_in_finally_block(create_ingestion_service: IngestionS
 def test_logger_info_called_on_success(create_ingestion_service: IngestionService) -> None:
     """Logger should log info message on successful completion"""
     job_state = JobState()
-    job_state.create_job("GPU")
+    job_state.create_job(category="Computing", subreddit_list=["GPU"])
 
     mock_result = IngestionResult(
         posts_processed=10, comments_processed=50, comments_inserted=30, cancelled=False
@@ -135,7 +135,7 @@ def test_logger_info_called_on_success(create_ingestion_service: IngestionServic
 def test_zero_results_completes_successfully(create_ingestion_service: IngestionService) -> None:
     """Pipeline with zero results should still complete successfully"""
     job_state = JobState()
-    job_state.create_job("GPU")
+    job_state.create_job(category="Computing", subreddit_list=["GPU"])
 
     mock_result = IngestionResult(
         posts_processed=0, comments_processed=0, comments_inserted=0, cancelled=False
@@ -165,7 +165,7 @@ def test_multiple_exception_types_all_handled(create_ingestion_service: Ingestio
 
     for exception in exception_types:
         job_state = JobState()
-        job_state.create_job("GPU")
+        job_state.create_job(category="Computing", subreddit_list=["GPU"])
 
         with patch.object(
             create_ingestion_service, "_run_ingestion_pipeline", side_effect=exception

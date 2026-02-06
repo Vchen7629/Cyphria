@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from testcontainers.postgres import PostgresContainer
 from src.ingestion_service import IngestionService
-from src.preprocessing.relevant_fields import RedditComment
+from src.preprocessing.relevant_fields import ProcessedRedditComment
 from src.db_utils.queries import batch_insert_raw_comments
 import psycopg
 import pytest
@@ -19,7 +19,7 @@ def test_worker_batch_insert_error_handling(worker_with_test_db: IngestionServic
             "author": "user1",
             "score": 10,
             "created_utc": datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-            "product_topic": worker_with_test_db.product_topic,
+            "product_topic": worker_with_test_db.topic_list[0],
         }
     ]
 
@@ -38,7 +38,7 @@ def test_worker_batch_insert_with_connection_pool_multiple_batches(
     """
     # First batch
     batch1 = [
-        RedditComment(
+        ProcessedRedditComment(
             comment_id=f"batch1_{i}",
             post_id=f"post_{i}",
             comment_body=f"Batch 1 comment {i}",
@@ -47,13 +47,14 @@ def test_worker_batch_insert_with_connection_pool_multiple_batches(
             author=f"user_{i}",
             score=i,
             timestamp=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+            topic="gpu"
         )
         for i in range(5)
     ]
 
     # Second batch
     batch2 = [
-        RedditComment(
+        ProcessedRedditComment(
             comment_id=f"batch2_{i}",
             post_id=f"post_{i}",
             comment_body=f"Batch 2 comment {i}",
@@ -62,6 +63,7 @@ def test_worker_batch_insert_with_connection_pool_multiple_batches(
             author=f"user_{i}",
             score=i,
             timestamp=datetime(2024, 1, 1, 13, 0, 0, tzinfo=timezone.utc),
+            topic="gpu"
         )
         for i in range(5)
     ]

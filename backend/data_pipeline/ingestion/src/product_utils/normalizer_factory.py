@@ -1,5 +1,6 @@
 from typing import Optional
 from src.core.logger import StructuredLogger
+from src.utils.validation import validate_string
 from src.product_utils.gpu_normalization import GPUNameNormalizer
 
 
@@ -23,13 +24,9 @@ class NormalizerFactory:
         Raises:
             ValueError: If product_topic is not supported
         """
-        if not product_topic or not product_list or product_topic.strip() == "":
-            if logger:
-                logger.error(
-                    event_type="ingestion_service run",
-                    message="Missing product topic, can't normalize",
-                )
+        if not validate_string(product_topic, "product_topic", logger, log_error=True):
             return None
+
         match product_topic.lower().strip():
             case "gpu":
                 return GPUNameNormalizer().normalize_gpu_list(product_list)

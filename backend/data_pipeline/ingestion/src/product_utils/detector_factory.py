@@ -1,6 +1,7 @@
 from typing import Any
 from typing import Optional
 from src.core.logger import StructuredLogger
+from src.utils.validation import validate_string
 from src.product_utils.gpu_detector import GPUDetector
 
 
@@ -58,12 +59,7 @@ class DetectorFactory:
         Raises:
             ValueError: If category is not supported
         """
-        if not product_topic or product_topic.strip() == "":
-            if logger:
-                logger.error(
-                    event_type="ingestion_service run",
-                    message="Missing product topic, can't detect",
-                )
+        if not validate_string(product_topic, "product_topic", logger, log_error=True):
             return None
 
         match product_topic.lower().strip():

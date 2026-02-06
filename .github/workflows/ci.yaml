@@ -152,9 +152,9 @@ jobs:
           run: uv run pytest tests
           working-directory: backend/data_pipeline/ingestion
 
-        - name: Trigger CD for Data Ingestion
+        - name: Trigger generate-service-tags for Data Ingestion
           run: |
-            gh workflow run cd.yaml \
+            gh workflow run generate-service-tags.yaml \
               -f service=ingestion \
               -f folder=backend/data_pipeline/ingestion \
               -f sha=${{ github.sha }}
@@ -197,9 +197,9 @@ jobs:
               run: uv run pytest tests
               working-directory: backend/data_pipeline/llm_summary
 
-            - name: Trigger CD for LLM Summary
+            - name: Trigger generate-service-tags for llm-summary
               run: |
-                gh workflow run cd.yaml \
+                gh workflow run generate-service-tags.yaml \
                   -f service=llm_summary \
                   -f folder=backend/data_pipeline/llm_summary \
                   -f sha=${{ github.sha }}
@@ -241,13 +241,12 @@ jobs:
           - name: Run Unit/Integration Tests
             run: uv run pytest tests
             working-directory: backend/data_pipeline/ranking_calculator
-          
-          - name: Trigger CD for Ranking Calculator
+
+          - name: Trigger generate-service-tags for Ranking Calculator
             run: |
-              gh workflow run cd.yaml \
+              gh workflow run generate-service-tags.yaml \
                 -f service=ranking_calculator \
                 -f folder=backend/data_pipeline/ranking_calculator \
-                -f version=${{ steps.tag_version.outputs.new_tag }} \
                 -f sha=${{ github.sha }}
             env:
               GH_TOKEN: ${{ secrets.CI_CD_PAT }}
@@ -288,9 +287,9 @@ jobs:
             run: uv run pytest tests
             working-directory: backend/data_pipeline/sentiment_analysis
 
-          - name: Trigger CD for Sentiment Analysis
+          - name: Trigger generate-service-tags for Sentiment Analysis
             run: |
-              gh workflow run cd.yaml \
+              gh workflow run generate-service-tags.yaml \
                 -f service=sentiment_analysis \
                 -f folder=backend/data_pipeline/sentiment_analysis \
                 -f sha=${{ github.sha }}

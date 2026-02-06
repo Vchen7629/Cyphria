@@ -6,6 +6,7 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 from testcontainers.postgres import PostgresContainer
 from psycopg_pool import ConnectionPool
+from concurrent.futures import ThreadPoolExecutor
 import os
 
 os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
@@ -37,10 +38,11 @@ def create_ingestion_service(
         reddit_client=mock_reddit_client,
         db_pool=db_pool,
         logger=StructuredLogger(pod="ingestion_service"),
-        product_topic="GPU",
-        subreddits=["nvidia"],
-        detector=detector,
+        topic_list=["GPU"],
+        subreddit_list=["nvidia"],
+        detector_list=[detector],
         normalizer=NormalizerFactory,
+        fetch_executor=ThreadPoolExecutor(max_workers=1),
     )
 
 
@@ -69,10 +71,11 @@ def mock_ingestion_service(mock_reddit_client: MagicMock) -> IngestionService:
         reddit_client=mock_reddit_client,
         db_pool=MagicMock(spec=ConnectionPool),
         logger=MagicMock(spec=StructuredLogger),
-        product_topic="GPU",
-        subreddits=["nvidia"],
-        detector=MagicMock(spec=DetectorFactory.get_detector(product_topic="GPU")),
+        topic_list=["GPU"],
+        subreddit_list=["nvidia"],
+        detector_list=[MagicMock(spec=DetectorFactory.get_detector(product_topic="GPU"))],
         normalizer=MagicMock(spec=NormalizerFactory),
+        fetch_executor=MagicMock(spec=ThreadPoolExecutor),
     )
 
 
@@ -101,10 +104,11 @@ def worker_with_test_db(
                 reddit_client=mock_reddit_client,
                 db_pool=test_pool,
                 logger=StructuredLogger(pod="ingestion_service"),
-                product_topic="gpu",
-                subreddits=["nvidia"],
-                detector=detector,
+                topic_list=["GPU"],
+                subreddit_list=["nvidia"],
+                detector_list=[detector],
                 normalizer=NormalizerFactory,
+                fetch_executor=ThreadPoolExecutor(max_workers=1),
             )
             yield worker
 

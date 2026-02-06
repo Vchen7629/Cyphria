@@ -19,18 +19,14 @@ def test_airflow_dags_loaded(k8s_core_api: CoreV1Api, test_namespace: str, airfl
             tty=False
         )
 
-        if "product_gpu_sentiment_analysis" in resp:
+        if "product_computing_sentiment_analysis" in resp:
             break
 
         time.sleep(10)
 
     expected_dags = [
-        "product_gpu_sentiment_analysis",
-        "product_laptop_sentiment_analysis",
-        "product_headphone_sentiment_analysis",
-        "product_gpu_ranking",
-        "product_laptop_ranking",
-        "product_headphone_ranking",
+        "product_computing_sentiment_analysis",
+        "product_computing_ranking",
         "product_summary"
     ]
 

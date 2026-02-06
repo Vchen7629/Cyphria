@@ -19,7 +19,7 @@ def test_ingestion_task_correct_configs() -> None:
     assert ingest_task.headers == {"Content-Type": "application/json"}
 
     expected_api_params = json.dumps({
-        'topic_list': ['topic1', 'topic2'],
+        'category': "GPU",
         'subreddit_list': ["subreddit1", "subreddit2"]
     })
     assert ingest_task.data == expected_api_params

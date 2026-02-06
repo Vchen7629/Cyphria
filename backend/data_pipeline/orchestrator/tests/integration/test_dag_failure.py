@@ -17,7 +17,7 @@ def test_dag_task_fails_on_500_error(
         should_fail=True
     )
 
-    dag_id = "product_gpu_sentiment_analysis"
+    dag_id = "product_computing_sentiment_analysis"
     run_id = trigger_dag(k8s_core_api, test_namespace, airflow_pod, dag_id)
     assert run_id, "Failed to trigger DAG"
 
@@ -36,7 +36,7 @@ def test_dag_task_fails_on_invalid_status(
         response_status="invalid_status"
     )
 
-    dag_id = "product_gpu_sentiment_analysis"
+    dag_id = "product_computing_sentiment_analysis"
     run_id = trigger_dag(k8s_core_api, test_namespace, airflow_pod, dag_id)
     assert run_id, "Failed to trigger DAG"
 
@@ -54,7 +54,7 @@ def test_dag_task_fails_on_pod_not_ready(
     # Delete the pod entirely, service still exists but has no endpoints
     delete_pod(k8s_core_api, test_namespace, "ingestion-service")
 
-    dag_id = "product_gpu_sentiment_analysis"
+    dag_id = "product_computing_sentiment_analysis"
     run_id = trigger_dag(k8s_core_api, test_namespace, airflow_pod, dag_id)
     assert run_id, "Failed to trigger DAG"
 
@@ -80,7 +80,7 @@ def test_dag_task_fails_on_timeout(
         response_delay=12  # 12s > 10s
     )
 
-    dag_id = "product_gpu_sentiment_analysis"
+    dag_id = "product_computing_sentiment_analysis"
     run_id = trigger_dag(k8s_core_api, test_namespace, airflow_pod, dag_id)
     assert run_id, "Failed to trigger DAG"
 
@@ -99,7 +99,7 @@ def test_on_failure_callback_invoked(
         should_fail=True
     )
 
-    dag_id = "product_gpu_sentiment_analysis"
+    dag_id = "product_computing_sentiment_analysis"
     run_id = trigger_dag(k8s_core_api, test_namespace, airflow_pod, dag_id)
     assert run_id, "Failed to trigger DAG"
 
@@ -110,7 +110,7 @@ def test_on_failure_callback_invoked(
     # Check that failure callback was invoked by looking at logs
     logs = exec_airflow_cmd(
         k8s_core_api, test_namespace, airflow_pod,
-        ["airflow", "tasks", "logs", dag_id, "ingest_gpu_comments", run_id]
+        ["airflow", "tasks", "logs", dag_id, "ingest_computing_comments", run_id]
     )
     assert "failed" in logs.lower()
 

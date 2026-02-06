@@ -47,7 +47,21 @@ def airflow_config_configmap(k8s_core_api: CoreV1Api, test_namespace: str) -> Ge
     config_path = SRC_PATH / "config"
     config_files = {"__init__.py": ""}
     for config_file in config_path.glob("*.py"):
-        config_files[config_file.name] = config_file.read_text()
+        # Override mappings.py with test-specific subset of categories
+        if config_file.name == "mappings.py":
+            config_files[config_file.name] = """# Test-specific mappings with limited categories
+CATEGORYTOPIC = {
+    "COMPUTING": ["GPU", "LAPTOP", "CPU"],
+}
+
+TOPICSUBREDDIT = {
+    "GPU": ["nvidia", "radeon", "amd"],
+    "LAPTOP": ["laptops"],
+    "CPU": ["amd", "Intel"],
+}
+"""
+        else:
+            config_files[config_file.name] = config_file.read_text()
 
     configmap = V1ConfigMap(
         metadata=V1ObjectMeta(name="airflow-config"),

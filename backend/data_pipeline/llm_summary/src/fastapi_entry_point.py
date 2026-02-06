@@ -8,7 +8,7 @@ settings = Settings()
 
 app = FastAPI(
     title="LLM summary service",
-    description="Fastapi wrapper around LLM summary service so Airflow can call the /run endpoint to invoke the worker",
+    description="Fastapi wrapper around LLM summary service so Airflow can call the /run endpoint to invoke the worker.",
     version="1.0.0",
     lifespan=lifespan,
 )

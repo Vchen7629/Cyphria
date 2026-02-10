@@ -2,7 +2,7 @@ from typing import Any
 from typing import Optional
 from src.core.logger import StructuredLogger
 from src.utils.validation import validate_string
-from src.product_utils.gpu_detector import GPUDetector
+from src.products.computing.gpu.detector import GPUDetector
 
 
 class ProductDetectorWrapper:

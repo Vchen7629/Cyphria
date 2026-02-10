@@ -1,7 +1,7 @@
 from typing import Optional
 from src.core.logger import StructuredLogger
 from src.utils.validation import validate_string
-from src.product_utils.gpu_normalization import GPUNameNormalizer
+from src.products.computing.gpu.normalizer import GPUNameNormalizer
 
 
 class NormalizerFactory:

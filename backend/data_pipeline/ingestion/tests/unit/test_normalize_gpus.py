@@ -1,4 +1,4 @@
-from src.product_utils.gpu_normalization import GPUNameNormalizer
+from src.products.computing.gpu.normalizer import GPUNameNormalizer
 
 
 def test_remove_duplicate_gpu_name() -> None:

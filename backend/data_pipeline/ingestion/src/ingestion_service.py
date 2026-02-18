@@ -17,7 +17,7 @@ from src.preprocessing.url_remover import remove_url
 from src.preprocessing.check_english import detect_english
 from src.preprocessing.is_valid_comment import is_valid_comment
 from src.preprocessing.relevant_fields import extract_relevant_fields
-from src.product_utils.detector_factory import ProductDetectorWrapper
+from src.products.detector_factory import ProductDetectorWrapper
 import prawcore
 
 

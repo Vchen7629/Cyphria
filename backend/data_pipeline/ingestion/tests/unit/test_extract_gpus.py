@@ -1,4 +1,4 @@
-from src.product_utils.gpu_detector import GPUDetector
+from src.products.computing.gpu.detector import GPUDetector
 
 
 def test_matches_bare_gpu_number() -> None:

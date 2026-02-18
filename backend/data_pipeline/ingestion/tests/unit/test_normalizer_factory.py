@@ -1,5 +1,5 @@
 from unittest.mock import patch
-from src.product_utils.normalizer_factory import NormalizerFactory
+from src.products.normalizer_factory import NormalizerFactory
 import pytest
 
 

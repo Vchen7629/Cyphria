@@ -1,12 +1,7 @@
 import pytest
 from fastapi import FastAPI
-from unittest.mock import MagicMock, patch
-import os
-
-os.environ.setdefault("REDDIT_API_CLIENT_ID", "fake")
-os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "fake")
-os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "fake")
-os.environ.setdefault("REDDIT_ACCOUNT_PASSWORD", "fake")
+from unittest.mock import patch
+from unittest.mock import MagicMock
 from src.core.lifespan import lifespan
 
 

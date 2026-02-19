@@ -1,6 +1,5 @@
 from src.products.computing.gpu.detector import GPUDetector
 
-
 def test_matches_bare_gpu_number() -> None:
     """Test if extract gpu function can detect a bare gpu number like 4090"""
     text = "I just bought the 4090, it's great!"

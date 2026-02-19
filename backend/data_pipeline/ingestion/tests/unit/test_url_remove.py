@@ -1,9 +1,4 @@
 from src.preprocessing.url_remover import remove_url
-from pathlib import Path
-import sys
-
-sys.path.append(str(Path(__file__).resolve().parents[3]))
-
 
 def test_post_regular() -> None:
     """Regular url should be removed"""
@@ -11,7 +6,6 @@ def test_post_regular() -> None:
     result = remove_url(text)
 
     assert result == "Come to  to see new deals!"
-
 
 def test_no_www() -> None:
     """No prefix url should still be removed"""

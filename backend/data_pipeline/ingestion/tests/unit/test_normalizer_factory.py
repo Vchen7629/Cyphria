@@ -23,23 +23,11 @@ def test_unsupported_category() -> None:
     with pytest.raises(ValueError, match="Unsupported product_topic: 'GPUsd'. Supported: gpu"):
         NormalizerFactory.normalize("GPUsd", ["RTX 3090"])
 
-
-def test_supported_category_normalize() -> None:
+@pytest.mark.parametrize(argnames="category,product_list", argvalues=[
+    ("GPU", ["RTX 4090", "RTX 5090"]), ("GpU", ["RTX 4090", "RTX 5090"]), ("  GPU  ", ["RTX 4090", "RTX 5090"])
+])
+def test_valid_category_normalize(category: str, product_list: list[str]) -> None:
     """Supported category should properly normalize product names"""
-    res = NormalizerFactory.normalize("GPU", ["RTX 4090", "RTX 5090"])
-
-    assert res == ["NVIDIA RTX 4090", "NVIDIA RTX 5090"]
-
-
-def test_category_case_insensitivity() -> None:
-    """Mixed case should still match"""
-    res = NormalizerFactory.normalize("GpU", ["RTX 4090", "RTX 5090"])
-
-    assert res == ["NVIDIA RTX 4090", "NVIDIA RTX 5090"]
-
-
-def test_white_space_category() -> None:
-    """White space should still match"""
-    res = NormalizerFactory.normalize("  GPU  ", ["RTX 4090", "RTX 5090"])
+    res = NormalizerFactory.normalize(category, product_list)
 
     assert res == ["NVIDIA RTX 4090", "NVIDIA RTX 5090"]

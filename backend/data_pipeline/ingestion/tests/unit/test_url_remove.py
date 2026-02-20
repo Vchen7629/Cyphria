@@ -1,11 +1,13 @@
 from src.preprocessing.url_remover import remove_url
 
+
 def test_post_regular() -> None:
     """Regular url should be removed"""
     text = "Come to www.amazon.com to see new deals!"
     result = remove_url(text)
 
     assert result == "Come to  to see new deals!"
+
 
 def test_no_www() -> None:
     """No prefix url should still be removed"""

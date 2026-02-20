@@ -5,6 +5,7 @@ from src.utils.validation import validate_string
 from src.products.computing.gpu.detector import GPUDetector
 from src.products.computing.cpu.detector import CPUDetector
 
+
 class ProductDetectorWrapper:
     """Wrapper that provides a universal interface for all product detectors"""
 

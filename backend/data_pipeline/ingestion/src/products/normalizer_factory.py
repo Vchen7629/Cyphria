@@ -4,6 +4,7 @@ from src.utils.validation import validate_string
 from src.products.computing.gpu.normalizer import GPUNameNormalizer
 from src.products.computing.cpu.normalizer import CPUNameNormalizer
 
+
 class NormalizerFactory:
     """Factory that returns normalized product names based on category"""
 

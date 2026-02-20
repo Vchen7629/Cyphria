@@ -6,6 +6,7 @@ import re
 
 class GPUDetector:
     """Detects GPU product mentions in comments"""
+
     GPU_PATTERNS = [
         # Full names with brand: RTX 4090, GTX 1080 Ti, etc
         r"\b(RTX|GTX|GT)\s?(\d{4})(\s?(Ti|SUPER|Super|FE))?\b",

@@ -100,19 +100,22 @@ class GPUNameNormalizer:
 
         return self._format_name(brand, model, brand_prefix, variant)
 
-    def normalize_gpu_list(self, detected_products: list[str]) -> list[str]:
+    def normalize_gpu_list(self, gpu_list: list[str]) -> list[str]:
         """
         Normalize a list of detected GPU names to canonical format
 
         Args:
-            detected_products: list of raw GPU names from GPUDetector
+            gpu_list: list of raw GPU names from GPUDetector
 
         Returns:
             list of unique formatted product names with duplicates removed
         """
+        if not gpu_list:
+            return []
+
         formatted_products = set()
 
-        for gpu in detected_products:
+        for gpu in gpu_list:
             normalized: str | None = self._normalize(gpu)
             if normalized:
                 formatted_products.add(normalized)

@@ -149,7 +149,9 @@ jobs:
           working-directory: backend/data_pipeline/ingestion
         
         - name: Run Unit/Integration Tests
-          run: uv run pytest tests
+          run: |
+            uv run pytest tests/unit
+            uv run pytest tests/integration
           working-directory: backend/data_pipeline/ingestion
 
         - name: Trigger generate-service-tags for Data Ingestion

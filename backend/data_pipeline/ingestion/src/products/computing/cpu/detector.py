@@ -3,12 +3,11 @@ import re
 class CPUDetector:
     """Detects CPU product mentions in comments"""
     CPU_REGEX_PATTERNS = [
-        r"(?i)\b(?:Ryzen\s?\d?\s?\d{3,4}(?:x3d|xtx|x|hx|hs|ge|g)?|\d{3,4}(?:x3d|xtx|x|hx|hs|ge|g))\b", # regular ryzen cpus
+        r"(?i)\b(?:Ryzen\s?\d?\s?(?:\s+Pro)?\s?\d{3,4}(?:x3d|xtx|x|xt|hx|hs|ge|gt|g|f)?|\d{3,4}(?:x3d|xtx|x|xt|hx|hs|ge|gt|g|f))\b", # regular ryzen cpus
         r"(?i)\b(?:(?:Ryzen\s+AI\s+(?:\d+\s+)?)?(?:Max\+?|HX)|Ryzen\s+AI(?:\s+\d+)?)\s+\d{3,4}\b", # ryzen AI cpus
-        r"(?i)\b(?:(?:(?:Ryzen|Threadripper|PRO)\s+)+\d{4}(?:W?X)?|\d{4}W?X)\b", # ryzen threadripper cpus
-        r"(?i)\b(?:Epyc\s+\d{4}(?:P|F|X|S|C)?|\d{4}(?:P|F|X|S|C))\b", # epyc cpus
-        r"(?i)\b(?:i[3579]-\d{3,5}(?:K[FS]?|U|H)?|(?:Core|Ultra)\s+\d+\s+\d{3,5}(?:K[FS]?|U|H)?|\d{3,5}(?:K[FS]?|U|H))\b", # regular intel cpus
-        r"(?i)\b(?:Xeon\s+(?:[we]\d?-)?\d{3,5}(?:[a-z]+)?|[we]\d?-\d{3,5}[a-z]*|\d{3,5}[a-z]+)\b" # intel xeon cpus
+        r"(?i)\b(?:(?:Ryzen\s+)?Threadripper(?:\s+Pro)?\s+\d{4}(?:W?X)?|Ryzen\s+\d{4}(?:W?X)?|\d{4}W?X)\b", # ryzen threadripper cpus
+        r"(?i)\b(?:i[3579]-\d{3,5}(?:K[FS]?|U|H|T|E|TE|S|P|X)?|Core(?:\s+Ultra)?\s+\d+\s+\d{3,5}(?:K[FS]?|U|H|T|E|TE|S|P|X)?|\d{3,5}(?:K[FS]?|U|H|T|E|TE|S|P|X))\b", # regular intel cpus
+        r"(Pentium|Celeron)?\s?(Gold|Silver)?\s?([G|N|J|U|Y]\d{3,5}(?:TE|T|F|U|Y|E)?)" # intel pentium and celeron cpus
     ]
 
     def __init__(self) -> None:

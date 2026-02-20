@@ -6,8 +6,8 @@ from psycopg_pool import ConnectionPool
 from concurrent.futures import ThreadPoolExecutor
 from src.core.logger import StructuredLogger
 from src.ingestion_service import IngestionService
-from src.product_utils.detector_factory import DetectorFactory
-from src.product_utils.normalizer_factory import NormalizerFactory
+from src.products.detector_factory import DetectorFactory
+from src.products.normalizer_factory import NormalizerFactory
 import pytest
 
 

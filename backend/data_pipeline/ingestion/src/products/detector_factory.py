@@ -2,8 +2,8 @@ from typing import Any
 from typing import Optional
 from src.core.logger import StructuredLogger
 from src.utils.validation import validate_string
-from src.product_utils.gpu_detector import GPUDetector
-
+from src.products.computing.gpu.detector import GPUDetector
+from src.products.computing.cpu.detector import CPUDetector
 
 class ProductDetectorWrapper:
     """Wrapper that provides a universal interface for all product detectors"""
@@ -68,6 +68,10 @@ class DetectorFactory:
             case "gpu":
                 return ProductDetectorWrapper(
                     GPUDetector(), contains_method="contains_gpu", extract_method="extract_gpus"
+                )
+            case "cpu":
+                return ProductDetectorWrapper(
+                    CPUDetector(), contains_method="contains_cpu", extract_method="extract_cpus"
                 )
             case _:
                 raise ValueError(f"Unsupported product_topic: '{product_topic}'. Supported: gpu")

@@ -11,8 +11,8 @@ from src.api.schemas import CurrentJob
 from src.utils.validation import validate_list
 from src.utils.validation import validate_string
 from src.ingestion_service import IngestionService
-from src.product_utils.detector_factory import DetectorFactory
-from src.product_utils.detector_factory import ProductDetectorWrapper
+from src.products.detector_factory import DetectorFactory
+from src.products.detector_factory import ProductDetectorWrapper
 import asyncio
 
 router = APIRouter()

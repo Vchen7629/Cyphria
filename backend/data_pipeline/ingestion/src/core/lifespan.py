@@ -1,6 +1,6 @@
 from src.api.job_state import JobState
 from concurrent.futures import ThreadPoolExecutor
-from src.product_utils.normalizer_factory import NormalizerFactory
+from src.products.normalizer_factory import NormalizerFactory
 from src.core.settings_config import Settings
 from src.core.reddit_client_instance import createRedditClient
 from src.db_utils.conn import create_connection_pool

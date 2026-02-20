@@ -1,5 +1,5 @@
 from unittest.mock import patch
-from src.product_utils.detector_factory import DetectorFactory
+from src.products.detector_factory import DetectorFactory
 import pytest
 
 

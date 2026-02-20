@@ -1,8 +1,8 @@
-from src.api.schemas import IngestionResult
 from datetime import datetime
 from datetime import timezone
 from src.api.schemas import JobStatus
 from src.api.job_state import JobState
+from src.api.schemas import IngestionResult
 import pytest
 
 

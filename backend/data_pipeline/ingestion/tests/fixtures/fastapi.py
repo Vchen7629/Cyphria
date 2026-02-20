@@ -12,8 +12,8 @@ from src.api.routes import router as base_router
 from src.core.logger import StructuredLogger
 from tests.utils.service import null_lifespan
 from tests.utils.classes import FastAPITestClient
-from src.product_utils.detector_factory import DetectorFactory
-from src.product_utils.normalizer_factory import NormalizerFactory
+from src.products.detector_factory import DetectorFactory
+from src.products.normalizer_factory import NormalizerFactory
 import pytest
 
 

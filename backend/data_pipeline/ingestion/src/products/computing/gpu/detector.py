@@ -1,72 +1,11 @@
+from src.products.computing.gpu.models import KNOWN_INTEL_MODELS
+from src.products.computing.gpu.models import KNOWN_AMD_MODELS
+from src.products.computing.gpu.models import KNOWN_NVIDIA_MODELS
 import re
 
 
 class GPUDetector:
     """Detects GPU product mentions in comments"""
-
-    # Known GPU model numbers for validation
-    KNOWN_NVIDIA_MODELS = {
-        "5090",
-        "5080",
-        "5070",
-        "5060",
-        "5050",
-        "4090",
-        "4080",
-        "4070",
-        "4060",
-        "3090",
-        "3080",
-        "3070",
-        "3060",
-        "3050",
-        "2080",
-        "2070",
-        "2060",
-        "1080",
-        "1070",
-        "1060",
-        "1050",
-        "1030",
-        "980",
-        "970",
-        "960",
-        "950",
-    }
-
-    KNOWN_AMD_MODELS = {
-        "9070",
-        "9060",
-        "7900",
-        "7800",
-        "7700",
-        "7600",
-        "6950",
-        "6900",
-        "6800",
-        "6750",
-        "6700",
-        "6650",
-        "6600",
-        "6500",
-        "6400",
-        "5700",
-        "5600",
-        "5500",
-        "5300",
-    }
-
-    KNOWN_INTEL_MODELS = {
-        "A770",
-        "A750",
-        "A580",
-        "A380",
-        "A310",
-        "B770",
-        "B580",
-        "B570",
-    }
-
     GPU_PATTERNS = [
         # Full names with brand: RTX 4090, GTX 1080 Ti, etc
         r"\b(RTX|GTX|GT)\s?(\d{4})(\s?(Ti|SUPER|Super|FE))?\b",
@@ -106,9 +45,9 @@ class GPUDetector:
                     base_num = num_match.group(1)
                     # skip numbers not matching the known gpu numbers
                     if (
-                        base_num not in self.KNOWN_NVIDIA_MODELS
-                        and base_num not in self.KNOWN_AMD_MODELS
-                        and base_num not in self.KNOWN_INTEL_MODELS
+                        base_num not in KNOWN_NVIDIA_MODELS
+                        and base_num not in KNOWN_AMD_MODELS
+                        and base_num not in KNOWN_INTEL_MODELS
                     ):
                         continue
 

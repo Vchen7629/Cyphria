@@ -1,8 +1,7 @@
-import pytest
-import psycopg
 from unittest.mock import Mock, patch
 from src.db_utils.retry import retry_with_backoff
-
+import pytest
+import psycopg
 
 def test_retry_succeeds_after_transient_error() -> None:
     """Test that function retries and succeeds after transient errors."""

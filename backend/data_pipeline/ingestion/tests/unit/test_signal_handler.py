@@ -1,11 +1,6 @@
 from unittest.mock import MagicMock
-import os
-
-os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
-os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "reddit_secret")
-os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "username")
-os.environ.setdefault("REDDIT_ACCOUNT_PASSWORD", "password")
-from src.api.signal_handler import run_state, signal_handler
+from src.api.signal_handler import run_state
+from src.api.signal_handler import signal_handler
 import signal
 
 

@@ -6,6 +6,7 @@ from src.products.computing.cpu.mappings import INTEL_MODEL_TO_TIER
 from src.products.computing.cpu.mappings import AMD_MODEL_TO_TIER
 import re
 
+
 class CPUNameNormalizer:
     def __init__(self, logger: Optional[StructuredLogger]) -> None:
         self.logger = logger
@@ -34,20 +35,17 @@ class CPUNameNormalizer:
         return list(normalized_names)
 
     def _lookup_and_format(
-        self,
-        model: str,
-        mapping: Dict[str, Tuple[str, str]],
-        vendor: str
+        self, model: str, mapping: Dict[str, Tuple[str, str]], vendor: str
     ) -> Optional[str]:
         """
         Look up model in mapping and format as 'Vendor Brand TierModel'
-        
+
         Args:
             model: the raw_cpu_name string
             mapping: the dict mapping the cpu_name to a tuple of brand, tier strings
             vendor: either AMD or Intel
 
-        Returns: 
+        Returns:
             the normalized cpu name or None if its not found in the mapping
         '"""
         info = mapping.get(model)
@@ -85,21 +83,21 @@ class CPUNameNormalizer:
         if not intel_result:
             if logger:
                 logger.debug(
-                    event_type="ingestion_service run", 
-                    message="cpu unable to be normalized with intel and amd"
+                    event_type="ingestion_service run",
+                    message="cpu unable to be normalized with intel and amd",
                 )
             return None
-        
+
         return intel_result
 
     def _normalize_amd(self, raw_cpu_name: str, cpu_name_caps: str) -> Optional[str]:
         """
         Normalize AMD CPU names (Ryzen, Threadripper)
-        
+
         Args:
             raw_cpu_name: the unformatted cpu name string with whitespace removed
             cpu_name_caps: the unformatted cpu name string in all caps
-        
+
         Returns:
             the amd specific formatted cpu name if it matches one of the regexes, None otherwise
         """
@@ -123,11 +121,11 @@ class CPUNameNormalizer:
     def _normalize_intel(self, raw_cpu_name: str, cpu_name_caps: str) -> Optional[str]:
         """
         Normalize Intel CPU names (Core, Pentium, Celeron)
-        
+
         Args:
             raw_cpu_name: the unformatted cpu name string with whitespace removed
             cpu_name_caps: the unformatted cpu name string in all caps
-        
+
         Returns:
             the intel specific formatted cpu name if it matches one of the regexes, None otherwise
         """

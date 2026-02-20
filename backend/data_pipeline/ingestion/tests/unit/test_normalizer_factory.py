@@ -23,9 +23,15 @@ def test_unsupported_category() -> None:
     with pytest.raises(ValueError, match="Unsupported product_topic: 'GPUsd'. Supported: gpu"):
         NormalizerFactory.normalize("GPUsd", ["RTX 3090"])
 
-@pytest.mark.parametrize(argnames="category,product_list", argvalues=[
-    ("GPU", ["RTX 4090", "RTX 5090"]), ("GpU", ["RTX 4090", "RTX 5090"]), ("  GPU  ", ["RTX 4090", "RTX 5090"])
-])
+
+@pytest.mark.parametrize(
+    argnames="category,product_list",
+    argvalues=[
+        ("GPU", ["RTX 4090", "RTX 5090"]),
+        ("GpU", ["RTX 4090", "RTX 5090"]),
+        ("  GPU  ", ["RTX 4090", "RTX 5090"]),
+    ],
+)
 def test_valid_category_normalize(category: str, product_list: list[str]) -> None:
     """Supported category should properly normalize product names"""
     res = NormalizerFactory.normalize(category, product_list)

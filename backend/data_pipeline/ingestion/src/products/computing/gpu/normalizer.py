@@ -1,6 +1,7 @@
 from src.products.computing.gpu.mappings import MODEL_TO_BRAND
 import re
 
+
 class GPUNameNormalizer:
     """Normalizes Variations of GPU names into one format"""
 

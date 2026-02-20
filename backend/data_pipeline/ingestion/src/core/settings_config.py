@@ -19,10 +19,10 @@ class Settings(BaseSettings):
     DB_PASS: str = ""
 
     # --- Reddit Client ---
-    REDDIT_API_CLIENT_ID: str
-    REDDIT_API_CLIENT_SECRET: str
-    REDDIT_ACCOUNT_USERNAME: str
-    REDDIT_ACCOUNT_PASSWORD: str
+    REDDIT_API_CLIENT_ID: str = "default"
+    REDDIT_API_CLIENT_SECRET: str = "default"
+    REDDIT_ACCOUNT_USERNAME: str = "default"
+    REDDIT_ACCOUNT_PASSWORD: str = "default"
 
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE) if not PRODUCTION_MODE else None,

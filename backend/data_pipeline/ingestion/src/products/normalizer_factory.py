@@ -3,7 +3,7 @@ from src.core.logger import StructuredLogger
 from src.utils.validation import validate_string
 from src.products.computing.gpu.normalizer import GPUNameNormalizer
 from src.products.computing.cpu.normalizer import CPUNameNormalizer
-
+from src.products.computing.mechanical_keyboard.normalizer import MechanicalKeyboardNormalizer
 
 class NormalizerFactory:
     """Factory that returns normalized product names based on category"""
@@ -35,5 +35,7 @@ class NormalizerFactory:
                 return GPUNameNormalizer().normalize_gpu_list(product_list)
             case "cpu":
                 return CPUNameNormalizer(logger).normalize_cpu_list(product_list)
+            case "MECHANICAL KEYBOARD":
+                return MechanicalKeyboardNormalizer().normalize_keyboard_list(product_list)
             case _:
                 raise ValueError(f"Unsupported product_topic: '{product_topic}'. Supported: gpu")

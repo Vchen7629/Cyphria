@@ -98,15 +98,26 @@ def test_mixed_valid_and_invalid() -> None:
 
     assert result == ["AMD RX 7900 XTX", "NVIDIA RTX 4090"]
 
-@pytest.mark.parametrize(argnames="keyboard_list,expected", argvalues=[
-    (["Altair-X", "Vega", "ai03 Vega"], ["ai03 Altair-X", "ai03 Vega"]), # should deduplicate
-    (["   Air 01  ", "gEm 01"], ["Akko Air 01", "Akko gEm 01"]), # should handle whitespace + mixed case
-    (["jajaja", "Altair-X", "Air 01"], ["ai03 Altair-X", "Akko Air 01"]) # should filter out invalid keyboard
-])
+
+@pytest.mark.parametrize(
+    argnames="keyboard_list,expected",
+    argvalues=[
+        (["Altair-X", "Vega", "ai03 Vega"], ["ai03 Altair-X", "ai03 Vega"]),  # should deduplicate
+        (
+            ["   Air 01  ", "gEm 01"],
+            ["Akko Air 01", "Akko gEm 01"],
+        ),  # should handle whitespace + mixed case
+        (
+            ["jajaja", "Altair-X", "Air 01"],
+            ["ai03 Altair-X", "Akko Air 01"],
+        ),  # should filter out invalid keyboard
+    ],
+)
 def test_valid_mechanical_keyboard(keyboard_list: list[str], expected: list[str]) -> None:
     """Should normalize valid mechanical keyboard names"""
     normalized = sorted(MechanicalKeyboardNormalizer().normalize_keyboard_list(keyboard_list))
     assert normalized == sorted(expected)
+
 
 @pytest.mark.parametrize(argnames="keyboard_list", argvalues=[None, 123, [123]])
 def test_invalid_mechanical_keyboard(keyboard_list: list[str]) -> None:

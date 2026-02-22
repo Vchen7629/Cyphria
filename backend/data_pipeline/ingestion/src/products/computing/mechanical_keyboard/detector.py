@@ -2,8 +2,10 @@ from collections import defaultdict
 import re
 from src.products.computing.mechanical_keyboard.mappings import KEYBOARD_MODEL_TO_BRAND
 
+
 class MechanicalKeyboardDetector:
     """Detects Mechanical Keyboard product mentions in comments"""
+
     def extract_mechanical_keyboards(self, text: str) -> list[str]:
         """
         Extract all mechanical keyboards mentions from the text
@@ -16,7 +18,7 @@ class MechanicalKeyboardDetector:
         """
         if not text or not isinstance(text, str):
             return []
-        
+
         detected_products = self._detect_products(text)
 
         deduplicated_products = self._deduplicate(detected_products)
@@ -48,14 +50,16 @@ class MechanicalKeyboardDetector:
         parts: list[str] = []
         for brand, models in brand_groups.items():
             sorted_models = sorted(models, key=len, reverse=True)
-            model_part = "|".join(re.escape(m) for m in sorted_models) # Example: Vega from ai03 Vega
+            model_part = "|".join(
+                re.escape(m) for m in sorted_models
+            )  # Example: Vega from ai03 Vega
             if brand:
                 parts.append(rf"(?:{re.escape(brand)}\s)?(?:{model_part})")
             else:
                 parts.append(model_part)
-        
+
         return re.compile("|".join(f"(?:{p})" for p in parts), re.IGNORECASE)
-    
+
     _pattern = _build_pattern()
 
     @classmethod
@@ -68,11 +72,11 @@ class MechanicalKeyboardDetector:
         """Connects/Resolves a match (with or without brand prefix) to its model"""
         match_lower = match.lower()
         for model, brand in KEYBOARD_MODEL_TO_BRAND.items():
-            if match_lower == model.lower(): # case where 
+            if match_lower == model.lower():  # case where
                 return model
             if brand and match_lower == f"{brand} {model}".lower():
                 return model
-        
+
         return match
 
     def _deduplicate(self, matches: set[str]) -> set[str]:

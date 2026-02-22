@@ -6,6 +6,7 @@ from src.products.computing.gpu.detector import GPUDetector
 from src.products.computing.cpu.detector import CPUDetector
 from src.products.computing.mechanical_keyboard.detector import MechanicalKeyboardDetector
 
+
 class ProductDetectorWrapper:
     """Wrapper that provides a universal interface for all product detectors"""
 
@@ -76,9 +77,9 @@ class DetectorFactory:
                 )
             case "MECHANICAL KEYBOARD":
                 return ProductDetectorWrapper(
-                    MechanicalKeyboardDetector(), 
-                    contains_method="contains_mechanical_keyboard", 
-                    extract_method="extract_mechanical_keyboards"
-                )                
+                    MechanicalKeyboardDetector(),
+                    contains_method="contains_mechanical_keyboard",
+                    extract_method="extract_mechanical_keyboards",
+                )
             case _:
                 raise ValueError(f"Unsupported product_topic: '{product_topic}'. Supported: gpu")

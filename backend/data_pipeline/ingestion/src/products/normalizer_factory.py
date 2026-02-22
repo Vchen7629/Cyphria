@@ -5,6 +5,7 @@ from src.products.computing.gpu.normalizer import GPUNameNormalizer
 from src.products.computing.cpu.normalizer import CPUNameNormalizer
 from src.products.computing.mechanical_keyboard.normalizer import MechanicalKeyboardNormalizer
 
+
 class NormalizerFactory:
     """Factory that returns normalized product names based on category"""
 

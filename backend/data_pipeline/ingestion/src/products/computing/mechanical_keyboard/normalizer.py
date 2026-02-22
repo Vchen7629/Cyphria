@@ -1,8 +1,11 @@
 from typing import Optional
 from src.products.computing.mechanical_keyboard.mappings import KEYBOARD_MODEL_TO_BRAND
 
+
 class MechanicalKeyboardNormalizer:
-    _UPPER_MODEL_TO_BRAND = {model.upper(): brand for model, brand in KEYBOARD_MODEL_TO_BRAND.items()}
+    _UPPER_MODEL_TO_BRAND = {
+        model.upper(): brand for model, brand in KEYBOARD_MODEL_TO_BRAND.items()
+    }
 
     def normalize_keyboard_list(self, keyboard_list: list[str]) -> list[str]:
         """

@@ -1,14 +1,15 @@
-from src.api.job_state import JobState
-from concurrent.futures import ThreadPoolExecutor
-from src.core.settings_config import Settings
-from src.core.reddit_client_instance import createRedditClient
-from src.db_utils.conn import create_connection_pool
-from src.core.logger import StructuredLogger
-from src.api import routes
-from typing import AsyncGenerator
 from typing import Any
-from contextlib import asynccontextmanager
+from typing import AsyncGenerator
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from concurrent.futures import ThreadPoolExecutor
+from src.api import routes
+from src.api.job_state import JobState
+from src.core.settings_config import Settings
+from src.db_utils.conn import create_connection_pool
+from src.core.reddit_client_instance import createRedditClient
+from src.core.logger import StructuredLogger
+from src.product_normalizer.base import ProductNormalizer
 
 settings = Settings()
 
@@ -54,10 +55,13 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
     job_state_instance = JobState()
 
+    normalizer = ProductNormalizer(logger)
+
     # Store these values in app state for dependency injection
     app.state.db_pool = db_pool
     app.state.reddit_client = reddit_client
     app.state.logger = logger
+    app.state.normalizer = normalizer
     app.state.main_processing_executor = main_processing_executor
     app.state.fetch_reddit_post_executor = fetch_reddit_posts_executor
 

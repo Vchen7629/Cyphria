@@ -77,3 +77,4 @@ def validate_list(
         return False
 
     return True
+

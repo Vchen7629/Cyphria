@@ -73,6 +73,24 @@ def test_mechanical_keyboard_normalized(keyboard_list: list[str], expected: list
     normalized = ProductNormalizer().normalize_product_list("MECHANICAL KEYBOARD", keyboard_list)
     assert normalized == sorted(expected)
 
+@pytest.mark.parametrize(
+    argnames="keyboard_list,expected",
+    argvalues=[
+        (["BE0", "Acer BE0", "XG27ACDMS"], ["Acer BE0", "Asus ROG Strix OLED XG27ACDMS"]),  # should deduplicate
+        (
+            ["   EX240  ", "Ex271uZ"],
+            ["BenQ Mobiuz EX240", "BenQ Mobiuz OLED Ex271uZ"],
+        ),  # should handle whitespace + mixed case
+        (
+            ["jajaja", "BE0"], ["Acer BE0"],
+        ),  # should filter out invalid keyboard
+    ],
+)
+def test_monitor_normalized(keyboard_list: list[str], expected: list[str]) -> None:
+    """Should normalize valid monitor names"""
+    normalized = ProductNormalizer().normalize_product_list("MONITOR", keyboard_list)
+    assert normalized == sorted(expected)
+
 @pytest.mark.parametrize(argnames="product_topic", argvalues=[None, "", "  "])
 def test_invalid_input_product_topic(product_topic: str | None) -> None:
     """Invalid product topic param (None, empty string, whitespace) should return None and log"""

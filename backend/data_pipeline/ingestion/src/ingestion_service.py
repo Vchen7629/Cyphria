@@ -4,11 +4,14 @@ from praw import Reddit
 from praw.models import Comment
 from praw.models import Submission
 from psycopg_pool.pool import ConnectionPool
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import as_completed
+from concurrent.futures import ThreadPoolExecutor
 from src.api.job_state import JobState
 from src.api.schemas import IngestionResult
 from src.api.schemas import ProcessedRedditComment
 from src.core.logger import StructuredLogger
+from src.product_detector.base import ProductDetector
+from src.product_normalizer.base import ProductNormalizer
 from src.utils.fetch_comments import fetch_comments
 from src.utils.fetch_post import fetch_post_delayed
 from src.db_utils.queries import batch_insert_raw_comments
@@ -17,7 +20,6 @@ from src.preprocessing.url_remover import remove_url
 from src.preprocessing.check_english import detect_english
 from src.preprocessing.is_valid_comment import is_valid_comment
 from src.preprocessing.relevant_fields import extract_relevant_fields
-from src.product_detector.base import ProductDetector
 import prawcore
 
 
@@ -31,6 +33,8 @@ class IngestionService:
         logger: StructuredLogger,
         topic_list: list[str],
         subreddit_list: list[str],
+        normalizer: ProductNormalizer,
+        detectors: dict[str, Optional[ProductDetector]],
         fetch_executor: ThreadPoolExecutor,
     ) -> None:
         self.reddit_client = reddit_client
@@ -38,6 +42,8 @@ class IngestionService:
         self.logger = logger
         self.topic_list = topic_list
         self.subreddit_list = subreddit_list
+        self._normalizer = normalizer
+        self._detectors = detectors
         self.fetch_executor = fetch_executor
 
         # cancellation flag, used to request graceful shutdown
@@ -52,42 +58,44 @@ class IngestionService:
         """
         all_posts = []
 
-        for subreddit in self.subreddit_list:
-            futures = {
-                self.fetch_executor.submit(
-                    fetch_post_delayed, self.reddit_client, subreddit, self.logger
-                ): subreddit
-                for subreddit in self.subreddit_list
-            }
+        futures = {
+            self.fetch_executor.submit(
+                fetch_post_delayed, self.reddit_client, subreddit, self.logger
+            ): subreddit
+            for subreddit in self.subreddit_list
+        }
 
-            for future in as_completed(futures):
-                subreddit = futures[future]
-                try:
-                    posts = future.result()
-                    if posts:
-                        all_posts.extend(posts)
-                except prawcore.exceptions.ServerError as e:
-                    self.logger.error(
-                        event_type="Subreddit Fetch",
-                        message=f"Reddit API server error for r/{subreddit}: {e}",
-                    )
-                except Exception as e:
-                    self.logger.error(
-                        event_type="Subreddit Fetch",
-                        message=f"Failed to fetch from r/{subreddit}: {e}",
-                    )
+        for future in as_completed(futures):
+            subreddit = futures[future]
+            try:
+                posts = future.result()
+                if posts:
+                    all_posts.extend(posts)
+            except prawcore.exceptions.ServerError as e:
+                self.logger.error(
+                    event_type="Subreddit Fetch",
+                    message=f"Reddit API server error for r/{subreddit}: {e}",
+                )
+            except Exception as e:
+                self.logger.error(
+                    event_type="Subreddit Fetch",
+                    message=f"Failed to fetch from r/{subreddit}: {e}",
+                )
 
         return all_posts
 
     def _process_comment(
-        self, comment: Comment, detector: ProductDetectorWrapper, topic: str
+        self,
+        comment: Comment,
+        detector: Optional[ProductDetector],
+        topic: str
     ) -> ProcessedRedditComment | None:
         """
         Extract, transform, and filter a comment
 
         Args:
             comment: single Praw reddit comment object
-            detector: a product detector used for a product topic
+            detector: pre-built product detector for the topic
             topic: the product topic we are trying to process for
 
         Returns:
@@ -95,15 +103,14 @@ class IngestionService:
                         comment like post_id, text, author, timestamp, upvotes
             None: none is returned if the comment is invalid
         """
-        if not is_valid_comment(comment):
-            return None
-
-        # if the comment doesnt contain a product name we should skip it
-        if not detector.contains_product(comment.body):
+        # Skip if no detector for this topic
+        if not detector or \
+           not is_valid_comment(comment) or \
+           not detector.contains_product(comment.body):
             return None
 
         products_in_comment: list[str] = detector.extract_products(comment.body)
-        normalized_product_name: list[str] = self.normalizer.normalize(topic, products_in_comment)
+        normalized_product_name: list[str] = self._normalizer.normalize_product_list(topic, products_in_comment)
 
         # extracting only relevant parts of the comment api res
         extracted: ProcessedRedditComment = extract_relevant_fields(
@@ -112,8 +119,7 @@ class IngestionService:
         url_removed: str = remove_url(extracted.comment_body)
         demojified: str = demojify(url_removed)
 
-        lang: str | None = detect_english(url_removed)
-        if lang != "en":  # If the post is non-english skip it
+        if detect_english(demojified) != "en":  # If the post is non-english skip it
             return None
 
         return ProcessedRedditComment(
@@ -165,9 +171,7 @@ class IngestionService:
         all_posts = self._fetch_all_posts()
         batch_comments: list[Any] = []
 
-        posts_processed = 0
-        comments_processed = 0
-        comments_inserted = 0
+        posts_processed, comments_processed, comments_inserted = 0, 0, 0
 
         for post in all_posts:
             if self.cancel_requested:
@@ -188,13 +192,16 @@ class IngestionService:
                     )
                     break
 
-                for topic, detector in zip(self.topic_list, self.detector_list):
+                for topic in self.topic_list:
                     if self.cancel_requested:
                         self.logger.info(
                             event_type="ingestion_service run",
                             message="Cancellation requested, stopping at comment level",
                         )
                         break
+
+                    # Look up the pre-built detector for this topic
+                    detector = self._detectors.get(topic.upper().strip())
 
                     processed_comment: Optional[ProcessedRedditComment] = self._process_comment(
                         comment, detector, topic
@@ -222,6 +229,7 @@ class IngestionService:
             comments_inserted=comments_inserted,
             cancelled=self.cancel_requested,
         )
+
 
     def run_single_cycle(self, job_state: JobState) -> None:
         """

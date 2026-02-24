@@ -17,7 +17,7 @@ from src.preprocessing.url_remover import remove_url
 from src.preprocessing.check_english import detect_english
 from src.preprocessing.is_valid_comment import is_valid_comment
 from src.preprocessing.relevant_fields import extract_relevant_fields
-from src.products.detector_factory import ProductDetectorWrapper
+from src.product_detector.base import ProductDetector
 import prawcore
 
 
@@ -31,8 +31,6 @@ class IngestionService:
         logger: StructuredLogger,
         topic_list: list[str],
         subreddit_list: list[str],
-        detector_list: list[ProductDetectorWrapper],
-        normalizer: Any,
         fetch_executor: ThreadPoolExecutor,
     ) -> None:
         self.reddit_client = reddit_client
@@ -40,8 +38,6 @@ class IngestionService:
         self.logger = logger
         self.topic_list = topic_list
         self.subreddit_list = subreddit_list
-        self.detector_list = detector_list
-        self.normalizer = normalizer
         self.fetch_executor = fetch_executor
 
         # cancellation flag, used to request graceful shutdown

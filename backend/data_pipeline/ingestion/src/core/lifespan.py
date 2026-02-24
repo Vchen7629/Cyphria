@@ -1,6 +1,5 @@
 from src.api.job_state import JobState
 from concurrent.futures import ThreadPoolExecutor
-from src.products.normalizer_factory import NormalizerFactory
 from src.core.settings_config import Settings
 from src.core.reddit_client_instance import createRedditClient
 from src.db_utils.conn import create_connection_pool
@@ -45,7 +44,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info(event_type="data_ingestion startup", message="Creating Reddit Client")
     reddit_client = createRedditClient()
 
-    normalizer = NormalizerFactory
 
     main_processing_executor = ThreadPoolExecutor(
         max_workers=1, thread_name_prefix="ingestion_service"
@@ -60,7 +58,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     app.state.db_pool = db_pool
     app.state.reddit_client = reddit_client
     app.state.logger = logger
-    app.state.normalizer = normalizer
     app.state.main_processing_executor = main_processing_executor
     app.state.fetch_reddit_post_executor = fetch_reddit_posts_executor
 

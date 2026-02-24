@@ -1,14 +1,14 @@
-from src.products.mappings.computing import CPU_MODEL_TO_BRAND
 from src.utils.validation import validate_string
 from typing import Optional
 from collections import defaultdict
 from src.core.logger import StructuredLogger
-from src.products.mappings.computing import CPU_REGEX_PATTERNS
-from src.products.mappings.computing import GPU_MODEL_TO_BRAND
-from src.products.mappings.computing import KEYBOARD_MODEL_TO_BRAND
-from src.products.mappings.computing import MONITOR_MODEL_TO_BRAND
-from src.products.detectors.gpu_pattern_builder import build_gpu_pattern
-from src.products.detectors.gpu_pattern_builder import validate_gpu_match
+from src.product_mappings.computing import CPU_REGEX_PATTERNS
+from src.product_mappings.computing import CPU_MODEL_TO_BRAND
+from src.product_mappings.computing import GPU_MODEL_TO_BRAND
+from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
+from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
+from src.product_detector.gpu_pattern_builder import build_gpu_pattern
+from src.product_detector.gpu_pattern_builder import validate_gpu_match
 import re
 
 class ProductDetector:

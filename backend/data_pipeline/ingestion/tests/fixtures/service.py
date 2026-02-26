@@ -1,3 +1,7 @@
+from typing import Optional
+from src.product_detector.base import BuildDetectorRegex
+from src.product_detector.base import ProductDetector
+from src.product_normalizer.base import ProductNormalizer
 from typing import Generator
 from unittest.mock import MagicMock
 from unittest.mock import patch
@@ -14,6 +18,23 @@ def create_ingestion_service(
     db_pool: ConnectionPool, mock_reddit_client: MagicMock
 ) -> IngestionService:
     """Creates a Sentiment Service Instance fixture"""
+    regex_builder = BuildDetectorRegex()
+    topic_list = ["GPU", "CPU"]
+    detector_patterns = regex_builder.process_all_topics(topic_list)
+
+    detectors: dict[str, Optional[ProductDetector]] = {}
+    for topic, pattern in zip(topic_list, detector_patterns):
+        if pattern:
+            mapping = regex_builder.get_mapping_for_topic(topic)
+            if mapping:
+                detectors[topic.upper().strip()] = ProductDetector(pattern=pattern, mapping=mapping)
+            else:
+                detectors[topic.upper().strip()] = None
+        else:
+            detectors[topic.upper().strip()] = None
+
+    assert detectors is not None, "GPU detector should not be None"
+    normalizer = ProductNormalizer()
 
     return IngestionService(
         reddit_client=mock_reddit_client,
@@ -21,6 +42,8 @@ def create_ingestion_service(
         logger=StructuredLogger(pod="ingestion_service"),
         topic_list=["GPU"],
         subreddit_list=["nvidia"],
+        detectors=detectors,
+        normalizer=normalizer,
         fetch_executor=ThreadPoolExecutor(max_workers=1),
     )
 
@@ -45,13 +68,15 @@ def mock_ingestion_service(mock_reddit_client: MagicMock) -> IngestionService:
         logger=MagicMock(spec=StructuredLogger),
         topic_list=["GPU"],
         subreddit_list=["nvidia"],
+        detectors=MagicMock(spec=ProductDetector),
+        normalizer=MagicMock(spec=ProductNormalizer),
         fetch_executor=MagicMock(spec=ThreadPoolExecutor),
     )
 
 
 @pytest.fixture
 def worker_with_test_db(
-    postgres_container: PostgresContainer, mock_reddit_client: MagicMock
+    postgres_container: PostgresContainer, mock_reddit_client: MagicMock, create_ingestion_service: IngestionService
 ) -> Generator[IngestionService, None, None]:
     """
     Create a Worker instance configured to use the test database.
@@ -67,14 +92,8 @@ def worker_with_test_db(
             test_pool = ConnectionPool(conninfo=connection_url, min_size=1, max_size=5, open=True)
             mock_pool.return_value = test_pool
 
-            worker = IngestionService(
-                reddit_client=mock_reddit_client,
-                db_pool=test_pool,
-                logger=StructuredLogger(pod="ingestion_service"),
-                topic_list=["GPU"],
-                subreddit_list=["nvidia"],
-                fetch_executor=ThreadPoolExecutor(max_workers=1),
-            )
+            worker = create_ingestion_service
+            
             yield worker
 
             # Cleanup - truncate table after test

@@ -8,10 +8,7 @@ from tests.utils.classes import FastAPITestClient
 
 def test_run_endpoint_success(fastapi_client: FastAPITestClient) -> None:
     """Run endpoint should return status: started."""
-    with (
-        patch("src.api.routes.IngestionService") as MockService,
-        patch("src.api.routes.DetectorFactory.get_detector") as mock_get_detector,
-    ):
+    with patch("src.api.routes.IngestionService") as MockService:
         mock_instance = MagicMock()
         mock_instance.run_single_cycle.return_value = IngestionResult(
             posts_processed=10,
@@ -20,10 +17,6 @@ def test_run_endpoint_success(fastapi_client: FastAPITestClient) -> None:
             cancelled=False,
         )
         MockService.return_value = mock_instance
-
-        mock_detector = MagicMock()
-        mock_get_detector.return_value = mock_detector
-
         req_body = RunRequest(category="Computing", topic_list=["GPU"], subreddit_list=["nvidia"])
 
         response = fastapi_client.client.post("/run", json=req_body.model_dump())

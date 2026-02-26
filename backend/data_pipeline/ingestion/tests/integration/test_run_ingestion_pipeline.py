@@ -17,7 +17,6 @@ def test_no_posts_returns_zero_counts(create_ingestion_service: IngestionService
     assert result.comments_inserted == 0
     assert result.cancelled is False
 
-
 def test_cancel_flag_stops_at_post_level(create_ingestion_service: IngestionService) -> None:
     """cancel_requested flag should break out of post iteration loop"""
     service = create_ingestion_service
@@ -39,7 +38,6 @@ def test_cancel_flag_stops_at_post_level(create_ingestion_service: IngestionServ
 
     assert result.cancelled is True
     assert posts_processed["count"] == 2
-
 
 def test_cancel_flag_stops_worker_at_comment_level(
     create_ingestion_service: IngestionService, mock_reddit_comment: ProcessedRedditComment
@@ -72,7 +70,6 @@ def test_cancel_flag_stops_worker_at_comment_level(
 
     assert result.cancelled is True
     assert comments_processed["count"] < 20
-
 
 def test_all_comments_filtered_out(create_ingestion_service: IngestionService) -> None:
     """All comments filtered should result in 0 inserts and 0 processed"""

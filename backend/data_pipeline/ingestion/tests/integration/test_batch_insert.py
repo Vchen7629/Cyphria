@@ -19,7 +19,7 @@ def test_worker_batch_insert_error_handling(worker_with_test_db: IngestionServic
             "author": "user1",
             "score": 10,
             "created_utc": datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-            "product_topic": worker_with_test_db.topic_list[0],
+            "product_topic": worker_with_test_db._topic_list[0],
         }
     ]
 

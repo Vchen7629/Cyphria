@@ -15,8 +15,6 @@ CPU_MODEL_TO_BRAND = {
     "2600K": "Intel Core i7-",
     "2700K": "Intel Core i7-",
     "3930K": "Intel Core i7-",
-    "3960X": "Intel Core Extreme i7-",
-    "3970X": "Intel Core Extreme i7-",
     "G620": "Intel Pentium",
     "G620T": "Intel Pentium",
     "G622": "Intel Pentium",
@@ -202,10 +200,8 @@ CPU_MODEL_TO_BRAND = {
     "7740X": "Intel Core i7 X i7-",
     "7800X": "Intel Core i7 X i7-",
     "7820X": "Intel Core i7 X i7-",
-    "7900X": "Intel Core i9-",
     "7920X": "Intel Core i9-",
     "7940X": "Intel Core i9-",
-    "7960X": "Intel Core i9-",
     "7980XE": "Intel Core i9-",
     "G4560": "Intel Pentium",
     "G4560T": "Intel Pentium",
@@ -253,10 +249,8 @@ CPU_MODEL_TO_BRAND = {
     "9900K": "Intel Core i9-",
     "9900KF": "Intel Core i9-",
     "9900KS": "Intel Core i9-",
-    "9900X": "Intel Core i9-",
     "9920X": "Intel Core i9-",
     "9940X": "Intel Core i9-",
-    "9960X": "Intel Core i9-",
     "9980XE": "Intel Core i9-",
     "9990X": "Intel Core i9-",
     "G5420": "Intel Pentium Gold",
@@ -1085,9 +1079,9 @@ KEYBOARD_MODEL_TO_BRAND = {
     "VA100": "Varmilo",
 }
 
-# Monitor specific terms: 
+# Monitor specific terms:
 # - how large it is (27 inch, 32 inch, etc)
-# - Panel type (IPS, OLED, etc) 
+# - Panel type (IPS, OLED, etc)
 # - Refresh rate (144hz, 60 hz, etc)
 # - Resolution (1080p, 4k, 5k, etc)
 # - Ports? (Thunderbolt, hdmi etc)
@@ -1865,7 +1859,7 @@ MONITOR_MODEL_TO_BRAND = {
     "MPG 346CQRF": "MSI",
     "MPG 491CQP": "MSI",
     "MPG 491CQPX": "MSI",
-    # Samsung monitors 
+    # Samsung monitors
     "CFG70": "Samsung",
     "CJ79": "Samsung ViewFinity",
     "CR50": "Samsung",

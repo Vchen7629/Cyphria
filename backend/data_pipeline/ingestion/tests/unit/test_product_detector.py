@@ -6,16 +6,23 @@ from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
 from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
 import pytest
 
+
 @pytest.mark.parametrize(
     argnames="sentence,expected",
     argvalues=[
         # Ryzen CPUs
-        ("I have a MAX 395, MAX+ 395, Ryzen AI 9 HX 475, and 3900x3d", ["MAX 395", "MAX+ 395", "Ryzen AI 9 HX 475", "3900x3d"]),
+        (
+            "I have a MAX 395, MAX+ 395, Ryzen AI 9 HX 475, and 3900x3d",
+            ["MAX 395", "MAX+ 395", "Ryzen AI 9 HX 475", "3900x3d"],
+        ),
         ("My 3900x3d broke, i bought a new Ryzen 3900x3d", ["Ryzen 3900x3d"]),
         ("The new thReadRipper PrO 9995WX is great", ["thReadRipper PrO 9995WX"]),
         # Intel cpus
-        ("I have a i9-14900, i9-14900K, i7-13700H, and Core Ultra 7 265K", ["Core Ultra 7 265K", "i7-13700H", "i9-14900", "i9-14900K"]),
-        ("I have a Pentium G620 and my friend has Intel Pentium G620", ["Pentium G620"])
+        (
+            "I have a i9-14900, i9-14900K, i7-13700H, and Core Ultra 7 265K",
+            ["Core Ultra 7 265K", "i7-13700H", "i9-14900", "i9-14900K"],
+        ),
+        ("I have a Pentium G620 and my friend has Intel Pentium G620", ["Pentium G620"]),
     ],
 )
 def test_cpu_valid_matches(sentence: str, expected: list[str]) -> None:
@@ -25,6 +32,7 @@ def test_cpu_valid_matches(sentence: str, expected: list[str]) -> None:
     detector = ProductDetector(pattern=cpu_regex_pattern, mapping=CPU_MODEL_TO_BRAND)
     assert detector.extract_products(sentence) == sorted(expected)
     assert detector.contains_product(sentence) is True
+
 
 @pytest.mark.parametrize(
     argnames="sentence,expected",
@@ -58,6 +66,7 @@ def test_gpu_valid_matches(sentence: str, expected: list[str]) -> None:
     detector = ProductDetector(pattern=gpu_regex_pattern, mapping=GPU_MODEL_TO_BRAND)
     assert detector.extract_products(sentence) == sorted(expected)
     assert detector.contains_product(sentence) is True
+
 
 @pytest.mark.parametrize(
     argnames="sentence,expected",
@@ -93,6 +102,7 @@ def test_mechanical_keyboard_valid_matches(sentence: str, expected: list[str]) -
     assert detector.extract_products(sentence) == sorted(expected)
     assert detector.contains_product(sentence) is True
 
+
 @pytest.mark.parametrize(
     argnames="sentence,expected",
     argvalues=[
@@ -107,6 +117,7 @@ def test_monitor_valid_matches(sentence: str, expected: list[str]) -> None:
     detector = ProductDetector(pattern=monitor_regex_pattern, mapping=MONITOR_MODEL_TO_BRAND)
     assert detector.extract_products(sentence) == sorted(expected)
     assert detector.contains_product(sentence) is True
+
 
 @pytest.mark.parametrize(
     argnames="sentence,expected_by_topic",
@@ -131,7 +142,9 @@ def test_monitor_valid_matches(sentence: str, expected: list[str]) -> None:
         ),
     ],
 )
-def test_multiple_topics_valid_matches(sentence: str, expected_by_topic: dict[str, list[str]]) -> None:
+def test_multiple_topics_valid_matches(
+    sentence: str, expected_by_topic: dict[str, list[str]]
+) -> None:
     """Test that each topic detector extracts only its relevant products"""
     topics = ["CPU", "GPU", "MECHANICAL KEYBOARD", "MONITOR"]
     mappings = {
@@ -146,7 +159,7 @@ def test_multiple_topics_valid_matches(sentence: str, expected_by_topic: dict[st
     assert len(regex_patterns) == len(topics)
 
     for topic, pattern in zip(topics, regex_patterns):
-        detector = ProductDetector(pattern=pattern, mapping=mappings[topic]) # type: ignore
+        detector = ProductDetector(pattern=pattern, mapping=mappings[topic])  # type: ignore
         expected = expected_by_topic[topic]
 
         if expected:
@@ -155,6 +168,7 @@ def test_multiple_topics_valid_matches(sentence: str, expected_by_topic: dict[st
         else:
             assert detector.extract_products(sentence) == []
             assert detector.contains_product(sentence) is False
+
 
 @pytest.mark.parametrize(
     argnames="sentence",

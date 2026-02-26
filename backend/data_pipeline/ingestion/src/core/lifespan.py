@@ -45,7 +45,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info(event_type="data_ingestion startup", message="Creating Reddit Client")
     reddit_client = createRedditClient()
 
-
     main_processing_executor = ThreadPoolExecutor(
         max_workers=1, thread_name_prefix="ingestion_service"
     )

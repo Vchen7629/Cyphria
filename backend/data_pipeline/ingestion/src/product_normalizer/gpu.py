@@ -1,6 +1,7 @@
 from typing import Optional
 import re
 
+
 class GPUNormalizer:
     # Series to brand mapping
     SERIES_TO_BRAND: dict[str, str] = {
@@ -43,7 +44,9 @@ class GPUNormalizer:
         return self._format_name(brand, model, brand_prefix, variant)
 
     @classmethod
-    def _determine_brand(cls, brand_prefix: Optional[str], model: str, product_mapping: dict[str, str]) -> Optional[str]:
+    def _determine_brand(
+        cls, brand_prefix: Optional[str], model: str, product_mapping: dict[str, str]
+    ) -> Optional[str]:
         """
         Determine manufacturer from prefix or model number
 
@@ -60,7 +63,7 @@ class GPUNormalizer:
         # for bare numbers, look up series in mapping and convert to brand
         if series := product_mapping.get(model.upper(), None):
             return cls.SERIES_TO_BRAND.get(series.lower())
-            
+
         return None
 
     @staticmethod

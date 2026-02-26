@@ -29,20 +29,24 @@ class CPUNormalizer:
         raw_cpu_name = cpu.strip()
         cpu_name_upper = raw_cpu_name.upper()
 
-        if (result := self._try_direct_lookup(cpu_name_upper, raw_cpu_name, product_mapping)) is not None:
+        if (
+            result := self._try_direct_lookup(cpu_name_upper, raw_cpu_name, product_mapping)
+        ) is not None:
             return result
 
         if (result := self._try_base_model_lookup(raw_cpu_name, product_mapping)) is not None:
             return result
 
-        if (result := self._normalize_amd(raw_cpu_name, cpu_name_upper, product_mapping)) is not None:
+        if (
+            result := self._normalize_amd(raw_cpu_name, cpu_name_upper, product_mapping)
+        ) is not None:
             return result
 
         if (result := self._normalize_intel(raw_cpu_name, cpu_name_upper)) is not None:
             return result
 
         return None
-    
+
     @classmethod
     def _extract_base_model(cls, cpu_name: str) -> tuple[Optional[str], Optional[str]]:
         """
@@ -62,7 +66,9 @@ class CPUNormalizer:
         return f"{brand}{separator}{model}"
 
     @staticmethod
-    def _normalize_amd(raw_name: str, name_upper: str, product_mapping: dict[str, str]) -> Optional[str]:
+    def _normalize_amd(
+        raw_name: str, name_upper: str, product_mapping: dict[str, str]
+    ) -> Optional[str]:
         model_match = None
 
         # Ryzen without tier (e.g., "Ryzen 5500X3D")
@@ -70,7 +76,9 @@ class CPUNormalizer:
             model_match = match.group(1)
 
         # Threadripper with optional Ryzen prefix (e.g., "Threadripper Pro 7995WX" or "Ryzen Threadripper Pro 7995WX")
-        elif match := re.match(r"(?i)^(?:ryzen\s+)?threadripper\s+(?:pro\s+)?(\d{3,4}(?:W?X)\w*)$", name_upper):
+        elif match := re.match(
+            r"(?i)^(?:ryzen\s+)?threadripper\s+(?:pro\s+)?(\d{3,4}(?:W?X)\w*)$", name_upper
+        ):
             model_match = match.group(1)
 
         if model_match and model_match in product_mapping:
@@ -119,9 +127,7 @@ class CPUNormalizer:
             return self._format_cpu_name(brand, cpu_original) if brand else None
         return None
 
-    def _try_base_model_lookup(
-        self, raw_cpu_name: str, mapping: dict[str, str]
-    ) -> Optional[str]:
+    def _try_base_model_lookup(self, raw_cpu_name: str, mapping: dict[str, str]) -> Optional[str]:
         """Extract base model and lookup in mapping (e.g., 'Core 3930K' -> '3930K')"""
         base_upper, base_original = self._extract_base_model(raw_cpu_name)
         if base_upper and base_upper in mapping:

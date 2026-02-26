@@ -46,7 +46,7 @@ class IngestionService:
 
         # cancellation flag, used to request graceful shutdown
         self.cancel_requested = False
-    
+
     def run_single_cycle(self, job_state: JobState) -> None:
         """
         Run one complete ingestion cycle and update job state
@@ -83,7 +83,7 @@ class IngestionService:
             # Clean up run state after job completes or fails
             run_state.run_in_progress = False
             run_state.current_service = None
-            
+
     @staticmethod
     def _preprocess_comment_text(text: str) -> tuple[str, bool]:
         """
@@ -132,10 +132,7 @@ class IngestionService:
         return all_posts
 
     def _process_comment(
-        self,
-        comment: Comment,
-        detector: Optional[ProductDetector],
-        topic: str
+        self, comment: Comment, detector: Optional[ProductDetector], topic: str
     ) -> ProcessedRedditComment | None:
         """
         Extract, transform, and filter a comment
@@ -151,13 +148,17 @@ class IngestionService:
             None: none is returned if the comment is invalid
         """
         # Skip if no detector for this topic
-        if not detector or \
-           not is_valid_comment(comment) or \
-           not detector.contains_product(comment.body):
+        if (
+            not detector
+            or not is_valid_comment(comment)
+            or not detector.contains_product(comment.body)
+        ):
             return None
 
         products_in_comment: list[str] = detector.extract_products(comment.body)
-        normalized_product_name: list[str] = self._normalizer.normalize_product_list(topic, products_in_comment)
+        normalized_product_name: list[str] = self._normalizer.normalize_product_list(
+            topic, products_in_comment
+        )
 
         # extracting only relevant parts of the comment api res
         extracted: ProcessedRedditComment = extract_relevant_fields(
@@ -205,11 +206,9 @@ class IngestionService:
 
         with self.db_pool.connection() as conn:
             batch_insert_raw_comments(conn, comment_dicts, logger=self.logger)
-    
+
     def _process_comment_for_all_topics(
-        self, 
-        comment: Comment, 
-        batch_comments: list[ProcessedRedditComment]
+        self, comment: Comment, batch_comments: list[ProcessedRedditComment]
     ) -> tuple[int, int]:
         """Process a single comment across all topics"""
         processed_count, inserted_count = 0, 0
@@ -217,7 +216,7 @@ class IngestionService:
         for topic in self._topic_list:
             if not self._should_continue_processing("topic"):
                 break
-                
+
             # Look up the pre-built detector for this topic
             detector = self._detectors.get(topic.upper().strip())
             processed_comment = self._process_comment(comment, detector, topic)
@@ -225,17 +224,15 @@ class IngestionService:
             if processed_comment:
                 processed_count += 1
                 batch_comments.append(processed_comment)
-            
+
                 new_batch, flushed = self._flush_batch_if_needed(batch_comments)
                 batch_comments[:] = new_batch
                 inserted_count += flushed
-        
+
         return processed_count, inserted_count
-    
+
     def _process_single_post(
-        self,
-        post: Submission,
-        batch_comments: list[ProcessedRedditComment]
+        self, post: Submission, batch_comments: list[ProcessedRedditComment]
     ) -> tuple[int, int]:
         """Process all comments from a single post"""
         comments = fetch_comments(post, self.logger)
@@ -255,25 +252,23 @@ class IngestionService:
         return processed_count, inserted_count
 
     def _process_all_posts(
-        self,
-        posts: list[Submission],
-        batch_comments: list[ProcessedRedditComment]
+        self, posts: list[Submission], batch_comments: list[ProcessedRedditComment]
     ) -> dict[str, int]:
         """Process all posts and return statistics"""
-        stats = {'posts': 0, 'comments': 0, 'inserted': 0}
+        stats = {"posts": 0, "comments": 0, "inserted": 0}
 
         for post in posts:
             if not self._should_continue_processing("post"):
                 break
-                
-            stats['posts'] += 1
+
+            stats["posts"] += 1
             post_comments, post_inserted = self._process_single_post(post, batch_comments)
-            stats['comments'] += post_comments
-            stats['inserted'] += post_inserted
-        
+            stats["comments"] += post_comments
+            stats["inserted"] += post_inserted
+
         # flush remaining batch to db
         _, final_inserted = self._flush_batch_if_needed(batch_comments, force=True)
-        stats['inserted'] += final_inserted
+        stats["inserted"] += final_inserted
 
         return stats
 
@@ -290,9 +285,9 @@ class IngestionService:
         stats = self._process_all_posts(all_posts, batch_comments)
 
         return IngestionResult(
-            posts_processed=stats.get('posts', 0),
-            comments_processed=stats.get('comments', 0),
-            comments_inserted=stats.get('inserted', 0),
+            posts_processed=stats.get("posts", 0),
+            comments_processed=stats.get("comments", 0),
+            comments_inserted=stats.get("inserted", 0),
             cancelled=self.cancel_requested,
         )
 
@@ -302,7 +297,7 @@ class IngestionService:
 
         Args:
             level: Description of processing level, like post, comment, topic
-        
+
         Returns:
             True if processing should continue, False if cancelled
         """
@@ -315,9 +310,7 @@ class IngestionService:
         return True
 
     def _flush_batch_if_needed(
-        self, 
-        batch: list[ProcessedRedditComment], 
-        force: bool = False
+        self, batch: list[ProcessedRedditComment], force: bool = False
     ) -> tuple[list[ProcessedRedditComment], int]:
         """
         Flush batch of processed comments if size threshold reached or forced

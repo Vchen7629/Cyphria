@@ -53,6 +53,7 @@ def mock_logger() -> MagicMock:
     """Mocked structured logger"""
     return MagicMock(spec=StructuredLogger)
 
+
 @pytest.fixture
 def mock_normalizer() -> MagicMock:
     """Mocked normalizer"""
@@ -76,7 +77,9 @@ def mock_ingestion_service(mock_reddit_client: MagicMock) -> IngestionService:
 
 @pytest.fixture
 def worker_with_test_db(
-    postgres_container: PostgresContainer, mock_reddit_client: MagicMock, create_ingestion_service: IngestionService
+    postgres_container: PostgresContainer,
+    mock_reddit_client: MagicMock,
+    create_ingestion_service: IngestionService,
 ) -> Generator[IngestionService, None, None]:
     """
     Create a Worker instance configured to use the test database.
@@ -93,7 +96,7 @@ def worker_with_test_db(
             mock_pool.return_value = test_pool
 
             worker = create_ingestion_service
-            
+
             yield worker
 
             # Cleanup - truncate table after test

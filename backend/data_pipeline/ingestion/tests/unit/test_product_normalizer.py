@@ -3,6 +3,7 @@ from unittest.mock import patch
 from src.product_normalizer.base import ProductNormalizer
 import pytest
 
+
 @pytest.mark.parametrize(
     argnames="cpu_names,expected_name",
     argvalues=[
@@ -39,20 +40,25 @@ def test_cpu_normalized(cpu_names: list[str], expected_name: str) -> None:
         result = normalizer.normalize_product_list("CPU", [name])
         assert result == [expected_name]
 
+
 @pytest.mark.parametrize(
     argnames="gpu_list,expected",
     argvalues=[
-        (["rtx 4090", "4090"],["NVIDIA RTX 4090"],),  # should deduplicate
-        (["rtx3060"], ["NVIDIA RTX 3060"]), # no spaces
+        (
+            ["rtx 4090", "4090"],
+            ["NVIDIA RTX 4090"],
+        ),  # should deduplicate
+        (["rtx3060"], ["NVIDIA RTX 3060"]),  # no spaces
         (["1030"], ["NVIDIA GT 1030"]),
-        (["  4090  "],  ["NVIDIA RTX 4090"]),
-        (["3070ti"], ["NVIDIA RTX 3070 Ti"])
+        (["  4090  "], ["NVIDIA RTX 4090"]),
+        (["3070ti"], ["NVIDIA RTX 3070 Ti"]),
     ],
 )
 def test_gpu_normalized(gpu_list: list[str], expected: list[str]) -> None:
     """GPUs should be properly normalized"""
     normalized = ProductNormalizer().normalize_product_list("GPU", gpu_list)
     assert normalized == sorted(expected)
+
 
 @pytest.mark.parametrize(
     argnames="keyboard_list,expected",
@@ -73,16 +79,21 @@ def test_mechanical_keyboard_normalized(keyboard_list: list[str], expected: list
     normalized = ProductNormalizer().normalize_product_list("MECHANICAL KEYBOARD", keyboard_list)
     assert normalized == sorted(expected)
 
+
 @pytest.mark.parametrize(
     argnames="keyboard_list,expected",
     argvalues=[
-        (["BE0", "Acer BE0", "XG27ACDMS"], ["Acer BE0", "Asus ROG Strix OLED XG27ACDMS"]),  # should deduplicate
+        (
+            ["BE0", "Acer BE0", "XG27ACDMS"],
+            ["Acer BE0", "Asus ROG Strix OLED XG27ACDMS"],
+        ),  # should deduplicate
         (
             ["   EX240  ", "Ex271uZ"],
             ["BenQ Mobiuz EX240", "BenQ Mobiuz OLED Ex271uZ"],
         ),  # should handle whitespace + mixed case
         (
-            ["jajaja", "BE0"], ["Acer BE0"],
+            ["jajaja", "BE0"],
+            ["Acer BE0"],
         ),  # should filter out invalid keyboard
     ],
 )
@@ -90,6 +101,7 @@ def test_monitor_normalized(keyboard_list: list[str], expected: list[str]) -> No
     """Should normalize valid monitor names"""
     normalized = ProductNormalizer().normalize_product_list("MONITOR", keyboard_list)
     assert normalized == sorted(expected)
+
 
 @pytest.mark.parametrize(argnames="product_topic", argvalues=[None, "", "  "])
 def test_invalid_input_product_topic(product_topic: str | None) -> None:
@@ -104,12 +116,14 @@ def test_invalid_input_product_topic(product_topic: str | None) -> None:
         assert normalizer == []
         mock_logger_instance.error.assert_called_once()
 
+
 @pytest.mark.parametrize(
     argnames="cpu_list", argvalues=[None, [], ["Banana", "12345", "idk"], ["9999"]]
 )
 def test_invalid_cpu_input(cpu_list: Optional[list[str]]) -> None:
     """CPUNormalizer shouldnt normalize invalid cpu strings"""
     assert ProductNormalizer().normalize_product_list("cpu", cpu_list) == []  # type: ignore
+
 
 @pytest.mark.parametrize(
     argnames="topic,product_list",

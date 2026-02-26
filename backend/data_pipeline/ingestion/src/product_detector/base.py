@@ -11,12 +11,9 @@ from src.product_detector.gpu_pattern_builder import build_gpu_pattern
 from src.product_detector.gpu_pattern_builder import validate_gpu_match
 import re
 
+
 class ProductDetector:
-    def __init__(
-        self,
-        pattern: re.Pattern[str],
-        mapping: dict[str, str]
-    ) -> None:
+    def __init__(self, pattern: re.Pattern[str], mapping: dict[str, str]) -> None:
         self._pattern = pattern
         self._mapping = mapping
 
@@ -37,13 +34,25 @@ class ProductDetector:
 
         # Apply validation based on mapping type
         if self._mapping is GPU_MODEL_TO_BRAND:
-            detected_products = {m for m in detected_products if validate_gpu_match(m, self._mapping)}
+            detected_products = {
+                m for m in detected_products if validate_gpu_match(m, self._mapping)
+            }
 
         # CPU uses substring containment deduplication
         if self._mapping is CPU_MODEL_TO_BRAND:
             deduplicated_products = self._deduplicate_regex(
-                detected_products, 
-                ['i3-', 'i5-', 'i7-', 'i9-', 'ryzen ', 'core ', 'pentium ', 'celeron ', 'threadripper ']
+                detected_products,
+                [
+                    "i3-",
+                    "i5-",
+                    "i7-",
+                    "i9-",
+                    "ryzen ",
+                    "core ",
+                    "pentium ",
+                    "celeron ",
+                    "threadripper ",
+                ],
             )
         else:
             deduplicated_products = self._deduplicate_mapping(detected_products)
@@ -87,26 +96,28 @@ class ProductDetector:
                 by_model[model] = match
 
         return set(by_model.values())
-    
+
     @staticmethod
     def _deduplicate_regex(matches: set[str], prefixes: list[str]) -> set[str]:
         """
         Remove matches taht are substrings of others with additional text at the start
         Keeps both if the longer match only adds a suffix at the end (different variants)
-        
+
         Ex: 3900x3d and Ryzen 7 3900x3d, remove 3900x3d, i9-14900 and i9-14900k keep both
         """
         result = set()
         for match in matches:
             is_substring_with_prefix = any(
                 match in other and not other.startswith(match)
-                for other in matches if other != match
+                for other in matches
+                if other != match
             )
 
             if not is_substring_with_prefix:
                 result.add(match)
-                
+
         return result
+
 
 class BuildDetectorRegex:
     """Build regex for product topics needed to parse text to detect products"""
@@ -136,9 +147,7 @@ class BuildDetectorRegex:
 
     @classmethod
     def process_all_topics(
-        cls,
-        topic_list: list[str],
-        logger: Optional[StructuredLogger] = None
+        cls, topic_list: list[str], logger: Optional[StructuredLogger] = None
     ) -> list[Optional[re.Pattern[str]]]:
         """
         Build regex patterns for each topic in topic_list
@@ -167,7 +176,7 @@ class BuildDetectorRegex:
                 if logger:
                     logger.warning(
                         event_type="Ingestion Run",
-                        message=f"No mapping registered for topic '{topic}', skipping..."
+                        message=f"No mapping registered for topic '{topic}', skipping...",
                     )
                 patterns.append(None)
                 continue
@@ -176,7 +185,7 @@ class BuildDetectorRegex:
 
             if custom_builder:
                 pattern = custom_builder(mapping)
-            elif mapping is CPU_MODEL_TO_BRAND: 
+            elif mapping is CPU_MODEL_TO_BRAND:
                 pattern = re.compile("|".join(CPU_REGEX_PATTERNS), re.IGNORECASE)
             else:
                 pattern = cls._build_pattern(mapping)
@@ -184,7 +193,7 @@ class BuildDetectorRegex:
             patterns.append(pattern)
 
         return patterns
-    
+
     @staticmethod
     def _build_pattern(mapping: dict[str, str]) -> re.Pattern[str]:
         """Builds compiled regex from mapping, grouping models by brand prefix"""
@@ -195,7 +204,9 @@ class BuildDetectorRegex:
         parts: list[str] = []
         for brand, models in brand_groups.items():
             sorted_models = sorted(models, key=len, reverse=True)
-            model_part = "|".join(re.escape(m) for m in sorted_models)  # Example: Vega from ai03 Vega
+            model_part = "|".join(
+                re.escape(m) for m in sorted_models
+            )  # Example: Vega from ai03 Vega
             if brand:
                 parts.append(rf"\b(?:{re.escape(brand)}\s?)?(?:{model_part})\b")
             else:

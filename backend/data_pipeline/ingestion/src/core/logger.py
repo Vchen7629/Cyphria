@@ -52,8 +52,7 @@ class StructuredLogger:
             **kwargs: extra arguments
         """
         self.logger.info(self._log("INFO", event_type, message, **kwargs))
-    
-    
+
     def warning(self, event_type: str, message: str, **kwargs: Any) -> None:
         """
         Warning log event

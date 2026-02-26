@@ -1,8 +1,8 @@
-from unittest.mock import patch
 from src.product_detector.base import BuildDetectorRegex
 import pytest
 
 build_regex = BuildDetectorRegex()
+
 
 @pytest.mark.parametrize(argnames="product_topic", argvalues=[None, "", "  "])
 def test_invalid_input_product_topic(product_topic: str | None) -> None:
@@ -10,6 +10,7 @@ def test_invalid_input_product_topic(product_topic: str | None) -> None:
     builder = build_regex.process_all_topics(product_topic)  # type: ignore
 
     assert builder == []
+
 
 @pytest.mark.parametrize(argnames="known_topics", argvalues=[["gPu"], ["  MECHANICAL KEYBOARD  "]])
 def test_build_from_topics_returns_detector_for_known_topic(known_topics: list[str]) -> None:

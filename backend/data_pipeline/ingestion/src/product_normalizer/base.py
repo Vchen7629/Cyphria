@@ -1,6 +1,5 @@
 from src.product_normalizer.gpu import GPUNormalizer
 from typing import Callable
-from typing import Any
 from typing import Optional
 from src.core.logger import StructuredLogger
 from src.utils.validation import validate_string
@@ -16,10 +15,22 @@ class ProductNormalizer:
     TopicConfig = tuple[dict[str, str], Optional[Callable[[str, dict[str, str]], Optional[str]]]]
 
     _TOPIC_CONFIGS: dict[str, TopicConfig] = {
-        "GPU": ({model.upper(): brand for model, brand in GPU_MODEL_TO_BRAND.items()}, GPUNormalizer().normalize_name),
-        "CPU": ({model.upper(): brand for model, brand in CPU_MODEL_TO_BRAND.items()}, CPUNormalizer().normalize_name),
-        "MONITOR": ({model.upper(): brand for model, brand in MONITOR_MODEL_TO_BRAND.items()}, None),
-        "MECHANICAL KEYBOARD": ({model.upper(): brand for model, brand in KEYBOARD_MODEL_TO_BRAND.items()}, None),
+        "GPU": (
+            {model.upper(): brand for model, brand in GPU_MODEL_TO_BRAND.items()},
+            GPUNormalizer().normalize_name,
+        ),
+        "CPU": (
+            {model.upper(): brand for model, brand in CPU_MODEL_TO_BRAND.items()},
+            CPUNormalizer().normalize_name,
+        ),
+        "MONITOR": (
+            {model.upper(): brand for model, brand in MONITOR_MODEL_TO_BRAND.items()},
+            None,
+        ),
+        "MECHANICAL KEYBOARD": (
+            {model.upper(): brand for model, brand in KEYBOARD_MODEL_TO_BRAND.items()},
+            None,
+        ),
     }
 
     def __init__(self, logger: Optional[StructuredLogger] = None) -> None:
@@ -37,7 +48,7 @@ class ProductNormalizer:
         """
         if not product_list or not isinstance(product_list, list):
             return []
-        
+
         if not validate_string(
             topic, "product_topic", self._logger, log_error=True, raise_on_error=False
         ):
@@ -54,7 +65,9 @@ class ProductNormalizer:
         return sorted(normalized_names)
 
     @classmethod
-    def _normalize_name(cls, product_name: str, topic: str, logger: Optional[StructuredLogger] = None) -> Optional[str]:
+    def _normalize_name(
+        cls, product_name: str, topic: str, logger: Optional[StructuredLogger] = None
+    ) -> Optional[str]:
         """
         Normalize one product_name name
 
@@ -74,7 +87,7 @@ class ProductNormalizer:
             if logger:
                 logger.warning(
                     event_type="Ingestion Run",
-                    message=f"No mapping registered for topic '{topic}', skipping..."
+                    message=f"No mapping registered for topic '{topic}', skipping...",
                 )
             return None
 

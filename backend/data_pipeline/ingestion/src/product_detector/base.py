@@ -120,6 +120,21 @@ class BuildDetectorRegex:
     }
 
     @classmethod
+    def get_mapping_for_topic(cls, topic: str) -> Optional[dict[str, str]]:
+        """
+        Get the model-to-brand mapping for a given topic
+
+        Args:
+            topic: product topic (e.g., 'GPU', 'CPU')
+
+        Returns:
+            The mapping dict for the topic, or None if topic not found
+        """
+        topic_upper = topic.upper().strip()
+        config = cls._TOPIC_CONFIGS.get(topic_upper)
+        return config[0] if config else None
+
+    @classmethod
     def process_all_topics(
         cls,
         topic_list: list[str],
@@ -135,6 +150,8 @@ class BuildDetectorRegex:
             List of compiled regex patterns in the same order as topic_list;
             None for any topic that has no registered mapping
         """
+        if not topic_list or not isinstance(topic_list, list):
+            return []
 
         patterns: list[Optional[re.Pattern[str]]] = []
 

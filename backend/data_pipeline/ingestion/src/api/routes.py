@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import Request
 from fastapi import APIRouter
 from fastapi import HTTPException
@@ -11,8 +12,8 @@ from src.api.schemas import CurrentJob
 from src.utils.validation import validate_list
 from src.utils.validation import validate_string
 from src.ingestion_service import IngestionService
-from src.products.detector_factory import DetectorFactory
-from src.products.detector_factory import ProductDetectorWrapper
+from src.product_detector.base import BuildDetectorRegex
+from src.product_detector.base import ProductDetector
 import asyncio
 
 router = APIRouter()
@@ -49,21 +50,30 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
 
     job_state.create_job(body.category, subreddit_list)
 
-    detector_list: list[ProductDetectorWrapper] = []
-    for topic in topic_list:
-        detector = DetectorFactory.get_detector(topic)
-        if not detector:
-            raise HTTPException(status_code=400, detail="Detector not available")
-        detector_list.append(detector)
+    # Build detectors for the requested topics
+    logger = request.app.state.logger
+    regex_builder = BuildDetectorRegex()
+    detector_patterns = regex_builder.process_all_topics(topic_list, logger=logger)
+
+    detectors: dict[str, Optional[ProductDetector]] = {}
+    for topic, pattern in zip(topic_list, detector_patterns):
+        if pattern:
+            mapping = regex_builder.get_mapping_for_topic(topic)
+            if mapping:
+                detectors[topic.upper().strip()] = ProductDetector(pattern=pattern, mapping=mapping)
+            else:
+                detectors[topic.upper().strip()] = None
+        else:
+            detectors[topic.upper().strip()] = None
 
     service = IngestionService(
         reddit_client=request.app.state.reddit_client,
         db_pool=request.app.state.db_pool,
-        logger=request.app.state.logger,
+        logger=logger,
         topic_list=topic_list,
         subreddit_list=subreddit_list,
-        detector_list=detector_list,
         normalizer=request.app.state.normalizer,
+        detectors=detectors,
         fetch_executor=request.app.state.fetch_reddit_posts_executor,
     )
 

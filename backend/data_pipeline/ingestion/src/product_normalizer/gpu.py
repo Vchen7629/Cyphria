@@ -1,9 +1,16 @@
-from src.products.computing.gpu.mappings import MODEL_TO_BRAND
+from typing import Optional
 import re
 
 
-class GPUNameNormalizer:
-    """Normalizes Variations of GPU names into one format"""
+class GPUNormalizer:
+    # Series to brand mapping
+    SERIES_TO_BRAND: dict[str, str] = {
+        "rtx": "NVIDIA",
+        "gtx": "NVIDIA",
+        "gt": "NVIDIA",
+        "rx": "AMD",
+        "arc": "Intel",
+    }
 
     # Pattern to parse GPU strings: captures brand, model, and variant
     # Examples: "rtx 4090", "4090 ti", "rx 7900 xtx", "arc a770"
@@ -14,7 +21,32 @@ class GPUNameNormalizer:
         re.IGNORECASE,
     )
 
-    def _determine_brand(self, brand_prefix: str | None, model: str) -> str | None:
+    def normalize_name(self, detected_gpu: str, product_mapping: dict[str, str]) -> Optional[str]:
+        """
+        Normalize a detected GPU Name into one format
+
+        Args:
+            detected_gpu: Raw GPU name from GPUDetector
+
+        Returns:
+            GPU name normalized into one product name format or None if it cant parse
+        """
+        match = self.GPU_PARSE_PATTERN.match(detected_gpu.lower().strip())
+        if not match:
+            return None
+
+        brand_prefix, model, variant = match.groups()
+
+        brand = self._determine_brand(brand_prefix, model, product_mapping)
+        if not brand:
+            return None
+
+        return self._format_name(brand, model, brand_prefix, variant)
+
+    @classmethod
+    def _determine_brand(
+        cls, brand_prefix: Optional[str], model: str, product_mapping: dict[str, str]
+    ) -> Optional[str]:
         """
         Determine manufacturer from prefix or model number
 
@@ -25,20 +57,18 @@ class GPUNameNormalizer:
         Returns:
             brand name, either NVIDIA, AMD, or Intel, None otherwise
         """
-        if brand_prefix:
-            prefix_lower = brand_prefix.lower()
-            if prefix_lower in ["rtx", "gtx", "gt"]:
-                return "NVIDIA"
-            elif prefix_lower == "rx":
-                return "AMD"
-            elif prefix_lower == "arc":
-                return "Intel"
+        if brand_prefix and (brand := cls.SERIES_TO_BRAND.get(brand_prefix.lower())):
+            return brand
 
-        # for bare numbers, look up in mapping
-        return MODEL_TO_BRAND.get(model.upper(), None)
+        # for bare numbers, look up series in mapping and convert to brand
+        if series := product_mapping.get(model.upper(), None):
+            return cls.SERIES_TO_BRAND.get(series.lower())
 
+        return None
+
+    @staticmethod
     def _format_name(
-        self, brand: str, model: str, brand_prefix: str | None, variant: str | None
+        brand: str, model: str, brand_prefix: str | None, variant: str | None
     ) -> str | None:
         """
         Build formatted name based on brand
@@ -78,47 +108,3 @@ class GPUNameNormalizer:
             return f"Intel Arc {model.upper()}"
 
         return None
-
-    def _normalize(self, detected_gpu: str) -> str | None:
-        """
-        Normalize a detected GPU Name into one format
-
-        Args:
-            detected_gpu: Raw GPU name from GPUDetector
-
-        Returns:
-            GPU name normalized into one product name format or None if it cant parse
-        """
-        match = self.GPU_PARSE_PATTERN.match(detected_gpu.lower().strip())
-        if not match:
-            return None
-
-        brand_prefix, model, variant = match.groups()
-
-        brand = self._determine_brand(brand_prefix, model)
-        if not brand:
-            return None
-
-        return self._format_name(brand, model, brand_prefix, variant)
-
-    def normalize_gpu_list(self, gpu_list: list[str]) -> list[str]:
-        """
-        Normalize a list of detected GPU names to canonical format
-
-        Args:
-            gpu_list: list of raw GPU names from GPUDetector
-
-        Returns:
-            list of unique formatted product names with duplicates removed
-        """
-        if not gpu_list:
-            return []
-
-        formatted_products = set()
-
-        for gpu in gpu_list:
-            normalized: str | None = self._normalize(gpu)
-            if normalized:
-                formatted_products.add(normalized)
-
-        return sorted(list(formatted_products))

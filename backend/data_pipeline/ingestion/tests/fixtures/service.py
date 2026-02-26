@@ -1,3 +1,7 @@
+from typing import Optional
+from src.product_detector.base import BuildDetectorRegex
+from src.product_detector.base import ProductDetector
+from src.product_normalizer.base import ProductNormalizer
 from typing import Generator
 from unittest.mock import MagicMock
 from unittest.mock import patch
@@ -6,8 +10,6 @@ from psycopg_pool import ConnectionPool
 from concurrent.futures import ThreadPoolExecutor
 from src.core.logger import StructuredLogger
 from src.ingestion_service import IngestionService
-from src.products.detector_factory import DetectorFactory
-from src.products.normalizer_factory import NormalizerFactory
 import pytest
 
 
@@ -16,8 +18,23 @@ def create_ingestion_service(
     db_pool: ConnectionPool, mock_reddit_client: MagicMock
 ) -> IngestionService:
     """Creates a Sentiment Service Instance fixture"""
-    detector = DetectorFactory.get_detector(product_topic="GPU")
-    assert detector is not None, "GPU detector should not be None"
+    regex_builder = BuildDetectorRegex()
+    topic_list = ["GPU", "CPU"]
+    detector_patterns = regex_builder.process_all_topics(topic_list)
+
+    detectors: dict[str, Optional[ProductDetector]] = {}
+    for topic, pattern in zip(topic_list, detector_patterns):
+        if pattern:
+            mapping = regex_builder.get_mapping_for_topic(topic)
+            if mapping:
+                detectors[topic.upper().strip()] = ProductDetector(pattern=pattern, mapping=mapping)
+            else:
+                detectors[topic.upper().strip()] = None
+        else:
+            detectors[topic.upper().strip()] = None
+
+    assert detectors is not None, "GPU detector should not be None"
+    normalizer = ProductNormalizer()
 
     return IngestionService(
         reddit_client=mock_reddit_client,
@@ -25,8 +42,8 @@ def create_ingestion_service(
         logger=StructuredLogger(pod="ingestion_service"),
         topic_list=["GPU"],
         subreddit_list=["nvidia"],
-        detector_list=[detector],
-        normalizer=NormalizerFactory,
+        detectors=detectors,
+        normalizer=normalizer,
         fetch_executor=ThreadPoolExecutor(max_workers=1),
     )
 
@@ -35,12 +52,6 @@ def create_ingestion_service(
 def mock_logger() -> MagicMock:
     """Mocked structured logger"""
     return MagicMock(spec=StructuredLogger)
-
-
-@pytest.fixture
-def mock_detector() -> MagicMock:
-    """Mocked product detector"""
-    return MagicMock(spec=DetectorFactory.get_detector(product_topic="GPU"))
 
 
 @pytest.fixture
@@ -58,15 +69,17 @@ def mock_ingestion_service(mock_reddit_client: MagicMock) -> IngestionService:
         logger=MagicMock(spec=StructuredLogger),
         topic_list=["GPU"],
         subreddit_list=["nvidia"],
-        detector_list=[MagicMock(spec=DetectorFactory.get_detector(product_topic="GPU"))],
-        normalizer=MagicMock(spec=NormalizerFactory),
+        detectors=MagicMock(spec=ProductDetector),
+        normalizer=MagicMock(spec=ProductNormalizer),
         fetch_executor=MagicMock(spec=ThreadPoolExecutor),
     )
 
 
 @pytest.fixture
 def worker_with_test_db(
-    postgres_container: PostgresContainer, mock_reddit_client: MagicMock
+    postgres_container: PostgresContainer,
+    mock_reddit_client: MagicMock,
+    create_ingestion_service: IngestionService,
 ) -> Generator[IngestionService, None, None]:
     """
     Create a Worker instance configured to use the test database.
@@ -82,19 +95,8 @@ def worker_with_test_db(
             test_pool = ConnectionPool(conninfo=connection_url, min_size=1, max_size=5, open=True)
             mock_pool.return_value = test_pool
 
-            detector = DetectorFactory.get_detector("gpu")
-            assert detector is not None, "GPU detector should not be None"
+            worker = create_ingestion_service
 
-            worker = IngestionService(
-                reddit_client=mock_reddit_client,
-                db_pool=test_pool,
-                logger=StructuredLogger(pod="ingestion_service"),
-                topic_list=["GPU"],
-                subreddit_list=["nvidia"],
-                detector_list=[detector],
-                normalizer=NormalizerFactory,
-                fetch_executor=ThreadPoolExecutor(max_workers=1),
-            )
             yield worker
 
             # Cleanup - truncate table after test

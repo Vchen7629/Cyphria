@@ -12,8 +12,7 @@ from src.api.routes import router as base_router
 from src.core.logger import StructuredLogger
 from tests.utils.service import null_lifespan
 from tests.utils.classes import FastAPITestClient
-from src.products.detector_factory import DetectorFactory
-from src.products.normalizer_factory import NormalizerFactory
+from src.product_normalizer.base import ProductNormalizer
 import pytest
 
 
@@ -44,8 +43,7 @@ def fastapi_client(
     test_app.state.db_pool = db_pool
     test_app.state.reddit_client = mock_reddit_client
     test_app.state.logger = StructuredLogger(pod="ingestion_service_test")
-    test_app.state.detector = DetectorFactory.get_detector("GPU")
-    test_app.state.normalizer = NormalizerFactory
+    test_app.state.normalizer = ProductNormalizer
     test_app.state.executor = mock_executor
     test_app.state.fetch_reddit_posts_executor = mock_executor
     test_app.state.main_processing_executor = mock_executor

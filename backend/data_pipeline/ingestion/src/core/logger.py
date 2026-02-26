@@ -53,6 +53,17 @@ class StructuredLogger:
         """
         self.logger.info(self._log("INFO", event_type, message, **kwargs))
 
+    def warning(self, event_type: str, message: str, **kwargs: Any) -> None:
+        """
+        Warning log event
+
+        Args:
+            event_type: the event type that triggered this
+            message: log message describing the log
+            **kwargs: extra arguments
+        """
+        self.logger.warning(self._log("WARNING", event_type, message, **kwargs))
+
     def error(self, event_type: str, message: str, **kwargs: Any) -> None:
         """
         error log event

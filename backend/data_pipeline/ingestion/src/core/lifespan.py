@@ -1,15 +1,15 @@
-from src.api.job_state import JobState
-from concurrent.futures import ThreadPoolExecutor
-from src.products.normalizer_factory import NormalizerFactory
-from src.core.settings_config import Settings
-from src.core.reddit_client_instance import createRedditClient
-from src.db_utils.conn import create_connection_pool
-from src.core.logger import StructuredLogger
-from src.api import routes
-from typing import AsyncGenerator
 from typing import Any
-from contextlib import asynccontextmanager
+from typing import AsyncGenerator
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from concurrent.futures import ThreadPoolExecutor
+from src.api import routes
+from src.api.job_state import JobState
+from src.core.settings_config import Settings
+from src.db_utils.conn import create_connection_pool
+from src.core.reddit_client_instance import createRedditClient
+from src.core.logger import StructuredLogger
+from src.product_normalizer.base import ProductNormalizer
 
 settings = Settings()
 
@@ -45,8 +45,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info(event_type="data_ingestion startup", message="Creating Reddit Client")
     reddit_client = createRedditClient()
 
-    normalizer = NormalizerFactory
-
     main_processing_executor = ThreadPoolExecutor(
         max_workers=1, thread_name_prefix="ingestion_service"
     )
@@ -55,6 +53,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     )
 
     job_state_instance = JobState()
+
+    normalizer = ProductNormalizer(logger)
 
     # Store these values in app state for dependency injection
     app.state.db_pool = db_pool

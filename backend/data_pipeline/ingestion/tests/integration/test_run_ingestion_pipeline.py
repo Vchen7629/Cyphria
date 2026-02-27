@@ -16,6 +16,7 @@ def test_no_posts_returns_zero_counts(create_ingestion_service: IngestionService
     assert result.comments_processed == 0
     assert result.comments_inserted == 0
 
+
 def test_all_comments_filtered_out(create_ingestion_service: IngestionService) -> None:
     """All comments filtered should result in 0 inserts and 0 processed"""
     service = create_ingestion_service

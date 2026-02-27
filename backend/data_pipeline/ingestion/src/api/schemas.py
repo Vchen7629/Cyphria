@@ -9,6 +9,7 @@ class JobStatus(str, Enum):
     COMPLETED = "completed"
     FAILED = "failed"
 
+
 # Pydantic class for processed reddit comments
 class ProcessedRedditComment(BaseModel):
     comment_id: str
@@ -28,6 +29,7 @@ class IngestionResult(BaseModel):
     posts_processed: int
     comments_processed: int
     comments_inserted: int
+
 
 class CurrentJob(BaseModel):
     """Currently running job state"""

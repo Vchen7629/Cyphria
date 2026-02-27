@@ -58,6 +58,7 @@ def test_exception_in_pipeline_fails_job(create_ingestion_service: IngestionServ
             assert mock_run_state.run_in_progress is False
             assert mock_run_state.current_service is None
 
+
 def test_logger_info_called_on_success(create_ingestion_service: IngestionService) -> None:
     """Logger should log info message on successful completion"""
     job_state = JobState()

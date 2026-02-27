@@ -1,5 +1,6 @@
 from shared_core.logger import StructuredLogger
 
+
 class TLDRValidationError(Exception):
     """Raised when TLDR validation fails"""
 

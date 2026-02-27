@@ -2,7 +2,6 @@ from unittest.mock import patch
 from psycopg_pool.pool import ConnectionPool
 from src.summary_service import LLMSummaryService
 
-
 def test_cancel_flag_stops_fetch_top_comments(
     db_pool: ConnectionPool, create_summary_service: LLMSummaryService
 ) -> None:

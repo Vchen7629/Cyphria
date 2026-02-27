@@ -1,5 +1,5 @@
 from unittest.mock import Mock
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.llm_client.response_parser import parse_tldr
 from src.llm_client.response_parser import TLDRValidationError
 import pytest

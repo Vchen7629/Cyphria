@@ -38,7 +38,6 @@ class LLMSummaryService:
         product_name_list: list[str] = fetch_unique_products(db_conn, self.time_window)
 
         for product_name in product_name_list:
-
             top_comments: list[str] = fetch_top_comments_for_product(
                 db_conn, product_name, self.time_window
             )

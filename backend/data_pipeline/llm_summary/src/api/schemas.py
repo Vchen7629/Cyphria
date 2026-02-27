@@ -9,6 +9,7 @@ class JobStatus(str, Enum):
     COMPLETED = "completed"
     FAILED = "failed"
 
+
 class SummaryResult(BaseModel):
     """Result of a summary airflow run"""
 
@@ -29,11 +30,13 @@ class CurrentJob(BaseModel):
 
 class RunRequest(BaseModel):
     """Request body to the /run endpoint"""
+
     time_window: str
 
 
 class RunResponse(BaseModel):
     """Response from /run endpoint"""
+
     status: str  # "started"
 
 

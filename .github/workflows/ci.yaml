@@ -107,9 +107,9 @@ jobs:
             run: uv run pytest tests
             working-directory: backend/insights_api
 
-          - name: Trigger CD for Insights API
+          - name: Trigger generate-service-tags for insights api
             run: |
-              gh workflow run cd.yaml \
+              gh workflow run generate-service-tags.yaml \
                 -f service=insights_api \
                 -f folder=backend \
                 -f sha=${{ github.sha }}

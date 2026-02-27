@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "psycopg>=3.3.3",
+    "psycopg-binary>=3.3.3",
     "psycopg-pool>=3.3.0",
 ]
 [tool.setuptools.package-dir]
@@ -14,3 +15,10 @@ dependencies = [
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["shared_db*", "shared_core*", "shared_api*"]
+
+[dependency-groups]
+dev = [
+    "fastapi>=0.133.1",
+    "pytest>=9.0.2",
+    "testcontainers[postgres]>=4.14.1",
+]

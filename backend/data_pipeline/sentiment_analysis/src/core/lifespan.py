@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from concurrent.futures import ThreadPoolExecutor
 from shared_core.logger import StructuredLogger
-from shared_db.conn import create_connection_pool
+from shared_db.conn import create_verified_connection_pool
 from src.api import routes
 from src.api.job_state import JobState
 from src.core.settings_config import Settings
@@ -25,26 +25,15 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
         event_type="sentiment_analysis startup", message="Initializing sentiment analysis service"
     )
 
-    logger.info(
-        event_type="sentiment_analysis startup", message="Creating database connection pool"
+    db_pool = create_verified_connection_pool(
+        settings.DB_HOST,
+        settings.DB_PORT,
+        settings.DB_NAME,
+        settings.DB_USER,
+        settings.DB_PASS,
+        logger,
+        service_name="sentiment_analysis",
     )
-    db_pool = create_connection_pool(
-        settings.DB_HOST, settings.DB_PORT, settings.DB_NAME, settings.DB_USER, settings.DB_PASS
-    )
-
-    # Check database health before proceeding, exit if database non responsive
-    try:
-        with db_pool.connection() as conn:
-            with conn.cursor() as cursor:
-                cursor.execute("SELECT 1")
-                cursor.fetchone()
-            logger.info(event_type="data_ingestion startup", message="Database health check passed")
-    except Exception as e:
-        logger.error(
-            event_type="data_ingestion startup", message=f"Database health check failed: {e}"
-        )
-        db_pool.close()
-        raise
 
     logger.info(event_type="sentiment_analysis startup", message="loading ABSA model")
     absa_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="absa_inference")

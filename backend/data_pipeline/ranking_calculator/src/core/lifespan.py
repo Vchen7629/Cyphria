@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from concurrent.futures import ThreadPoolExecutor
 from shared_core.logger import StructuredLogger
-from shared_db.conn import create_connection_pool
+from shared_db.conn import create_verified_connection_pool
 from src.api import routes
 from src.api.job_state import JobState
 from src.core.settings_config import Settings
@@ -21,9 +21,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger = StructuredLogger(pod="ranking_service")
     logger.info(event_type="ranking_service startup", message="Initializing ranking service")
 
-    logger.info(event_type="ranking_service startup", message="Creating database connection pool")
-    db_pool = create_connection_pool(
-        settings.DB_HOST, settings.DB_PORT, settings.DB_NAME, settings.DB_USER, settings.DB_PASS
+    db_pool = create_verified_connection_pool(
+        settings.DB_HOST,
+        settings.DB_PORT,
+        settings.DB_NAME,
+        settings.DB_USER,
+        settings.DB_PASS,
+        logger,
+        service_name="ranking_service",
     )
 
     # Check database health before proceeding, exit if database non responsive

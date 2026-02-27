@@ -912,13 +912,22 @@ version = "0.1.0"
 source = { editable = "../../shared" }
 dependencies = [
     { name = "psycopg" },
+    { name = "psycopg-binary" },
     { name = "psycopg-pool" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "psycopg", specifier = ">=3.3.3" },
+    { name = "psycopg-binary", specifier = ">=3.3.3" },
     { name = "psycopg-pool", specifier = ">=3.3.0" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "fastapi", specifier = ">=0.133.1" },
+    { name = "pytest", specifier = ">=9.0.2" },
+    { name = "testcontainers", extras = ["postgres"], specifier = ">=4.14.1" },
 ]
 
 [[package]]

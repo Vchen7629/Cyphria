@@ -5,6 +5,9 @@ WORKDIR /app
 # install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
+# Copy shared package first
+COPY shared/ ./shared/
+
 # for dependency files
 COPY data_pipeline/ranking_calculator/pyproject.toml data_pipeline/ranking_calculator/uv.lock ./
 RUN uv sync --frozen --no-dev

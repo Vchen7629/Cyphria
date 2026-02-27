@@ -36,7 +36,7 @@ jobs:
               ranking_calculator:
                 - 'backend/data_pipeline/ranking_calculator/**'
               sentiment_analysis:
-                - 'backend/data_processing/sentiment_analysis/**'
+                - 'backend/data_pipeline/sentiment_analysis/**'
     frontend-ci:
       needs: path-filter
       if: ${{ needs.path-filter.outputs.frontend == 'true' }}

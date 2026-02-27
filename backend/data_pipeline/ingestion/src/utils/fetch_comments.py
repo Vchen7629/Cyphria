@@ -2,7 +2,7 @@ from typing import cast
 from praw.models import Comment
 from praw.models import Submission
 from prawcore.exceptions import PrawcoreException  # type: ignore
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 
 
 def fetch_comments(

@@ -1,6 +1,6 @@
-from src.core.logger import StructuredLogger
 from fastapi import HTTPException
 from typing import Optional
+from shared_core.logger import StructuredLogger
 
 
 def validate_string(

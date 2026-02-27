@@ -8,8 +8,6 @@ class JobStatus(str, Enum):
     RUNNING = "running"
     COMPLETED = "completed"
     FAILED = "failed"
-    CANCELLED = "cancelled"
-
 
 class SummaryResult(BaseModel):
     """Result of a summary airflow run"""
@@ -21,7 +19,7 @@ class SummaryResult(BaseModel):
 class CurrentJob(BaseModel):
     """Currently running job state"""
 
-    status: JobStatus  # "pending" | "running" | "completed" | "failed" | "cancelled"
+    status: JobStatus
     time_window: str
     started_at: datetime
     completed_at: Optional[datetime] = None
@@ -31,13 +29,11 @@ class CurrentJob(BaseModel):
 
 class RunRequest(BaseModel):
     """Request body to the /run endpoint"""
-
     time_window: str
 
 
 class RunResponse(BaseModel):
     """Response from /run endpoint"""
-
     status: str  # "started"
 
 

@@ -1,7 +1,6 @@
 from openai import OpenAI
 from psycopg_pool import ConnectionPool
 from shared_core.logger import StructuredLogger
-from shared_dp_utils.should_continue_processing import CancellationCheckMixin
 from src.db.queries import fetch_top_comments_for_product
 from src.db.queries import fetch_unique_products
 from src.db.queries import upsert_llm_summaries
@@ -15,7 +14,7 @@ from src.llm_client.retry import retry_llm_api
 import psycopg
 
 
-class LLMSummaryService(CancellationCheckMixin):
+class LLMSummaryService:
     def __init__(
         self,
         time_window: str,
@@ -30,10 +29,6 @@ class LLMSummaryService(CancellationCheckMixin):
         self.logger = logger
         self.db_pool = db_pool
 
-        # cancellation flag, used to request graceful shutdown
-        # This flag is set externally by signal_handler.py when SIGTERM/SIGINT is received
-        self.cancel_requested = False
-
     def _fetch_products_with_comments(
         self, db_conn: psycopg.Connection
     ) -> list[tuple[str, list[str]]]:
@@ -43,8 +38,6 @@ class LLMSummaryService(CancellationCheckMixin):
         product_name_list: list[str] = fetch_unique_products(db_conn, self.time_window)
 
         for product_name in product_name_list:
-            if not self._should_continue_processing("fetch product"):
-                break
 
             top_comments: list[str] = fetch_top_comments_for_product(
                 db_conn, product_name, self.time_window
@@ -109,9 +102,6 @@ class LLMSummaryService(CancellationCheckMixin):
 
         for product_name, comments in product_list:
             try:
-                if not self._should_continue_processing("product"):
-                    break
-
                 # wrapping the generate summary here instead of over private method since it can't access self.logger
                 generate_with_retry = retry_llm_api(logger=self.logger)(
                     lambda: self._generate_summary(product_name, comments)
@@ -161,9 +151,6 @@ class LLMSummaryService(CancellationCheckMixin):
         Raise:
             Value error if not job state
         """
-        # nested import to prevent circular dependency import errors
-        from src.api.signal_handler import run_state
-
         if not job_state:
             raise ValueError("Job state must be provided for the run single cycle")
 
@@ -180,7 +167,3 @@ class LLMSummaryService(CancellationCheckMixin):
         except Exception as e:
             self.logger.error(event_type="llm_summary run", message=f"Summary failed: {str(e)}")
             job_state.fail_job(str(e))
-        finally:
-            # Clean up run state after job completes or fails
-            run_state.run_in_progress = False
-            run_state.current_service = None

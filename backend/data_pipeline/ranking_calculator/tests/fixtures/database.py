@@ -5,6 +5,7 @@ from unittest.mock import patch
 from psycopg_pool import ConnectionPool
 from testcontainers.postgres import PostgresContainer
 import os
+
 os.environ.setdefault("BAYESIAN_PARAMS", "10")
 from src.ranking_service import RankingService
 import pytest

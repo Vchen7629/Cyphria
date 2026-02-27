@@ -3,12 +3,12 @@ from typing import AsyncGenerator
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from concurrent.futures import ThreadPoolExecutor
+from shared_core.logger import StructuredLogger
+from shared_db.conn import create_connection_pool
 from src.api import routes
 from src.api.job_state import JobState
-from src.core.logger import StructuredLogger
 from src.core.settings_config import Settings
 from src.core.model import sentiment_analysis_model
-from src.db_utils.conn import create_connection_pool
 from src.preprocessing.sentiment_analysis import Aspect_Based_Sentiment_Analysis
 
 settings = Settings()
@@ -28,7 +28,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info(
         event_type="sentiment_analysis startup", message="Creating database connection pool"
     )
-    db_pool = create_connection_pool()
+    db_pool = create_connection_pool(
+        settings.DB_HOST, settings.DB_PORT, settings.DB_NAME, settings.DB_USER, settings.DB_PASS
+    )
 
     # Check database health before proceeding, exit if database non responsive
     try:

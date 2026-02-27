@@ -3,7 +3,7 @@ from typing import Optional
 from concurrent.futures import ThreadPoolExecutor
 from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 import torch
 import torch.nn.functional as F
 

@@ -3,7 +3,7 @@ from psycopg_pool import ConnectionPool
 from src.api.job_state import JobState
 from src.api.schemas import SentimentResult
 from src.api.schemas import ProductSentiment
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.api.schemas import UnprocessedComment
 from src.db_utils.queries import mark_comments_processed
 from src.db_utils.queries import fetch_unprocessed_comments

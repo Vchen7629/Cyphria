@@ -111,7 +111,7 @@ jobs:
             run: |
               gh workflow run cd.yaml \
                 -f service=insights_api \
-                -f folder=backend/insights_api \
+                -f folder=backend \
                 -f sha=${{ github.sha }}
             env:
               GH_TOKEN: ${{ secrets.CI_CD_PAT }}
@@ -158,7 +158,7 @@ jobs:
           run: |
             gh workflow run generate-service-tags.yaml \
               -f service=ingestion \
-              -f folder=backend/data_pipeline/ingestion \
+              -f folder=backend \
               -f sha=${{ github.sha }}
           env:
             GH_TOKEN: ${{ secrets.CI_CD_PAT }}
@@ -203,7 +203,7 @@ jobs:
               run: |
                 gh workflow run generate-service-tags.yaml \
                   -f service=llm_summary \
-                  -f folder=backend/data_pipeline/llm_summary \
+                  -f folder=backend \
                   -f sha=${{ github.sha }}
               env:
                 GH_TOKEN: ${{ secrets.CI_CD_PAT }}
@@ -248,7 +248,7 @@ jobs:
             run: |
               gh workflow run generate-service-tags.yaml \
                 -f service=ranking_calculator \
-                -f folder=backend/data_pipeline/ranking_calculator \
+                -f folder=backend \
                 -f sha=${{ github.sha }}
             env:
               GH_TOKEN: ${{ secrets.CI_CD_PAT }}
@@ -293,7 +293,7 @@ jobs:
             run: |
               gh workflow run generate-service-tags.yaml \
                 -f service=sentiment_analysis \
-                -f folder=backend/data_pipeline/sentiment_analysis \
+                -f folder=backend \
                 -f sha=${{ github.sha }}
             env:
               GH_TOKEN: ${{ secrets.CI_CD_PAT }}

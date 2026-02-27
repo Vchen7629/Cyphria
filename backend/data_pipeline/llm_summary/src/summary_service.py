@@ -1,6 +1,6 @@
 from openai import OpenAI
 from psycopg_pool import ConnectionPool
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.db.queries import fetch_top_comments_for_product
 from src.db.queries import fetch_unique_products
 from src.db.queries import upsert_llm_summaries

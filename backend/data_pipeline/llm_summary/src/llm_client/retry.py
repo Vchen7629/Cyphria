@@ -6,7 +6,7 @@ from typing import Optional
 from openai import APIError
 from openai import RateLimitError
 from openai import APITimeoutError
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.core.settings_config import settings
 import time
 

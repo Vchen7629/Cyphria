@@ -7,7 +7,7 @@ from psycopg_pool import ConnectionPool
 from contextlib import asynccontextmanager
 from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.api import routes
 from src.api.job_state import JobState
 from src.api.routes import router as base_router
@@ -46,7 +46,7 @@ def fastapi_client(
     job_state_instance = JobState()
 
     test_app.state.db_pool = db_pool
-    test_app.state.logger = StructuredLogger(pod="ingestion_service_test")
+    test_app.state.logger = StructuredLogger(pod="llm_summary_service_test")
     test_app.state.llm_model_name = "gpt-5.2"
     test_app.state.llm_client = mock_openai_client
     test_app.state.executor = mock_executor

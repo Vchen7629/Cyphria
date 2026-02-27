@@ -5,12 +5,15 @@ WORKDIR /app
 # install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
+# Copy shared package first
+COPY shared/ ./shared/
+
 # for dependency files
-COPY pyproject.toml uv.lock ./
+COPY data_pipeline/llm_summary/pyproject.toml data_pipeline/llm_summary/uv.lock ./
 RUN uv sync --frozen --no-dev
 
 # for source code
-COPY src/* ./src/
+COPY data_pipeline/llm_summary/src/* ./src/
 
 EXPOSE 8000
 

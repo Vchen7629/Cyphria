@@ -5,12 +5,15 @@ WORKDIR /app
 # install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
+# Copy shared package first
+COPY shared/ ./shared/
+
 # for dependency files
-COPY pyproject.toml uv.lock ./
+COPY insights_api/pyproject.toml insights_api/uv.lock ./
 RUN uv sync --frozen --no-dev
 
 # for source code
-COPY src/* ./src/
+COPY insights_api/src/* ./src/
 
 EXPOSE 8000
 

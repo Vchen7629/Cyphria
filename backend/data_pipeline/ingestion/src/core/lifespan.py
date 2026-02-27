@@ -3,8 +3,7 @@ from typing import AsyncGenerator
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from concurrent.futures import ThreadPoolExecutor
-from shared_db.conn import create_connection_pool
-from shared_db.health_check import check_db_health
+from shared_db.conn import create_verified_connection_pool
 from shared_core.logger import StructuredLogger
 from src.api import routes
 from src.api.job_state import JobState
@@ -24,15 +23,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     max_praw_connections: int = 7  # praw supports 10 max but using 5 to avoid rate limits
 
     logger = StructuredLogger(pod="data_ingestion")
-    logger.info(event_type="data_ingestion startup", message="Initializing ingestion service")
 
-    logger.info(event_type="data_ingestion startup", message="Creating database connection pool")
-    db_pool = create_connection_pool(
-        settings.DB_HOST, settings.DB_PORT, settings.DB_NAME, settings.DB_USER, settings.DB_PASS
+    db_pool = create_verified_connection_pool(
+        settings.DB_HOST, settings.DB_PORT, settings.DB_NAME, settings.DB_USER, settings.DB_PASS,
+        logger, service_name="data_ingestion"
     )
-
-    # Check database health before proceeding, exit if database non responsive
-    check_db_health(db_pool, logger, event_type="ingestion_service startup")
 
     logger.info(event_type="data_ingestion startup", message="Creating Reddit Client")
     reddit_client = createRedditClient()

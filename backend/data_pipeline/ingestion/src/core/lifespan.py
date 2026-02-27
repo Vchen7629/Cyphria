@@ -13,6 +13,7 @@ from shared_core.logger import StructuredLogger
 
 settings = Settings()
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     """
@@ -25,7 +26,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info(event_type="data_ingestion startup", message="Initializing ingestion service")
 
     logger.info(event_type="data_ingestion startup", message="Creating database connection pool")
-    db_pool = create_connection_pool(settings.DB_HOST, settings.DB_PORT, settings.DB_NAME, settings.DB_USER, settings.DB_PASS)
+    db_pool = create_connection_pool(
+        settings.DB_HOST, settings.DB_PORT, settings.DB_NAME, settings.DB_USER, settings.DB_PASS
+    )
 
     # Check database health before proceeding, exit if database non responsive
     try:

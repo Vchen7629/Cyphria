@@ -1,4 +1,5 @@
-from datetime import datetime, timezone
+from datetime import datetime
+from datetime import timezone
 from testcontainers.postgres import PostgresContainer
 from src.ingestion_service import IngestionService
 from src.preprocessing.relevant_fields import ProcessedRedditComment

@@ -5,6 +5,7 @@ from praw.models import Submission
 from psycopg_pool.pool import ConnectionPool
 from concurrent.futures import as_completed
 from shared_core.logger import StructuredLogger
+from shared_dp_utils.should_continue_processing import CancellationCheckMixin
 from concurrent.futures import ThreadPoolExecutor
 from src.api.job_state import JobState
 from src.api.schemas import IngestionResult
@@ -22,7 +23,7 @@ from src.preprocessing.relevant_fields import extract_relevant_fields
 import prawcore
 
 
-class IngestionService:
+class IngestionService(CancellationCheckMixin):
     def __init__(
         self,
         reddit_client: Reddit,
@@ -290,24 +291,6 @@ class IngestionService:
             comments_inserted=stats.get("inserted", 0),
             cancelled=self.cancel_requested,
         )
-
-    def _should_continue_processing(self, level: str) -> bool:
-        """
-        Check if processing should continue or has been cancelled
-
-        Args:
-            level: Description of processing level, like post, comment, topic
-
-        Returns:
-            True if processing should continue, False if cancelled
-        """
-        if self.cancel_requested:
-            self.logger.info(
-                event_type="ingestion_service run",
-                message=f"Cancellation requested, stopping at {level} level",
-            )
-            return False
-        return True
 
     def _flush_batch_if_needed(
         self, batch: list[ProcessedRedditComment], force: bool = False

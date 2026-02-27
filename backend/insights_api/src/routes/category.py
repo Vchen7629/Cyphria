@@ -7,7 +7,7 @@ from fastapi import HTTPException
 from valkey.asyncio import Valkey
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.settings import Settings
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.db_utils.pg_conn import get_session
 from src.db_utils.cache_conn import get_cache
 from src.db_utils.cache_commands import get_cache_value

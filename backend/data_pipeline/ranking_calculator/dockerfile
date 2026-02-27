@@ -6,11 +6,11 @@ WORKDIR /app
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # for dependency files
-COPY pyproject.toml uv.lock ./
+COPY data_pipeline/ranking_calculator/pyproject.toml data_pipeline/ranking_calculator/uv.lock ./
 RUN uv sync --frozen --no-dev
 
 # for source code
-COPY src/* ./src/
+COPY data_pipeline/ranking_calculator/src/* ./src/
 
 EXPOSE 8000
 

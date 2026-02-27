@@ -20,8 +20,13 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info(event_type="llm_summary startup", message="Initializing llm summary service")
 
     db_pool = create_verified_connection_pool(
-        settings.DB_HOST, settings.DB_PORT, settings.DB_NAME, settings.DB_USER, settings.DB_PASS,
-        logger, service_name="llm_summary"
+        settings.DB_HOST,
+        settings.DB_PORT,
+        settings.DB_NAME,
+        settings.DB_USER,
+        settings.DB_PASS,
+        logger,
+        service_name="llm_summary",
     )
 
     executor: ThreadPoolExecutor = ThreadPoolExecutor(

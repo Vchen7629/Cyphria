@@ -15,63 +15,6 @@ def test_no_posts_returns_zero_counts(create_ingestion_service: IngestionService
     assert result.posts_processed == 0
     assert result.comments_processed == 0
     assert result.comments_inserted == 0
-    assert result.cancelled is False
-
-
-def test_cancel_flag_stops_at_post_level(create_ingestion_service: IngestionService) -> None:
-    """cancel_requested flag should break out of post iteration loop"""
-    service = create_ingestion_service
-
-    posts = [MagicMock(id=f"post_{i}") for i in range(5)]
-    posts_processed = {"count": 0}
-
-    def mock_fetch_comments(_post: Any, _logger: Any) -> list[MagicMock]:
-        posts_processed["count"] += 1
-        if posts_processed["count"] >= 2:
-            service.cancel_requested = True
-        return []
-
-    with (
-        patch.object(service, "_fetch_all_posts", return_value=posts),
-        patch("src.ingestion_service.fetch_comments", side_effect=mock_fetch_comments),
-    ):
-        result = service._run_ingestion_pipeline()
-
-    assert result.cancelled is True
-    assert posts_processed["count"] == 2
-
-
-def test_cancel_flag_stops_worker_at_comment_level(
-    create_ingestion_service: IngestionService, mock_reddit_comment: ProcessedRedditComment
-) -> None:
-    """cancel_requested flag should stop worker loop at comment iteration level"""
-    service = create_ingestion_service
-
-    mock_post = MagicMock(id="test_post")
-    mock_comments = [MagicMock(id=f"c_{i}") for i in range(20)]
-    comments_processed = {"count": 0}
-
-    def mock_process_comment(
-        _comment: Any, _detector: Any, _topic: Any
-    ) -> ProcessedRedditComment | None:
-        comments_processed["count"] += 1
-        if comments_processed["count"] >= 5:
-            service.cancel_requested = True
-
-        reddit_comment = mock_reddit_comment.model_copy(
-            update={"comment_id": f"rc_{comments_processed['count']}"}
-        )
-        return reddit_comment
-
-    with (
-        patch.object(service, "_fetch_all_posts", return_value=[mock_post]),
-        patch("src.ingestion_service.fetch_comments", return_value=mock_comments),
-        patch.object(service, "_process_comment", side_effect=mock_process_comment),
-    ):
-        result = service._run_ingestion_pipeline()
-
-    assert result.cancelled is True
-    assert comments_processed["count"] < 20
 
 
 def test_all_comments_filtered_out(create_ingestion_service: IngestionService) -> None:
@@ -91,7 +34,6 @@ def test_all_comments_filtered_out(create_ingestion_service: IngestionService) -
     assert result.posts_processed == 1
     assert result.comments_processed == 0  # filtered comments are not counted as processed
     assert result.comments_inserted == 0  # all invalid comments should never be inserted into db
-    assert result.cancelled is False
 
 
 def test_exactly_100_comments_triggers_batch(
@@ -222,7 +164,6 @@ def test_mixed_valid_invalid_comments(
         result.comments_processed == 5
     )  # Only even numbered comments (0, 2, 4, 6, 8) are counted as processed
     assert result.comments_inserted == 5  # Only even numbered (0, 2, 4, 6, 8)
-    assert result.cancelled is False
 
 
 def test_multiple_posts_with_varying_comments(
@@ -255,7 +196,6 @@ def test_multiple_posts_with_varying_comments(
     assert result.posts_processed == 3
     assert result.comments_processed == 18  # 5 + 10 + 3
     assert result.comments_inserted == 18
-    assert result.cancelled is False
 
 
 def test_post_with_no_comments(create_ingestion_service: IngestionService) -> None:
@@ -281,40 +221,3 @@ def test_post_with_no_comments(create_ingestion_service: IngestionService) -> No
     assert result.posts_processed == 2
     assert result.comments_processed == 0  # comment from post_2 was filtered out (returned None)
     assert result.comments_inserted == 0
-    assert result.cancelled is False
-
-
-def test_cancellation_with_remaining_batch(
-    create_ingestion_service: IngestionService, mock_reddit_comment: ProcessedRedditComment
-) -> None:
-    """Cancellation with comments in batch should still insert remaining batch"""
-    service = create_ingestion_service
-
-    mock_post = MagicMock(id="test_post")
-    mock_comments = [MagicMock(id=f"c_{i}") for i in range(50)]
-    comments_processed_count = {"count": 0}
-
-    def mock_process_comment(_comment: Any, _detector: Any, _topic: Any) -> ProcessedRedditComment:
-        comments_processed_count["count"] += 1
-        if comments_processed_count["count"] >= 45:
-            service.cancel_requested = True
-        return mock_reddit_comment.model_copy(update={"comment_id": _comment.id})
-
-    batch_sizes: list[int] = []
-
-    def track_batch_insert(comment_list: list[ProcessedRedditComment]) -> None:
-        batch_sizes.append(len(comment_list))
-
-    with (
-        patch.object(service, "_fetch_all_posts", return_value=[mock_post]),
-        patch("src.ingestion_service.fetch_comments", return_value=mock_comments),
-        patch.object(service, "_process_comment", side_effect=mock_process_comment),
-        patch.object(service, "_batch_insert_to_db", side_effect=track_batch_insert),
-    ):
-        result = service._run_ingestion_pipeline()
-
-    assert result.cancelled is True
-    assert result.comments_processed == 45
-    assert result.comments_inserted == 45
-    # Should have final batch with remaining 45 comments
-    assert sum(batch_sizes) == 45

@@ -4,7 +4,6 @@ from fastapi import APIRouter
 from fastapi import HTTPException
 from concurrent.futures import ThreadPoolExecutor
 from src.api.job_state import JobState
-from src.api.signal_handler import run_state
 from src.api.schemas import HealthResponse
 from src.api.schemas import RunResponse
 from src.api.schemas import RunRequest
@@ -76,9 +75,6 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
         detectors=detectors,
         fetch_executor=request.app.state.fetch_reddit_posts_executor,
     )
-
-    run_state.current_service = service
-    run_state.run_in_progress = True
 
     executor: ThreadPoolExecutor = request.app.state.main_processing_executor
     loop = asyncio.get_event_loop()

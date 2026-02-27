@@ -14,12 +14,11 @@ from src.calculation_utils.badge import assign_has_limited_data
 from src.calculation_utils.badge import assign_is_most_discussed
 from src.calculation_utils.bayesian import calculate_bayesian_scores
 from shared_core.logger import StructuredLogger
-from shared_dp_utils.should_continue_processing import CancellationCheckMixin
 from src.core.settings_config import Settings
 import numpy as np
 
 
-class RankingService(CancellationCheckMixin):
+class RankingService:
     def __init__(
         self,
         logger: StructuredLogger,
@@ -93,9 +92,6 @@ class RankingService(CancellationCheckMixin):
         rankings: list[ProductScore] = []
 
         for i, product in enumerate(product_scores):
-            if not self._should_continue_processing("build product ranking"):
-                return []
-
             ranking = ProductScore(
                 product_name=product.product_name,
                 product_topic=product_topic,
@@ -144,9 +140,6 @@ class RankingService(CancellationCheckMixin):
             return 0
 
         with self.db_pool.connection() as conn:
-            if not self._should_continue_processing("calculate rankings"):
-                return 0
-
             product_scores = fetch_aggregated_product_scores(conn, product_topic, time_window)
 
             if not product_scores:
@@ -225,9 +218,6 @@ class RankingService(CancellationCheckMixin):
         Raise:
             Value error if not job state
         """
-        # nested import to prevent circular dependency import errors
-        from src.api.signal_handler import run_state
-
         if not job_state:
             raise ValueError("Job state must be provided for the run single cycle")
 
@@ -244,7 +234,3 @@ class RankingService(CancellationCheckMixin):
         except Exception as e:
             self.logger.error(event_type="ranking_service run", message=f"Ranking failed: {str(e)}")
             job_state.fail_job(str(e))
-        finally:
-            # Clean up run state after job completes or fails
-            run_state.run_in_progress = False
-            run_state.current_service = None

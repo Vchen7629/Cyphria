@@ -3,7 +3,6 @@ from fastapi import HTTPException
 from fastapi.routing import APIRouter
 from concurrent.futures import ThreadPoolExecutor
 from src.api.job_state import JobState
-from src.api.signal_handler import run_state
 from src.api.schemas import HealthResponse
 from src.api.schemas import RunResponse
 from src.api.schemas import RunRequest
@@ -51,9 +50,6 @@ async def trigger_ranking_calculation(request: Request, body: RunRequest) -> Run
         product_topic=product_topic,
         time_window=time_window,
     )
-
-    run_state.current_service = service
-    run_state.run_in_progress = True
 
     executor: ThreadPoolExecutor = request.app.state.executor
     loop = asyncio.get_event_loop()

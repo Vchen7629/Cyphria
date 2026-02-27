@@ -16,13 +16,12 @@ class JobStatus(str, Enum):
     RUNNING = "running"
     COMPLETED = "completed"
     FAILED = "failed"
-    CANCELLED = "cancelled"
 
 
 class CurrentJob(BaseModel):
     """Currently running job state"""
 
-    status: JobStatus  # "pending" | "running" | "completed" | "failed" | "cancelled"
+    status: JobStatus
     product_topic: str
     started_at: datetime
     completed_at: Optional[datetime] = None

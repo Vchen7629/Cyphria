@@ -8,7 +8,6 @@ from src.api.schemas import CurrentJob
 from src.api.schemas import RunRequest
 from src.api.schemas import RunResponse
 from src.api.schemas import HealthResponse
-from src.api.signal_handler import run_state
 import asyncio
 
 router = APIRouter()
@@ -48,9 +47,6 @@ async def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunR
         db_pool=request.app.state.db_pool,
         model=request.app.state.model,
     )
-
-    run_state.current_service = service
-    run_state.run_in_progress = True
 
     executor: ThreadPoolExecutor = request.app.state.executor
     loop = asyncio.get_event_loop()

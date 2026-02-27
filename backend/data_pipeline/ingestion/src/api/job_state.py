@@ -51,9 +51,7 @@ class JobState:
 
         with self._lock:
             if self._current_job:
-                self._current_job.status = (
-                    JobStatus.CANCELLED if result.cancelled else JobStatus.COMPLETED
-                )
+                self._current_job.status = JobStatus.COMPLETED
                 self._current_job.result = result
                 self._current_job.completed_at = datetime.now(tz=timezone.utc)
 

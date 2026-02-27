@@ -26,27 +26,6 @@ def tests_marks_complete_running_job_complete() -> None:
     assert before <= current_job.completed_at <= after
 
 
-def tests_marks_cancelled_running_job_complete() -> None:
-    """Calling cancelled job when a running job is active should mark it as done"""
-    job_state = JobState()
-    before = datetime.now(tz=timezone.utc)
-    job_state.create_job(category="Computing", subreddit_list=["Nvidia", "AMD"])
-
-    mock_result = IngestionResult(
-        posts_processed=100, comments_processed=250, comments_inserted=250, cancelled=True
-    )
-
-    job_state.complete_job(mock_result)
-    after = datetime.now(tz=timezone.utc)
-
-    current_job = job_state.get_current_job()
-    assert current_job is not None
-    assert current_job.status == JobStatus.CANCELLED
-    assert current_job.result == mock_result
-    assert current_job.completed_at is not None
-    assert before <= current_job.completed_at <= after
-
-
 def test_missing_ingestion_result() -> None:
     """ValueError should be raised if no ingestion result is provided"""
     job_state = JobState()

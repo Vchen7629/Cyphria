@@ -25,10 +25,6 @@ class SentimentService:
         self.db_pool = db_pool
         self.model = model
 
-        # cancellation flag, used to request graceful shutdown
-        # This flag is set externally by signal_handler.py when SIGTERM/SIGINT is received
-        self.cancel_requested = False
-
     def _process_sentiment_and_write_to_db(
         self,
         text_product_pairs: list[tuple[str, str]],
@@ -119,7 +115,7 @@ class SentimentService:
         comments_inserted: int = 0
         comments_updated: int = 0
 
-        while not self.cancel_requested:
+        while True:
             with self.db_pool.connection() as conn:
                 comments = fetch_unprocessed_comments(conn, self.product_topic, batch_size=200)
 
@@ -143,7 +139,6 @@ class SentimentService:
         return SentimentResult(
             comments_inserted=comments_inserted,
             comments_updated=comments_updated,
-            cancelled=self.cancel_requested,
         )
 
     def run_single_cycle(self, job_state: JobState) -> None:
@@ -157,9 +152,6 @@ class SentimentService:
         Raise:
             Value error if not job state
         """
-        # nested import to prevent circular dependency import errors
-        from src.api.signal_handler import run_state
-
         if not job_state:
             raise ValueError("Job state must be provided for the run single cycle")
 
@@ -180,7 +172,3 @@ class SentimentService:
                 event_type="sentiment_analysis run", message=f"Sentiment analysis failed: {str(e)}"
             )
             job_state.fail_job(str(e))
-        finally:
-            # Clean up run state after job completes or fails
-            run_state.run_in_progress = False
-            run_state.current_service = None

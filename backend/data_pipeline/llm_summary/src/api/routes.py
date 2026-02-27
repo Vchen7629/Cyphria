@@ -8,7 +8,6 @@ from src.api.schemas import RunResponse
 from src.api.schemas import HealthResponse
 from src.summary_service import LLMSummaryService
 from src.api.job_state import JobState
-from src.api.signal_handler import run_state
 import asyncio
 
 router = APIRouter()
@@ -48,9 +47,6 @@ async def trigger_llm_summarization(request: Request, body: RunRequest) -> RunRe
         logger=request.app.state.logger,
         db_pool=request.app.state.db_pool,
     )
-
-    run_state.current_service = service
-    run_state.run_in_progress = True
 
     executor: ThreadPoolExecutor = request.app.state.executor
     loop = asyncio.get_event_loop()

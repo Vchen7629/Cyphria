@@ -8,7 +8,6 @@ class JobStatus(str, Enum):
     RUNNING = "running"
     COMPLETED = "completed"
     FAILED = "failed"
-    CANCELLED = "cancelled"
 
 
 # Pydantic class for processed reddit comments
@@ -30,13 +29,12 @@ class IngestionResult(BaseModel):
     posts_processed: int
     comments_processed: int
     comments_inserted: int
-    cancelled: bool = False
 
 
 class CurrentJob(BaseModel):
     """Currently running job state"""
 
-    status: JobStatus  # "pending" | "running" | "completed" | "failed" | "cancelled"
+    status: JobStatus
     category: str
     subreddit_list: list[str]
     started_at: datetime

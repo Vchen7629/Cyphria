@@ -106,7 +106,7 @@ def test_monitor_normalized(keyboard_list: list[str], expected: list[str]) -> No
 @pytest.mark.parametrize(argnames="product_topic", argvalues=[None, "", "  "])
 def test_invalid_input_product_topic(product_topic: str | None) -> None:
     """Invalid product topic param (None, empty string, whitespace) should return None and log"""
-    with patch("src.core.logger.StructuredLogger") as MockLogger:
+    with patch("shared_core.logger.StructuredLogger") as MockLogger:
         mock_logger_instance = MockLogger.return_value
         normalizer = ProductNormalizer(mock_logger_instance).normalize_product_list(
             product_topic,  # type: ignore

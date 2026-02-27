@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from concurrent.futures import ThreadPoolExecutor
 from shared_core.logger import StructuredLogger
-from shared_db.conn import create_connection_pool
+from shared_db.conn import create_verified_connection_pool
 from src.api import routes
 from src.api.job_state import JobState
 from src.core.settings_config import Settings
@@ -19,21 +19,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger = StructuredLogger(pod="llm_summary")
     logger.info(event_type="llm_summary startup", message="Initializing llm summary service")
 
-    logger.info(event_type="llm_summary startup", message="Creating database connection pool")
-    db_pool = create_connection_pool(
-        settings.DB_HOST, settings.DB_PORT, settings.DB_NAME, settings.DB_USER, settings.DB_PASS
+    db_pool = create_verified_connection_pool(
+        settings.DB_HOST, settings.DB_PORT, settings.DB_NAME, settings.DB_USER, settings.DB_PASS,
+        logger, service_name="llm_summary"
     )
-    # Check database health before proceeding, exit if database non responsive
-    try:
-        with db_pool.connection() as conn:
-            with conn.cursor() as cursor:
-                cursor.execute("SELECT 1")
-                cursor.fetchone()
-            logger.info(event_type="llm_summary startup", message="Database health check passed")
-    except Exception as e:
-        logger.error(event_type="llm_summary startup", message=f"Database health check failed: {e}")
-        db_pool.close()
-        raise
 
     executor: ThreadPoolExecutor = ThreadPoolExecutor(
         max_workers=1, thread_name_prefix="summary_service"

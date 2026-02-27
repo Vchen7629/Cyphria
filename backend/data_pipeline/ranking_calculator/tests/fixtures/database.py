@@ -5,13 +5,7 @@ from unittest.mock import patch
 from psycopg_pool import ConnectionPool
 from testcontainers.postgres import PostgresContainer
 import os
-
 os.environ.setdefault("BAYESIAN_PARAMS", "10")
-os.environ.setdefault("DB_HOST", "localhost")
-os.environ.setdefault("DB_PORT", "5432")
-os.environ.setdefault("DB_NAME", "test_db")
-os.environ.setdefault("DB_USER", "test_user")
-os.environ.setdefault("DB_PASS", "test_pass")
 from src.ranking_service import RankingService
 import pytest
 import psycopg

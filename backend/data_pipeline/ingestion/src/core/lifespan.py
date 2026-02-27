@@ -6,10 +6,10 @@ from concurrent.futures import ThreadPoolExecutor
 from src.api import routes
 from src.api.job_state import JobState
 from src.core.settings_config import Settings
-from src.db_utils.conn import create_connection_pool
 from src.core.reddit_client_instance import createRedditClient
-from src.core.logger import StructuredLogger
 from src.product_normalizer.base import ProductNormalizer
+from shared_db.conn import create_connection_pool
+from shared_core.logger import StructuredLogger
 
 settings = Settings()
 
@@ -26,7 +26,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info(event_type="data_ingestion startup", message="Initializing ingestion service")
 
     logger.info(event_type="data_ingestion startup", message="Creating database connection pool")
-    db_pool = create_connection_pool()
+    db_pool = create_connection_pool(
+        settings.DB_HOST, settings.DB_PORT, settings.DB_NAME, settings.DB_USER, settings.DB_PASS
+    )
 
     # Check database health before proceeding, exit if database non responsive
     try:

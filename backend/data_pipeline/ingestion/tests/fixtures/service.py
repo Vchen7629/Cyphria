@@ -8,7 +8,7 @@ from unittest.mock import patch
 from testcontainers.postgres import PostgresContainer
 from psycopg_pool import ConnectionPool
 from concurrent.futures import ThreadPoolExecutor
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.ingestion_service import IngestionService
 import pytest
 
@@ -88,7 +88,7 @@ def worker_with_test_db(
     with patch(
         "src.core.reddit_client_instance.createRedditClient", return_value=mock_reddit_client
     ) as mock_reddit_client:
-        with patch("src.db_utils.conn.create_connection_pool") as mock_pool:
+        with patch("src.core.lifespan.create_connection_pool") as mock_pool:
             # Create a real connection pool to the test database
             # Convert SQLAlchemy URL to PostgreSQL URI for psycopg
             connection_url = postgres_container.get_connection_url().replace("+psycopg2", "")

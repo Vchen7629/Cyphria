@@ -2,9 +2,9 @@ from datetime import datetime
 from datetime import timezone
 from datetime import timedelta
 from praw.models import Submission
-from prawcore.exceptions import Forbidden  # type: ignore
-from src.core.logger import StructuredLogger
-import praw  # type: ignore
+from prawcore.exceptions import Forbidden
+from shared_core.logger import StructuredLogger
+import praw
 
 
 def fetch_post_delayed(

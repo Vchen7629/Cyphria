@@ -80,17 +80,17 @@ def test_worker_batch_insert_with_connection_pool_multiple_batches(
             cursor.execute("SELECT COUNT(*) FROM raw_comments;")
             result = cursor.fetchone()
             assert result is not None
-            count = result[0]
+            count = result[0]  # type: ignore
             assert count == 10
 
             # Verify batch1 comments
             cursor.execute("SELECT COUNT(*) FROM raw_comments WHERE comment_id LIKE 'batch1_%';")
             result = cursor.fetchone()
             assert result is not None
-            assert result[0] == 5
+            assert result[0] == 5  # type: ignore
 
             # Verify batch2 comments
             cursor.execute("SELECT COUNT(*) FROM raw_comments WHERE comment_id LIKE 'batch2_%';")
             result = cursor.fetchone()
             assert result is not None
-            assert result[0] == 5
+            assert result[0] == 5  # type: ignore

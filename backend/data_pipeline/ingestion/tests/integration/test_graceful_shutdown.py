@@ -43,7 +43,7 @@ def test_remaining_batch_saved_on_shutdown(
             cursor.execute("SELECT COUNT(*) FROM raw_comments")
             count = cursor.fetchone()
             assert count is not None
-            assert count[0] == 30
+            assert count[0] == 30  # type: ignore[index]
 
 
 def test_shutdown_after_batch_insert_no_duplicate_save(
@@ -85,4 +85,4 @@ def test_shutdown_after_batch_insert_no_duplicate_save(
             cursor.execute("SELECT COUNT(*) FROM raw_comments")
             count = cursor.fetchone()
             assert count is not None
-            assert count[0] == 100
+            assert count[0] == 100  # type: ignore[index]

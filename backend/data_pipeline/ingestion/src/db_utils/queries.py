@@ -1,6 +1,6 @@
 from typing import Any, Optional
-from src.core.logger import StructuredLogger
-from src.db_utils.retry import retry_with_backoff
+from shared_core.logger import StructuredLogger
+from shared_db.retry import retry_with_backoff
 import psycopg
 
 

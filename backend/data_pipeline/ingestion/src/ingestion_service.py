@@ -4,11 +4,11 @@ from praw.models import Comment
 from praw.models import Submission
 from psycopg_pool.pool import ConnectionPool
 from concurrent.futures import as_completed
+from shared_core.logger import StructuredLogger
 from concurrent.futures import ThreadPoolExecutor
 from src.api.job_state import JobState
 from src.api.schemas import IngestionResult
 from src.api.schemas import ProcessedRedditComment
-from src.core.logger import StructuredLogger
 from src.product_detector.base import ProductDetector
 from src.product_normalizer.base import ProductNormalizer
 from src.utils.fetch_comments import fetch_comments

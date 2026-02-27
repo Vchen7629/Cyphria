@@ -1,5 +1,5 @@
 from unittest.mock import Mock, patch
-from src.db_utils.retry import retry_with_backoff
+from src.dp_shared.db.retry import retry_with_backoff
 import pytest
 import psycopg
 

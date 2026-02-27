@@ -3,7 +3,6 @@ import json
 from datetime import datetime
 from typing import Any
 
-
 class StructuredLogger:
     """Central Logging for this worker service"""
 

@@ -3,7 +3,7 @@ from functools import wraps
 from typing import Any, Callable, TypeVar, Optional
 import psycopg
 
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 
 ReturnType = TypeVar("ReturnType")
 

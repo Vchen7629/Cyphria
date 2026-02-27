@@ -4,12 +4,12 @@ from typing import Any
 from typing import Generator
 from unittest.mock import MagicMock
 from psycopg_pool import ConnectionPool
+from shared_core.logger import StructuredLogger
 from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
 from src.api import routes
 from src.api.job_state import JobState
 from src.api.routes import router as base_router
-from src.core.logger import StructuredLogger
 from tests.utils.service import null_lifespan
 from tests.utils.classes import FastAPITestClient
 from src.product_normalizer.base import ProductNormalizer

@@ -13,18 +13,24 @@ dependencies = [
     "pydantic>=2.11.10",
     "pydantic-settings>=2.12.0",
     "fastapi[standard]>=0.128.0",
+    "shared"
 ]
 
 [tool.pyrefly]
 python-version = "3.13"
 untyped-def-behavior = "check-and-infer-return-any"
-search-path = ["."] # so pyrefly knows we are running from ingestion folder not ingestion/src
+search-path = [".", "../../shared"] # ingestion root + shared package
+venv = ".venv"
 
 [tool.pyrefly.errors]
 unannotated-parameter = "error"
 unannotated-return = "error"
 unannotated-attribute = "error"
 implicit-any = "error"
+
+[tool.uv.sources]
+shared = { path = "../../shared", editable = true }
+
 
 [dependency-groups]
 dev = [

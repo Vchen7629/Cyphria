@@ -3,13 +3,14 @@ from typing import AsyncGenerator
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from concurrent.futures import ThreadPoolExecutor
+from shared_db.conn import create_connection_pool
+from shared_db.health_check import check_db_health
+from shared_core.logger import StructuredLogger
 from src.api import routes
 from src.api.job_state import JobState
 from src.core.settings_config import Settings
 from src.core.reddit_client_instance import createRedditClient
 from src.product_normalizer.base import ProductNormalizer
-from shared_db.conn import create_connection_pool
-from shared_core.logger import StructuredLogger
 
 settings = Settings()
 
@@ -31,18 +32,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     )
 
     # Check database health before proceeding, exit if database non responsive
-    try:
-        with db_pool.connection() as conn:
-            with conn.cursor() as cursor:
-                cursor.execute("SELECT 1")
-                cursor.fetchone()
-            logger.info(event_type="data_ingestion startup", message="Database health check passed")
-    except Exception as e:
-        logger.error(
-            event_type="data_ingestion startup", message=f"Database health check failed: {e}"
-        )
-        db_pool.close()
-        raise
+    check_db_health(db_pool, logger, event_type="ingestion_service startup")
 
     logger.info(event_type="data_ingestion startup", message="Creating Reddit Client")
     reddit_client = createRedditClient()

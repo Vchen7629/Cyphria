@@ -2,14 +2,7 @@ from unittest.mock import MagicMock
 from psycopg_pool import ConnectionPool
 import time
 import pytest
-import os
-
-os.environ.setdefault("DB_HOST", "localhost")
-os.environ.setdefault("DB_PORT", "5432")
-os.environ.setdefault("DB_NAME", "test_db")
-os.environ.setdefault("DB_USER", "test_user")
-os.environ.setdefault("DB_PASS", "test_pass")
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.sentiment_service import SentimentService
 from src.preprocessing.sentiment_analysis import Aspect_Based_Sentiment_Analysis
 

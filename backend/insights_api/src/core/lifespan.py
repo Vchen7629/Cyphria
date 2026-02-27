@@ -3,8 +3,8 @@ from typing import AsyncGenerator
 from fastapi import FastAPI
 from sqlalchemy import text
 from contextlib import asynccontextmanager
+from shared_core.logger import StructuredLogger
 from src.core.settings import Settings
-from src.core.logger import StructuredLogger
 from src.db_utils.pg_conn import engine
 from src.db_utils.pg_conn import async_session
 from src.db_utils.cache_conn import cache_client

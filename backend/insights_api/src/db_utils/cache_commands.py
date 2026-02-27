@@ -6,7 +6,7 @@ from datetime import datetime
 from pydantic import BaseModel
 from valkey.asyncio import Valkey
 from valkey.typing import ResponseT
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.middleware.metrics import cache_operation_duration
 import time
 

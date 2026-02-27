@@ -8,7 +8,7 @@ from fastapi import HTTPException
 from valkey.asyncio import Valkey
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from src.core.settings import Settings
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.schemas.queries import FetchProductsResult
 from src.schemas.response import GetRankedProductsResponse
 from src.middleware.get_client_ip import get_client_ip

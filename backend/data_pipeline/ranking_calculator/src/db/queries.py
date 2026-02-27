@@ -1,8 +1,8 @@
 from psycopg.rows import dict_row
+from shared_db.retry import retry_with_backoff
+from shared_core.logger import StructuredLogger
 from src.api.schemas import ProductScore
 from src.api.schemas import SentimentAggregate
-from src.db.retry import retry_with_backoff
-from src.core.logger import StructuredLogger
 import psycopg
 
 structured_logger = StructuredLogger(pod="idk")

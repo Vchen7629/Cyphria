@@ -8,13 +8,8 @@ from contextlib import asynccontextmanager
 import os
 
 os.environ.setdefault("BAYESIAN_PARAMS", "10")
-os.environ.setdefault("DB_HOST", "localhost")
-os.environ.setdefault("DB_PORT", "5432")
-os.environ.setdefault("DB_NAME", "test_db")
-os.environ.setdefault("DB_USER", "test_user")
-os.environ.setdefault("DB_PASS", "test_pass")
 from src.api.schemas import ProductScore
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.ranking_service import RankingService
 import pytest
 

@@ -1,4 +1,4 @@
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 
 
 class TLDRValidationError(Exception):

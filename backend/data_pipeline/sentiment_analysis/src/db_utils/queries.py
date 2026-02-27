@@ -1,11 +1,11 @@
-import psycopg
 from psycopg.rows import dict_row
+from shared_core.logger import StructuredLogger
+from shared_db.retry import retry_with_backoff
 from src.api.schemas import UnprocessedComment
 from src.api.schemas import ProductSentiment
-from src.core.logger import StructuredLogger
-from src.db_utils.retry import retry_with_backoff
+import psycopg
 
-structured_logger = StructuredLogger(pod="idk")
+structured_logger = StructuredLogger(pod="sentiment_analysis")
 
 
 @retry_with_backoff(max_retries=3, initial_delay=1.0, logger=structured_logger)

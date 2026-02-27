@@ -1,15 +1,7 @@
 from unittest.mock import MagicMock
 from psycopg_pool import ConnectionPool
 import pytest
-import os
-
-os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
-os.environ.setdefault("DB_HOST", "localhost")
-os.environ.setdefault("DB_PORT", "5432")
-os.environ.setdefault("DB_NAME", "test_db")
-os.environ.setdefault("DB_USER", "test_user")
-os.environ.setdefault("DB_PASS", "test_pass")
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.summary_service import LLMSummaryService
 
 
@@ -19,7 +11,7 @@ def create_summary_service(
 ) -> LLMSummaryService:
     """Creates a llm_summary service Instance fixture"""
     return LLMSummaryService(
-        logger=StructuredLogger(pod="sentiment_analysis"),
+        logger=StructuredLogger(pod="llm_summary"),
         time_window="all_time",
         db_pool=db_pool,
         llm_model_name="gpt-5.2",

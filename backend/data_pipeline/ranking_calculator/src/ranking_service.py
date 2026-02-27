@@ -13,7 +13,7 @@ from src.calculation_utils.badge import assign_is_top_pick
 from src.calculation_utils.badge import assign_has_limited_data
 from src.calculation_utils.badge import assign_is_most_discussed
 from src.calculation_utils.bayesian import calculate_bayesian_scores
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.core.settings_config import Settings
 import numpy as np
 

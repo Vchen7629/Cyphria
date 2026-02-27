@@ -8,7 +8,7 @@ from fastapi import HTTPException
 from valkey.asyncio import Valkey
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from src.core.settings import Settings
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from src.schemas.response import SearchProductResponse
 from src.schemas.response import GetViewMoreProductsMetadataResponse
 from src.schemas.response import GetTopCommentsProductResponse

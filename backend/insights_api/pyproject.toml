@@ -11,18 +11,23 @@ dependencies = [
     "pydantic-settings>=2.12.0",
     "valkey[libvalkey]>=6.1.1",
     "prometheus-fastapi-instrumentator>=7.1.0",
+    "shared"
 ]
 
 [tool.pyrefly]
 python-version = "3.13"
 untyped-def-behavior = "check-and-infer-return-any"
-search-path = ["."]
+search-path = [".", "../shared"] # ingestion root + shared package
+venv = ".venv"
 
 [tool.pyrefly.errors]
 unannotated-parameter = "error"
 unannotated-return = "error"
 unannotated-attribute = "error"
 implicit-any = "error"
+
+[tool.uv.sources]
+shared = { path = "../shared", editable = true }
 
 [dependency-groups]
 dev = [

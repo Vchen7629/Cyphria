@@ -1,5 +1,6 @@
 from unittest.mock import MagicMock
-from src.api.signal_handler import run_state, signal_handler
+from src.api.signal_handler import run_state
+from src.api.signal_handler import signal_handler
 import signal
 
 

@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from src.db_utils.pg_conn import get_session
-from src.core.logger import StructuredLogger
+from shared_core.logger import StructuredLogger
 from tests.types.fastapi import FastAPITestClient
 from src.routes.home import routes as home_router
 from src.routes.topic import routes as topic_router

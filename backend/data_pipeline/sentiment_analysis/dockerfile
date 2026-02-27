@@ -5,16 +5,19 @@ WORKDIR /app
 # create non-root user
 RUN groupadd -r appuser && useradd -r -g appuser appuser 
 
+# Copy shared package first
+COPY shared/ ./shared/
+
 ENV TRANSFORMERS_CACHE=/app/.cache/transformers
 ENV HF_HOME=/app/.cache/huggingface
 
 # install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-COPY pyproject.toml uv.lock ./
+COPY data_pipeline/sentiment_analysis/pyproject.toml data_pipeline/sentiment_analysis/uv.lock ./
 
 # For installing dependencies
-RUN uv sync --frozen --no-dev
+RUN data_pipeline/sentiment_analysis/uv sync --frozen --no-dev
 
 RUN mkdir -p /app/.cache && \
     uv run python -c "from transformers import AutoTokenizer, AutoModelForSequenceClassification; print('Downloading model and tokenizer'); \

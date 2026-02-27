@@ -25,8 +25,13 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger = StructuredLogger(pod="data_ingestion")
 
     db_pool = create_verified_connection_pool(
-        settings.DB_HOST, settings.DB_PORT, settings.DB_NAME, settings.DB_USER, settings.DB_PASS,
-        logger, service_name="data_ingestion"
+        settings.DB_HOST,
+        settings.DB_PORT,
+        settings.DB_NAME,
+        settings.DB_USER,
+        settings.DB_PASS,
+        logger,
+        service_name="data_ingestion",
     )
 
     logger.info(event_type="data_ingestion startup", message="Creating Reddit Client")

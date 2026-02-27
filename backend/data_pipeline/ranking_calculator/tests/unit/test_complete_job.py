@@ -23,6 +23,7 @@ def tests_marks_complete_running_job_complete() -> None:
     assert current_job.completed_at is not None
     assert before <= current_job.completed_at <= after
 
+
 def test_missing_ingestion_result() -> None:
     """ValueError should be raised if no ranking result is provided"""
     job_state = JobState()

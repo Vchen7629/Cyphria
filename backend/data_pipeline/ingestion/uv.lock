@@ -921,6 +921,9 @@ requires-dist = [
     { name = "psycopg-pool", specifier = ">=3.3.0" },
 ]
 
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=9.0.2" }]
+
 [[package]]
 name = "shellingham"
 version = "1.5.4"

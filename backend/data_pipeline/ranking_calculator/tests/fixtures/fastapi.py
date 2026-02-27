@@ -3,21 +3,14 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from typing import Any
 from typing import Generator
+from shared_core.logger import StructuredLogger
 from unittest.mock import MagicMock
 from psycopg_pool import ConnectionPool
 from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
-import os
-
-os.environ.setdefault("PRODUCT_CATEGORY", "GPU")
-os.environ.setdefault("REDDIT_API_CLIENT_ID", "reddit_id")
-os.environ.setdefault("REDDIT_API_CLIENT_SECRET", "reddit_secret")
-os.environ.setdefault("REDDIT_ACCOUNT_USERNAME", "username")
-os.environ.setdefault("REDDIT_ACCOUNT_PASSWORD", "password")
 from src.api import routes
 from src.api.routes import router as base_router
 from src.api.job_state import JobState
-from src.core.logger import StructuredLogger
 from tests.types.fastapi import FastAPITestClient
 import pytest
 

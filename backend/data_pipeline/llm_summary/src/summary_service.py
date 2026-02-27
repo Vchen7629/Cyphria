@@ -37,15 +37,7 @@ class LLMSummaryService(CancellationCheckMixin):
     def _fetch_products_with_comments(
         self, db_conn: psycopg.Connection
     ) -> list[tuple[str, list[str]]]:
-        """
-        Fetch all products and their top comments
-
-        Args:
-            db_conn: psycopg database connection
-
-        Returns:
-            a list of tuples (product_name, [comment_1, comment_2, ...])
-        """
+        """Fetch all products and their top comments"""
         result: list[tuple[str, list[str]]] = []
 
         product_name_list: list[str] = fetch_unique_products(db_conn, self.time_window)
@@ -101,23 +93,47 @@ class LLMSummaryService(CancellationCheckMixin):
 
         return tldr
 
-    def _insert_summary(self, db_conn: psycopg.Connection, product_name: str, summary: str) -> bool:
-        """
-        Insert the llm summary for a product into the database
-
-        Args:
-            db_conn: psycopg database connection
-            product_name: the name of the product we are inserting the summary for
-            summary: the llm summary
-
-        Returns:
-            true if the insert is successful, false otherwise
-        """
+    def _insert_summary(self, conn: psycopg.Connection, product_name: str, summary: str) -> bool:
+        """Insert the llm summary for a product into the database"""
         inserted: bool = upsert_llm_summaries(
-            db_conn, product_name, summary, self.time_window, self.llm_model_name
+            conn, product_name, summary, self.time_window, self.llm_model_name
         )
 
         return inserted
+
+    def _process_product_name_comment_pairs(
+        self, conn: psycopg.Connection, product_list: list[tuple[str, list[str]]]
+    ) -> int:
+        """process all product name comment pairs in the list"""
+        products_processed = 0
+
+        for product_name, comments in product_list:
+            try:
+                if not self._should_continue_processing("product"):
+                    break
+
+                # wrapping the generate summary here instead of over private method since it can't access self.logger
+                generate_with_retry = retry_llm_api(logger=self.logger)(
+                    lambda: self._generate_summary(product_name, comments)
+                )
+
+                summary: str = generate_with_retry()
+                if not summary:
+                    continue
+
+                inserted: bool = self._insert_summary(conn, product_name, summary)
+                if not inserted:
+                    continue
+
+                products_processed += 1
+            except Exception as e:
+                self.logger.error(
+                    "llm_summary run",
+                    message=f"Unexpected error processing {product_name}, error={str(e)}",
+                )
+                continue
+
+        return products_processed
 
     def _run_summary_pipeline(self) -> SummaryResult:
         """Run the entire processing pipeline"""
@@ -130,31 +146,7 @@ class LLMSummaryService(CancellationCheckMixin):
                 message=f"fetched {len(products_list)} products, for {self.time_window} time window",
             )
 
-            for product_name, comments in products_list:
-                try:
-                    if not self._should_continue_processing("product"):
-                        break
-
-                    # wrapping the generate summary here instead of over private method since it can't access self.logger
-                    generate_with_retry = retry_llm_api(logger=self.logger)(
-                        lambda: self._generate_summary(product_name, comments)
-                    )
-
-                    summary: str = generate_with_retry()
-                    if not summary:
-                        continue
-
-                    inserted: bool = self._insert_summary(conn, product_name, summary)
-                    if not inserted:
-                        continue
-
-                    products_processed += 1
-                except Exception as e:
-                    self.logger.error(
-                        "llm_summary run",
-                        message=f"Unexpected error processing {product_name}, error={str(e)}",
-                    )
-                    continue
+            products_processed += self._process_product_name_comment_pairs(conn, products_list)
 
         return SummaryResult(products_summarized=products_processed, cancelled=False)
 

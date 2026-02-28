@@ -8,7 +8,7 @@ from src.product_mappings.computing import GPU_MODEL_TO_BRAND
 from src.product_mappings.computing import CPU_MODEL_TO_BRAND
 from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
 from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
-
+from src.product_mappings.computing import LAPTOP_MODEL_TO_BRAND
 
 class ProductNormalizer:
     # Type alias for config tuple (mapping_dict, optional_normalizer_function)
@@ -31,6 +31,10 @@ class ProductNormalizer:
             {model.upper(): brand for model, brand in KEYBOARD_MODEL_TO_BRAND.items()},
             None,
         ),
+        "LAPTOP": (
+            {model.upper(): brand for model, brand in LAPTOP_MODEL_TO_BRAND.items()},
+            None,
+        )
     }
 
     def __init__(self, logger: Optional[StructuredLogger] = None) -> None:

@@ -31,9 +31,7 @@ def validate_cpu_match(matches: set[str], _mapping: dict[str, str]) -> set[str]:
     result = set()
     for match in matches:
         is_substring_with_prefix = any(
-            match in other and not other.startswith(match)
-            for other in matches
-            if other != match
+            match in other and not other.startswith(match) for other in matches if other != match
         )
 
         if not is_substring_with_prefix:

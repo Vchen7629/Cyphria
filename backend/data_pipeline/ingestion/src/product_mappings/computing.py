@@ -1996,7 +1996,7 @@ LAPTOP_MODEL_TO_BRAND = {
     "TravelMate P4": "Acer",
     "TravelMate P4 Spin 14": "Acer",
     # Apple
-    "Macbook Air M3": "Apple", # Note: People also say M3 Macbook Air so gotta find a way to fix this
+    "Macbook Air M3": "Apple",  # Note: People also say M3 Macbook Air so gotta find a way to fix this
     "Macbook Air M4": "Apple",
     "Macbook Pro M4": "Apple",
     "Macbook Pro M4 Max": "Apple",

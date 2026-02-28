@@ -31,10 +31,10 @@ class ProductDetector:
         """
         if not text or not isinstance(text, str):
             return []
-        
+
         process_fns = [
             (GPU_MODEL_TO_BRAND, validate_gpu_match),
-            (CPU_MODEL_TO_BRAND, validate_cpu_match)
+            (CPU_MODEL_TO_BRAND, validate_cpu_match),
         ]
 
         detected_products = {match.group(0).strip() for match in self._pattern.finditer(text)}
@@ -85,6 +85,7 @@ class ProductDetector:
 
         return set(by_model.values())
 
+
 class BuildDetectorRegex:
     """Build regex for product topics needed to parse text to detect products"""
 
@@ -94,7 +95,7 @@ class BuildDetectorRegex:
         "CPU": (CPU_MODEL_TO_BRAND, build_cpu_pattern),
         "MONITOR": (MONITOR_MODEL_TO_BRAND, None),
         "MECHANICAL KEYBOARD": (KEYBOARD_MODEL_TO_BRAND, None),
-        "LAPTOP": (LAPTOP_MODEL_TO_BRAND, None)
+        "LAPTOP": (LAPTOP_MODEL_TO_BRAND, None),
     }
 
     @classmethod

@@ -31,6 +31,7 @@ def validate_gpu_match(matches: set[str], mapping: dict[str, str]) -> set[str]:
     Validate if a match is a real GPU (filters out false positives like CPU numbers)
     and returns all matching
     """
+
     def _is_valid(match: str) -> bool:
         # Has brand prefix? Valid.
         if any(b.lower() in match.lower() for b in ["rtx", "gtx", "gt", "rx", "arc"]):
@@ -44,10 +45,11 @@ def validate_gpu_match(matches: set[str], mapping: dict[str, str]) -> set[str]:
         base_num = num.group(1)
         # Check if this base number exists in any model in the mapping
         return any(model.startswith(base_num) for model in mapping.keys())
-    
+
     valid = {m for m in matches if _is_valid(m)}
 
-    return _deduplicate_names(valid)    
+    return _deduplicate_names(valid)
+
 
 def _deduplicate_names(valid_names: set[str]) -> set[str]:
     """For the same base number, keep the longest match (brand-prefixed wins)"""

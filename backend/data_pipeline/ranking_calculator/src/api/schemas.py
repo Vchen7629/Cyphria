@@ -1,20 +1,13 @@
 from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime
-from enum import Enum
-
-
-class JobStatus(str, Enum):
-    RUNNING = "running"
-    COMPLETED = "completed"
-    FAILED = "failed"
+from pipeline_types.data_pipeline import JobStatus
 
 
 class RankingResult(BaseModel):
     """Result of a ranking airflow run"""
 
     products_processed: int
-    cancelled: bool = False
 
 
 class CurrentJob(BaseModel):

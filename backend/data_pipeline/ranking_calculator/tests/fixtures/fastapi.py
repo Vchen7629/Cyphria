@@ -8,9 +8,9 @@ from unittest.mock import MagicMock
 from psycopg_pool import ConnectionPool
 from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
-from src.api import routes
 from src.api.routes import router as base_router
-from src.api.job_state import JobState
+from src.api.schemas import CurrentJob
+from data_pipeline_utils.job_state_manager import JobState
 from tests.types.fastapi import FastAPITestClient
 import pytest
 
@@ -35,13 +35,11 @@ def fastapi_client(db_pool: ConnectionPool) -> Generator[FastAPITestClient, None
         return future
 
     mock_executor.submit = mock_submit
-    job_state_instance = JobState()
 
     test_app.state.db_pool = db_pool
     test_app.state.executor = mock_executor
     test_app.state.logger = StructuredLogger(pod="ranking_service")
-
-    routes.job_state = job_state_instance
+    test_app.state.job_state = JobState[CurrentJob]()
 
     with TestClient(test_app, raise_server_exceptions=False) as client:
         yield FastAPITestClient(client=client, app=test_app)

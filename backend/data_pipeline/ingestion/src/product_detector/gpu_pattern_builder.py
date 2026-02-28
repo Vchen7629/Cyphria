@@ -26,17 +26,36 @@ def build_gpu_pattern(mapping: dict[str, str]) -> re.Pattern[str]:
     return re.compile("|".join(f"(?:{p})" for p in parts), re.IGNORECASE)
 
 
-def validate_gpu_match(match: str, mapping: dict[str, str]) -> bool:
-    """Validate if a match is a real GPU (filters out false positives like CPU numbers)"""
-    # Has brand prefix? Valid.
-    if any(b.lower() in match.lower() for b in ["rtx", "gtx", "gt", "rx", "arc"]):
-        return True
+def validate_gpu_match(matches: set[str], mapping: dict[str, str]) -> set[str]:
+    """
+    Validate if a match is a real GPU (filters out false positives like CPU numbers)
+    and returns all matching
+    """
+    def _is_valid(match: str) -> bool:
+        # Has brand prefix? Valid.
+        if any(b.lower() in match.lower() for b in ["rtx", "gtx", "gt", "rx", "arc"]):
+            return True
 
-    # Bare number - check if it's a known model in the mapping
-    num = re.match(r"(\d{3,4})", match)
-    if not num:
-        return False
+        # Bare number - check if it's a known model in the mapping
+        num = re.match(r"(\d{3,4})", match)
+        if not num:
+            return False
 
-    base_num = num.group(1)
-    # Check if this base number exists in any model in the mapping
-    return any(model.startswith(base_num) for model in mapping.keys())
+        base_num = num.group(1)
+        # Check if this base number exists in any model in the mapping
+        return any(model.startswith(base_num) for model in mapping.keys())
+    
+    valid = {m for m in matches if _is_valid(m)}
+
+    return _deduplicate_names(valid)    
+
+def _deduplicate_names(valid_names: set[str]) -> set[str]:
+    """For the same base number, keep the longest match (brand-prefixed wins)"""
+    by_number: dict[str, str] = {}
+    for match in valid_names:
+        num = re.search(r"(\d{3,4})", match)
+        key = num.group(1) if num else match
+        if key not in by_number or len(match) > len(by_number[key]):
+            by_number[key] = match
+
+    return set(by_number.values())

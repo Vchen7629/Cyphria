@@ -2,6 +2,7 @@ from src.product_detector.base import ProductDetector
 from src.product_detector.base import BuildDetectorRegex
 from src.product_mappings.computing import GPU_MODEL_TO_BRAND
 from src.product_mappings.computing import CPU_MODEL_TO_BRAND
+from src.product_mappings.computing import LAPTOP_MODEL_TO_BRAND
 from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
 from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
 import pytest
@@ -115,6 +116,27 @@ def test_monitor_valid_matches(sentence: str, expected: list[str]) -> None:
     monitor_regex_pattern = BuildDetectorRegex().process_all_topics(["Monitor"])[0]
     assert monitor_regex_pattern is not None
     detector = ProductDetector(pattern=monitor_regex_pattern, mapping=MONITOR_MODEL_TO_BRAND)
+    assert detector.extract_products(sentence) == sorted(expected)
+    assert detector.contains_product(sentence) is True
+
+
+@pytest.mark.parametrize(
+    argnames="sentence,expected",
+    argvalues=[
+        # multiple matches
+        (
+            "I have a Nitro V 15, Aero 5, and Lenovo IdeaPad 1",
+            ["Nitro V 15", "Aero 5", "Lenovo IdeaPad 1"],
+        ),
+        # deduplicate
+        ("i have Aero 5, he has Gigabyte Aero 5", ["Gigabyte Aero 5"]),
+    ],
+)
+def test_laptop_valid_matches(sentence: str, expected: list[str]) -> None:
+    """Test if it can match valid laptop strings"""
+    laptop_regex_pattern = BuildDetectorRegex().process_all_topics(["LAPTOP"])[0]
+    assert laptop_regex_pattern is not None
+    detector = ProductDetector(pattern=laptop_regex_pattern, mapping=LAPTOP_MODEL_TO_BRAND)
     assert detector.extract_products(sentence) == sorted(expected)
     assert detector.contains_product(sentence) is True
 

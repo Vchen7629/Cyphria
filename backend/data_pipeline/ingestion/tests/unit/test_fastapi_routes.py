@@ -1,6 +1,5 @@
 from unittest.mock import MagicMock
 from src.api.routes import get_job_state
-from unittest.mock import patch
 from datetime import datetime
 from datetime import timezone
 from fastapi import FastAPI

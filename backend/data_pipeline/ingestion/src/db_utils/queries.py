@@ -1,4 +1,5 @@
-from typing import Any, Optional
+from typing import Any
+from typing import Optional
 from shared_core.logger import StructuredLogger
 from shared_db.retry import retry_with_backoff
 import psycopg

@@ -1,6 +1,5 @@
 from datetime import datetime
 from psycopg_pool import ConnectionPool
-from src.api.job_state import JobState
 from src.api.schemas import SentimentResult
 from src.api.schemas import ProductSentiment
 from shared_core.logger import StructuredLogger
@@ -24,6 +23,46 @@ class SentimentService:
         self.product_topic = product_topic
         self.db_pool = db_pool
         self.model = model
+
+    def run_sentiment_pipeline(self) -> SentimentResult:
+        """
+        Main orchestrator method that polls for unprocessed comments for a product_topic and processes them
+
+        Returns
+            SentimentResult with counts of posts/comments processed
+        """
+        self.logger.info(
+            event_type="sentiment_analysis worker", message="Starting main worker loop"
+        )
+
+        comments_inserted: int = 0
+        comments_updated: int = 0
+
+        while True:
+            with self.db_pool.connection() as conn:
+                comments = fetch_unprocessed_comments(conn, self.product_topic, batch_size=200)
+
+            # This stops the service from running once all comments are processed
+            if not comments:
+                self.logger.info(
+                    event_type="sentiment_analysis run",
+                    message=f"All comments processed for product_topic {self.product_topic}. Exiting",
+                )
+                break
+
+            sentiments_inserted, comments_processed = self._process_comments(comments)
+            self.logger.info(
+                event_type="sentiment_analysis run",
+                message=f"Processed batch: {comments_inserted} sentiments inserted, {comments_updated} comments marked processed",
+            )
+
+            comments_inserted += sentiments_inserted
+            comments_updated += comments_processed
+
+        return SentimentResult(
+            comments_inserted=comments_inserted,
+            comments_updated=comments_updated,
+        )
 
     def _process_sentiment_and_write_to_db(
         self,
@@ -100,75 +139,3 @@ class SentimentService:
         )
 
         return sentiments_inserted, comments_processed
-
-    def _run_sentiment_pipeline(self) -> SentimentResult:
-        """
-        Main orchestrator method that polls for unprocessed comments for a product_topic and processes them
-
-        Returns
-            SentimentResult with counts of posts/comments processed
-        """
-        self.logger.info(
-            event_type="sentiment_analysis worker", message="Starting main worker loop"
-        )
-
-        comments_inserted: int = 0
-        comments_updated: int = 0
-
-        while True:
-            with self.db_pool.connection() as conn:
-                comments = fetch_unprocessed_comments(conn, self.product_topic, batch_size=200)
-
-            # This stops the service from running once all comments are processed
-            if not comments:
-                self.logger.info(
-                    event_type="sentiment_analysis run",
-                    message=f"All comments processed for product_topic {self.product_topic}. Exiting",
-                )
-                break
-
-            sentiments_inserted, comments_processed = self._process_comments(comments)
-            self.logger.info(
-                event_type="sentiment_analysis run",
-                message=f"Processed batch: {comments_inserted} sentiments inserted, {comments_updated} comments marked processed",
-            )
-
-            comments_inserted += sentiments_inserted
-            comments_updated += comments_processed
-
-        return SentimentResult(
-            comments_inserted=comments_inserted,
-            comments_updated=comments_updated,
-        )
-
-    def run_single_cycle(self, job_state: JobState) -> None:
-        """
-        Run one complete sentiment analysis cycle and update job state
-        runs in a background thread and handles all errors internally and updates the job state
-
-        Args:
-            job_state: JobState instance to update with progress/results
-
-        Raise:
-            Value error if not job state
-        """
-        if not job_state:
-            raise ValueError("Job state must be provided for the run single cycle")
-
-        try:
-            result = self._run_sentiment_pipeline()
-
-            job_state.complete_job(result)
-
-            self.logger.info(
-                event_type="sentiment_analysis run",
-                message=f"Ranking completed: \
-                    {result.comments_inserted} comments inserted, \
-                    {result.comments_updated} comments updated",
-            )
-
-        except Exception as e:
-            self.logger.error(
-                event_type="sentiment_analysis run", message=f"Sentiment analysis failed: {str(e)}"
-            )
-            job_state.fail_job(str(e))

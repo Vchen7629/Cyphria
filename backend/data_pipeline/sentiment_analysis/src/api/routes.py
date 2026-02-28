@@ -1,9 +1,14 @@
+from data_pipeline_utils.run_single_cycle import run_single_cycle
+from fastapi import Depends
 from fastapi import Request
 from fastapi import APIRouter
 from fastapi import HTTPException
+from datetime import datetime
+from datetime import timezone
 from concurrent.futures import ThreadPoolExecutor
+from pipeline_types.data_pipeline import JobStatus
+from data_pipeline_utils.job_state_manager import JobState
 from src.sentiment_service import SentimentService
-from src.api.job_state import JobState
 from src.api.schemas import CurrentJob
 from src.api.schemas import RunRequest
 from src.api.schemas import RunResponse
@@ -12,12 +17,15 @@ import asyncio
 
 router = APIRouter()
 
-# global job state thats initialized in lifespan
-job_state: JobState | None = None
+
+def get_job_state(request: Request) -> JobState[CurrentJob]:
+    return request.app.state.job_state
 
 
 @router.post("/run", response_model=RunResponse)
-async def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunResponse:
+async def trigger_sentiment_analysis(
+    request: Request, body: RunRequest, job_state: JobState[CurrentJob] = Depends(get_job_state)
+) -> RunResponse:
     """
     Trigger an sentiment analysis run asynchronously
 
@@ -38,8 +46,13 @@ async def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunR
     if job_state.is_running():
         raise HTTPException(status_code=409, detail="Ranking already in progress")
 
-    if job_state:
-        job_state.create_job(product_topic)
+    job_state.set_running_job(
+        CurrentJob(
+            product_topic=product_topic,
+            status=JobStatus.RUNNING,
+            started_at=datetime.now(tz=timezone.utc),
+        )
+    )
 
     service = SentimentService(
         logger=request.app.state.logger,
@@ -51,14 +64,20 @@ async def trigger_sentiment_analysis(request: Request, body: RunRequest) -> RunR
     executor: ThreadPoolExecutor = request.app.state.executor
     loop = asyncio.get_event_loop()
 
-    if job_state:
-        loop.run_in_executor(executor, service.run_single_cycle, job_state)
+    loop.run_in_executor(
+        executor,
+        run_single_cycle,
+        job_state,
+        "sentiment_service",
+        service.run_sentiment_pipeline,
+        request.app.state.logger,
+    )
 
     return RunResponse(status="started")
 
 
 @router.get("/status", response_model=CurrentJob)
-async def get_job_status() -> CurrentJob:
+async def get_job_status(job_state: JobState[CurrentJob] = Depends(get_job_state)) -> CurrentJob:
     """
     Get status of a ingestion job
     Airflow HttpSensor polls this endpoint until status is 'completed' or 'failed'

@@ -7,6 +7,7 @@ from src.summary_service import LLMSummaryService
 from pipeline_types.data_pipeline import JobStatus
 import pytest
 
+
 @pytest.fixture
 def create_summary_service(
     db_pool: ConnectionPool, mock_openai_client: MagicMock

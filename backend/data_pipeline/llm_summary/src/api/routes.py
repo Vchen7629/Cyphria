@@ -16,8 +16,10 @@ import asyncio
 
 router = APIRouter()
 
+
 def get_job_state(request: Request) -> JobState[CurrentJob]:
     return request.app.state.job_state
+
 
 @router.post("/run", response_model=RunResponse)
 async def trigger_llm_summarization(
@@ -75,7 +77,7 @@ async def get_job_status(job_state: JobState[CurrentJob] = Depends(get_job_state
 
     Args:
         job_state: current job state
-        
+
     Raises:
         HTTPException if no job_state
     """

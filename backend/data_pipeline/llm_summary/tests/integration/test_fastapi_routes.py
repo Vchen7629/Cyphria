@@ -4,6 +4,7 @@ from tests.types.fastapi import FastAPITestClient
 from src.api.schemas import RunRequest
 from src.api.schemas import SummaryResult
 
+
 def test_health_endpoint_health_when_dependencies_ok(fastapi_client: FastAPITestClient) -> None:
     """Health endpoint should return healthy when all dependencies ok"""
     response = fastapi_client.client.get("/health")
@@ -25,6 +26,7 @@ def test_health_endpoint_unhealthy_db(fastapi_client: FastAPITestClient) -> None
     data = response.json()
     assert data["status"] == "unhealthy"
     assert data["db_connected"] is False
+
 
 def test_run_endpoint_success(fastapi_client: FastAPITestClient) -> None:
     """Run endpoint should return status: started."""
@@ -62,6 +64,4 @@ def test_call_run_endpoint_when_already_in_progress(
         assert "already in progress" in response.json()["detail"]
     finally:
         # Clean up by completing the job
-        job_state.mark_complete(
-            SummaryResult(products_summarized=10, cancelled=False)
-        )
+        job_state.mark_complete(SummaryResult(products_summarized=10, cancelled=False))

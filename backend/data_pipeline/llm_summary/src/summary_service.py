@@ -27,7 +27,7 @@ class LLMSummaryService:
         self.llm_client = llm_client
         self.logger = logger
         self.db_pool = db_pool
-    
+
     def run_summary_pipeline(self) -> SummaryResult:
         """Run the entire processing pipeline"""
         products_processed = 0
@@ -42,7 +42,6 @@ class LLMSummaryService:
             products_processed += self._process_product_name_comment_pairs(conn, products_list)
 
         return SummaryResult(products_summarized=products_processed, cancelled=False)
-
 
     def _fetch_products_with_comments(
         self, db_conn: psycopg.Connection

@@ -64,7 +64,7 @@ def test_comments_triggers_batch(
     def mock_process_comment(_comment: Any, _detector: Any, _topic: Any) -> ProcessedRedditComment:
         return mock_reddit_comment.model_copy(update={"comment_id": f"rc_{_comment.id}"})
 
-    batch_insert_calls: dict[str, Any] = {"count": 0, "sizes": []} # type: ignore
+    batch_insert_calls: dict[str, Any] = {"count": 0, "sizes": []}  # type: ignore
 
     def track_batch_insert(comment_list: list[ProcessedRedditComment]) -> None:
         batch_insert_calls["count"] += 1

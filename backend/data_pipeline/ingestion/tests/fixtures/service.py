@@ -110,6 +110,7 @@ def worker_with_test_db(
 
             test_pool.close()
 
+
 @pytest.fixture
 def mock_job() -> MagicMock:
     return MagicMock(

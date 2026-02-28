@@ -2,13 +2,15 @@ from typing import Optional
 from collections import defaultdict
 from shared_core.logger import StructuredLogger
 from src.utils.validation import validate_string
-from src.product_mappings.computing import CPU_REGEX_PATTERNS
 from src.product_mappings.computing import CPU_MODEL_TO_BRAND
 from src.product_mappings.computing import GPU_MODEL_TO_BRAND
-from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
+from src.product_mappings.computing import LAPTOP_MODEL_TO_BRAND
 from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
+from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
 from src.product_detector.gpu_pattern_builder import build_gpu_pattern
 from src.product_detector.gpu_pattern_builder import validate_gpu_match
+from src.product_detector.cpu_pattern_builder import build_cpu_pattern
+from src.product_detector.cpu_pattern_builder import validate_cpu_match
 import re
 
 
@@ -29,31 +31,17 @@ class ProductDetector:
         """
         if not text or not isinstance(text, str):
             return []
+        
+        process_fns = [
+            (GPU_MODEL_TO_BRAND, validate_gpu_match),
+            (CPU_MODEL_TO_BRAND, validate_cpu_match)
+        ]
 
         detected_products = {match.group(0).strip() for match in self._pattern.finditer(text)}
 
-        # Apply validation based on mapping type
-        if self._mapping is GPU_MODEL_TO_BRAND:
-            detected_products = {
-                m for m in detected_products if validate_gpu_match(m, self._mapping)
-            }
-
-        # CPU uses substring containment deduplication
-        if self._mapping is CPU_MODEL_TO_BRAND:
-            deduplicated_products = self._deduplicate_regex(
-                detected_products,
-                [
-                    "i3-",
-                    "i5-",
-                    "i7-",
-                    "i9-",
-                    "ryzen ",
-                    "core ",
-                    "pentium ",
-                    "celeron ",
-                    "threadripper ",
-                ],
-            )
+        process_fn = next((fn for mapping, fn in process_fns if self._mapping is mapping), None)
+        if process_fn:
+            deduplicated_products = process_fn(detected_products, self._mapping)
         else:
             deduplicated_products = self._deduplicate_mapping(detected_products)
 
@@ -97,37 +85,16 @@ class ProductDetector:
 
         return set(by_model.values())
 
-    @staticmethod
-    def _deduplicate_regex(matches: set[str], prefixes: list[str]) -> set[str]:
-        """
-        Remove matches taht are substrings of others with additional text at the start
-        Keeps both if the longer match only adds a suffix at the end (different variants)
-
-        Ex: 3900x3d and Ryzen 7 3900x3d, remove 3900x3d, i9-14900 and i9-14900k keep both
-        """
-        result = set()
-        for match in matches:
-            is_substring_with_prefix = any(
-                match in other and not other.startswith(match)
-                for other in matches
-                if other != match
-            )
-
-            if not is_substring_with_prefix:
-                result.add(match)
-
-        return result
-
-
 class BuildDetectorRegex:
     """Build regex for product topics needed to parse text to detect products"""
 
     # Mapping of topics to (data_mapping, optional_custom_builder)
     _TOPIC_CONFIGS = {
         "GPU": (GPU_MODEL_TO_BRAND, build_gpu_pattern),
-        "CPU": (CPU_MODEL_TO_BRAND, None),
+        "CPU": (CPU_MODEL_TO_BRAND, build_cpu_pattern),
         "MONITOR": (MONITOR_MODEL_TO_BRAND, None),
         "MECHANICAL KEYBOARD": (KEYBOARD_MODEL_TO_BRAND, None),
+        "LAPTOP": (LAPTOP_MODEL_TO_BRAND, None)
     }
 
     @classmethod
@@ -185,8 +152,6 @@ class BuildDetectorRegex:
 
             if custom_builder:
                 pattern = custom_builder(mapping)
-            elif mapping is CPU_MODEL_TO_BRAND:
-                pattern = re.compile("|".join(CPU_REGEX_PATTERNS), re.IGNORECASE)
             else:
                 pattern = cls._build_pattern(mapping)
 

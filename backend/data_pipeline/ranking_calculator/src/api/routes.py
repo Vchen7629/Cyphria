@@ -1,8 +1,14 @@
+from shared_core.logger import StructuredLogger
+from data_pipeline_utils.run_single_cycle import run_single_cycle
+from datetime import timezone
+from datetime import datetime
+from fastapi import Depends
 from fastapi import Request
 from fastapi import HTTPException
 from fastapi.routing import APIRouter
 from concurrent.futures import ThreadPoolExecutor
-from src.api.job_state import JobState
+from pipeline_types.data_pipeline import JobStatus
+from data_pipeline_utils.job_state_manager import JobState
 from src.api.schemas import HealthResponse
 from src.api.schemas import RunResponse
 from src.api.schemas import RunRequest
@@ -12,12 +18,15 @@ import asyncio
 
 router = APIRouter()
 
-# global job state thats initialized in lifespan
-job_state: JobState | None = None
+
+def get_job_state(request: Request) -> JobState[CurrentJob]:
+    return request.app.state.job_state
 
 
 @router.post("/run", response_model=RunResponse)
-async def trigger_ranking_calculation(request: Request, body: RunRequest) -> RunResponse:
+async def trigger_ranking_calculation(
+    request: Request, body: RunRequest, job_state: JobState[CurrentJob] = Depends(get_job_state)
+) -> RunResponse:
     """
     Trigger an ranking calculation run asynchronously
 
@@ -29,6 +38,7 @@ async def trigger_ranking_calculation(request: Request, body: RunRequest) -> Run
     """
     product_topic: str = body.product_topic
     time_window: str = body.time_window
+    logger = StructuredLogger(pod="ranking_service")
 
     if not product_topic.strip() or not time_window.strip():
         raise HTTPException(
@@ -42,7 +52,13 @@ async def trigger_ranking_calculation(request: Request, body: RunRequest) -> Run
     if job_state.is_running():
         raise HTTPException(status_code=409, detail="Ranking already in progress")
 
-    job_state.create_job(product_topic)
+    job_state.set_running_job(
+        CurrentJob(
+            product_topic=product_topic,
+            status=JobStatus.RUNNING,
+            started_at=datetime.now(tz=timezone.utc),
+        )
+    )
 
     service = RankingService(
         db_pool=request.app.state.db_pool,
@@ -55,13 +71,20 @@ async def trigger_ranking_calculation(request: Request, body: RunRequest) -> Run
     loop = asyncio.get_event_loop()
 
     # run worker in thread pool to prevent blocking the polling /status endpoint
-    loop.run_in_executor(executor, service.run_single_cycle, job_state)
+    loop.run_in_executor(
+        executor,
+        run_single_cycle,
+        job_state,
+        "ingestion_service",
+        service.run_ranking_pipeline,
+        logger,
+    )
 
     return RunResponse(status="started")
 
 
 @router.get("/status", response_model=CurrentJob)
-async def get_job_status() -> CurrentJob:
+async def get_job_status(job_state: JobState[CurrentJob] = Depends(get_job_state)) -> CurrentJob:
     """
     Get status of a ranking job
     Airflow HttpSensor polls this endpoint until status is 'completed' or 'failed'

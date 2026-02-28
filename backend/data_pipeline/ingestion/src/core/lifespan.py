@@ -4,12 +4,12 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from concurrent.futures import ThreadPoolExecutor
 from shared_db.conn import create_verified_connection_pool
+from data_pipeline_utils.job_state_manager import JobState
 from shared_core.logger import StructuredLogger
-from src.api import routes
-from src.api.job_state import JobState
+from src.api.schemas import CurrentJob
 from src.core.settings_config import Settings
-from src.core.reddit_client_instance import createRedditClient
 from src.product_normalizer.base import ProductNormalizer
+from src.core.reddit_client_instance import createRedditClient
 
 settings = Settings()
 
@@ -44,19 +44,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
         max_workers=max_praw_connections, thread_name_prefix="fetch_reddit"
     )
 
-    job_state_instance = JobState()
-
-    normalizer = ProductNormalizer(logger)
-
     # Store these values in app state for dependency injection
     app.state.db_pool = db_pool
     app.state.reddit_client = reddit_client
+    app.state.job_state = JobState[CurrentJob]()
     app.state.logger = logger
-    app.state.normalizer = normalizer
+    app.state.normalizer = ProductNormalizer(logger)
     app.state.main_processing_executor = main_processing_executor
     app.state.fetch_reddit_post_executor = fetch_reddit_posts_executor
-
-    routes.job_state = job_state_instance
 
     logger.info(event_type="data_ingestion startup", message="Ingestion service ready")
 

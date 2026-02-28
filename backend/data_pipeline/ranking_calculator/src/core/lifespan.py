@@ -5,8 +5,8 @@ from contextlib import asynccontextmanager
 from concurrent.futures import ThreadPoolExecutor
 from shared_core.logger import StructuredLogger
 from shared_db.conn import create_verified_connection_pool
-from src.api import routes
-from src.api.job_state import JobState
+from data_pipeline_utils.job_state_manager import JobState
+from src.api.schemas import CurrentJob
 from src.core.settings_config import Settings
 
 settings = Settings()
@@ -49,14 +49,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
     executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="ranking_service")
 
-    job_state_instance = JobState()
-
     # Store these values in app state for dependency injection
     app.state.db_pool = db_pool
     app.state.logger = logger
     app.state.executor = executor
-
-    routes.job_state = job_state_instance
+    app.state.job_state = JobState[CurrentJob]()
 
     logger.info(event_type="ranking_service startup", message="Ranking service ready")
 

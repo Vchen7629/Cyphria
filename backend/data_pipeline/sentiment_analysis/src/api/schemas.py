@@ -1,7 +1,7 @@
-from enum import Enum
 from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel
+from pipeline_types.data_pipeline import JobStatus
 
 
 class SentimentResult(BaseModel):
@@ -9,13 +9,6 @@ class SentimentResult(BaseModel):
 
     comments_inserted: int
     comments_updated: int
-    cancelled: bool = False
-
-
-class JobStatus(str, Enum):
-    RUNNING = "running"
-    COMPLETED = "completed"
-    FAILED = "failed"
 
 
 class CurrentJob(BaseModel):

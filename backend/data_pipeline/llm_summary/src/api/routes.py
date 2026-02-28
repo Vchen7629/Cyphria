@@ -1,23 +1,31 @@
+from fastapi import Depends
 from fastapi import APIRouter
 from fastapi import Request
 from fastapi import HTTPException
+from datetime import datetime
+from datetime import timezone
 from concurrent.futures import ThreadPoolExecutor
+from pipeline_types.data_pipeline import JobStatus
+from data_pipeline_utils.job_state_manager import JobState
+from data_pipeline_utils.run_single_cycle import run_single_cycle
 from src.api.schemas import CurrentJob
 from src.api.schemas import RunRequest
 from src.api.schemas import RunResponse
 from src.api.schemas import HealthResponse
 from src.summary_service import LLMSummaryService
-from src.api.job_state import JobState
 import asyncio
 
 router = APIRouter()
 
-# global job state thats initialized in lifespan
-job_state: JobState | None = None
+
+def get_job_state(request: Request) -> JobState[CurrentJob]:
+    return request.app.state.job_state
 
 
 @router.post("/run", response_model=RunResponse)
-async def trigger_llm_summarization(request: Request, body: RunRequest) -> RunResponse:
+async def trigger_llm_summarization(
+    request: Request, body: RunRequest, job_state: JobState[CurrentJob] = Depends(get_job_state)
+) -> RunResponse:
     """
     Trigger an summary run asynchronously
 
@@ -38,7 +46,13 @@ async def trigger_llm_summarization(request: Request, body: RunRequest) -> RunRe
     if job_state.is_running():
         raise HTTPException(status_code=409, detail="Summary already in progress")
 
-    job_state.create_job(time_window=time_window)
+    job_state.set_running_job(
+        CurrentJob(
+            time_window=time_window,
+            status=JobStatus.RUNNING,
+            started_at=datetime.now(tz=timezone.utc),
+        )
+    )
 
     service = LLMSummaryService(
         llm_model_name=request.app.state.llm_model_name,
@@ -51,16 +65,27 @@ async def trigger_llm_summarization(request: Request, body: RunRequest) -> RunRe
     executor: ThreadPoolExecutor = request.app.state.executor
     loop = asyncio.get_event_loop()
 
-    loop.run_in_executor(executor, service.run_single_cycle, job_state)
+    # run worker in thread pool to prevent blocking the polling /status endpoint
+    loop.run_in_executor(
+        executor,
+        run_single_cycle,
+        job_state,
+        "llm_summary_service",
+        service.run_summary_pipeline,
+        request.app.state.logger,
+    )
 
     return RunResponse(status="started")
 
 
 @router.get("/status", response_model=CurrentJob)
-async def get_job_status() -> CurrentJob:
+async def get_job_status(job_state: JobState[CurrentJob] = Depends(get_job_state)) -> CurrentJob:
     """
     Get status of a summary job
     Airflow HttpSensor polls this endpoint until status is 'completed' or 'failed'
+
+    Args:
+        job_state: current job state
 
     Raises:
         HTTPException if no job_state

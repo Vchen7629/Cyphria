@@ -14,11 +14,12 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["shared_db*", "shared_core*", "shared_api*"]
+include = ["shared_db*", "shared_core*", "shared_api*", "pipeline_types*", "data_pipeline_utils*"]
 
 [dependency-groups]
 dev = [
     "fastapi>=0.133.1",
     "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
     "testcontainers[postgres]>=4.14.1",
 ]

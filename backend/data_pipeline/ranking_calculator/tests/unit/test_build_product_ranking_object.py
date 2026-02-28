@@ -295,24 +295,3 @@ def test_invalid_input_params(
     )
 
     assert result == []
-
-
-def test_cancel_flag_stops_processing(mock_ranking_service: RankingService) -> None:
-    """cancel_requested flag cause the method to return 0"""
-    service = mock_ranking_service
-    service.cancel_requested = True
-
-    result = service._build_product_ranking_object(
-        product_scores=[MOCK_SENTIMENT_AGGREGATE],
-        product_topic="GPU",
-        time_window="all_time",
-        ranks=np.array([2]),
-        grades=np.array(["S"]),
-        bayesian_scores=np.array([0.88]),
-        is_top_pick=np.array([True]),
-        is_most_discussed=np.array([False]),
-        has_limited_data=np.array([False]),
-        calculation_date=datetime.now(tz=timezone.utc),
-    )
-
-    assert result == []

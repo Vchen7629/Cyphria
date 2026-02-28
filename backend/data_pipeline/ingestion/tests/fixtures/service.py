@@ -1,4 +1,7 @@
 from typing import Optional
+from datetime import datetime
+from datetime import timezone
+from pipeline_types.data_pipeline import JobStatus
 from src.product_detector.base import BuildDetectorRegex
 from src.product_detector.base import ProductDetector
 from src.product_normalizer.base import ProductNormalizer
@@ -106,3 +109,16 @@ def worker_with_test_db(
                 conn.commit()
 
             test_pool.close()
+
+
+@pytest.fixture
+def mock_job() -> MagicMock:
+    return MagicMock(
+        category="Computing",
+        subreddit_list=["Nvidia", "AMD"],
+        status=JobStatus.RUNNING,
+        started_at=datetime.now(tz=timezone.utc),
+        completed_at=None,
+        result=None,
+        error=None,
+    )

@@ -1,19 +1,24 @@
 import pytest
-from fastapi import FastAPI
 from unittest.mock import patch
 from unittest.mock import MagicMock
+from shared_db.conn import create_verified_connection_pool
 
-@pytest.mark.asyncio
-async def test_pool_closed_on_db_health_check_failure() -> None:
+
+def test_pool_closed_on_db_health_check_failure() -> None:
     """Pool should be closed if database health check fails during startup"""
     mock_pool = MagicMock()
     mock_pool.connection.side_effect = Exception("Connection refused")
 
-    with patch("shared_db.conn.create_verified_connection_pool", return_value=mock_pool):
-        app = FastAPI(lifespan=lifespan)
-
+    with patch("shared_db.conn.ConnectionPool", return_value=mock_pool):
         with pytest.raises(Exception, match="Connection refused"):
-            async with lifespan(app):
-                pass
+            create_verified_connection_pool(
+                db_host="localhost",
+                db_port=5432,
+                db_name="test",
+                db_user="test",
+                db_password="test",
+                logger=MagicMock(),
+                service_name="test",
+            )
 
         mock_pool.close.assert_called_once()

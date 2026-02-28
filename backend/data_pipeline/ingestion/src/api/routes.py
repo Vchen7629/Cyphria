@@ -1,9 +1,14 @@
 from typing import Optional
+from datetime import timezone
+from datetime import datetime
+from fastapi import Depends
 from fastapi import Request
 from fastapi import APIRouter
 from fastapi import HTTPException
 from concurrent.futures import ThreadPoolExecutor
-from src.api.job_state import JobState
+from pipeline_types.data_pipeline import JobStatus
+from data_pipeline_utils.job_state_manager import JobState
+from data_pipeline_utils.run_single_cycle import run_single_cycle
 from src.api.schemas import HealthResponse
 from src.api.schemas import RunResponse
 from src.api.schemas import RunRequest
@@ -17,12 +22,15 @@ import asyncio
 
 router = APIRouter()
 
-# global job state thats initialized in lifespan
-job_state: JobState | None = None
+
+def get_job_state(request: Request) -> JobState[CurrentJob]:
+    return request.app.state.job_state
 
 
 @router.post("/run", response_model=RunResponse)
-async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
+async def trigger_ingestion(
+    request: Request, body: RunRequest, job_state: JobState[CurrentJob] = Depends(get_job_state)
+) -> RunResponse:
     """
     Trigger an ingestion run asynchronously
 
@@ -47,7 +55,14 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
     if job_state.is_running():
         raise HTTPException(status_code=409, detail="Ingestion already in progress")
 
-    job_state.create_job(body.category, subreddit_list)
+    job_state.set_running_job(
+        CurrentJob(
+            category=category,
+            subreddit_list=subreddit_list,
+            status=JobStatus.RUNNING,
+            started_at=datetime.now(tz=timezone.utc),
+        )
+    )
 
     # Build detectors for the requested topics
     logger = request.app.state.logger
@@ -80,13 +95,20 @@ async def trigger_ingestion(request: Request, body: RunRequest) -> RunResponse:
     loop = asyncio.get_event_loop()
 
     # run worker in thread pool to prevent blocking the polling /status endpoint
-    loop.run_in_executor(executor, service.run_single_cycle, job_state)
+    loop.run_in_executor(
+        executor,
+        run_single_cycle,
+        job_state,
+        "ingestion_service",
+        service.run_ingestion_pipeline,
+        logger,
+    )
 
     return RunResponse(status="started")
 
 
 @router.get("/status", response_model=CurrentJob)
-async def get_job_status() -> CurrentJob:
+async def get_job_status(job_state: JobState[CurrentJob] = Depends(get_job_state)) -> CurrentJob:
     """
     Get status of a ingestion job
     Airflow HttpSensor polls this endpoint until status is 'completed' or 'failed'

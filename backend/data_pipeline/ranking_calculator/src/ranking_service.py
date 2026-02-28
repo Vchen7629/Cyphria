@@ -1,7 +1,6 @@
 from datetime import timezone
 from datetime import datetime
 from psycopg_pool import ConnectionPool
-from src.api.job_state import JobState
 from src.api.schemas import ProductScore
 from src.api.schemas import RankingResult
 from src.api.schemas import SentimentAggregate
@@ -32,8 +31,18 @@ class RankingService:
         self.product_topic = product_topic
         self.time_window = time_window
 
-        # cancellation flag, used to request graceful shutdown
-        self.cancel_requested = False
+    def run_ranking_pipeline(self) -> RankingResult:
+        """
+        Main orchestrator function: fetch, process, and write to db for products
+
+        Returns:
+            RankingResult with counts of posts/comments processed
+        """
+        products_processed = self._calculate_rankings_for_window(
+            self.product_topic, self.time_window
+        )
+
+        return RankingResult(products_processed=products_processed)
 
     def _build_product_ranking_object(
         self,
@@ -193,44 +202,3 @@ class RankingService:
             )
 
             return len(product_ranking_list)
-
-    def _run_ranking_pipeline(self) -> RankingResult:
-        """
-        Main orchestrator function: fetch, process, and write to db for products
-
-        Returns:
-            RankingResult with counts of posts/comments processed
-        """
-        products_processed = self._calculate_rankings_for_window(
-            self.product_topic, self.time_window
-        )
-
-        return RankingResult(products_processed=products_processed, cancelled=self.cancel_requested)
-
-    def run_single_cycle(self, job_state: JobState) -> None:
-        """
-        Run one complete ranking cycle and update job state
-        runs in a background thread and handles all errors internally and updates the job state
-
-        Args:
-            job_state: JobState instance to update with progress/results
-
-        Raise:
-            Value error if not job state
-        """
-        if not job_state:
-            raise ValueError("Job state must be provided for the run single cycle")
-
-        try:
-            result = self._run_ranking_pipeline()
-
-            job_state.complete_job(result)
-
-            self.logger.info(
-                event_type="ranking_service run",
-                message=f"Ingestion completed: {result.products_processed} products processed",
-            )
-
-        except Exception as e:
-            self.logger.error(event_type="ranking_service run", message=f"Ranking failed: {str(e)}")
-            job_state.fail_job(str(e))

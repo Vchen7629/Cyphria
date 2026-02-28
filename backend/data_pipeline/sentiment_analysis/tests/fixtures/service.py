@@ -1,10 +1,13 @@
+from datetime import datetime
+from datetime import timezone
 from unittest.mock import MagicMock
 from psycopg_pool import ConnectionPool
-import time
-import pytest
 from shared_core.logger import StructuredLogger
+from pipeline_types.data_pipeline import JobStatus
 from src.sentiment_service import SentimentService
 from src.preprocessing.sentiment_analysis import Aspect_Based_Sentiment_Analysis
+import time
+import pytest
 
 
 @pytest.fixture
@@ -42,4 +45,16 @@ def mock_sentiment_service() -> SentimentService:
         logger=MagicMock(spec=StructuredLogger),
         product_topic="GPU",
         model=MagicMock(spec=Aspect_Based_Sentiment_Analysis),
+    )
+
+
+@pytest.fixture
+def mock_job() -> MagicMock:
+    return MagicMock(
+        product_topic="GPU",
+        status=JobStatus.RUNNING,
+        started_at=datetime.now(tz=timezone.utc),
+        completed_at=None,
+        result=None,
+        error=None,
     )

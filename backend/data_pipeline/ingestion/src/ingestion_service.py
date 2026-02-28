@@ -6,7 +6,6 @@ from psycopg_pool.pool import ConnectionPool
 from concurrent.futures import as_completed
 from shared_core.logger import StructuredLogger
 from concurrent.futures import ThreadPoolExecutor
-from src.api.job_state import JobState
 from src.api.schemas import IngestionResult
 from src.api.schemas import ProcessedRedditComment
 from src.product_detector.base import ProductDetector
@@ -44,36 +43,23 @@ class IngestionService:
         self.fetch_executor = fetch_executor
         self._batch_size = 100
 
-    def run_single_cycle(self, job_state: JobState) -> None:
+    def run_ingestion_pipeline(self) -> IngestionResult:
         """
-        Run one complete ingestion cycle and update job state
-        runs in a background thread and handles all errors internally and updates the job state
+        Main orchestrator function: fetch, process, and publish comments
 
-        Args:
-            job_state: JobState instance to update with progress/results
-
-        Raise:
-            Value error if not job state
+        Returns:
+            IngestionResult with counts of posts/comments processed
         """
-        # nested import to prevent circular dependency import errors
-        if not job_state:
-            raise ValueError("Job state must be provided for the run single cycle")
+        all_posts = self._fetch_all_posts()
+        batch_comments: list[ProcessedRedditComment] = []
 
-        try:
-            result = self._run_ingestion_pipeline()
+        stats = self._process_all_posts(all_posts, batch_comments)
 
-            job_state.complete_job(result)
-
-            self.logger.info(
-                event_type="ingestion_service run",
-                message=f"Ingestion completed: {result.posts_processed} posts, {result.comments_inserted} comments processed",
-            )
-
-        except Exception as e:
-            self.logger.error(
-                event_type="ingestion_service run", message=f"Ingestion failed: {str(e)}"
-            )
-            job_state.fail_job(str(e))
+        return IngestionResult(
+            posts_processed=stats.get("posts", 0),
+            comments_processed=stats.get("comments", 0),
+            comments_inserted=stats.get("inserted", 0),
+        )
 
     @staticmethod
     def _preprocess_comment_text(text: str) -> tuple[str, bool]:
@@ -253,24 +239,6 @@ class IngestionService:
         stats["inserted"] += final_inserted
 
         return stats
-
-    def _run_ingestion_pipeline(self) -> IngestionResult:
-        """
-        Main orchestrator function: fetch, process, and publish comments
-
-        Returns:
-            IngestionResult with counts of posts/comments processed
-        """
-        all_posts = self._fetch_all_posts()
-        batch_comments: list[ProcessedRedditComment] = []
-
-        stats = self._process_all_posts(all_posts, batch_comments)
-
-        return IngestionResult(
-            posts_processed=stats.get("posts", 0),
-            comments_processed=stats.get("comments", 0),
-            comments_inserted=stats.get("inserted", 0),
-        )
 
     def _flush_batch_if_needed(
         self, batch: list[ProcessedRedditComment], force: bool = False

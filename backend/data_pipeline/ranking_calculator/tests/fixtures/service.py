@@ -1,3 +1,4 @@
+from pipeline_types.data_pipeline import JobStatus
 from typing import Any
 from fastapi import FastAPI
 from datetime import datetime
@@ -74,4 +75,16 @@ def single_product_score_comment() -> ProductScore:
         is_most_discussed=False,
         has_limited_data=False,
         calculation_date=datetime.now(timezone.utc),
+    )
+
+
+@pytest.fixture
+def mock_job() -> MagicMock:
+    return MagicMock(
+        product_topic="GPU",
+        status=JobStatus.RUNNING,
+        started_at=datetime.now(tz=timezone.utc),
+        completed_at=None,
+        result=None,
+        error=None,
     )

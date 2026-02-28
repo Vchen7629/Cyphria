@@ -4,7 +4,6 @@ from shared_core.logger import StructuredLogger
 from src.db.queries import fetch_top_comments_for_product
 from src.db.queries import fetch_unique_products
 from src.db.queries import upsert_llm_summaries
-from src.api.job_state import JobState
 from src.api.schemas import SummaryResult
 from src.llm_client.prompts import SYSTEM_PROMPT
 from src.llm_client.prompts import build_user_prompt
@@ -28,6 +27,21 @@ class LLMSummaryService:
         self.llm_client = llm_client
         self.logger = logger
         self.db_pool = db_pool
+
+    def run_summary_pipeline(self) -> SummaryResult:
+        """Run the entire processing pipeline"""
+        products_processed = 0
+
+        with self.db_pool.connection() as conn:
+            products_list: list[tuple[str, list[str]]] = self._fetch_products_with_comments(conn)
+            self.logger.info(
+                "llm_summary run",
+                message=f"fetched {len(products_list)} products, for {self.time_window} time window",
+            )
+
+            products_processed += self._process_product_name_comment_pairs(conn, products_list)
+
+        return SummaryResult(products_summarized=products_processed, cancelled=False)
 
     def _fetch_products_with_comments(
         self, db_conn: psycopg.Connection
@@ -123,46 +137,3 @@ class LLMSummaryService:
                 continue
 
         return products_processed
-
-    def _run_summary_pipeline(self) -> SummaryResult:
-        """Run the entire processing pipeline"""
-        products_processed = 0
-
-        with self.db_pool.connection() as conn:
-            products_list: list[tuple[str, list[str]]] = self._fetch_products_with_comments(conn)
-            self.logger.info(
-                "llm_summary run",
-                message=f"fetched {len(products_list)} products, for {self.time_window} time window",
-            )
-
-            products_processed += self._process_product_name_comment_pairs(conn, products_list)
-
-        return SummaryResult(products_summarized=products_processed, cancelled=False)
-
-    def run_single_cycle(self, job_state: JobState) -> None:
-        """
-        Run one complete summary cycle and update job state
-        runs in a background thread and handles all errors internally and updates the job state
-
-        Args:
-            job_state: JobState instance to update with progress/results
-
-        Raise:
-            Value error if not job state
-        """
-        if not job_state:
-            raise ValueError("Job state must be provided for the run single cycle")
-
-        try:
-            result = self._run_summary_pipeline()
-
-            job_state.complete_job(result)
-
-            self.logger.info(
-                event_type="llm_summary run",
-                message=f"Ingestion completed: {result.products_summarized} products summarized",
-            )
-
-        except Exception as e:
-            self.logger.error(event_type="llm_summary run", message=f"Summary failed: {str(e)}")
-            job_state.fail_job(str(e))

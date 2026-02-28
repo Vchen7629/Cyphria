@@ -1,5 +1,5 @@
-import praw  # type: ignore
 from src.core.settings_config import Settings
+import praw
 
 settings: Settings = Settings()
 

@@ -4,10 +4,10 @@ from openai import OpenAI
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from concurrent.futures import ThreadPoolExecutor
+from data_pipeline_utils.job_state_manager import JobState
+from src.api.schemas import CurrentJob
 from shared_core.logger import StructuredLogger
 from shared_db.conn import create_verified_connection_pool
-from src.api import routes
-from src.api.job_state import JobState
 from src.core.settings_config import Settings
 
 settings = Settings()
@@ -32,19 +32,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     executor: ThreadPoolExecutor = ThreadPoolExecutor(
         max_workers=1, thread_name_prefix="summary_service"
     )
-    job_state_instance = JobState()
-
-    llm_model_name = settings.LLM_MODEL
-    llm_client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
     # Store these values in app state for dependency injection
     app.state.db_pool = db_pool
     app.state.logger = logger
-    app.state.llm_client = llm_client
-    app.state.llm_model_name = llm_model_name
+    app.state.llm_client = OpenAI(api_key=settings.OPENAI_API_KEY)
+    app.state.job_state = JobState[CurrentJob]()
+    app.state.llm_model_name = settings.LLM_MODEL
     app.state.executor = executor
-
-    routes.job_state = job_state_instance
 
     logger.info(event_type="llm_summary startup", message="Summary service ready")
 

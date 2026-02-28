@@ -27,6 +27,7 @@ def test_health_endpoint_unhealthy_db(fastapi_client: FastAPITestClient) -> None
     assert data["status"] == "unhealthy"
     assert data["db_connected"] is False
 
+
 def test_run_endpoint_success(fastapi_client: FastAPITestClient) -> None:
     """Run endpoint should return status: started."""
     with patch("src.api.routes.IngestionService") as MockService:

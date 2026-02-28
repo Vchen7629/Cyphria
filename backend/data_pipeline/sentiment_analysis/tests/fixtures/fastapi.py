@@ -8,8 +8,8 @@ from contextlib import asynccontextmanager
 from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
 from shared_core.logger import StructuredLogger
-from src.api import routes
-from src.api.job_state import JobState
+from data_pipeline_utils.job_state_manager import JobState
+from src.api.schemas import CurrentJob
 from src.api.routes import router as base_router
 from tests.types.fastapi import FastAPITestClient
 import pytest
@@ -42,14 +42,11 @@ def fastapi_client(
 
     mock_executor.submit = mock_submit
 
-    job_state_instance = JobState()
-
     test_app.state.db_pool = db_pool
     test_app.state.logger = StructuredLogger(pod="sentiment_service_test")
     test_app.state.model = mock_absa
     test_app.state.executor = mock_executor
-
-    routes.job_state = job_state_instance
+    test_app.state.job_state = JobState[CurrentJob]()
 
     with TestClient(test_app, raise_server_exceptions=False) as client:
         yield FastAPITestClient(client=client, app=test_app)

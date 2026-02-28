@@ -1,42 +1,31 @@
-from src.utils.validation import validate_string
-from src.utils.validation import validate_list
-from threading import Lock
+
+from typing import Any
+from typing import Generic
+from typing import TypeVar
 from typing import Optional
+from threading import Lock
 from datetime import datetime
 from datetime import timezone
-from src.api.schemas import CurrentJob, IngestionResult, JobStatus
+from pipeline_types.data_pipeline import JobStatus
 
+TJob = TypeVar("TJob")
 
-class JobState:
-    """Thread-safe state for the single current job, state tracks job metadata"""
-
+class JobState(Generic[TJob]):
     def __init__(self) -> None:
-        self._current_job: Optional[CurrentJob] = None
+        self._current_job: Optional[TJob] = None
         self._lock = Lock()
 
-    def create_job(self, category: str, subreddit_list: list[str]) -> None:
+    def set_running_job(self, job: TJob) -> None:
         """
         Create a new job
 
         Args:
-            category: the current category we are processing for
-            subreddit_list: list of subreddits to fetch and process comments from
-
-        Raises:
-            ValueError: if subreddit_list or category is none or category is an empty string
+            job: The job details
         """
-        validate_string(category, "category", raise_http=False)
-        validate_list(subreddit_list, "subreddit_list", raise_http=False)
-
         with self._lock:
-            self._current_job = CurrentJob(
-                category=category,
-                subreddit_list=subreddit_list,
-                status=JobStatus.RUNNING,
-                started_at=datetime.now(tz=timezone.utc),
-            )
+            self._current_job = job
 
-    def complete_job(self, result: IngestionResult) -> None:
+    def mark_complete(self, result: Any) -> None:
         """
         Mark job as done with the result metadata
 
@@ -55,7 +44,7 @@ class JobState:
                 self._current_job.result = result
                 self._current_job.completed_at = datetime.now(tz=timezone.utc)
 
-    def fail_job(self, error: str) -> None:
+    def mark_failed(self, error: str) -> None:
         """
         Mark job as failed with error
 
@@ -65,7 +54,8 @@ class JobState:
         Raises:
             ValueError: if error is None or empty string
         """
-        validate_string(error, "error", raise_http=False)
+        if not error or not error.strip():
+            raise ValueError("Missing error type")
 
         with self._lock:
             if self._current_job:
@@ -73,7 +63,7 @@ class JobState:
                 self._current_job.error = error
                 self._current_job.completed_at = datetime.now(tz=timezone.utc)
 
-    def get_current_job(self) -> Optional[CurrentJob]:
+    def get_current_job(self) -> Optional[TJob]:
         """Get currently running job's state"""
         with self._lock:
             return self._current_job

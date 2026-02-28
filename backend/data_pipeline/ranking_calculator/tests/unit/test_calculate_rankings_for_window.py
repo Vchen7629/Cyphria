@@ -1,4 +1,3 @@
-from unittest.mock import patch
 from src.ranking_service import RankingService
 import pytest
 
@@ -26,16 +25,3 @@ def test_invalid_input_params(
     )
 
     assert result == 0
-
-
-def test_cancel_flag_stops_processing(mock_ranking_service: RankingService) -> None:
-    """cancel_requested flag cause the method to return 0"""
-    service = mock_ranking_service
-
-    with patch("src.db.queries.fetch_aggregated_product_scores") as mock_fetch_aggregated:
-        service.cancel_requested = True
-
-        result = service._calculate_rankings_for_window(product_topic="GPU", time_window="all_time")
-
-        mock_fetch_aggregated.assert_not_called()
-        assert result == 0

@@ -1,8 +1,33 @@
-import os
-
-os.environ.setdefault("BAYESIAN_PARAMS", "10")
 import numpy as np
+from src.calculation_utils.grading import assign_grades
 from src.calculation_utils.grading import assign_ranks
+import pytest
+
+
+@pytest.mark.parametrize(
+    argnames="score,expected", argvalues=[(0.91, "A"), (0.90, "A"), (-1.0, "F-"), (1.0, "S")]
+)
+def test_assign_one_rank(score: int, expected: str) -> None:
+    """Testing multiple cases including boundary cases"""
+    bayesian_scores = np.array([score])
+
+    assert assign_grades(bayesian_scores)[0] == expected
+
+
+def test_assign_multiple_ranks() -> None:
+    """Multiple bayesian scores should be correctly graded"""
+    bayesian_scores = np.array([0.91, 0.81, 0.31])
+
+    assert assign_grades(bayesian_scores)[0] == "A"
+    assert assign_grades(bayesian_scores)[1] == "B-"
+    assert assign_grades(bayesian_scores)[2] == "C-"
+
+
+def test_no_bayesian_score() -> None:
+    """No bayesian score should not assign anything"""
+    bayesian_scores = np.array([])
+
+    assert len(assign_grades(bayesian_scores)) == 0
 
 
 def test_assign_ranks() -> None:

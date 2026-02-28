@@ -7,6 +7,7 @@ from datetime import timezone
 from concurrent.futures import ThreadPoolExecutor
 from pipeline_types.data_pipeline import JobStatus
 from data_pipeline_utils.job_state_manager import JobState
+from data_pipeline_utils.run_single_cycle import run_single_cycle
 from src.api.schemas import CurrentJob
 from src.api.schemas import RunRequest
 from src.api.schemas import RunResponse
@@ -64,7 +65,15 @@ async def trigger_llm_summarization(
     executor: ThreadPoolExecutor = request.app.state.executor
     loop = asyncio.get_event_loop()
 
-    loop.run_in_executor(executor, service.run_single_cycle, job_state)
+    # run worker in thread pool to prevent blocking the polling /status endpoint
+    loop.run_in_executor(
+        executor,
+        run_single_cycle,
+        job_state,
+        "llm_summary_service",
+        service.run_summary_pipeline,
+        request.app.state.logger,
+    )
 
     return RunResponse(status="started")
 

@@ -8,7 +8,6 @@ class SummaryResult(BaseModel):
     """Result of a summary airflow run"""
 
     products_summarized: int
-    cancelled: bool = False
 
 
 class CurrentJob(BaseModel):

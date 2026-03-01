@@ -20,19 +20,28 @@ TOPICSUBREDDIT = {
     # Computing subreddits
     "GPU": ["nvidia", "radeon", "amd", "IntelArc", "buildapc", "gamingpc", "pcbuild", "hardware"],
     "LAPTOP": [
-        "laptops", "gaminglaptops", "AcerOfficial", "macbookair", "macbookpro", "asus", "Dell", "Hewlett_Packard", 
-        "Lenovo", "Surface", "Razer", "GalaxyBook", "System76"
+        "laptops", "gaminglaptops", "AcerOfficial", "macbookair", "macbookpro", "asus", "Dell", 
+        "Hewlett_Packard", "Lenovo", "Surface", "Razer", "GalaxyBook", "System76"
     ],
     "CPU": ["amd", "Intel", "buildapc", "gamingpc", "pcbuild", "hardware"],
-    "MONITOR": ["Monitors", "buildapc", "buildapcmonitors", "ultrawidemasterrace", "gamingpc", "pcbuild", "hardware", "OLED_Gaming"],
+    "MONITOR": [
+        "Monitors", "buildapc", "buildapcmonitors", "ultrawidemasterrace", "gamingpc", 
+        "pcbuild", "hardware", "OLED_Gaming"
+    ],
     "MECHANICAL KEYBOARD": [
         "MechanicalKeyboards", "olkb", "keyboards", "HHKB", "CustomKeyboards", "BudgetKeebs", 
         "LogitechG", "HyperX", "Razer", "steelseries", "WootingKB", "Keychron", "NuPhy"
     ],
 
     # Audio subreddits
-    "HEADPHONE": ["headphones", "HeadphoneAdvice", "Audiophile", "BudgetAudiophile"],
-    "EARBUD": ["Earbuds", "Audiophile", "BudgetAudiophile"],
+    "HEADPHONE": [
+        "headphones", "HeadphoneAdvice", "Audiophile", "BudgetAudiophile", "Airpodsmax",
+        "beatsbydre", "bose", "JBL", "Sennheiser", "SonyHeadphones",
+    ],
+    "EARBUD": [
+        "Earbuds", "Audiophile", "BudgetAudiophile", "Airpods", "beatsbydre", "JBL",
+        "SonyHeadphones", "bose", "Jlab", "Soundcore"
+    ],
     "SOUNDBAR": ["Soundbars", "hometheater", "Audiophile", "BudgetAudiophile"],
     "DAC": ["headphones", "HeadphoneAdvice", "Audiophile", "BudgetAudiophile", "StereoAdvice"],
     "SPEAKER": ["Bluetooth_speakers", "SoundSystem", "StereoAdvice", "Audiophile", "BudgetAudiophile"],

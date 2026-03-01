@@ -8,6 +8,7 @@ from src.product_mappings.computing import GPU_MODEL_TO_BRAND
 from src.product_mappings.computing import CPU_MODEL_TO_BRAND
 from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
 from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
+from src.product_mappings.computing import LAPTOP_MODEL_TO_BRAND
 
 
 class ProductNormalizer:
@@ -23,14 +24,9 @@ class ProductNormalizer:
             {model.upper(): brand for model, brand in CPU_MODEL_TO_BRAND.items()},
             CPUNormalizer().normalize_name,
         ),
-        "MONITOR": (
-            {model.upper(): brand for model, brand in MONITOR_MODEL_TO_BRAND.items()},
-            None,
-        ),
-        "MECHANICAL KEYBOARD": (
-            {model.upper(): brand for model, brand in KEYBOARD_MODEL_TO_BRAND.items()},
-            None,
-        ),
+        "MONITOR": (MONITOR_MODEL_TO_BRAND, None),
+        "MECHANICAL KEYBOARD": (KEYBOARD_MODEL_TO_BRAND, None),
+        "LAPTOP": (LAPTOP_MODEL_TO_BRAND, None),
     }
 
     def __init__(self, logger: Optional[StructuredLogger] = None) -> None:
@@ -98,8 +94,12 @@ class ProductNormalizer:
             return custom_normalizer(raw_product_name, data_mapping)
 
         # Otherwise use default mapping logic
-        brand = data_mapping.get(raw_product_name.upper())
-        if brand is None:
-            return None
+        # Try direct lookup first, only model name, then try stripping leading brand prefix
+        for model_key, model_brand in data_mapping.items():
+            if raw_product_name.upper() in (
+                model_key.upper(),
+                f"{model_brand} {model_key}".upper(),
+            ):
+                return f"{model_brand} {model_key}" if model_brand else model_key
 
-        return f"{brand} {raw_product_name}" if brand else raw_product_name
+        return None

@@ -66,7 +66,7 @@ def test_gpu_normalized(gpu_list: list[str], expected: list[str]) -> None:
         (["Altair-X", "Vega", "ai03 Vega"], ["ai03 Altair-X", "ai03 Vega"]),  # should deduplicate
         (
             ["   Air 01  ", "gEm 01"],
-            ["Akko Air 01", "Akko gEm 01"],
+            ["Akko Air 01", "Akko Gem 01"],
         ),  # should handle whitespace + mixed case
         (
             ["jajaja", "Altair-X", "Air 01"],
@@ -89,7 +89,7 @@ def test_mechanical_keyboard_normalized(keyboard_list: list[str], expected: list
         ),  # should deduplicate
         (
             ["   EX240  ", "Ex271uZ"],
-            ["BenQ Mobiuz EX240", "BenQ Mobiuz OLED Ex271uZ"],
+            ["BenQ Mobiuz EX240", "BenQ Mobiuz OLED EX271UZ"],
         ),  # should handle whitespace + mixed case
         (
             ["jajaja", "BE0"],
@@ -100,6 +100,19 @@ def test_mechanical_keyboard_normalized(keyboard_list: list[str], expected: list
 def test_monitor_normalized(keyboard_list: list[str], expected: list[str]) -> None:
     """Should normalize valid monitor names"""
     normalized = ProductNormalizer().normalize_product_list("MONITOR", keyboard_list)
+    assert normalized == sorted(expected)
+
+
+@pytest.mark.parametrize(
+    argnames="laptop_list,expected",
+    argvalues=[
+        (["Aero 5", "Omen Max", "LG gram 14"], ["Gigabyte Aero 5", "HP Omen Max", "LG gram 14"]),
+        (["Aero 5", "Gigabyte Aero 5"], ["Gigabyte Aero 5"]),  # deduplicate
+    ],
+)
+def test_laptop_normalized(laptop_list: list[str], expected: list[str]) -> None:
+    """Laptops should be properly normalized"""
+    normalized = ProductNormalizer().normalize_product_list("LAPTOP", laptop_list)
     assert normalized == sorted(expected)
 
 

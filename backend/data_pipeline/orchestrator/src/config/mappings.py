@@ -19,10 +19,16 @@ CATEGORYTOPIC = {
 TOPICSUBREDDIT = {
     # Computing subreddits
     "GPU": ["nvidia", "radeon", "amd", "IntelArc", "buildapc", "gamingpc", "pcbuild", "hardware"],
-    "LAPTOP": ["laptops"],
+    "LAPTOP": [
+        "laptops", "gaminglaptops", "AcerOfficial", "macbookair", "macbookpro", "asus", "Dell", "Hewlett_Packard", 
+        "Lenovo", "Surface", "Razer", "GalaxyBook", "System76"
+    ],
     "CPU": ["amd", "Intel", "buildapc", "gamingpc", "pcbuild", "hardware"],
-    "MONITOR": ["Monitors", "buildapc", "gamingpc", "pcbuild", "hardware"],
-    "MECHANICAL KEYBOARD": ["MechanicalKeyboards"],
+    "MONITOR": ["Monitors", "buildapc", "buildapcmonitors", "ultrawidemasterrace", "gamingpc", "pcbuild", "hardware", "OLED_Gaming"],
+    "MECHANICAL KEYBOARD": [
+        "MechanicalKeyboards", "olkb", "keyboards", "HHKB", "CustomKeyboards", "BudgetKeebs", 
+        "LogitechG", "HyperX", "Razer", "steelseries", "WootingKB", "Keychron", "NuPhy"
+    ],
 
     # Audio subreddits
     "HEADPHONE": ["headphones", "HeadphoneAdvice", "Audiophile", "BudgetAudiophile"],

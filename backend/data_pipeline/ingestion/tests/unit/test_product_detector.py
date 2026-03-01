@@ -7,6 +7,7 @@ from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
 from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
 from src.product_mappings.audio import EARBUD_MODEL_TO_BRAND
 from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
+from src.product_mappings.audio import SOUNDBAR_MODEL_TO_BRAND
 import pytest
 
 
@@ -181,6 +182,27 @@ def test_earbud_valid_matches(sentence: str, expected: list[str]) -> None:
     earbud_regex_pattern = BuildDetectorRegex().process_all_topics(["EARBUD"])[0]
     assert earbud_regex_pattern is not None
     detector = ProductDetector(pattern=earbud_regex_pattern, mapping=EARBUD_MODEL_TO_BRAND)
+    assert detector.extract_products(sentence) == sorted(expected)
+    assert detector.contains_product(sentence) is True
+
+
+@pytest.mark.parametrize(
+    argnames="sentence,expected",
+    argvalues=[
+        # multiple matches
+        (
+            "I have a Bose 550, LG H7, and B400F",
+            ["Bose 550", "LG H7", "B400F"],
+        ),
+        # deduplicate
+        ("my old B400F broke, i bought a new Samsung HW-B400F", ["Samsung HW-B400F"]),
+    ],
+)
+def test_soundbar_valid_matches(sentence: str, expected: list[str]) -> None:
+    """Test if it can match valid soundbar strings"""
+    soundbar_regex_pattern = BuildDetectorRegex().process_all_topics(["SOUNDBAR"])[0]
+    assert soundbar_regex_pattern is not None
+    detector = ProductDetector(pattern=soundbar_regex_pattern, mapping=SOUNDBAR_MODEL_TO_BRAND)
     assert detector.extract_products(sentence) == sorted(expected)
     assert detector.contains_product(sentence) is True
 

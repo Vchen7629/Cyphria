@@ -9,6 +9,7 @@ from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
 from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
 from src.product_mappings.audio import EARBUD_MODEL_TO_BRAND
 from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
+from src.product_mappings.audio import SOUNDBAR_MODEL_TO_BRAND
 from src.product_detector.gpu_pattern_builder import build_gpu_pattern
 from src.product_detector.gpu_pattern_builder import validate_gpu_match
 from src.product_detector.cpu_pattern_builder import build_cpu_pattern
@@ -72,7 +73,8 @@ class ProductDetector:
         for model, brand in self._mapping.items():
             if match_lower == model.lower():
                 return model
-            if brand and match_lower == f"{brand} {model}".lower():
+            separator = "" if brand.endswith("-") else " "
+            if brand and match_lower == f"{brand}{separator}{model}".lower():
                 return model
 
         return match
@@ -100,6 +102,7 @@ class BuildDetectorRegex:
         "LAPTOP": (LAPTOP_MODEL_TO_BRAND, None),
         "HEADPHONE": (HEADPHONE_MODEL_TO_BRAND, None),
         "EARBUD": (EARBUD_MODEL_TO_BRAND, None),
+        "SOUNDBAR": (SOUNDBAR_MODEL_TO_BRAND, None),
     }
 
     @classmethod

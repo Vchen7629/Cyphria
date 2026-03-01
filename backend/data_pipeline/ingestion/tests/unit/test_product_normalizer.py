@@ -128,8 +128,24 @@ def test_laptop_normalized(laptop_list: list[str], expected: list[str]) -> None:
     ],
 )
 def test_headphone_normalized(headphone_list: list[str], expected: list[str]) -> None:
-    """Heaphones should be properly normalized"""
+    """Headphones should be properly normalized"""
     normalized = normalizer.normalize_product_list("HEADPHONE", headphone_list)
+    assert normalized == sorted(expected)
+
+
+@pytest.mark.parametrize(
+    argnames="soundbar_list,expected",
+    argvalues=[
+        (
+            ["Ambeo Max", "H7", "B400F"],
+            ["Sennheiser Ambeo Max", "LG H7", "Samsung HW-B400F"],
+        ),
+        (["B400F", "Samsung HW-B400F"], ["Samsung HW-B400F"]),  # deduplicate
+    ],
+)
+def test_soundbar_normalized(soundbar_list: list[str], expected: list[str]) -> None:
+    """soundbar should be properly normalized"""
+    normalized = normalizer.normalize_product_list("SOUNDBAR", soundbar_list)
     assert normalized == sorted(expected)
 
 

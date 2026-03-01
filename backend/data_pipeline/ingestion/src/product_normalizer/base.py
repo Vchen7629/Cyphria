@@ -4,6 +4,7 @@ from shared_core.logger import StructuredLogger
 from src.utils.validation import validate_string
 from src.product_normalizer.cpu import CPUNormalizer
 from src.product_normalizer.gpu import GPUNormalizer
+from src.product_normalizer.format import format_brand_model
 from src.product_mappings.computing import GPU_MODEL_TO_BRAND
 from src.product_mappings.computing import CPU_MODEL_TO_BRAND
 from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
@@ -11,6 +12,7 @@ from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
 from src.product_mappings.computing import LAPTOP_MODEL_TO_BRAND
 from src.product_mappings.audio import EARBUD_MODEL_TO_BRAND
 from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
+from src.product_mappings.audio import SOUNDBAR_MODEL_TO_BRAND
 
 
 class ProductNormalizer:
@@ -31,6 +33,7 @@ class ProductNormalizer:
         "LAPTOP": (LAPTOP_MODEL_TO_BRAND, None),
         "HEADPHONE": (HEADPHONE_MODEL_TO_BRAND, None),
         "EARBUD": (EARBUD_MODEL_TO_BRAND, None),
+        "SOUNDBAR": (SOUNDBAR_MODEL_TO_BRAND, None),
     }
 
     def __init__(self, logger: Optional[StructuredLogger] = None) -> None:
@@ -102,8 +105,8 @@ class ProductNormalizer:
         for model_key, model_brand in data_mapping.items():
             if raw_product_name.upper() in (
                 model_key.upper(),
-                f"{model_brand} {model_key}".upper(),
+                format_brand_model(model_brand, model_key).upper(),
             ):
-                return f"{model_brand} {model_key}" if model_brand else model_key
+                return format_brand_model(model_brand, model_key) if model_brand else model_key
 
         return None

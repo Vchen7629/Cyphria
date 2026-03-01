@@ -150,6 +150,22 @@ def test_soundbar_normalized(soundbar_list: list[str], expected: list[str]) -> N
 
 
 @pytest.mark.parametrize(
+    argnames="dac_list,expected",
+    argvalues=[
+        (
+            ["DragonFly Black", "Gustard R26", "Erco"],
+            ["AudioQuest DragonFly Black", "Gustard R26", "Ferrum Erco"],
+        ),
+        (["DM7", "Topping DM7"], ["Topping DM7"]),  # deduplicate
+    ],
+)
+def test_dac_normalized(dac_list: list[str], expected: list[str]) -> None:
+    """dac should be properly normalized"""
+    normalized = normalizer.normalize_product_list("DAC", dac_list)
+    assert normalized == sorted(expected)
+
+
+@pytest.mark.parametrize(
     argnames="earbud_list,expected",
     argvalues=[
         (

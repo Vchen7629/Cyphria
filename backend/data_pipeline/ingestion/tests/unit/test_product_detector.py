@@ -5,9 +5,10 @@ from src.product_mappings.computing import CPU_MODEL_TO_BRAND
 from src.product_mappings.computing import LAPTOP_MODEL_TO_BRAND
 from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
 from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
+from src.product_mappings.audio import DAC_MODEL_TO_BRAND
 from src.product_mappings.audio import EARBUD_MODEL_TO_BRAND
-from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
 from src.product_mappings.audio import SOUNDBAR_MODEL_TO_BRAND
+from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
 import pytest
 
 
@@ -203,6 +204,27 @@ def test_soundbar_valid_matches(sentence: str, expected: list[str]) -> None:
     soundbar_regex_pattern = BuildDetectorRegex().process_all_topics(["SOUNDBAR"])[0]
     assert soundbar_regex_pattern is not None
     detector = ProductDetector(pattern=soundbar_regex_pattern, mapping=SOUNDBAR_MODEL_TO_BRAND)
+    assert detector.extract_products(sentence) == sorted(expected)
+    assert detector.contains_product(sentence) is True
+
+
+@pytest.mark.parametrize(
+    argnames="sentence,expected",
+    argvalues=[
+        # multiple matches
+        (
+            "I have a DragonFly Black, Gustard R26, and Erco",
+            ["DragonFly Black", "Gustard R26", "Erco"],
+        ),
+        # deduplicate
+        ("my old DM7 broke, i bought a new Topping DM7", ["Topping DM7"]),
+    ],
+)
+def test_dac_valid_matches(sentence: str, expected: list[str]) -> None:
+    """Test if it can match valid dac strings"""
+    dac_regex_pattern = BuildDetectorRegex().process_all_topics(["DAC"])[0]
+    assert dac_regex_pattern is not None
+    detector = ProductDetector(pattern=dac_regex_pattern, mapping=DAC_MODEL_TO_BRAND)
     assert detector.extract_products(sentence) == sorted(expected)
     assert detector.contains_product(sentence) is True
 

@@ -9,6 +9,7 @@ from src.product_mappings.computing import CPU_MODEL_TO_BRAND
 from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
 from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
 from src.product_mappings.computing import LAPTOP_MODEL_TO_BRAND
+from src.product_mappings.audio import EARBUD_MODEL_TO_BRAND
 from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
 
 
@@ -29,6 +30,7 @@ class ProductNormalizer:
         "MECHANICAL KEYBOARD": (KEYBOARD_MODEL_TO_BRAND, None),
         "LAPTOP": (LAPTOP_MODEL_TO_BRAND, None),
         "HEADPHONE": (HEADPHONE_MODEL_TO_BRAND, None),
+        "EARBUD": (EARBUD_MODEL_TO_BRAND, None),
     }
 
     def __init__(self, logger: Optional[StructuredLogger] = None) -> None:

@@ -7,6 +7,7 @@ from src.product_mappings.computing import GPU_MODEL_TO_BRAND
 from src.product_mappings.computing import LAPTOP_MODEL_TO_BRAND
 from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
 from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
+from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
 from src.product_detector.gpu_pattern_builder import build_gpu_pattern
 from src.product_detector.gpu_pattern_builder import validate_gpu_match
 from src.product_detector.cpu_pattern_builder import build_cpu_pattern
@@ -96,6 +97,7 @@ class BuildDetectorRegex:
         "MONITOR": (MONITOR_MODEL_TO_BRAND, None),
         "MECHANICAL KEYBOARD": (KEYBOARD_MODEL_TO_BRAND, None),
         "LAPTOP": (LAPTOP_MODEL_TO_BRAND, None),
+        "HEADPHONE": (HEADPHONE_MODEL_TO_BRAND, None),
     }
 
     @classmethod

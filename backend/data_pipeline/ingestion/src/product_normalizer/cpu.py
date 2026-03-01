@@ -1,4 +1,5 @@
 from typing import Optional
+from src.product_normalizer.format import format_brand_model
 import re
 
 
@@ -60,12 +61,6 @@ class CPUNormalizer:
         return (None, None)
 
     @staticmethod
-    def _format_cpu_name(brand: str, model: str) -> str:
-        """Format CPU name with proper spacing (no space if brand ends with hyphen)"""
-        separator = "" if brand.endswith("-") else " "
-        return f"{brand}{separator}{model}"
-
-    @staticmethod
     def _normalize_amd(
         raw_name: str, name_upper: str, product_mapping: dict[str, str]
     ) -> Optional[str]:
@@ -124,7 +119,7 @@ class CPUNormalizer:
         """Try looking up the CPU name directly in the mapping"""
         if cpu_upper in mapping:
             brand = mapping[cpu_upper]
-            return self._format_cpu_name(brand, cpu_original) if brand else None
+            return format_brand_model(brand, cpu_original) if brand else None
         return None
 
     def _try_base_model_lookup(self, raw_cpu_name: str, mapping: dict[str, str]) -> Optional[str]:
@@ -133,5 +128,5 @@ class CPUNormalizer:
         if base_upper and base_upper in mapping:
             brand = mapping[base_upper]
             if base_original:
-                return self._format_cpu_name(brand, base_original) if brand else None
+                return format_brand_model(brand, base_original) if brand else None
         return None

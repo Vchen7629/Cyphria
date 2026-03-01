@@ -5,6 +5,7 @@ from src.product_mappings.computing import CPU_MODEL_TO_BRAND
 from src.product_mappings.computing import LAPTOP_MODEL_TO_BRAND
 from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
 from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
+from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
 import pytest
 
 
@@ -137,6 +138,27 @@ def test_laptop_valid_matches(sentence: str, expected: list[str]) -> None:
     laptop_regex_pattern = BuildDetectorRegex().process_all_topics(["LAPTOP"])[0]
     assert laptop_regex_pattern is not None
     detector = ProductDetector(pattern=laptop_regex_pattern, mapping=LAPTOP_MODEL_TO_BRAND)
+    assert detector.extract_products(sentence) == sorted(expected)
+    assert detector.contains_product(sentence) is True
+
+
+@pytest.mark.parametrize(
+    argnames="sentence,expected",
+    argvalues=[
+        # multiple matches
+        (
+            "I have a K72, Apple Airpods Max, and WH-CH520",
+            ["K72", "Apple Airpods Max", "WH-CH520"],
+        ),
+        # deduplicate
+        ("my old WH-CH520 broke, i bought a new Sony WH-CH520", ["Sony WH-CH520"]),
+    ],
+)
+def test_headphone_valid_matches(sentence: str, expected: list[str]) -> None:
+    """Test if it can match valid heaphone strings"""
+    headphone_regex_pattern = BuildDetectorRegex().process_all_topics(["HEADPHONE"])[0]
+    assert headphone_regex_pattern is not None
+    detector = ProductDetector(pattern=headphone_regex_pattern, mapping=HEADPHONE_MODEL_TO_BRAND)
     assert detector.extract_products(sentence) == sorted(expected)
     assert detector.contains_product(sentence) is True
 

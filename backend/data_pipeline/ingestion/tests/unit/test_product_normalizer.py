@@ -3,6 +3,8 @@ from unittest.mock import patch
 from src.product_normalizer.base import ProductNormalizer
 import pytest
 
+normalizer = ProductNormalizer()
+
 
 @pytest.mark.parametrize(
     argnames="cpu_names,expected_name",
@@ -33,7 +35,6 @@ import pytest
 )
 def test_cpu_normalized(cpu_names: list[str], expected_name: str) -> None:
     """Should normalize intel cpus properly"""
-    normalizer = ProductNormalizer()
     config = ProductNormalizer._TOPIC_CONFIGS["CPU"]
     mapping, custom_norm = config
     for name in cpu_names:
@@ -56,7 +57,7 @@ def test_cpu_normalized(cpu_names: list[str], expected_name: str) -> None:
 )
 def test_gpu_normalized(gpu_list: list[str], expected: list[str]) -> None:
     """GPUs should be properly normalized"""
-    normalized = ProductNormalizer().normalize_product_list("GPU", gpu_list)
+    normalized = normalizer.normalize_product_list("GPU", gpu_list)
     assert normalized == sorted(expected)
 
 
@@ -76,7 +77,7 @@ def test_gpu_normalized(gpu_list: list[str], expected: list[str]) -> None:
 )
 def test_mechanical_keyboard_normalized(keyboard_list: list[str], expected: list[str]) -> None:
     """Should normalize valid mechanical keyboard names"""
-    normalized = ProductNormalizer().normalize_product_list("MECHANICAL KEYBOARD", keyboard_list)
+    normalized = normalizer.normalize_product_list("MECHANICAL KEYBOARD", keyboard_list)
     assert normalized == sorted(expected)
 
 
@@ -99,7 +100,7 @@ def test_mechanical_keyboard_normalized(keyboard_list: list[str], expected: list
 )
 def test_monitor_normalized(keyboard_list: list[str], expected: list[str]) -> None:
     """Should normalize valid monitor names"""
-    normalized = ProductNormalizer().normalize_product_list("MONITOR", keyboard_list)
+    normalized = normalizer.normalize_product_list("MONITOR", keyboard_list)
     assert normalized == sorted(expected)
 
 
@@ -112,7 +113,23 @@ def test_monitor_normalized(keyboard_list: list[str], expected: list[str]) -> No
 )
 def test_laptop_normalized(laptop_list: list[str], expected: list[str]) -> None:
     """Laptops should be properly normalized"""
-    normalized = ProductNormalizer().normalize_product_list("LAPTOP", laptop_list)
+    normalized = normalizer.normalize_product_list("LAPTOP", laptop_list)
+    assert normalized == sorted(expected)
+
+
+@pytest.mark.parametrize(
+    argnames="headphone_list,expected",
+    argvalues=[
+        (
+            ["K72", "Apple Airpods Max", "WH-CH520"],
+            ["AKG K72", "Apple Airpods Max", "Sony WH-CH520"],
+        ),
+        (["WH-CH520", "Sony WH-CH520"], ["Sony WH-CH520"]),  # deduplicate
+    ],
+)
+def test_headphone_normalized(headphone_list: list[str], expected: list[str]) -> None:
+    """Heaphones should be properly normalized"""
+    normalized = normalizer.normalize_product_list("HEADPHONE", headphone_list)
     assert normalized == sorted(expected)
 
 
@@ -135,7 +152,7 @@ def test_invalid_input_product_topic(product_topic: str | None) -> None:
 )
 def test_invalid_cpu_input(cpu_list: Optional[list[str]]) -> None:
     """CPUNormalizer shouldnt normalize invalid cpu strings"""
-    assert ProductNormalizer().normalize_product_list("cpu", cpu_list) == []  # type: ignore
+    assert normalizer.normalize_product_list("cpu", cpu_list) == []  # type: ignore
 
 
 @pytest.mark.parametrize(
@@ -148,6 +165,6 @@ def test_invalid_cpu_input(cpu_list: Optional[list[str]]) -> None:
 )
 def test_valid_category_normalize(topic: str, product_list: list[str]) -> None:
     """Supported category should properly normalize product names"""
-    res = ProductNormalizer().normalize_product_list(topic, product_list)
+    res = normalizer.normalize_product_list(topic, product_list)
 
     assert res == ["NVIDIA RTX 4090", "NVIDIA RTX 5090"]

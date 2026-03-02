@@ -12,6 +12,7 @@ from src.product_mappings.audio import EARBUD_MODEL_TO_BRAND
 from src.product_mappings.audio import SPEAKER_MODEL_TO_BRAND
 from src.product_mappings.audio import SOUNDBAR_MODEL_TO_BRAND
 from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
+from src.product_mappings.mobile import TABLET_MODEL_TO_BRAND
 from src.product_mappings.mobile import SMARTPHONE_MODEL_TO_BRAND
 from src.product_detector.gpu_pattern_builder import build_gpu_pattern
 from src.product_detector.gpu_pattern_builder import validate_gpu_match
@@ -109,6 +110,7 @@ class BuildDetectorRegex:
         "DAC": (DAC_MODEL_TO_BRAND, None),
         "SPEAKER": (SPEAKER_MODEL_TO_BRAND, None),
         "SMARTPHONE": (SMARTPHONE_MODEL_TO_BRAND, None),
+        "TABLET": (TABLET_MODEL_TO_BRAND, None),
     }
 
     @classmethod

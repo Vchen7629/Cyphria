@@ -10,6 +10,7 @@ from src.product_mappings.audio import EARBUD_MODEL_TO_BRAND
 from src.product_mappings.audio import SPEAKER_MODEL_TO_BRAND
 from src.product_mappings.audio import SOUNDBAR_MODEL_TO_BRAND
 from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
+from src.product_mappings.mobile import TABLET_MODEL_TO_BRAND
 from src.product_mappings.mobile import SMARTPHONE_MODEL_TO_BRAND
 import pytest
 
@@ -84,6 +85,12 @@ import pytest
             "SMARTPHONE",
             SMARTPHONE_MODEL_TO_BRAND,
         ),
+        (
+            "I have a iPad Pro m4, Apple iPad Mini 7, and Idea Tab",
+            ["iPad Pro m4", "Apple iPad Mini 7", "Idea Tab"],
+            "TABLET",
+            TABLET_MODEL_TO_BRAND,
+        ),
         # deduplicate
         (
             "I just bought a 4090 and my friend has a RTX 4090",
@@ -145,6 +152,12 @@ import pytest
             ["Apple iPhone 17"],
             "SMARTPHONE",
             SMARTPHONE_MODEL_TO_BRAND,
+        ),
+        (
+            "my old iPad Air m2, i bought a new Apple iPad Air m2",
+            ["Apple iPad Air m2"],
+            "TABLET",
+            TABLET_MODEL_TO_BRAND,
         ),
     ],
 )

@@ -290,3 +290,66 @@ SMARTPHONE_MODEL_TO_BRAND = {
     "Xiaomi 17": "",
     "Xiaomi 17 Ultra": "",
 }
+
+TABLET_MODEL_TO_BRAND = {
+    # Amazon
+    "Fire HD 8": "Amazon",
+    "Fire HD 10": "Amazon",
+    "Fire Max 11": "Amazon",
+    # Apple
+    "iPad": "Apple",
+    "iPad Air m2": "Apple",
+    "iPad Air m3": "Apple",
+    "iPad Air m4": "Apple",
+    "iPad Mini 7": "Apple",
+    "iPad Mini 8": "Apple",
+    "iPad Pro m2": "Apple",
+    "iPad Pro m3": "Apple",
+    "iPad Pro m4": "Apple",
+    "iPad Pro m5": "Apple",
+    # Lenovo
+    "Idea Tab": "Lenovo",
+    "Idea Tab Plus": "Lenovo",
+    "Idea Tab Pro": "Lenovo",
+    "Legion Tab Gen 3": "Lenovo",
+    "Tab K11": "Lenovo",
+    "Tab M10 Plus": "Lenovo",
+    "Tab M11": "Lenovo",
+    "Tab One": "Lenovo",
+    "Yoga Tab": "Lenovo",
+    "Yoga Tab Plus": "Lenovo",
+    # Microsoft
+    "Surface Pro 10": "Microsoft",
+    "Surface Pro 11": "Microsoft",
+    "Surface Pro 12": "Microsoft",
+    # Oneplus
+    "Oneplus Pad Go 2": "",
+    "Oneplus Pad 3": "",
+    # Oppo
+    "Oppo Pad Air": "",
+    "Oppo Pad Neo": "",
+    "Oppo Pad 2": "",
+    "Oppo Pad 3": "",
+    "Oppo Pad 3 Pro": "",
+    "Oppo Pad Se": "",
+    "Oppo Pad 5": "",
+    # Samsung
+    "Galaxy Tab A11+": "Samsung",
+    "Galaxy Tab S10+": "Samsung",
+    "Galaxy Tab S10 FE": "Samsung",
+    "Galaxy Tab S10 FE+": "Samsung",
+    "Galaxy Tab S10 Lite": "Samsung",
+    "Galaxy Tab S10 Ultra": "Samsung",
+    "Galaxy Tab S11": "Samsung",
+    "Galaxy Tab S11 Ultra": "Samsung",
+    # Xiaomi
+    "Poco Pad M1": "Xiaomi",
+    "Poco Pad X1": "Xiaomi",
+    "Redmi Pad 2": "Xiaomi",
+    "Redmi Pad 2 Pro": "Xiaomi",
+    "Xiaomi Pad Mini": "Xiaomi",
+    "Xiaomi Pad 7": "Xiaomi",
+    "Xiaomi Pad 7 Pro": "Xiaomi",
+    "Xiaomi Pad 8": "",
+    "Xiaomi Pad 8 Pro": "",
+}

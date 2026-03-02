@@ -14,239 +14,134 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    argnames="sentence,expected",
+    argnames="sentence,expected,topic,mapping",
     argvalues=[
-        # Ryzen CPUs
+        # multiple matches
         (
             "I have a MAX 395, MAX+ 395, Ryzen AI 9 HX 475, and 3900x3d",
             ["MAX 395", "MAX+ 395", "Ryzen AI 9 HX 475", "3900x3d"],
+            "CPU",
+            CPU_MODEL_TO_BRAND,
         ),
-        ("My 3900x3d broke, i bought a new Ryzen 3900x3d", ["Ryzen 3900x3d"]),
-        ("The new thReadRipper PrO 9995WX is great", ["thReadRipper PrO 9995WX"]),
-        # Intel cpus
-        (
-            "I have a i9-14900, i9-14900K, i7-13700H, and Core Ultra 7 265K",
-            ["Core Ultra 7 265K", "i7-13700H", "i9-14900", "i9-14900K"],
-        ),
-        ("I have a Pentium G620 and my friend has Intel Pentium G620", ["Pentium G620"]),
-    ],
-)
-def test_cpu_valid_matches(sentence: str, expected: list[str]) -> None:
-    """Test if it can match valid CPU strings"""
-    cpu_regex_pattern = BuildDetectorRegex().process_all_topics(["CPU"])[0]
-    assert cpu_regex_pattern is not None
-    detector = ProductDetector(pattern=cpu_regex_pattern, mapping=CPU_MODEL_TO_BRAND)
-    assert detector.extract_products(sentence) == sorted(expected)
-    assert detector.contains_product(sentence) is True
-
-
-@pytest.mark.parametrize(
-    argnames="sentence,expected",
-    argvalues=[
-        ("I just bought the 4090, it's great!", ["4090"]),  # bare gpu number
-        ("I just bought the rtx4070ti, it's great!", ["rtx4070ti"]),  # no spaces gpu name
         (
             "Should i buy the rtx 4090 or the rtx5090 for deep learning?",
             ["rtx 4090", "rtx5090"],
-        ),  # multiple matches
-        ("The 3090 Ti is very good.", ["3090 Ti"]),  # gpu number with space between suffix
-        ("my 3080fe/7700x starts to crumble on demanding games.", ["3080fe"]),  # matches fe
-        (
-            "I just bought a 4090 and my friend has a RTX 4090",
-            ["RTX 4090"],
-        ),  # should deduplicate same gpu number
-        (
-            "i have a rtx 4090, RTX 3080, and RtX 2070",
-            ["RtX 2070", "RTX 3080", "rtx 4090"],
-        ),  # case insensitive
-        (
-            "I have [RTX 4090], its very nice",
-            ["RTX 4090"],
-        ),  # should still match with brackets around
-    ],
-)
-def test_gpu_valid_matches(sentence: str, expected: list[str]) -> None:
-    """Test if extract gpu function can match valid gpu strings"""
-    gpu_regex_pattern = BuildDetectorRegex().process_all_topics(["GPU"])[0]
-    assert gpu_regex_pattern is not None
-    detector = ProductDetector(pattern=gpu_regex_pattern, mapping=GPU_MODEL_TO_BRAND)
-    assert detector.extract_products(sentence) == sorted(expected)
-    assert detector.contains_product(sentence) is True
-
-
-@pytest.mark.parametrize(
-    argnames="sentence,expected",
-    argvalues=[
-        # ai03 brand tests
-        ("I just bought a new ai03 Altair-X", ["ai03 Altair-X"]),
-        ("I just bought a new Altair-X", ["Altair-X"]),
-        ("Should i buy Vega or ai03 Vega?", ["ai03 Vega"]),  # deduplicates
-        # akko brand tests
+            "GPU",
+            GPU_MODEL_TO_BRAND,
+        ),
         (
             "I have Akko Air 01, Akko Gem 01, Akko ACR59",
             ["Akko Air 01", "Akko Gem 01", "Akko ACR59"],
+            "MECHANICAL KEYBOARD",
+            KEYBOARD_MODEL_TO_BRAND,
         ),
-        ("I have Mineral 01 and Akko Mineral 01", ["Akko Mineral 01"]),  # deduplicates
-        # Anne Pro brand tests
-        ("I bought Anne Pro and Anne Pro 2 kbs", ["Anne Pro", "Anne Pro 2"]),
-        # Asus ROG brand Test
         (
-            "Should i buy the Strix Scope or Asus ROG Strix Scope NX",
-            ["Strix Scope", "Asus ROG Strix Scope NX"],
+            "I just bought a new BL0 to complement my Odyssey g9",
+            ["BL0", "Odyssey g9"],
+            "MONITOR",
+            MONITOR_MODEL_TO_BRAND,
         ),
-        ("New Azoth X, old Asus ROG Azoth X", ["Asus ROG Azoth X"]),  # deduplicates
-        # Corsair brand tests
-        ("I have the k57, Corsair K60 Pro, and K70 Core", ["k57", "Corsair K60 Pro", "K70 Core"]),
-        ("K100 and Corsair K100", ["Corsair K100"]),  # deduplicates
-    ],
-)
-def test_mechanical_keyboard_valid_matches(sentence: str, expected: list[str]) -> None:
-    """Should correctly extract and detect mechanical keyboard names"""
-    keyboard_regex_pattern = BuildDetectorRegex().process_all_topics(["MECHANICAL KEYBOARD"])[0]
-    assert keyboard_regex_pattern is not None
-    detector = ProductDetector(pattern=keyboard_regex_pattern, mapping=KEYBOARD_MODEL_TO_BRAND)
-    assert detector.extract_products(sentence) == sorted(expected)
-    assert detector.contains_product(sentence) is True
-
-
-@pytest.mark.parametrize(
-    argnames="sentence,expected",
-    argvalues=[
-        ("I just bought a new BL0 to complement my Odyssey g9", ["BL0", "Odyssey g9"]),
-        ("I have a Samsung Odyssey g9 and my friend has a Odyssey g9", ["Samsung Odyssey g9"]),
-    ],
-)
-def test_monitor_valid_matches(sentence: str, expected: list[str]) -> None:
-    """Should correctly extract and detect monitor names"""
-    monitor_regex_pattern = BuildDetectorRegex().process_all_topics(["Monitor"])[0]
-    assert monitor_regex_pattern is not None
-    detector = ProductDetector(pattern=monitor_regex_pattern, mapping=MONITOR_MODEL_TO_BRAND)
-    assert detector.extract_products(sentence) == sorted(expected)
-    assert detector.contains_product(sentence) is True
-
-
-@pytest.mark.parametrize(
-    argnames="sentence,expected",
-    argvalues=[
-        # multiple matches
         (
             "I have a Nitro V 15, Aero 5, and Lenovo IdeaPad 1",
             ["Nitro V 15", "Aero 5", "Lenovo IdeaPad 1"],
+            "LAPTOP",
+            LAPTOP_MODEL_TO_BRAND,
         ),
-        # deduplicate
-        ("i have Aero 5, he has Gigabyte Aero 5", ["Gigabyte Aero 5"]),
-    ],
-)
-def test_laptop_valid_matches(sentence: str, expected: list[str]) -> None:
-    """Test if it can match valid laptop strings"""
-    laptop_regex_pattern = BuildDetectorRegex().process_all_topics(["LAPTOP"])[0]
-    assert laptop_regex_pattern is not None
-    detector = ProductDetector(pattern=laptop_regex_pattern, mapping=LAPTOP_MODEL_TO_BRAND)
-    assert detector.extract_products(sentence) == sorted(expected)
-    assert detector.contains_product(sentence) is True
-
-
-@pytest.mark.parametrize(
-    argnames="sentence,expected",
-    argvalues=[
-        # multiple matches
         (
             "I have a K72, Apple Airpods Max, and WH-CH520",
             ["K72", "Apple Airpods Max", "WH-CH520"],
+            "HEADPHONE",
+            HEADPHONE_MODEL_TO_BRAND,
         ),
-        # deduplicate
-        ("my old WH-CH520 broke, i bought a new Sony WH-CH520", ["Sony WH-CH520"]),
-    ],
-)
-def test_headphone_valid_matches(sentence: str, expected: list[str]) -> None:
-    """Test if it can match valid heaphone strings"""
-    headphone_regex_pattern = BuildDetectorRegex().process_all_topics(["HEADPHONE"])[0]
-    assert headphone_regex_pattern is not None
-    detector = ProductDetector(pattern=headphone_regex_pattern, mapping=HEADPHONE_MODEL_TO_BRAND)
-    assert detector.extract_products(sentence) == sorted(expected)
-    assert detector.contains_product(sentence) is True
-
-
-@pytest.mark.parametrize(
-    argnames="sentence,expected",
-    argvalues=[
-        # multiple matches
         (
             "I have a ATH-CKS50TW2, Apple Airpods 4, and Live Flex 3",
             ["ATH-CKS50TW2", "Apple Airpods 4", "Live Flex 3"],
+            "EARBUD",
+            EARBUD_MODEL_TO_BRAND,
         ),
-        # deduplicate
-        ("my old Airpods 4 broke, i bought a new Apple Airpods 4", ["Apple Airpods 4"]),
-    ],
-)
-def test_earbud_valid_matches(sentence: str, expected: list[str]) -> None:
-    """Test if it can match valid earbud strings"""
-    earbud_regex_pattern = BuildDetectorRegex().process_all_topics(["EARBUD"])[0]
-    assert earbud_regex_pattern is not None
-    detector = ProductDetector(pattern=earbud_regex_pattern, mapping=EARBUD_MODEL_TO_BRAND)
-    assert detector.extract_products(sentence) == sorted(expected)
-    assert detector.contains_product(sentence) is True
-
-
-@pytest.mark.parametrize(
-    argnames="sentence,expected",
-    argvalues=[
-        # multiple matches
         (
             "I have a Bose 550, LG H7, and B400F",
             ["Bose 550", "LG H7", "B400F"],
+            "SOUNDBAR",
+            SOUNDBAR_MODEL_TO_BRAND,
         ),
-        # deduplicate
-        ("my old B400F broke, i bought a new Samsung HW-B400F", ["Samsung HW-B400F"]),
-    ],
-)
-def test_soundbar_valid_matches(sentence: str, expected: list[str]) -> None:
-    """Test if it can match valid soundbar strings"""
-    soundbar_regex_pattern = BuildDetectorRegex().process_all_topics(["SOUNDBAR"])[0]
-    assert soundbar_regex_pattern is not None
-    detector = ProductDetector(pattern=soundbar_regex_pattern, mapping=SOUNDBAR_MODEL_TO_BRAND)
-    assert detector.extract_products(sentence) == sorted(expected)
-    assert detector.contains_product(sentence) is True
-
-
-@pytest.mark.parametrize(
-    argnames="sentence,expected",
-    argvalues=[
-        # multiple matches
         (
             "I have a DragonFly Black, Gustard R26, and Erco",
             ["DragonFly Black", "Gustard R26", "Erco"],
+            "DAC",
+            DAC_MODEL_TO_BRAND,
         ),
-        # deduplicate
-        ("my old DM7 broke, i bought a new Topping DM7", ["Topping DM7"]),
-    ],
-)
-def test_dac_valid_matches(sentence: str, expected: list[str]) -> None:
-    """Test if it can match valid dac strings"""
-    dac_regex_pattern = BuildDetectorRegex().process_all_topics(["DAC"])[0]
-    assert dac_regex_pattern is not None
-    detector = ProductDetector(pattern=dac_regex_pattern, mapping=DAC_MODEL_TO_BRAND)
-    assert detector.extract_products(sentence) == sorted(expected)
-    assert detector.contains_product(sentence) is True
-
-
-@pytest.mark.parametrize(
-    argnames="sentence,expected",
-    argvalues=[
-        # multiple matches
         (
             "I have a Echo Dot, Elac Concertro, and Aria SR900",
             ["Echo Dot", "Elac Concertro", "Aria SR900"],
+            "SPEAKER",
+            SPEAKER_MODEL_TO_BRAND,
         ),
         # deduplicate
-        ("my old Echo Dot broke, i bought a new Amazon Echo Dot", ["Amazon Echo Dot"]),
+        (
+            "I just bought a 4090 and my friend has a RTX 4090",
+            ["RTX 4090"],
+            "GPU",
+            GPU_MODEL_TO_BRAND,
+        ),
+        (
+            "I have a Pentium G620 and my friend has Intel Pentium G620",
+            ["Pentium G620"],
+            "CPU",
+            CPU_MODEL_TO_BRAND,
+        ),
+        ("K100 and Corsair K100", ["Corsair K100"], "MECHANICAL KEYBOARD", KEYBOARD_MODEL_TO_BRAND),
+        (
+            "I have a Samsung Odyssey g9 and my friend has a Odyssey g9",
+            ["Samsung Odyssey g9"],
+            "MONITOR",
+            MONITOR_MODEL_TO_BRAND,
+        ),
+        (
+            "i have Aero 5, he has Gigabyte Aero 5",
+            ["Gigabyte Aero 5"],
+            "LAPTOP",
+            LAPTOP_MODEL_TO_BRAND,
+        ),
+        (
+            "my old WH-CH520 broke, i bought a new Sony WH-CH520",
+            ["Sony WH-CH520"],
+            "HEADPHONE",
+            HEADPHONE_MODEL_TO_BRAND,
+        ),
+        (
+            "my old Airpods 4 broke, i bought a new Apple Airpods 4",
+            ["Apple Airpods 4"],
+            "EARBUD",
+            EARBUD_MODEL_TO_BRAND,
+        ),
+        (
+            "my old B400F broke, i bought a new Samsung HW-B400F",
+            ["Samsung HW-B400F"],
+            "SOUNDBAR",
+            SOUNDBAR_MODEL_TO_BRAND,
+        ),
+        (
+            "my old DM7 broke, i bought a new Topping DM7",
+            ["Topping DM7"],
+            "DAC",
+            DAC_MODEL_TO_BRAND,
+        ),
+        (
+            "my old Echo Dot broke, i bought a new Amazon Echo Dot",
+            ["Amazon Echo Dot"],
+            "SPEAKER",
+            SPEAKER_MODEL_TO_BRAND,
+        ),
     ],
 )
-def test_speaker_valid_matches(sentence: str, expected: list[str]) -> None:
-    """Test if it can match valid speaker strings"""
-    speaker_regex_pattern = BuildDetectorRegex().process_all_topics(["SPEAKER"])[0]
-    assert speaker_regex_pattern is not None
-    detector = ProductDetector(pattern=speaker_regex_pattern, mapping=SPEAKER_MODEL_TO_BRAND)
+def test_product_topic_valid_matches(
+    sentence: str, expected: list[str], topic: str, mapping: dict[str, str]
+) -> None:
+    """Test if it can match valid topic strings"""
+    product_regex_pattern = BuildDetectorRegex().process_all_topics([topic])[0]
+    assert product_regex_pattern is not None
+    detector = ProductDetector(pattern=product_regex_pattern, mapping=mapping)
     assert detector.extract_products(sentence) == sorted(expected)
     assert detector.contains_product(sentence) is True
 

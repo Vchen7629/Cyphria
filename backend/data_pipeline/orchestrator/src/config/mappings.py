@@ -42,9 +42,19 @@ TOPICSUBREDDIT = {
         "Earbuds", "Audiophile", "BudgetAudiophile", "Airpods", "beatsbydre", "JBL",
         "SonyHeadphones", "bose", "Jlab", "Soundcore"
     ],
-    "SOUNDBAR": ["Soundbars", "hometheater", "Audiophile", "BudgetAudiophile"],
-    "DAC": ["headphones", "HeadphoneAdvice", "Audiophile", "BudgetAudiophile", "StereoAdvice"],
-    "SPEAKER": ["Bluetooth_speakers", "SoundSystem", "StereoAdvice", "Audiophile", "BudgetAudiophile"],
+    "SOUNDBAR": [
+        "Soundbars", "hometheater", "Audiophile", "BudgetAudiophile", "Bose", "devialet",
+        "LG_UserHub", "Sennheiser", "Sonos", "bravia", "hifiaudio"
+    ],
+    "DAC": [
+        "headphones", "HeadphoneAdvice", "Audiophile", "BudgetAudiophile", "StereoAdvice",
+        "FiiO", "hifiaudio", "Schiit"
+    ],
+    "SPEAKER": [
+        "Bluetooth_speakers", "SoundSystem", "StereoAdvice", "Audiophile", "BudgetAudiophile",
+        "alexa", "HomePod", "Bose", "hometheater", "googlehome", "JBL", "Klipsch", "logitech",
+        "marshall", "Sonos", "Sony",
+    ],
 
     # Mobile subreddits
     "SMARTPHONE": ["Smartphones", "Android", "PickAnAndroidForMe", "iPhone"],

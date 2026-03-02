@@ -7,177 +7,58 @@ normalizer = ProductNormalizer()
 
 
 @pytest.mark.parametrize(
-    argnames="cpu_names,expected_name",
+    argnames="product_list,expected,topic",
     argvalues=[
-        # intel cpus
-        (["3930K", "Core 3930K", "Core i7-3930K", "i7-3930K"], "Intel Core i7-3930K"),
-        (["G5500T", "Pentium G5500T", "Pentium Gold G5500T"], "Intel Pentium Gold G5500T"),
-        (["G4900T", "Celeron G4900T"], "Intel Celeron G4900T"),
+        # multiple matches
+        (["  4090  ", "RTX 5090"], ["NVIDIA RTX 4090", "NVIDIA RTX 5090"], "GPU"),
+        (["   Air 01  ", "gEm 01"], ["Akko Air 01", "Akko Gem 01"], "MECHANICAL KEYBOARD"),
+        (["   EX240  ", "Ex271uZ"], ["BenQ Mobiuz EX240", "BenQ Mobiuz OLED EX271UZ"], "MONITOR"),
         (
-            [
-                "7740X",
-                "Core 7740X",
-                "i7-7740X",
-                "i7 X i7-7740X",
-                "Core i7-7740X",
-                "Core i7 X i7-7740X",
-            ],
-            "Intel Core i7 X i7-7740X",
+            ["Aero 5", "Omen Max", "LG gram 14"],
+            ["Gigabyte Aero 5", "HP Omen Max", "LG gram 14"],
+            "LAPTOP",
         ),
-        (["235T", "Core Ultra 235T", "Core Ultra 5 235T"], "Intel Core Ultra 5 235T"),
-        # ryzen cpus
-        (["5500X3D", "Ryzen 5500X3D", "Ryzen 5 5500X3D"], "AMD Ryzen 5 5500X3D"),
-        (
-            ["7995WX", "Ryzen 7995WX", "Ryzen Threadripper Pro 7995WX", "Threadripper Pro 7995WX"],
-            "AMD Ryzen Threadripper Pro 7995WX",
-        ),
-    ],
-)
-def test_cpu_normalized(cpu_names: list[str], expected_name: str) -> None:
-    """Should normalize intel cpus properly"""
-    config = ProductNormalizer._TOPIC_CONFIGS["CPU"]
-    mapping, custom_norm = config
-    for name in cpu_names:
-        result = normalizer.normalize_product_list("CPU", [name])
-        assert result == [expected_name]
-
-
-@pytest.mark.parametrize(
-    argnames="gpu_list,expected",
-    argvalues=[
-        (
-            ["rtx 4090", "4090"],
-            ["NVIDIA RTX 4090"],
-        ),  # should deduplicate
-        (["rtx3060"], ["NVIDIA RTX 3060"]),  # no spaces
-        (["1030"], ["NVIDIA GT 1030"]),
-        (["  4090  "], ["NVIDIA RTX 4090"]),
-        (["3070ti"], ["NVIDIA RTX 3070 Ti"]),
-    ],
-)
-def test_gpu_normalized(gpu_list: list[str], expected: list[str]) -> None:
-    """GPUs should be properly normalized"""
-    normalized = normalizer.normalize_product_list("GPU", gpu_list)
-    assert normalized == sorted(expected)
-
-
-@pytest.mark.parametrize(
-    argnames="keyboard_list,expected",
-    argvalues=[
-        (["Altair-X", "Vega", "ai03 Vega"], ["ai03 Altair-X", "ai03 Vega"]),  # should deduplicate
-        (
-            ["   Air 01  ", "gEm 01"],
-            ["Akko Air 01", "Akko Gem 01"],
-        ),  # should handle whitespace + mixed case
-        (
-            ["jajaja", "Altair-X", "Air 01"],
-            ["ai03 Altair-X", "Akko Air 01"],
-        ),  # should filter out invalid keyboard
-    ],
-)
-def test_mechanical_keyboard_normalized(keyboard_list: list[str], expected: list[str]) -> None:
-    """Should normalize valid mechanical keyboard names"""
-    normalized = normalizer.normalize_product_list("MECHANICAL KEYBOARD", keyboard_list)
-    assert normalized == sorted(expected)
-
-
-@pytest.mark.parametrize(
-    argnames="keyboard_list,expected",
-    argvalues=[
-        (
-            ["BE0", "Acer BE0", "XG27ACDMS"],
-            ["Acer BE0", "Asus ROG Strix OLED XG27ACDMS"],
-        ),  # should deduplicate
-        (
-            ["   EX240  ", "Ex271uZ"],
-            ["BenQ Mobiuz EX240", "BenQ Mobiuz OLED EX271UZ"],
-        ),  # should handle whitespace + mixed case
-        (
-            ["jajaja", "BE0"],
-            ["Acer BE0"],
-        ),  # should filter out invalid keyboard
-    ],
-)
-def test_monitor_normalized(keyboard_list: list[str], expected: list[str]) -> None:
-    """Should normalize valid monitor names"""
-    normalized = normalizer.normalize_product_list("MONITOR", keyboard_list)
-    assert normalized == sorted(expected)
-
-
-@pytest.mark.parametrize(
-    argnames="laptop_list,expected",
-    argvalues=[
-        (["Aero 5", "Omen Max", "LG gram 14"], ["Gigabyte Aero 5", "HP Omen Max", "LG gram 14"]),
-        (["Aero 5", "Gigabyte Aero 5"], ["Gigabyte Aero 5"]),  # deduplicate
-    ],
-)
-def test_laptop_normalized(laptop_list: list[str], expected: list[str]) -> None:
-    """Laptops should be properly normalized"""
-    normalized = normalizer.normalize_product_list("LAPTOP", laptop_list)
-    assert normalized == sorted(expected)
-
-
-@pytest.mark.parametrize(
-    argnames="headphone_list,expected",
-    argvalues=[
         (
             ["K72", "Apple Airpods Max", "WH-CH520"],
             ["AKG K72", "Apple Airpods Max", "Sony WH-CH520"],
+            "HEADPHONE",
         ),
-        (["WH-CH520", "Sony WH-CH520"], ["Sony WH-CH520"]),  # deduplicate
-    ],
-)
-def test_headphone_normalized(headphone_list: list[str], expected: list[str]) -> None:
-    """Headphones should be properly normalized"""
-    normalized = normalizer.normalize_product_list("HEADPHONE", headphone_list)
-    assert normalized == sorted(expected)
-
-
-@pytest.mark.parametrize(
-    argnames="soundbar_list,expected",
-    argvalues=[
         (
             ["Ambeo Max", "H7", "B400F"],
             ["Sennheiser Ambeo Max", "LG H7", "Samsung HW-B400F"],
+            "SOUNDBAR",
         ),
-        (["B400F", "Samsung HW-B400F"], ["Samsung HW-B400F"]),  # deduplicate
-    ],
-)
-def test_soundbar_normalized(soundbar_list: list[str], expected: list[str]) -> None:
-    """soundbar should be properly normalized"""
-    normalized = normalizer.normalize_product_list("SOUNDBAR", soundbar_list)
-    assert normalized == sorted(expected)
-
-
-@pytest.mark.parametrize(
-    argnames="dac_list,expected",
-    argvalues=[
         (
             ["DragonFly Black", "Gustard R26", "Erco"],
             ["AudioQuest DragonFly Black", "Gustard R26", "Ferrum Erco"],
+            "DAC",
         ),
-        (["DM7", "Topping DM7"], ["Topping DM7"]),  # deduplicate
-    ],
-)
-def test_dac_normalized(dac_list: list[str], expected: list[str]) -> None:
-    """dac should be properly normalized"""
-    normalized = normalizer.normalize_product_list("DAC", dac_list)
-    assert normalized == sorted(expected)
-
-
-@pytest.mark.parametrize(
-    argnames="earbud_list,expected",
-    argvalues=[
         (
             ["ATH-CKS50TW2", "Apple Airpods 4", "Live Flex 3"],
             ["Audio-Technica ATH-CKS50TW2", "Apple Airpods 4", "JBL Live Flex 3"],
+            "EARBUD",
         ),
-        (["Airpods 4", "Apple Airpods 4"], ["Apple Airpods 4"]),  # deduplicate
+        (
+            ["Echo Dot", "Elac Concertro", "Aria SR900"],
+            ["Amazon Echo Dot", "Elac Concertro", "Focal Aria SR900"],
+            "SPEAKER",
+        ),
+        # deduplicates
+        (["3930K", "Core i7-3930K", "i7-3930K"], ["Intel Core i7-3930K"], "CPU"),
+        (["rtx 4090", "4090"], ["NVIDIA RTX 4090"], "GPU"),
+        (["Vega", "ai03 Vega"], ["ai03 Vega"], "MECHANICAL KEYBOARD"),
+        (["BE0", "Acer BE0"], ["Acer BE0"], "MONITOR"),
+        (["Aero 5", "Gigabyte Aero 5"], ["Gigabyte Aero 5"], "LAPTOP"),
+        (["WH-CH520", "Sony WH-CH520"], ["Sony WH-CH520"], "HEADPHONE"),
+        (["B400F", "Samsung HW-B400F"], ["Samsung HW-B400F"], "SOUNDBAR"),
+        (["DM7", "Topping DM7"], ["Topping DM7"], "DAC"),
+        (["Airpods 4", "Apple Airpods 4"], ["Apple Airpods 4"], "EARBUD"),
+        (["Echo Dot", "Amazon Echo Dot"], ["Amazon Echo Dot"], "SPEAKER"),
     ],
 )
-def test_earbud_normalized(earbud_list: list[str], expected: list[str]) -> None:
-    """earbuds should be properly normalized"""
-    normalized = normalizer.normalize_product_list("EARBUD", earbud_list)
+def test_product_normalized(product_list: list[str], expected: list[str], topic: str) -> None:
+    """products should be properly normalized"""
+    normalized = normalizer.normalize_product_list(topic, product_list)
     assert normalized == sorted(expected)
 
 

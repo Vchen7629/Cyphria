@@ -43,6 +43,11 @@ normalizer = ProductNormalizer()
             ["Amazon Echo Dot", "Elac Concertro", "Focal Aria SR900"],
             "SPEAKER",
         ),
+        (
+            ["iPhone 16", "Google Pixel 8a", "Edge 2025"],
+            ["Apple iPhone 16", "Google Pixel 8a", "Motorola Edge 2025"],
+            "SMARTPHONE",
+        ),
         # deduplicates
         (["3930K", "Core i7-3930K", "i7-3930K"], ["Intel Core i7-3930K"], "CPU"),
         (["rtx 4090", "4090"], ["NVIDIA RTX 4090"], "GPU"),
@@ -54,6 +59,7 @@ normalizer = ProductNormalizer()
         (["DM7", "Topping DM7"], ["Topping DM7"], "DAC"),
         (["Airpods 4", "Apple Airpods 4"], ["Apple Airpods 4"], "EARBUD"),
         (["Echo Dot", "Amazon Echo Dot"], ["Amazon Echo Dot"], "SPEAKER"),
+        (["iPhone 16", "Apple iPhone 16"], ["Apple iPhone 16"], "SMARTPHONE"),
     ],
 )
 def test_product_normalized(product_list: list[str], expected: list[str], topic: str) -> None:

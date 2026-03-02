@@ -181,6 +181,22 @@ def test_earbud_normalized(earbud_list: list[str], expected: list[str]) -> None:
     assert normalized == sorted(expected)
 
 
+@pytest.mark.parametrize(
+    argnames="speaker_list,expected",
+    argvalues=[
+        (
+            ["Echo Dot", "Elac Concertro", "Aria SR900"],
+            ["Amazon Echo Dot", "Elac Concertro", "Focal Aria SR900"],
+        ),
+        (["Echo Dot", "Amazon Echo Dot"], ["Amazon Echo Dot"]),  # deduplicate
+    ],
+)
+def test_speaker_normalized(speaker_list: list[str], expected: list[str]) -> None:
+    """speaker should be properly normalized"""
+    normalized = normalizer.normalize_product_list("SPEAKER", speaker_list)
+    assert normalized == sorted(expected)
+
+
 @pytest.mark.parametrize(argnames="product_topic", argvalues=[None, "", "  "])
 def test_invalid_input_product_topic(product_topic: str | None) -> None:
     """Invalid product topic param (None, empty string, whitespace) should return None and log"""

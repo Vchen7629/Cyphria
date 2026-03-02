@@ -7,6 +7,7 @@ from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
 from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
 from src.product_mappings.audio import DAC_MODEL_TO_BRAND
 from src.product_mappings.audio import EARBUD_MODEL_TO_BRAND
+from src.product_mappings.audio import SPEAKER_MODEL_TO_BRAND
 from src.product_mappings.audio import SOUNDBAR_MODEL_TO_BRAND
 from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
 import pytest
@@ -225,6 +226,27 @@ def test_dac_valid_matches(sentence: str, expected: list[str]) -> None:
     dac_regex_pattern = BuildDetectorRegex().process_all_topics(["DAC"])[0]
     assert dac_regex_pattern is not None
     detector = ProductDetector(pattern=dac_regex_pattern, mapping=DAC_MODEL_TO_BRAND)
+    assert detector.extract_products(sentence) == sorted(expected)
+    assert detector.contains_product(sentence) is True
+
+
+@pytest.mark.parametrize(
+    argnames="sentence,expected",
+    argvalues=[
+        # multiple matches
+        (
+            "I have a Echo Dot, Elac Concertro, and Aria SR900",
+            ["Echo Dot", "Elac Concertro", "Aria SR900"],
+        ),
+        # deduplicate
+        ("my old Echo Dot broke, i bought a new Amazon Echo Dot", ["Amazon Echo Dot"]),
+    ],
+)
+def test_speaker_valid_matches(sentence: str, expected: list[str]) -> None:
+    """Test if it can match valid speaker strings"""
+    speaker_regex_pattern = BuildDetectorRegex().process_all_topics(["SPEAKER"])[0]
+    assert speaker_regex_pattern is not None
+    detector = ProductDetector(pattern=speaker_regex_pattern, mapping=SPEAKER_MODEL_TO_BRAND)
     assert detector.extract_products(sentence) == sorted(expected)
     assert detector.contains_product(sentence) is True
 

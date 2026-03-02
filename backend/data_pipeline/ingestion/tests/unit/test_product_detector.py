@@ -10,6 +10,7 @@ from src.product_mappings.audio import EARBUD_MODEL_TO_BRAND
 from src.product_mappings.audio import SPEAKER_MODEL_TO_BRAND
 from src.product_mappings.audio import SOUNDBAR_MODEL_TO_BRAND
 from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
+from src.product_mappings.mobile import SMARTPHONE_MODEL_TO_BRAND
 import pytest
 
 
@@ -77,6 +78,12 @@ import pytest
             "SPEAKER",
             SPEAKER_MODEL_TO_BRAND,
         ),
+        (
+            "I have a iPhone 16, Google Pixel 8a, and Edge 2025",
+            ["iPhone 16", "Google Pixel 8a", "Edge 2025"],
+            "SMARTPHONE",
+            SMARTPHONE_MODEL_TO_BRAND,
+        ),
         # deduplicate
         (
             "I just bought a 4090 and my friend has a RTX 4090",
@@ -132,6 +139,12 @@ import pytest
             ["Amazon Echo Dot"],
             "SPEAKER",
             SPEAKER_MODEL_TO_BRAND,
+        ),
+        (
+            "my old iphone 17, i bought a new Apple iPhone 17",
+            ["Apple iPhone 17"],
+            "SMARTPHONE",
+            SMARTPHONE_MODEL_TO_BRAND,
         ),
     ],
 )

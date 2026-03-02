@@ -15,6 +15,7 @@ from src.product_mappings.audio import EARBUD_MODEL_TO_BRAND
 from src.product_mappings.audio import SPEAKER_MODEL_TO_BRAND
 from src.product_mappings.audio import SOUNDBAR_MODEL_TO_BRAND
 from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
+from src.product_mappings.mobile import SMARTPHONE_MODEL_TO_BRAND
 
 
 class ProductNormalizer:
@@ -38,6 +39,7 @@ class ProductNormalizer:
         "SOUNDBAR": (SOUNDBAR_MODEL_TO_BRAND, None),
         "DAC": (DAC_MODEL_TO_BRAND, None),
         "SPEAKER": (SPEAKER_MODEL_TO_BRAND, None),
+        "SMARTPHONE": (SMARTPHONE_MODEL_TO_BRAND, None),
     }
 
     def __init__(self, logger: Optional[StructuredLogger] = None) -> None:

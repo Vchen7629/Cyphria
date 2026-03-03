@@ -11,6 +11,7 @@ from src.product_mappings import CPU_MODEL_TO_BRAND
 from src.product_mappings import TABLET_MODEL_TO_BRAND
 from src.product_mappings import EARBUD_MODEL_TO_BRAND
 from src.product_mappings import LAPTOP_MODEL_TO_BRAND
+from src.product_mappings import HEADSET_MODEL_TO_BRAND
 from src.product_mappings import MONITOR_MODEL_TO_BRAND
 from src.product_mappings import SPEAKER_MODEL_TO_BRAND
 from src.product_mappings import KEYBOARD_MODEL_TO_BRAND
@@ -38,6 +39,7 @@ class ProductNormalizer:
         "MECHANICAL KEYBOARD": (KEYBOARD_MODEL_TO_BRAND, None),
         "LAPTOP": (LAPTOP_MODEL_TO_BRAND, None),
         "HEADPHONE": (HEADPHONE_MODEL_TO_BRAND, None),
+        "HEADSET": (HEADSET_MODEL_TO_BRAND, None),
         "EARBUD": (EARBUD_MODEL_TO_BRAND, None),
         "SOUNDBAR": (SOUNDBAR_MODEL_TO_BRAND, None),
         "DAC": (DAC_MODEL_TO_BRAND, None),

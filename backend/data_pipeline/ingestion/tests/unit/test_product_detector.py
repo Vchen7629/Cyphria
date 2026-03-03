@@ -12,6 +12,7 @@ from src.product_mappings.audio import SOUNDBAR_MODEL_TO_BRAND
 from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
 from src.product_mappings.mobile import TABLET_MODEL_TO_BRAND
 from src.product_mappings.mobile import SMARTPHONE_MODEL_TO_BRAND
+from src.product_mappings.gaming import GAMING_MOUSE_MODEL_TO_BRAND
 import pytest
 
 
@@ -91,6 +92,12 @@ import pytest
             "TABLET",
             TABLET_MODEL_TO_BRAND,
         ),
+        (
+            "I have a Darkstar, Glorious Model D3, and Pulsefire Fuse",
+            ["Darkstar", "Glorious Model D3", "Pulsefire Fuse"],
+            "GAMING MICE",
+            GAMING_MOUSE_MODEL_TO_BRAND,
+        ),
         # deduplicate
         (
             "I just bought a 4090 and my friend has a RTX 4090",
@@ -158,6 +165,12 @@ import pytest
             ["Apple iPad Air m2"],
             "TABLET",
             TABLET_MODEL_TO_BRAND,
+        ),
+        (
+            "my old BM22, i bought a new Keychron BM22",
+            ["Keychron BM22"],
+            "GAMING MICE",
+            GAMING_MOUSE_MODEL_TO_BRAND,
         ),
     ],
 )

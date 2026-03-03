@@ -5,19 +5,20 @@ from src.utils.validation import validate_string
 from src.product_normalizer.cpu import CPUNormalizer
 from src.product_normalizer.gpu import GPUNormalizer
 from src.product_normalizer.format import format_brand_model
-from src.product_mappings.computing import GPU_MODEL_TO_BRAND
-from src.product_mappings.computing import CPU_MODEL_TO_BRAND
-from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
-from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
-from src.product_mappings.computing import LAPTOP_MODEL_TO_BRAND
-from src.product_mappings.audio import DAC_MODEL_TO_BRAND
-from src.product_mappings.audio import EARBUD_MODEL_TO_BRAND
-from src.product_mappings.audio import SPEAKER_MODEL_TO_BRAND
-from src.product_mappings.audio import SOUNDBAR_MODEL_TO_BRAND
-from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
-from src.product_mappings.mobile import TABLET_MODEL_TO_BRAND
-from src.product_mappings.mobile import SMARTPHONE_MODEL_TO_BRAND
-from src.product_mappings.gaming import GAMING_MOUSE_MODEL_TO_BRAND
+from src.product_mappings import DAC_MODEL_TO_BRAND
+from src.product_mappings import GPU_MODEL_TO_BRAND
+from src.product_mappings import CPU_MODEL_TO_BRAND
+from src.product_mappings import TABLET_MODEL_TO_BRAND
+from src.product_mappings import EARBUD_MODEL_TO_BRAND
+from src.product_mappings import LAPTOP_MODEL_TO_BRAND
+from src.product_mappings import MONITOR_MODEL_TO_BRAND
+from src.product_mappings import SPEAKER_MODEL_TO_BRAND
+from src.product_mappings import KEYBOARD_MODEL_TO_BRAND
+from src.product_mappings import SOUNDBAR_MODEL_TO_BRAND
+from src.product_mappings import HEADPHONE_MODEL_TO_BRAND
+from src.product_mappings import CONTROLLER_MODEL_TO_BRAND
+from src.product_mappings import SMARTPHONE_MODEL_TO_BRAND
+from src.product_mappings import GAMING_MOUSE_MODEL_TO_BRAND
 
 
 class ProductNormalizer:
@@ -44,6 +45,7 @@ class ProductNormalizer:
         "SMARTPHONE": (SMARTPHONE_MODEL_TO_BRAND, None),
         "TABLET": (TABLET_MODEL_TO_BRAND, None),
         "GAMING MICE": (GAMING_MOUSE_MODEL_TO_BRAND, None),
+        "CONTROLLER": (CONTROLLER_MODEL_TO_BRAND, None),
     }
 
     def __init__(self, logger: Optional[StructuredLogger] = None) -> None:

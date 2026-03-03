@@ -24,6 +24,11 @@ normalizer = ProductNormalizer()
             "HEADPHONE",
         ),
         (
+            ["G321", "Razer Barracuda", "Delta II"],
+            ["Logitech G321", "Razer Barracuda", "Asus ROG Delta II"],
+            "HEADSET",
+        ),
+        (
             ["Ambeo Max", "H7", "B400F"],
             ["Sennheiser Ambeo Max", "LG H7", "Samsung HW-B400F"],
             "SOUNDBAR",
@@ -58,6 +63,11 @@ normalizer = ProductNormalizer()
             ["Corsair Darkstar", "Glorious Model D3", "HyperX Pulsefire Fuse"],
             "GAMING MICE",
         ),
+        (
+            ["Cyclone 2", "Gulikit Elves", "Apex 5"],
+            ["GameSir Cyclone 2", "Gulikit Elves", "Flydigi Apex 5"],
+            "CONTROLLER",
+        ),
         # deduplicates
         (["3930K", "Core i7-3930K", "i7-3930K"], ["Intel Core i7-3930K"], "CPU"),
         (["rtx 4090", "4090"], ["NVIDIA RTX 4090"], "GPU"),
@@ -65,6 +75,7 @@ normalizer = ProductNormalizer()
         (["BE0", "Acer BE0"], ["Acer BE0"], "MONITOR"),
         (["Aero 5", "Gigabyte Aero 5"], ["Gigabyte Aero 5"], "LAPTOP"),
         (["WH-CH520", "Sony WH-CH520"], ["Sony WH-CH520"], "HEADPHONE"),
+        (["Arctis Pro", "SteelSeries Arctis Pro"], ["SteelSeries Arctis Pro"], "HEADSET"),
         (["B400F", "Samsung HW-B400F"], ["Samsung HW-B400F"], "SOUNDBAR"),
         (["DM7", "Topping DM7"], ["Topping DM7"], "DAC"),
         (["Airpods 4", "Apple Airpods 4"], ["Apple Airpods 4"], "EARBUD"),
@@ -72,6 +83,7 @@ normalizer = ProductNormalizer()
         (["iPhone 16", "Apple iPhone 16"], ["Apple iPhone 16"], "SMARTPHONE"),
         (["iPad Air m2", "Apple iPad Air m2"], ["Apple iPad Air m2"], "TABLET"),
         (["BM22", "Keychron BM22"], ["Keychron BM22"], "GAMING MICE"),
+        (["Raiju V3 Pro", "Razer Raiju V3 Pro"], ["Razer Raiju V3 Pro"], "Controller"),
     ],
 )
 def test_product_normalized(product_list: list[str], expected: list[str], topic: str) -> None:

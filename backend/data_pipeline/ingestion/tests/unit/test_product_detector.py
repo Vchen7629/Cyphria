@@ -1,18 +1,20 @@
 from src.product_detector.base import ProductDetector
 from src.product_detector.base import BuildDetectorRegex
-from src.product_mappings.computing import GPU_MODEL_TO_BRAND
-from src.product_mappings.computing import CPU_MODEL_TO_BRAND
-from src.product_mappings.computing import LAPTOP_MODEL_TO_BRAND
-from src.product_mappings.computing import KEYBOARD_MODEL_TO_BRAND
-from src.product_mappings.computing import MONITOR_MODEL_TO_BRAND
-from src.product_mappings.audio import DAC_MODEL_TO_BRAND
-from src.product_mappings.audio import EARBUD_MODEL_TO_BRAND
-from src.product_mappings.audio import SPEAKER_MODEL_TO_BRAND
-from src.product_mappings.audio import SOUNDBAR_MODEL_TO_BRAND
-from src.product_mappings.audio import HEADPHONE_MODEL_TO_BRAND
-from src.product_mappings.mobile import TABLET_MODEL_TO_BRAND
-from src.product_mappings.mobile import SMARTPHONE_MODEL_TO_BRAND
-from src.product_mappings.gaming import GAMING_MOUSE_MODEL_TO_BRAND
+from src.product_mappings import DAC_MODEL_TO_BRAND
+from src.product_mappings import GPU_MODEL_TO_BRAND
+from src.product_mappings import CPU_MODEL_TO_BRAND
+from src.product_mappings import TABLET_MODEL_TO_BRAND
+from src.product_mappings import EARBUD_MODEL_TO_BRAND
+from src.product_mappings import LAPTOP_MODEL_TO_BRAND
+from src.product_mappings import HEADSET_MODEL_TO_BRAND
+from src.product_mappings import MONITOR_MODEL_TO_BRAND
+from src.product_mappings import SPEAKER_MODEL_TO_BRAND
+from src.product_mappings import KEYBOARD_MODEL_TO_BRAND
+from src.product_mappings import SOUNDBAR_MODEL_TO_BRAND
+from src.product_mappings import HEADPHONE_MODEL_TO_BRAND
+from src.product_mappings import CONTROLLER_MODEL_TO_BRAND
+from src.product_mappings import SMARTPHONE_MODEL_TO_BRAND
+from src.product_mappings import GAMING_MOUSE_MODEL_TO_BRAND
 import pytest
 
 
@@ -57,6 +59,12 @@ import pytest
             HEADPHONE_MODEL_TO_BRAND,
         ),
         (
+            "I have a G321, Razer Barracuda, and Delta II",
+            ["G321", "Razer Barracuda", "Delta II"],
+            "HEADSET",
+            HEADSET_MODEL_TO_BRAND,
+        ),
+        (
             "I have a ATH-CKS50TW2, Apple Airpods 4, and Live Flex 3",
             ["ATH-CKS50TW2", "Apple Airpods 4", "Live Flex 3"],
             "EARBUD",
@@ -98,6 +106,12 @@ import pytest
             "GAMING MICE",
             GAMING_MOUSE_MODEL_TO_BRAND,
         ),
+        (
+            "I have a Cyclone 2, Gulikit Elves, and Apex 5",
+            ["Cyclone 2", "Gulikit Elves", "Apex 5"],
+            "CONTROLLER",
+            CONTROLLER_MODEL_TO_BRAND,
+        ),
         # deduplicate
         (
             "I just bought a 4090 and my friend has a RTX 4090",
@@ -129,6 +143,12 @@ import pytest
             ["Sony WH-CH520"],
             "HEADPHONE",
             HEADPHONE_MODEL_TO_BRAND,
+        ),
+        (
+            "my old Arctis Pro broke, i bought a new SteelSeries Arctis Pro",
+            ["SteelSeries Arctis Pro"],
+            "HEADSET",
+            HEADSET_MODEL_TO_BRAND,
         ),
         (
             "my old Airpods 4 broke, i bought a new Apple Airpods 4",
@@ -171,6 +191,12 @@ import pytest
             ["Keychron BM22"],
             "GAMING MICE",
             GAMING_MOUSE_MODEL_TO_BRAND,
+        ),
+        (
+            "my old Raiju V3 Pro, i bought a new Razer Raiju V3 Pro",
+            ["Razer Raiju V3 Pro"],
+            "CONTROLLER",
+            CONTROLLER_MODEL_TO_BRAND,
         ),
     ],
 )

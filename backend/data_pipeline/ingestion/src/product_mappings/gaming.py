@@ -204,3 +204,80 @@ GAMING_MOUSE_MODEL_TO_BRAND = {
     "U2-DW": "Zowie",
     "ZA13-DW": "Zowie",
 }
+
+# Controller specific keywords
+# Platform, Ex: Windows controller, etc
+# Wired or Wireless
+# Latency?
+CONTROLLER_MODEL_TO_BRAND = {
+    # GameSir
+    "Cyclone 2": "GameSir",
+    "G7 HE": "GameSir",
+    "G7 Pro": "GameSir",
+    "G7 SE": "GameSir",
+    "G8 Plus": "GameSir",
+    "Kaleid": "GameSir",
+    "Kaleid Flux": "GameSir",
+    "Nova HD": "GameSir",
+    "Nova Lite": "GameSir",
+    "Nova 2 Lite": "GameSir",
+    "Super Nova": "GameSir",
+    "Tarantula Pro": "GameSir",
+    "Tegenaria Lite": "GameSir",
+    "T7": "GameSir",
+    "T7 Pro": "GameSir",
+    "X2s": "GameSir",
+    "X3 Pro": "GameSir",
+    "X4 Aileron": "GameSir",
+    "X5s": "GameSir",
+    "X5 Lite": "GameSir",
+    # Gulikit
+    "Elves": "Gulikit",
+    "Elves Pro": "Gulikit",
+    "Elves 2": "Gulikit",
+    "Elves 2 Pro": "Gulikit",
+    "ES Pro": "Gulikit",
+    "Guilikit ES": "",
+    "Gulikit KingKong": "",
+    "KingKong Pro": "Gulikit",
+    "KingKong 2": "Gulikit",
+    "KingKong 2 Pro": "Gulikit",
+    "KK2T": "Gulikit",
+    "KK3": "Gulikit",
+    "KK3 Max": "Gulikit",
+    "KK3 Pro": "Gulikit",
+    "TT Max": "Gulikit",
+    "TT Pro": "Gulikit",
+    "Zen Pro": "Gulikit",
+    # Flydigi
+    "Apex 5": "Flydigi",
+    "Dune Fox": "Flydigi",
+    "Vader 4 Pro": "Flydigi",
+    # Razer
+    "Raiju V3 Pro": "Razer",
+    "Wolverine V3 Pro": "Razer",
+    "Wolverine V3 Tournament Edition": "Razer",
+    # Scuf Gaming
+    "Envision": "Scuf",
+    "Envision Pro": "Scuf",
+    "Instinct Pro": "Scuf",
+    "Scuf Reflex": "Scuf",
+    "Valor Pro": "Scuf",
+    # Victrix
+    "Gambit Prime": "Victrix",
+    "Pro BFG": "Victrix",
+    # 8BitDo
+    "M30": "8BitDo",
+    "SN30": "8BitDo",
+    "SN30 Pro": "8BitDo",
+    "Ultimate Mini": "8BitDo",
+    "Ultimate 2": "8BitDo",
+    "Ultimate 2C": "8BitDo",
+    "Zero 2": "8BitDo",
+    "8BitDo Lite SE": "",
+    "8BitDo Lite 2": "",
+    "8BitDo Pro 2": "",
+    "8BitDo Pro 3": "",
+    "8BitDo Ultimate": "",
+    "8BitDo 64 Controller": "",
+}

@@ -24,6 +24,11 @@ normalizer = ProductNormalizer()
             "HEADPHONE",
         ),
         (
+            ["G321", "Razer Barracuda", "Delta II"],
+            ["Logitech G321", "Razer Barracuda", "Asus ROG Delta II"],
+            "HEADSET",
+        ),
+        (
             ["Ambeo Max", "H7", "B400F"],
             ["Sennheiser Ambeo Max", "LG H7", "Samsung HW-B400F"],
             "SOUNDBAR",
@@ -70,6 +75,7 @@ normalizer = ProductNormalizer()
         (["BE0", "Acer BE0"], ["Acer BE0"], "MONITOR"),
         (["Aero 5", "Gigabyte Aero 5"], ["Gigabyte Aero 5"], "LAPTOP"),
         (["WH-CH520", "Sony WH-CH520"], ["Sony WH-CH520"], "HEADPHONE"),
+        (["Arctis Pro", "SteelSeries Arctis Pro"], ["SteelSeries Arctis Pro"], "HEADSET"),
         (["B400F", "Samsung HW-B400F"], ["Samsung HW-B400F"], "SOUNDBAR"),
         (["DM7", "Topping DM7"], ["Topping DM7"], "DAC"),
         (["Airpods 4", "Apple Airpods 4"], ["Apple Airpods 4"], "EARBUD"),

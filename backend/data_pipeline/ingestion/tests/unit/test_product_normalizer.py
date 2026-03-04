@@ -14,8 +14,8 @@ normalizer = ProductNormalizer()
         (["   Air 01  ", "gEm 01"], ["Akko Air 01", "Akko Gem 01"], "MECHANICAL KEYBOARD"),
         (["   EX240  ", "Ex271uZ"], ["BenQ Mobiuz EX240", "BenQ Mobiuz OLED EX271UZ"], "MONITOR"),
         (
-            ["Aero 5", "Omen Max", "LG gram 14"],
-            ["Gigabyte Aero 5", "HP Omen Max", "LG gram 14"],
+            ["Aspire Go 15", "Gigabyte Aero 5", "ThinkBook 14"],
+            ["Acer Aspire Go 15", "Gigabyte Aero 5", "Lenovo ThinkBook 14"],
             "LAPTOP",
         ),
         (
@@ -84,6 +84,7 @@ normalizer = ProductNormalizer()
         (["iPad Air m2", "Apple iPad Air m2"], ["Apple iPad Air m2"], "TABLET"),
         (["BM22", "Keychron BM22"], ["Keychron BM22"], "GAMING MICE"),
         (["Raiju V3 Pro", "Razer Raiju V3 Pro"], ["Razer Raiju V3 Pro"], "Controller"),
+        (["Aorus 7", "Gigabyte Aorus 7"], ["Gigabyte Aorus 7"], "GAMING LAPTOP"),
     ],
 )
 def test_product_normalized(product_list: list[str], expected: list[str], topic: str) -> None:

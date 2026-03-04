@@ -17,6 +17,7 @@ from src.product_mappings import HEADPHONE_MODEL_TO_BRAND
 from src.product_mappings import CONTROLLER_MODEL_TO_BRAND
 from src.product_mappings import SMARTPHONE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_MOUSE_MODEL_TO_BRAND
+from src.product_mappings import GAMING_LAPTOP_MODEL_TO_BRAND
 from src.product_detector.gpu_pattern_builder import build_gpu_pattern
 from src.product_detector.gpu_pattern_builder import validate_gpu_match
 from src.product_detector.cpu_pattern_builder import build_cpu_pattern
@@ -117,6 +118,7 @@ class BuildDetectorRegex:
         "TABLET": (TABLET_MODEL_TO_BRAND, None),
         "GAMING MICE": (GAMING_MOUSE_MODEL_TO_BRAND, None),
         "CONTROLLER": (CONTROLLER_MODEL_TO_BRAND, None),
+        "GAMING LAPTOP": (GAMING_LAPTOP_MODEL_TO_BRAND, None),
     }
 
     @classmethod

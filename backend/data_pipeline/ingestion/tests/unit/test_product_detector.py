@@ -6,6 +6,7 @@ from src.product_mappings import CPU_MODEL_TO_BRAND
 from src.product_mappings import TABLET_MODEL_TO_BRAND
 from src.product_mappings import EARBUD_MODEL_TO_BRAND
 from src.product_mappings import LAPTOP_MODEL_TO_BRAND
+from src.product_mappings import CAMERA_MODEL_TO_BRAND
 from src.product_mappings import HEADSET_MODEL_TO_BRAND
 from src.product_mappings import MONITOR_MODEL_TO_BRAND
 from src.product_mappings import SPEAKER_MODEL_TO_BRAND
@@ -119,6 +120,12 @@ import pytest
             "GAMING LAPTOP",
             GAMING_LAPTOP_MODEL_TO_BRAND,
         ),
+        (
+            "I have a EOS R3, Fujifilm GFX100RF, and Hero 12",
+            ["EOS R3", "Fujifilm GFX100RF", "Hero 12"],
+            "CAMERA",
+            CAMERA_MODEL_TO_BRAND,
+        ),
         # deduplicate
         (
             "I just bought a 4090 and my friend has a RTX 4090",
@@ -210,6 +217,12 @@ import pytest
             ["Gigabyte Aorus 7"],
             "GAMING LAPTOP",
             GAMING_LAPTOP_MODEL_TO_BRAND,
+        ),
+        (
+            "my old M11-D broke, i bought a new Leica M11-D",
+            ["Leica M11-D"],
+            "CAMERA",
+            CAMERA_MODEL_TO_BRAND,
         ),
     ],
 )

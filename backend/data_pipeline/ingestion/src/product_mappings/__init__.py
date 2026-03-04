@@ -20,6 +20,7 @@ from src.product_mappings.mobile import (
 from src.product_mappings.gaming import (
     CONTROLLER_MODEL_TO_BRAND,
     GAMING_MOUSE_MODEL_TO_BRAND,
+    GAMING_LAPTOP_MODEL_TO_BRAND
 )
 
 __all__ = [
@@ -38,4 +39,5 @@ __all__ = [
     "SMARTPHONE_MODEL_TO_BRAND",
     "CONTROLLER_MODEL_TO_BRAND",
     "GAMING_MOUSE_MODEL_TO_BRAND",
+    "GAMING_LAPTOP_MODEL_TO_BRAND",
 ]

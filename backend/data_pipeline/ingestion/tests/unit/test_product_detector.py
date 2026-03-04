@@ -15,6 +15,7 @@ from src.product_mappings import HEADPHONE_MODEL_TO_BRAND
 from src.product_mappings import CONTROLLER_MODEL_TO_BRAND
 from src.product_mappings import SMARTPHONE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_MOUSE_MODEL_TO_BRAND
+from src.product_mappings import GAMING_LAPTOP_MODEL_TO_BRAND
 import pytest
 
 
@@ -47,8 +48,8 @@ import pytest
             MONITOR_MODEL_TO_BRAND,
         ),
         (
-            "I have a Nitro V 15, Aero 5, and Lenovo IdeaPad 1",
-            ["Nitro V 15", "Aero 5", "Lenovo IdeaPad 1"],
+            "I have a Aspire Go 15, Gigabyte Aero 5, and ThinkBook 14",
+            ["Aspire Go 15", "Gigabyte Aero 5", "ThinkBook 14"],
             "LAPTOP",
             LAPTOP_MODEL_TO_BRAND,
         ),
@@ -111,6 +112,12 @@ import pytest
             ["Cyclone 2", "Gulikit Elves", "Apex 5"],
             "CONTROLLER",
             CONTROLLER_MODEL_TO_BRAND,
+        ),
+        (
+            "I have a Nitro V 15, Gigabyte Aorus 7, and Blade 14",
+            ["Nitro V 15", "Gigabyte Aorus 7", "Blade 14"],
+            "GAMING LAPTOP",
+            GAMING_LAPTOP_MODEL_TO_BRAND,
         ),
         # deduplicate
         (
@@ -197,6 +204,12 @@ import pytest
             ["Razer Raiju V3 Pro"],
             "CONTROLLER",
             CONTROLLER_MODEL_TO_BRAND,
+        ),
+        (
+            "my old Aorus 7 broke, i bought a new Gigabyte Aorus 7",
+            ["Gigabyte Aorus 7"],
+            "GAMING LAPTOP",
+            GAMING_LAPTOP_MODEL_TO_BRAND,
         ),
     ],
 )

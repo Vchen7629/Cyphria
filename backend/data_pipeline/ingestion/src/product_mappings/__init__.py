@@ -23,7 +23,11 @@ from src.product_mappings.gaming import (
     GAMING_LAPTOP_MODEL_TO_BRAND,
 )
 
-from src.product_mappings.photography import CAMERA_MODEL_TO_BRAND
+from src.product_mappings.photography import (
+    CAMERA_MODEL_TO_BRAND,
+    TRIPOD_MODEL_TO_BRAND,
+    CAMERA_BACKPACK_MODEL_TO_BRAND,
+)
 
 __all__ = [
     "CPU_MODEL_TO_BRAND",
@@ -43,4 +47,6 @@ __all__ = [
     "GAMING_MOUSE_MODEL_TO_BRAND",
     "GAMING_LAPTOP_MODEL_TO_BRAND",
     "CAMERA_MODEL_TO_BRAND",
+    "TRIPOD_MODEL_TO_BRAND",
+    "CAMERA_BACKPACK_MODEL_TO_BRAND",
 ]

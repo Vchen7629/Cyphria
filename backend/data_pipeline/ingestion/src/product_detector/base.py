@@ -9,6 +9,7 @@ from src.product_mappings import TABLET_MODEL_TO_BRAND
 from src.product_mappings import EARBUD_MODEL_TO_BRAND
 from src.product_mappings import LAPTOP_MODEL_TO_BRAND
 from src.product_mappings import CAMERA_MODEL_TO_BRAND
+from src.product_mappings import TRIPOD_MODEL_TO_BRAND
 from src.product_mappings import MONITOR_MODEL_TO_BRAND
 from src.product_mappings import HEADSET_MODEL_TO_BRAND
 from src.product_mappings import SPEAKER_MODEL_TO_BRAND
@@ -121,6 +122,7 @@ class BuildDetectorRegex:
         "CONTROLLER": (CONTROLLER_MODEL_TO_BRAND, None),
         "GAMING LAPTOP": (GAMING_LAPTOP_MODEL_TO_BRAND, None),
         "CAMERA": (CAMERA_MODEL_TO_BRAND, None),
+        "TRIPOD": (TRIPOD_MODEL_TO_BRAND, None),
     }
 
     @classmethod

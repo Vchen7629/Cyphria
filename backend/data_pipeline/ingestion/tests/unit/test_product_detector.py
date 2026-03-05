@@ -19,6 +19,7 @@ from src.product_mappings import SMARTPHONE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_MOUSE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_LAPTOP_MODEL_TO_BRAND
 from src.product_mappings import CAMERA_BACKPACK_MODEL_TO_BRAND
+from src.product_mappings import ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS
 import pytest
 
 
@@ -140,6 +141,12 @@ import pytest
             "CAMERA BACKPACK",
             CAMERA_BACKPACK_MODEL_TO_BRAND,
         ),
+        (
+            "I have a Bambino, DeLonghi Dedica, and Neo Flex",
+            ["Bambino", "DeLonghi Dedica", "Neo Flex"],
+            "ESPRESSO MACHINE",
+            ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS,
+        ),
         # deduplicate
         (
             "I just bought a 4090 and my friend has a RTX 4090",
@@ -249,6 +256,12 @@ import pytest
             ["Tenba Cineluxe V2"],
             "CAMERA BACKPACK",
             CAMERA_BACKPACK_MODEL_TO_BRAND,
+        ),
+        (
+            "my old Anima, i bought a new Gaggia Anima",
+            ["Gaggia Anima"],
+            "ESPRESSO MACHINE",
+            ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS,
         ),
     ],
 )

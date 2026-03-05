@@ -21,6 +21,7 @@ from src.product_mappings import SMARTPHONE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_MOUSE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_LAPTOP_MODEL_TO_BRAND
 from src.product_mappings import CAMERA_BACKPACK_MODEL_TO_BRAND
+from src.product_mappings import ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS
 from src.product_detector.gpu_pattern_builder import build_gpu_pattern
 from src.product_detector.gpu_pattern_builder import validate_gpu_match
 from src.product_detector.cpu_pattern_builder import build_cpu_pattern
@@ -125,6 +126,7 @@ class BuildDetectorRegex:
         "CAMERA": (CAMERA_MODEL_TO_BRAND, None),
         "TRIPOD": (TRIPOD_MODEL_TO_BRAND, None),
         "CAMERA BACKPACK": (CAMERA_BACKPACK_MODEL_TO_BRAND, None),
+        "ESPRESSO MACHINE": (ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS, None),
     }
 
     @classmethod

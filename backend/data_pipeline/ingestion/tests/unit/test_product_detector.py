@@ -19,6 +19,7 @@ from src.product_mappings import SMARTPHONE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_MOUSE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_LAPTOP_MODEL_TO_BRAND
 from src.product_mappings import CAMERA_BACKPACK_MODEL_TO_BRAND
+from src.product_mappings import AIRFRYER_MODEL_TO_BRAND_MAPPINGS
 from src.product_mappings import ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS
 import pytest
 
@@ -147,6 +148,12 @@ import pytest
             "ESPRESSO MACHINE",
             ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS,
         ),
+        (
+            "I have a ADZ-112, Chefman Compact, and Combi",
+            ["ADZ-112", "Chefman Compact", "Combi"],
+            "AIR FRYER",
+            AIRFRYER_MODEL_TO_BRAND_MAPPINGS,
+        ),
         # deduplicate
         (
             "I just bought a 4090 and my friend has a RTX 4090",
@@ -262,6 +269,12 @@ import pytest
             ["Gaggia Anima"],
             "ESPRESSO MACHINE",
             ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS,
+        ),
+        (
+            "my old GAF1190, i bought a new Gourmia GAF1190",
+            ["Gourmia GAF1190"],
+            "AIR FRYER",
+            AIRFRYER_MODEL_TO_BRAND_MAPPINGS,
         ),
     ],
 )

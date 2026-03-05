@@ -29,6 +29,8 @@ from src.product_mappings.photography import (
     CAMERA_BACKPACK_MODEL_TO_BRAND,
 )
 
+from src.product_mappings.kitchen import ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS
+
 __all__ = [
     "CPU_MODEL_TO_BRAND",
     "GPU_MODEL_TO_BRAND",
@@ -49,4 +51,5 @@ __all__ = [
     "CAMERA_MODEL_TO_BRAND",
     "TRIPOD_MODEL_TO_BRAND",
     "CAMERA_BACKPACK_MODEL_TO_BRAND",
+    "ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS",
 ]

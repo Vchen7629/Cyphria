@@ -19,6 +19,7 @@ from src.product_mappings import SMARTPHONE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_MOUSE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_LAPTOP_MODEL_TO_BRAND
 from src.product_mappings import CAMERA_BACKPACK_MODEL_TO_BRAND
+from src.product_mappings import BLENDER_MODEL_TO_BRAND_MAPPING
 from src.product_mappings import AIRFRYER_MODEL_TO_BRAND_MAPPINGS
 from src.product_mappings import ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS
 import pytest
@@ -154,6 +155,12 @@ import pytest
             "AIR FRYER",
             AIRFRYER_MODEL_TO_BRAND_MAPPINGS,
         ),
+        (
+            "I have a Beast Go, Black+Decker Powercrush, and Classic 575",
+            ["Beast Go", "Black+Decker Powercrush", "Classic 575"],
+            "BLENDER",
+            BLENDER_MODEL_TO_BRAND_MAPPING,
+        ),
         # deduplicate
         (
             "I just bought a 4090 and my friend has a RTX 4090",
@@ -275,6 +282,12 @@ import pytest
             ["Gourmia GAF1190"],
             "AIR FRYER",
             AIRFRYER_MODEL_TO_BRAND_MAPPINGS,
+        ),
+        (
+            "my old Super Q, i bought a new Breville Super Q",
+            ["Breville Super Q"],
+            "BLENDER",
+            BLENDER_MODEL_TO_BRAND_MAPPING,
         ),
     ],
 )

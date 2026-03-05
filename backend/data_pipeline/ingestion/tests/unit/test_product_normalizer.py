@@ -93,6 +93,11 @@ normalizer = ProductNormalizer()
             ["Cruisinart ADZ-112", "Chefman Compact", "Dreo Chefmaker Combi"],
             "AIR FRYER",
         ),
+        (
+            ["Beast Go", "Black+Decker Powercrush", "Classic 575"],
+            ["Beast Go", "Black+Decker Powercrush", "Blendtec Classic 575"],
+            "BLENDER",
+        ),
         # deduplicates
         (["3930K", "Core i7-3930K", "i7-3930K"], ["Intel Core i7-3930K"], "CPU"),
         (["rtx 4090", "4090"], ["NVIDIA RTX 4090"], "GPU"),
@@ -115,6 +120,7 @@ normalizer = ProductNormalizer()
         (["Cineluxe V2", "Tenba Cineluxe V2"], ["Tenba Cineluxe V2"], "CAMERA BACKPACK"),
         (["Anima", "Gaggia Anima"], ["Gaggia Anima"], "ESPRESSO MACHINE"),
         (["GAF1190", "Gourmia GAF1190"], ["Gourmia GAF1190"], "AIR FRYER"),
+        (["Super Q", "Breville Super Q"], ["Breville Super Q"], "BLENDER"),
     ],
 )
 def test_product_normalized(product_list: list[str], expected: list[str], topic: str) -> None:

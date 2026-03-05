@@ -289,3 +289,80 @@ AIRFRYER_MODEL_TO_BRAND_MAPPINGS = {
     # Tristar
     "Power AirFryer": "Tristar",
 }
+
+BLENDER_MODEL_TO_BRAND_MAPPING = {
+    # Beast
+    "Beast Go": "",
+    "Beast Mini 600": "",
+    "Mega 1200": "Beast",
+    "Mega 1200 Plus": "Beast",
+    "Mini 600 Plus": "Beast",
+    "Mighty 850": "Beast",
+    "Mighty 850 Plus": "Beast",
+    # Black & Decker
+    "Powercrush": "Black+Decker",
+    "Black+Decker Quiet": "",
+    # BlendJet
+    "Blendjet 2": "",
+    # Blendtec
+    "Blendtec Bar": "",
+    "Blendtec Chef": "",
+    "Classic 575": "Blendtec",
+    "Connoisseur 825": "Blendtec",
+    "Designer 650": "Blendtec",
+    "Designer 650 S": "Blendtec",
+    "Professional 800": "Blendtec",
+    "Stealth Nitro X": "Blendtec",
+    "Stealth X": "Blendtec",
+    "Stealth 885": "Blendtec",
+    "Stealth 895": "Blendtec",
+    "Zakarian Pro": "Blendtec",
+    # Breville
+    "Breville Q": "",
+    "Fresh & Furious": "Breville",
+    "Super Q": "Breville",
+    # Hamilton Beach
+    "Blend Now": "Hamilton Beach",
+    "Go Sport": "Hamilton Beach",
+    "Multiblend": "Hamilton Beach",
+    "Personal Creations": "Hamilton Beach",
+    "Powerblend Duo": "Hamilton Beach",
+    "Power Elite": "Hamilton Beach",
+    "PowerMax": "Hamilton Beach",
+    "Smoothie Smart": "Hamilton Beach",
+    "Wave Action": "Hamilton Beach",
+    "Wave Crusher": "Hamilton Beach",
+    # KitchenAid
+    "KitchenAid Go": "",
+    "K150": "KitchenAid",
+    "K400": "KitchenAid",
+    "Pure Power": "KitchenAid",
+    # Ninja
+    "Blast Max": "Ninja",
+    "BlendBoss": "Ninja",
+    "Foodi Power Blender": "Ninja",
+    "Ninja Blast": "",
+    "Ninja Detect": "",
+    "Ninja Detect Duo": "",
+    "Ninja Professional Plus": "",
+    "Nutri-Blender Pro": "Ninja",
+    "Power Duo": "Ninja",
+    "Twisti": "Ninja",
+    "UltraCrush": "Ninja",
+    # Oster
+    "Oster One-Touch Blender": "",
+    "Oster Party Blender": "",
+    "Oster Pro Blender": "",
+    "Oster Turbo Blender": "",
+    # Vitamix
+    "Ascent X2": "Vitamix",
+    "Ascent X4": "Vitamix",
+    "Ascent X5": "Vitamix",
+    "A2500": "Vitamix",
+    "A3500": "Vitamix",
+    "Immersion": "Vitamix",
+    "Propel 510": "Vitamix",
+    "Propel 750": "Vitamix",
+    "VX1": "Vitamix",
+    "5200": "Vitamix",
+}

@@ -32,6 +32,7 @@ from src.product_mappings.photography import (
 from src.product_mappings.kitchen import (
     ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS,
     AIRFRYER_MODEL_TO_BRAND_MAPPINGS,
+    BLENDER_MODEL_TO_BRAND_MAPPING,
 )
 
 __all__ = [
@@ -56,4 +57,5 @@ __all__ = [
     "CAMERA_BACKPACK_MODEL_TO_BRAND",
     "ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS",
     "AIRFRYER_MODEL_TO_BRAND_MAPPINGS",
+    "BLENDER_MODEL_TO_BRAND_MAPPING",
 ]

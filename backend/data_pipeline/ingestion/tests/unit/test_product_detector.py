@@ -7,6 +7,7 @@ from src.product_mappings import TABLET_MODEL_TO_BRAND
 from src.product_mappings import EARBUD_MODEL_TO_BRAND
 from src.product_mappings import LAPTOP_MODEL_TO_BRAND
 from src.product_mappings import CAMERA_MODEL_TO_BRAND
+from src.product_mappings import TRIPOD_MODEL_TO_BRAND
 from src.product_mappings import HEADSET_MODEL_TO_BRAND
 from src.product_mappings import MONITOR_MODEL_TO_BRAND
 from src.product_mappings import SPEAKER_MODEL_TO_BRAND
@@ -126,6 +127,12 @@ import pytest
             "CAMERA",
             CAMERA_MODEL_TO_BRAND,
         ),
+        (
+            "I have a CyanBird, Joby GorillaPod Go, and Befree",
+            ["CyanBird", "Joby GorillaPod Go", "Befree"],
+            "TRIPOD",
+            TRIPOD_MODEL_TO_BRAND,
+        ),
         # deduplicate
         (
             "I just bought a 4090 and my friend has a RTX 4090",
@@ -223,6 +230,12 @@ import pytest
             ["Leica M11-D"],
             "CAMERA",
             CAMERA_MODEL_TO_BRAND,
+        ),
+        (
+            "my old Ascend-14 broke, i bought a new RRS Ascend-14",
+            ["RRS Ascend-14"],
+            "TRIPOD",
+            TRIPOD_MODEL_TO_BRAND,
         ),
     ],
 )

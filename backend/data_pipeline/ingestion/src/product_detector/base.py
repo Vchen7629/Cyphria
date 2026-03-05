@@ -21,6 +21,7 @@ from src.product_mappings import SMARTPHONE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_MOUSE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_LAPTOP_MODEL_TO_BRAND
 from src.product_mappings import CAMERA_BACKPACK_MODEL_TO_BRAND
+from src.product_mappings import BLENDER_MODEL_TO_BRAND_MAPPING
 from src.product_mappings import AIRFRYER_MODEL_TO_BRAND_MAPPINGS
 from src.product_mappings import ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS
 from src.product_detector.gpu_pattern_builder import build_gpu_pattern
@@ -129,6 +130,7 @@ class BuildDetectorRegex:
         "CAMERA BACKPACK": (CAMERA_BACKPACK_MODEL_TO_BRAND, None),
         "ESPRESSO MACHINE": (ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS, None),
         "AIR FRYER": (AIRFRYER_MODEL_TO_BRAND_MAPPINGS, None),
+        "BLENDER": (BLENDER_MODEL_TO_BRAND_MAPPING, None),
     }
 
     @classmethod

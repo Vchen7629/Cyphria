@@ -23,6 +23,7 @@ from src.product_mappings import CONTROLLER_MODEL_TO_BRAND
 from src.product_mappings import SMARTPHONE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_MOUSE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_LAPTOP_MODEL_TO_BRAND
+from src.product_mappings import CAMERA_BACKPACK_MODEL_TO_BRAND
 
 
 class ProductNormalizer:
@@ -54,6 +55,7 @@ class ProductNormalizer:
         "GAMING LAPTOP": (GAMING_LAPTOP_MODEL_TO_BRAND, None),
         "CAMERA": (CAMERA_MODEL_TO_BRAND, None),
         "TRIPOD": (TRIPOD_MODEL_TO_BRAND, None),
+        "CAMERA BACKPACK": (CAMERA_BACKPACK_MODEL_TO_BRAND, None),
     }
 
     def __init__(self, logger: Optional[StructuredLogger] = None) -> None:

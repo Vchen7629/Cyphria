@@ -24,6 +24,7 @@ from src.product_mappings import SMARTPHONE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_MOUSE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_LAPTOP_MODEL_TO_BRAND
 from src.product_mappings import CAMERA_BACKPACK_MODEL_TO_BRAND
+from src.product_mappings import AIRFRYER_MODEL_TO_BRAND_MAPPINGS
 from src.product_mappings import ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS
 
 
@@ -58,6 +59,7 @@ class ProductNormalizer:
         "TRIPOD": (TRIPOD_MODEL_TO_BRAND, None),
         "CAMERA BACKPACK": (CAMERA_BACKPACK_MODEL_TO_BRAND, None),
         "ESPRESSO MACHINE": (ESPRESSO_MACHINE_MODEL_TO_BRAND_MAPPINGS, None),
+        "AIR FRYER": (AIRFRYER_MODEL_TO_BRAND_MAPPINGS, None),
     }
 
     def __init__(self, logger: Optional[StructuredLogger] = None) -> None:

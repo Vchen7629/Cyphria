@@ -18,6 +18,7 @@ from src.product_mappings import CONTROLLER_MODEL_TO_BRAND
 from src.product_mappings import SMARTPHONE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_MOUSE_MODEL_TO_BRAND
 from src.product_mappings import GAMING_LAPTOP_MODEL_TO_BRAND
+from src.product_mappings import CAMERA_BACKPACK_MODEL_TO_BRAND
 import pytest
 
 
@@ -133,6 +134,12 @@ import pytest
             "TRIPOD",
             TRIPOD_MODEL_TO_BRAND,
         ),
+        (
+            "I have a Chicago, Nomatic Luma 18L, and Action X30 V2",
+            ["Chicago", "Nomatic Luma 18L", "Action X30 V2"],
+            "CAMERA BACKPACK",
+            CAMERA_BACKPACK_MODEL_TO_BRAND,
+        ),
         # deduplicate
         (
             "I just bought a 4090 and my friend has a RTX 4090",
@@ -236,6 +243,12 @@ import pytest
             ["RRS Ascend-14"],
             "TRIPOD",
             TRIPOD_MODEL_TO_BRAND,
+        ),
+        (
+            "my old Cineluxe V2 broke, i bought a new Tenba Cineluxe V2",
+            ["Tenba Cineluxe V2"],
+            "CAMERA BACKPACK",
+            CAMERA_BACKPACK_MODEL_TO_BRAND,
         ),
     ],
 )

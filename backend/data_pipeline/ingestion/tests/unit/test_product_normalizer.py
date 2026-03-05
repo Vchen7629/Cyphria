@@ -78,6 +78,11 @@ normalizer = ProductNormalizer()
             ["Benro CyanBird", "Joby GorillaPod Go", "Manfrotto Befree"],
             "TRIPOD",
         ),
+        (
+            ["Chicago", "Nomatic Luma 18L", "Action X30 V2"],
+            ["Manfrotto Chicago", "Nomatic Luma 18L", "Shimoda Action X30 V2"],
+            "CAMERA BACKPACK",
+        ),
         # deduplicates
         (["3930K", "Core i7-3930K", "i7-3930K"], ["Intel Core i7-3930K"], "CPU"),
         (["rtx 4090", "4090"], ["NVIDIA RTX 4090"], "GPU"),
@@ -97,6 +102,7 @@ normalizer = ProductNormalizer()
         (["Aorus 7", "Gigabyte Aorus 7"], ["Gigabyte Aorus 7"], "GAMING LAPTOP"),
         (["M11-D", "Leica M11-D"], ["Leica M11-D"], "CAMERA"),
         (["Ascend-14", "RRS Ascend-14"], ["RRS Ascend-14"], "TRIPOD"),
+        (["Cineluxe V2", "Tenba Cineluxe V2"], ["Tenba Cineluxe V2"], "CAMERA BACKPACK"),
     ],
 )
 def test_product_normalized(product_list: list[str], expected: list[str], topic: str) -> None:
